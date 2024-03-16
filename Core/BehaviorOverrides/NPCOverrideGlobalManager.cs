@@ -31,7 +31,7 @@ namespace DifferentExoMechs
 
         public override bool PreAI(NPC npc)
         {
-            if (BehaviorOverride is not null)
+            if (!InfernumModeCompatibility.InfernumModeIsActive && BehaviorOverride is not null)
             {
                 BehaviorOverride.AI();
                 return false;
@@ -40,12 +40,24 @@ namespace DifferentExoMechs
             return true;
         }
 
-        public override void FindFrame(NPC npc, int frameHeight) => BehaviorOverride?.FindFrame(frameHeight);
+        public override void FindFrame(NPC npc, int frameHeight)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.FindFrame(frameHeight);
+        }
 
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) => BehaviorOverride?.SendExtraAI(bitWriter, binaryWriter);
 
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) => BehaviorOverride?.ReceiveExtraAI(bitReader, binaryReader);
 
-        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => BehaviorOverride?.PreDraw(spriteBatch, screenPos, drawColor) ?? true;
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return true;
+
+            return BehaviorOverride?.PreDraw(spriteBatch, screenPos, drawColor) ?? true;
+        }
     }
 }

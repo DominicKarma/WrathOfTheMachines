@@ -40,7 +40,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         /// 
         /// <remarks>
-        /// This is primarily used in the context of a fallback when the fight not ongoing at all.
+        /// This is primarily used in the context of a fallback when the fight is not ongoing at all.
         /// </remarks>
         public static readonly PhaseTransitionCondition UndefinedPhaseTransitionCondition = new(_ => false);
 
@@ -92,7 +92,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             FightState = new(ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
         }
 
-        // The wasSummoned parameter is necessary because it's sometimes not be possible to check PreviouslySummonedMechIDs in this method, due to the NPC itself being null.
+        // The wasSummoned parameter is necessary because it's sometimes not possible to check PreviouslySummonedMechIDs in this method, due to the NPC itself being null.
         /// <summary>
         /// Converts an NPC into an <see cref="ExoMechState"/>.
         /// </summary>
@@ -106,7 +106,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         {
             // Yes, I know. Null safety operators. I prefer it like this, due to the fact that the
             // expression that requires null safety uses a Not operation.
-            // '!(exoMech?.active ?? false)' just feels more unnecessarily dense.
+            // '!(exoMech?.active ?? false)' just feels unnecessarily dense.
             if (exoMech is null || !exoMech.active)
                 return new(0f, wasSummoned, true);
 
