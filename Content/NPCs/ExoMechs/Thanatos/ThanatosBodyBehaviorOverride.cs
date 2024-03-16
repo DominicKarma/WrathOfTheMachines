@@ -13,10 +13,12 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 {
     public sealed class ThanatosBodyBehaviorOverride : NPCBehaviorOverride, IThanatosSegment
     {
+        // This uses newAI[2] of all things because that happens to coincide with the immunity timer base Thanatos has, which makes incoming hits basically not matter if it hasn't exceeded a certain threshold.
+        // By using it for the general existence timer, that guarantees that the immunity timer doesn't stay at zero 24/7 and effectively make Thanatos unable to be damaged.
         /// <summary>
         /// How long this body segment has existed, in frames.
         /// </summary>
-        public ref float ExistenceTimer => ref NPC.localAI[0];
+        public ref float ExistenceTimer => ref NPC.Calamity().newAI[2];
 
         /// <summary>
         /// How open this body segment is.
@@ -72,7 +74,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             NPC.Opacity = aheadSegment.Opacity;
 
-            NPC.Center = aheadSegment.Center - directionToNextSegment.SafeNormalize(Vector2.Zero) * NPC.width * NPC.scale * 0.9f;
+            NPC.Center = aheadSegment.Center - directionToNextSegment.SafeNormalize(Vector2.Zero) * NPC.width * NPC.scale * 0.97f;
             NPC.rotation = directionToNextSegment.ToRotation() + MathHelper.PiOver2;
             NPC.spriteDirection = directionToNextSegment.X.NonZeroSign();
 
@@ -154,6 +156,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         {
             Texture2D texture = TextureAssets.Npc[NPC.type].Value;
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosBody1Glow").Value;
+            Texture2D bloom = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
             if (RelativeIndex % 2 == 1)
             {
                 int body2ID = ModContent.NPCType<ThanatosBody2>();
@@ -174,6 +177,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Rectangle rectangleFrame = texture.Frame(1, Main.npcFrameCount[NPC.type], 0, frame);
             Main.spriteBatch.Draw(texture, drawPosition, rectangleFrame, NPC.GetAlpha(lightColor), NPC.rotation, rectangleFrame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, rectangleFrame, NPC.GetAlpha(Color.White), NPC.rotation, rectangleFrame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
+
+            float bloomOpacity = SegmentOpenInterpolant.Squared() * 0.56f;
+            Vector2 bloomDrawPosition = drawPosition + (NPC.rotation - MathHelper.PiOver2).ToRotationVector2() * NPC.scale * 26f;
+            Main.spriteBatch.Draw(bloom, bloomDrawPosition, null, NPC.GetAlpha(Color.Red with { A = 0 }) * bloomOpacity, 0f, bloom.Size() * 0.5f, NPC.scale * 0.4f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, bloomDrawPosition, null, NPC.GetAlpha(Color.Wheat with { A = 0 }) * bloomOpacity * 0.5f, 0f, bloom.Size() * 0.5f, NPC.scale * 0.2f, 0, 0f);
 
             NPC.As<ThanatosBody1>().SmokeDrawer.DrawSet(NPC.Center);
 
