@@ -1,0 +1,4 @@
+displayName = Calamity: Different Exo Mechs
+author = Dominic Karma
+version = 1.0.0
+modReferences = CalamityMod, SubworldLibrary, Luminance
