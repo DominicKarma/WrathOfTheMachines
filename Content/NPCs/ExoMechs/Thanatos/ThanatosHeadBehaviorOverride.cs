@@ -62,6 +62,16 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public const int BodySegmentCount = 67;
 
         /// <summary>
+        /// The standard segment opening rate from <see cref="OpenSegment(float)"/>.
+        /// </summary>
+        public const float StandardSegmentOpenRate = 0.03f;
+
+        /// <summary>
+        /// The standard segment closing rate from <see cref="CloseSegment(float)"/>.
+        /// </summary>
+        public const float StandardSegmentCloseRate = 0.067f;
+
+        /// <summary>
         /// Represents an action that should be performed by segments on Thanatos' body.
         /// </summary>
         /// <param name="behaviorOverride">The segment's overriding instance.</param>
@@ -109,9 +119,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (Main.mouseRight)
-                BodyAction = new(EveryNthSegment(2), OpenSegmentAction(0.03f));
+                BodyAction = new(EveryNthSegment(2), OpenSegment());
             else
-                BodyAction = new(EveryNthSegment(2), CloseSegmentAction(0.067f));
+                BodyAction = new(EveryNthSegment(2), CloseSegment());
         }
 
         /// <summary>
@@ -169,7 +179,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// An action that opens a segment's vents. Meant to be used in conjunction with <see cref="BodyAction"/>.
         /// </summary>
         /// <param name="segmentOpenRate">The amount by which the segment open interpolant changes every frame.</param>
-        public static BodySegmentAction OpenSegmentAction(float segmentOpenRate)
+        public static BodySegmentAction OpenSegment(float segmentOpenRate = StandardSegmentOpenRate)
         {
             return new(behaviorOverride =>
             {
@@ -189,7 +199,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// An action that closes a segment's vents. Meant to be used in conjunction with <see cref="BodyAction"/>.
         /// </summary>
         /// <param name="segmentCloseRate">The amount by which the segment open interpolant changes every frame.</param>
-        public static BodySegmentAction CloseSegmentAction(float segmentCloseRate) => OpenSegmentAction(-segmentCloseRate);
+        public static BodySegmentAction CloseSegment(float segmentCloseRate = StandardSegmentCloseRate) => OpenSegment(-segmentCloseRate);
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
