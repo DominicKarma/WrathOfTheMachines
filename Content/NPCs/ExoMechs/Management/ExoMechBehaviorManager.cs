@@ -66,6 +66,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// Evaluates the overall fight state, storing the result in the <see cref="FightState"/> member.
         /// </summary>
+        /// 
+        /// <remarks>
+        /// This method should only be called when the fight is ongoing.
+        /// </remarks>
         private static void CalculateFightState()
         {
             List<int> evaluatedMechs = [];
