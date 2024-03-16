@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace DifferentExoMechs
 {
@@ -38,6 +40,12 @@ namespace DifferentExoMechs
             return true;
         }
 
-        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => BehaviorOverride?.PreDraw(spriteBatch) ?? true;
+        public override void FindFrame(NPC npc, int frameHeight) => BehaviorOverride?.FindFrame(frameHeight);
+
+        public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) => BehaviorOverride?.SendExtraAI(bitWriter, binaryWriter);
+
+        public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) => BehaviorOverride?.ReceiveExtraAI(bitReader, binaryReader);
+
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => BehaviorOverride?.PreDraw(spriteBatch, screenPos, drawColor) ?? true;
     }
 }

@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace DifferentExoMechs
 {
@@ -34,15 +37,37 @@ namespace DifferentExoMechs
         protected override NPC CreateTemplateEntity() => new();
 
         /// <summary>
+        /// Sends arbitrary NPC state data across the network when an NPC sync occurs.
+        /// </summary>
+        /// <param name="bitWriter">The compressible bit writer. Booleans written via this are compressed across all mods to improve multiplayer performance.</param>
+        /// <param name="binaryWriter">The writer.</param>
+        public virtual void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter) { }
+
+        /// <summary>
+        /// Receives arbitrary NPC state data across the network after an NPC sync occurs.
+        /// </summary>
+        /// <param name="bitReader">The compressible bit reader.</param>
+        /// <param name="binaryReader">The reader.</param>
+        public virtual void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader) { }
+
+        /// <summary>
         /// The central AI loop for the NPC.
         /// </summary>
         public virtual void AI() { }
 
         /// <summary>
+        /// Allows you to modify the frame from an NPC's texture that is drawn, which is necessary in order to animate NPCs.
+        /// </summary>
+        /// <param name="frameHeight">The height of a single frame from the overall texture.</param>
+        public virtual void FindFrame(int frameHeight) { }
+
+        /// <summary>
         /// The central rendering method.
         /// </summary>
-        /// <param name="spriteBatch"></param>
+        /// <param name="spriteBatch">The sprite batch to draw with.</param>
+        /// <param name="screenPos">The screen position.</param>
+        /// <param name="lightColor">The color of light at the NPC's center.</param>
         /// <returns><see langword="false"/> if base drawing should be ignored, <see langword="true"/> otherwise.</returns>
-        public virtual bool PreDraw(SpriteBatch spriteBatch) => true;
+        public virtual bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor) => true;
     }
 }
