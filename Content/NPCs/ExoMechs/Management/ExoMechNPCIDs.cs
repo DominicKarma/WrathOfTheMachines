@@ -64,7 +64,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             private set;
         }
 
-        public override void PostSetupContent()
+        public override void OnModLoad()
         {
             ArtemisID = ModContent.NPCType<Artemis>();
             ApolloID = ModContent.NPCType<Apollo>();

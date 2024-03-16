@@ -22,9 +22,16 @@ namespace DifferentExoMechs
         protected sealed override void Register()
         {
             ModTypeLookup<NPCBehaviorOverride>.Register(this);
-            NPCOverrideGlobalManager.NPCOverrideRelationship[NPCOverrideID] = this;
             NPC.type = NPCOverrideID;
         }
+
+        public sealed override void SetupContent()
+        {
+            NPCOverrideGlobalManager.NPCOverrideRelationship[NPCOverrideID] = this;
+            SetStaticDefaults();
+        }
+
+        protected override NPC CreateTemplateEntity() => new();
 
         /// <summary>
         /// The central AI loop for the NPC.

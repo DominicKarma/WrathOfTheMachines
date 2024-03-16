@@ -79,7 +79,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (TryFindPrimaryMech(out NPC? primaryMech))
                 evaluatedMechs.Remove(primaryMech!.type);
 
-            ExoMechState[] stateOfOtherExoMechs = new ExoMechState[PreviouslySummonedMechIDs.Count];
+            ExoMechState[] stateOfOtherExoMechs = new ExoMechState[evaluatedMechs.Count];
             for (int i = 0; i < evaluatedMechs.Count; i++)
             {
                 int otherExoMechIndex = NPC.FindFirstNPC(evaluatedMechs[i]);
