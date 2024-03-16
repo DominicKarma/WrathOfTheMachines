@@ -59,7 +59,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// The amount of body segments Thanatos spawns with.
         /// </summary>
-        public const int BodySegmentCount = 72;
+        public const int BodySegmentCount = 67;
 
         /// <summary>
         /// Represents an action that should be performed by segments on Thanatos' body.
@@ -109,9 +109,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (Main.mouseRight)
-                BodyAction = new(EveryNthSegment(2, 0), OpenSegmentAction(0.03f));
+                BodyAction = new(EveryNthSegment(2), OpenSegmentAction(0.03f));
             else
-                BodyAction = new(EveryNthSegment(2, 0), CloseSegmentAction(0.067f));
+                BodyAction = new(EveryNthSegment(2), CloseSegmentAction(0.067f));
         }
 
         /// <summary>
