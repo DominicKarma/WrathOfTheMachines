@@ -113,6 +113,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             NPC.chaseable = !globalNPC.unbreakableDR;
         }
 
+        /// <summary>
+        /// Updates the vent smoke that Thanatos emits.
+        /// </summary>
         public void UpdateVentSmoke()
         {
             ThanatosSmokeParticleSet smoke = NPC.As<ThanatosBody1>().SmokeDrawer;
