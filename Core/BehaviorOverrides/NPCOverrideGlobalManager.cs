@@ -48,7 +48,13 @@ namespace DifferentExoMechs
             BehaviorOverride?.FindFrame(frameHeight);
         }
 
-        public override void ModifyTypeName(NPC npc, ref string typeName) => BehaviorOverride?.ModifyTypeName(ref typeName);
+        public override void ModifyTypeName(NPC npc, ref string typeName)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.ModifyTypeName(ref typeName);
+        }
 
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) => BehaviorOverride?.SendExtraAI(bitWriter, binaryWriter);
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Particles;
@@ -15,11 +16,29 @@ using Terraria.ModLoader.IO;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public sealed class ThanatosHeadBehaviorOverride : NPCBehaviorOverride, IThanatosSegment
+    public sealed partial class ThanatosHeadBehaviorOverride : NPCBehaviorOverride, IThanatosSegment
     {
         public enum ThanatosAIState
         {
+            PerpendicularBodyLaserBlasts
+        }
 
+        /// <summary>
+        /// Thanatos' current, non-combo state.
+        /// </summary>
+        public ThanatosAIState CurrentState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Thanatos' current AI timer.
+        /// </summary>
+        public int AITimer
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -27,8 +46,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public bool HasCreatedSegments
         {
-            get => NPC.ai[0] == 1f;
-            set => NPC.ai[0] = value.ToInt();
+            get;
+            set;
         }
 
         /// <summary>
@@ -47,7 +66,20 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <remarks>
         /// This value can be (and usually is) null. When it is, nothing special is performed by the body segments.
         /// </remarks>
-        public BodySegmentInstructions? BodyAction
+        public BodySegmentInstructions? BodyBehaviorAction
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The render action that should be taken by body segments.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// This value can be (and usually is) null. When it is, nothing special is performed by the body segments.
+        /// </remarks>
+        public BodySegmentInstructions? BodyRenderAction
         {
             get;
             set;
@@ -56,7 +88,12 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// Unimplemented, since Thanatos' head doesn't have an ahead segment. Do not use.
         /// </summary>
-        public int AheadSegmentIndex => -1;
+        public int AheadSegmentIndex => throw new NotImplementedException();
+
+        /// <summary>
+        /// The target that Thanatos will attempt to attack.
+        /// </summary>
+        public static Player Target => ExoMechTargetSelector.Target;
 
         /// <summary>
         /// The amount of body segments Thanatos spawns with.
@@ -66,7 +103,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// The standard segment opening rate from <see cref="OpenSegment(float)"/>.
         /// </summary>
-        public const float StandardSegmentOpenRate = 0.03f;
+        public const float StandardSegmentOpenRate = 0.0285f;
 
         /// <summary>
         /// The standard segment closing rate from <see cref="CloseSegment(float)"/>.
@@ -97,12 +134,20 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
+            bitWriter.WriteBit(HasCreatedSegments);
+
             binaryWriter.Write(SegmentOpenInterpolant);
+            binaryWriter.Write(AITimer);
+            binaryWriter.Write((int)CurrentState);
         }
 
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
+            HasCreatedSegments = bitReader.ReadBit();
+
             SegmentOpenInterpolant = binaryReader.ReadSingle();
+            AITimer = binaryReader.ReadInt32();
+            CurrentState = (ThanatosAIState)binaryReader.ReadInt32();
         }
 
         public override void AI()
@@ -116,27 +161,19 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 NPC.netUpdate = true;
             }
 
-            NPC.Opacity = 1f;
-            NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
-            Vector2 idealVelocity = NPC.DirectionTo(Main.MouseWorld) * 23f;
+            ExecuteCurrentState();
 
-            if (Main.mouseRight)
-            {
-                BodyAction = new(EveryNthSegment(6, 3), OpenSegment());
-                idealVelocity *= 0.2f;
-                NPC.velocity *= 0.9f;
-            }
-            else
-                BodyAction = new(EveryNthSegment(6, 3), CloseSegment());
-            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.032f);
+            NPC.Opacity = 1f;
+
+            AITimer++;
         }
 
         /// <summary>
-        ///     Resets various things pertaining to the fight state prior to behavior updates.
+        /// Resets various things pertaining to the fight state prior to behavior updates.
         /// </summary>
         /// <remarks>
-        ///     This serves as a means of ensuring that changes to the fight state are gracefully reset if something suddenly changes, while affording the ability to make changes during updates.<br></br>
-        ///     As a result, this alleviates behaviors AI states from the burden of having to assume that they may terminate at any time and must account for that to ensure that the state is reset.
+        /// This serves as a means of ensuring that changes to the fight state are gracefully reset if something suddenly changes, while affording the ability to make changes during updates.<br></br>
+        /// As a result, this alleviates behaviors AI states from the burden of having to assume that they may terminate at any time and must account for that to ensure that the state is reset.
         /// </remarks>
         public void PerformPreUpdateResets()
         {
@@ -144,7 +181,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
-            BodyAction = null;
+            BodyBehaviorAction = null;
+            BodyRenderAction = null;
 
             CalamityGlobalNPC.draedonExoMechWorm = NPC.whoAmI;
         }
@@ -176,14 +214,32 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Generates a <see cref="BodySegmentCondition"/> that corresponds to every Nth segment. Meant to be used in conjunction with <see cref="BodyAction"/>.
+        /// Performs Thanatos' current state.
+        /// </summary>
+        public void ExecuteCurrentState()
+        {
+            switch (CurrentState)
+            {
+                case ThanatosAIState.PerpendicularBodyLaserBlasts:
+                    DoBehavior_PerpendicularBodyLaserBlasts();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Generates a <see cref="BodySegmentCondition"/> that corresponds to every Nth segment. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
         /// </summary>
         /// <param name="n">The cycle repeat value.</param>
         /// <param name="cyclicOffset">The offset in the cycle. Defaults to 0.</param>
         public static BodySegmentCondition EveryNthSegment(int n, int cyclicOffset = 0) => new((segment, segmentIndex) => segmentIndex % n == cyclicOffset);
 
         /// <summary>
-        /// An action that opens a segment's vents. Meant to be used in conjunction with <see cref="BodyAction"/>.
+        /// Generates a <see cref="BodySegmentCondition"/> that corresponds to every single segment. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
+        /// </summary>
+        public static BodySegmentCondition AllSegments() => new((segment, segmentIndex) => true);
+
+        /// <summary>
+        /// An action that opens a segment's vents. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
         /// </summary>
         /// <param name="segmentOpenRate">The amount by which the segment open interpolant changes every frame.</param>
         public static BodySegmentAction OpenSegment(float segmentOpenRate = StandardSegmentOpenRate)
@@ -193,39 +249,51 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 float oldInterpolant = behaviorOverride.SegmentOpenInterpolant;
                 behaviorOverride.SegmentOpenInterpolant = Utilities.Saturate(behaviorOverride.SegmentOpenInterpolant + segmentOpenRate);
 
-                if (behaviorOverride.SegmentOpenInterpolant > 0f && oldInterpolant <= 0f)
+                bool segmentJustOpened = behaviorOverride.SegmentOpenInterpolant > 0f && oldInterpolant <= 0f;
+                if (segmentJustOpened)
                     SoundEngine.PlaySound(ThanatosHead.VentSound with { MaxInstances = 8, Volume = 0.3f }, behaviorOverride.NPC.Center);
 
                 float bigInterpolant = Utilities.InverseLerp(1f, 0.91f, behaviorOverride.SegmentOpenInterpolant);
                 if (behaviorOverride.SegmentOpenInterpolant >= 0.91f)
-                {
-                    for (int i = 0; i < (2 + bigInterpolant * 36f); i++)
-                    {
-                        int smokeLifetime = Main.rand.Next(24, 36);
-                        float smokeSpeed = Main.rand.NextFloat(15f, 29f);
-                        Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
-                        if (Main.rand.NextBool(4))
-                            smokeColor = Color.DarkRed;
-                        smokeColor.A = 97;
-
-                        bool bigBurst = Main.rand.NextBool(bigInterpolant);
-                        if (bigBurst)
-                        {
-                            smokeSpeed *= 1f + bigInterpolant;
-                            smokeLifetime += (int)(bigInterpolant * 30f);
-                        }
-
-                        Vector2 perpendicular = behaviorOverride.NPC.rotation.ToRotationVector2();
-                        Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
-                        SmokeParticle smoke = new(behaviorOverride.NPC.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
-                        GeneralParticleHandler.SpawnParticle(smoke);
-                    }
-                }
+                    CreateSmoke(behaviorOverride.NPC, bigInterpolant);
             });
         }
 
         /// <summary>
-        /// An action that closes a segment's vents. Meant to be used in conjunction with <see cref="BodyAction"/>.
+        /// Creates smoke particles perpendicular to a segment NPC.
+        /// </summary>
+        /// <param name="npc">The segment NPC instance.</param>
+        /// <param name="bigInterpolant">How big the smoke should be.</param>
+        public static void CreateSmoke(NPC npc, float bigInterpolant)
+        {
+            if (!npc.WithinRange(Main.LocalPlayer.Center, 1500f))
+                return;
+
+            int smokeCount = (int)MathHelper.Lerp(2f, 40f, bigInterpolant);
+            for (int i = 0; i < smokeCount; i++)
+            {
+                int smokeLifetime = Main.rand.Next(24, 36);
+                float smokeSpeed = Main.rand.NextFloat(15f, 29f);
+                Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
+                if (Main.rand.NextBool(4))
+                    smokeColor = Color.DarkRed;
+                smokeColor.A = 97;
+
+                if (Main.rand.NextBool(bigInterpolant))
+                {
+                    smokeSpeed *= 1f + bigInterpolant;
+                    smokeLifetime += (int)(bigInterpolant * 30f);
+                }
+
+                Vector2 perpendicular = npc.rotation.ToRotationVector2();
+                Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
+                SmokeParticle smoke = new(npc.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
+                GeneralParticleHandler.SpawnParticle(smoke);
+            }
+        }
+
+        /// <summary>
+        /// An action that closes a segment's vents. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
         /// </summary>
         /// <param name="segmentCloseRate">The amount by which the segment open interpolant changes every frame.</param>
         public static BodySegmentAction CloseSegment(float segmentCloseRate = StandardSegmentCloseRate) => OpenSegment(-segmentCloseRate);
@@ -237,6 +305,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
+            // TODO -- Implement segment opening.
             return true;
         }
     }
