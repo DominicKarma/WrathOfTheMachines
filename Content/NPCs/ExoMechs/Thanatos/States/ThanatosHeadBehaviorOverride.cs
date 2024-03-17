@@ -1,7 +1,6 @@
 ﻿using System;
 using CalamityMod;
 using CalamityMod.Particles;
-using CalamityMod.Projectiles.Boss;
 using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -38,7 +37,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// How long Thanatos spends snaking around into position in anticipation of attacking during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
-        public static int PerpendicularBodyLaserBlasts_RedirectTime => Utilities.SecondsToFrames(4f);
+        public static int PerpendicularBodyLaserBlasts_RedirectTime => Utilities.SecondsToFrames(3f);
 
         /// <summary>
         /// How long Thanatos spends telegraphing prior to firing lasers during his PerpendicularBodyLaserBlasts attack.
@@ -107,8 +106,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (!PerpendicularBodyLaserBlasts_HasReachedDestination && NPC.WithinRange(flyDestination, 250f))
             {
                 PerpendicularBodyLaserBlasts_HasReachedDestination = true;
-                if (AITimer < PerpendicularBodyLaserBlasts_RedirectTime - 30)
-                    AITimer = PerpendicularBodyLaserBlasts_RedirectTime - 30;
+                if (AITimer < PerpendicularBodyLaserBlasts_RedirectTime - 10)
+                    AITimer = PerpendicularBodyLaserBlasts_RedirectTime - 10;
 
                 NPC.netUpdate = true;
             }
@@ -125,7 +124,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (localAITimer == 1)
                 SoundEngine.PlaySound(LaserChargeUpSound);
 
-            NPC.velocity *= 0.98f;
+            NPC.velocity *= 0.97f;
 
             var bodySegmentCondition = EveryNthSegment(PerpendicularBodyLaserBlasts_SegmentUsageCycle, PerpendicularBodyLaserBlasts_SegmentUsageCycle - 1);
             float telegraphCompletion = localAITimer / (float)PerpendicularBodyLaserBlasts_BlastTelegraphTime;
@@ -133,7 +132,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             {
                 if (localAITimer == (int)(PerpendicularBodyLaserBlasts_BlastTelegraphTime * shootCompletionRatio) && PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
                 {
-                    ScreenShakeSystem.StartShake(2f);
+                    ScreenShakeSystem.StartShake(3.2f);
 
                     NPC segment = behaviorOverride.NPC;
                     SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { MaxInstances = 0, Volume = 0.15f }, segment.Center);
@@ -153,9 +152,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        float laserShootSpeed = 9f;
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * laserShootSpeed, ModContent.ProjectileType<ThanatosLaser>(), BasicLaserDamage, 0f, -1, 60f, -1f);
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -laserShootSpeed, ModContent.ProjectileType<ThanatosLaser>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        float laserShootSpeed = 27f;
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * laserShootSpeed, ModContent.ProjectileType<ThanatosLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -laserShootSpeed, ModContent.ProjectileType<ThanatosLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
                     }
                 }
 
@@ -189,7 +188,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public static bool PerpendicularBodyLaserBlasts_SegmentCanFire(NPC segment, NPC head)
         {
             bool roughlySameDirectionAsHead = Vector2.Dot(segment.rotation.ToRotationVector2(), head.rotation.ToRotationVector2()) >= 0.2f;
-            bool closeEnoughToTarget = segment.WithinRange(Target.Center, 2000f);
+            bool closeEnoughToTarget = segment.WithinRange(Target.Center, 1120f);
             return roughlySameDirectionAsHead && closeEnoughToTarget;
         }
 
