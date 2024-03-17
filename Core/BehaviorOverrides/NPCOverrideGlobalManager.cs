@@ -48,6 +48,8 @@ namespace DifferentExoMechs
             BehaviorOverride?.FindFrame(frameHeight);
         }
 
+        public override void ModifyTypeName(NPC npc, ref string typeName) => BehaviorOverride?.ModifyTypeName(ref typeName);
+
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) => BehaviorOverride?.SendExtraAI(bitWriter, binaryWriter);
 
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) => BehaviorOverride?.ReceiveExtraAI(bitReader, binaryReader);

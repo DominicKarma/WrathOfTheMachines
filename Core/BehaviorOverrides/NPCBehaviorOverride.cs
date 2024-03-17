@@ -37,6 +37,12 @@ namespace DifferentExoMechs
         protected override NPC CreateTemplateEntity() => new();
 
         /// <summary>
+        /// Modifies the type name of the NPC.
+        /// </summary>
+        /// <param name="typeName">The NPC's <see cref="NPC.TypeName"/.></param>
+        public virtual void ModifyTypeName(ref string typeName) { }
+
+        /// <summary>
         /// Sends arbitrary NPC state data across the network when an NPC sync occurs.
         /// </summary>
         /// <param name="bitWriter">The compressible bit writer. Booleans written via this are compressed across all mods to improve multiplayer performance.</param>

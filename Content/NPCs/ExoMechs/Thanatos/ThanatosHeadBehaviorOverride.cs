@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -228,6 +229,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         /// <param name="segmentCloseRate">The amount by which the segment open interpolant changes every frame.</param>
         public static BodySegmentAction CloseSegment(float segmentCloseRate = StandardSegmentCloseRate) => OpenSegment(-segmentCloseRate);
+
+        public override void ModifyTypeName(ref string typeName)
+        {
+            typeName = Language.GetTextValue("Mods.DifferentExoMechs.NPCs.ThanatosRename");
+        }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {

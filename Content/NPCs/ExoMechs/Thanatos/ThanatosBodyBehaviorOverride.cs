@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
@@ -136,6 +137,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         {
             int frame = Utils.Clamp((int)(SegmentOpenInterpolant * Main.npcFrameCount[NPC.type]), 0, Main.npcFrameCount[NPC.type] - 1);
             NPC.frame.Y = frame * frameHeight;
+        }
+
+        public override void ModifyTypeName(ref string typeName)
+        {
+            typeName = Language.GetTextValue("Mods.DifferentExoMechs.NPCs.ThanatosRename");
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
