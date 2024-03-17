@@ -50,6 +50,26 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public static int PerpendicularBodyLaserBlasts_SegmentUsageCycle => Main.expertMode ? 3 : 2;
 
         /// <summary>
+        /// How far Hades tries to go ahead of the player before firing during his PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public static float PerpendicularBodyLaserBlasts_ForwardDestinationOffset => 1600f;
+
+        /// <summary>
+        /// How far Hades tries to go to the side of the player before firing during his PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public static float PerpendicularBodyLaserBlasts_SideDestinationOffset => 450f;
+
+        /// <summary>
+        /// How far along, as a 0-1 completion ratio, Hades needs to be during his PerpendicularBodyLaserBlasts slow down animation before lasers are fired all at once.
+        /// </summary>
+        public static float PerpendicularBodyLaserBlasts_BurstShootCompletionRatio => 0.79f;
+
+        /// <summary>
+        /// How fast lasers shot by Hades should be during his PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public static float PerpendicularBodyLaserBlasts_LaserShootSpeed => 27f;
+
+        /// <summary>
         /// The amount of damage basic lasers from Hades do.
         /// </summary>
         public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
@@ -88,10 +108,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                     NPC.netUpdate = true;
             }
 
-            float forwardOffset = 1600f;
-            float perpendicularOffset = 450f;
+            float forwardOffset = PerpendicularBodyLaserBlasts_ForwardDestinationOffset;
+            float sideOffset = PerpendicularBodyLaserBlasts_SideDestinationOffset;
             Vector2 idealOffsetDirection = PerpendicularBodyLaserBlasts_StartingDirection;
-            Vector2 flyDestination = Target.Center + idealOffsetDirection * forwardOffset + idealOffsetDirection.RotatedBy(MathHelper.PiOver2) * perpendicularOffset;
+            Vector2 flyDestination = Target.Center + idealOffsetDirection * forwardOffset + idealOffsetDirection.RotatedBy(MathHelper.PiOver2) * sideOffset;
 
             float moveCompletion = AITimer / (float)PerpendicularBodyLaserBlasts_RedirectTime;
             float flySpeedInterpolant = Utilities.InverseLerp(0f, 0.35f, moveCompletion);
@@ -119,8 +139,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void DoBehavior_PerpendicularBodyLaserBlasts_CreateBlastTelegraphs()
         {
             int localAITimer = AITimer - PerpendicularBodyLaserBlasts_RedirectTime;
-            float shootCompletionRatio = 0.79f;
-
             if (localAITimer == 1)
                 SoundEngine.PlaySound(LaserChargeUpSound);
 
@@ -130,7 +148,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             float telegraphCompletion = localAITimer / (float)PerpendicularBodyLaserBlasts_BlastTelegraphTime;
             BodyBehaviorAction = new(bodySegmentCondition, new(behaviorOverride =>
             {
-                if (localAITimer == (int)(PerpendicularBodyLaserBlasts_BlastTelegraphTime * shootCompletionRatio) && PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
+                if (localAITimer == (int)(PerpendicularBodyLaserBlasts_BlastTelegraphTime * PerpendicularBodyLaserBlasts_BurstShootCompletionRatio) && PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
                 {
                     ScreenShakeSystem.StartShake(3.2f);
 
@@ -152,9 +170,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        float laserShootSpeed = 27f;
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * laserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -laserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
                     }
                 }
 
@@ -176,8 +193,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 Main.spriteBatch.ResetToDefault();
             }));
 
-            float rumblePower = Utilities.InverseLerpBump(0f, shootCompletionRatio, shootCompletionRatio, shootCompletionRatio + 0.04f, telegraphCompletion) * 1.3f;
-            ScreenShakeSystem.SetUniversalRumble(rumblePower);
+            float rumblePower = Utilities.InverseLerpBump(0f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio + 0.04f, telegraphCompletion);
+            ScreenShakeSystem.SetUniversalRumble(rumblePower * 1.3f);
         }
 
         /// <summary>
@@ -204,7 +221,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Vector2 start = behaviorOverride.TurretPosition - perpendicularOffset * 12f;
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
-            float fadeOut = Utilities.InverseLerp(1f, 0.8f, telegraphIntensityFactor).Squared();
+            float fadeOut = Utilities.InverseLerp(1f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, telegraphIntensityFactor).Squared();
             Effect effect = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             effect.Parameters["centerOpacity"].SetValue(0.4f);
             effect.Parameters["mainOpacity"].SetValue(opacity);
