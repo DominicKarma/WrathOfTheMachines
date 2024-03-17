@@ -202,11 +202,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                     Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
                     if (Main.rand.NextBool(4))
                         smokeColor = Color.DarkRed;
-                    smokeColor.A /= 2;
+                    smokeColor.A = 97;
 
                     Vector2 perpendicular = behaviorOverride.NPC.rotation.ToRotationVector2();
                     Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
-                    SmokeParticle smoke = new(behaviorOverride.NPC.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.25f);
+                    SmokeParticle smoke = new(behaviorOverride.NPC.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
                     GeneralParticleHandler.SpawnParticle(smoke);
                 }
             });
