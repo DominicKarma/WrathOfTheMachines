@@ -36,7 +36,8 @@ namespace DifferentExoMechs.Content.Particles
             Rotation = Velocity.ToRotation() - MathHelper.PiOver2;
             Velocity *= 0.89f;
             Scale += LifetimeCompletion * ScaleGrowRate;
-            Color = Color.Lerp(Color, Color.White, 0.05f);
+
+            Color = Color.Lerp(Color, Color.White, 0.055f);
 
             if (LifetimeCompletion >= 1f)
                 Kill();
@@ -46,10 +47,10 @@ namespace DifferentExoMechs.Content.Particles
         {
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
 
-            float opacity = Utilities.InverseLerpBump(0f, 0.02f, 0.75f, 1f, LifetimeCompletion);
-            int horizontalFrame = (int)MathF.Round(MathHelper.Lerp(0f, 7f, LifetimeCompletion));
-            Rectangle frame = texture.Frame(8, FrameVariants, horizontalFrame, Variant);
-            spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * opacity, Rotation, frame.Size() * 0.5f, Scale, 0, 0f);
+            float opacity = Utilities.InverseLerpBump(0f, 0.02f, 0.4f, 1f, LifetimeCompletion) * 0.75f;
+            int horizontalFrame = (int)MathF.Round(MathHelper.Lerp(0f, 2f, LifetimeCompletion));
+            Rectangle frame = texture.Frame(3, FrameVariants, horizontalFrame, Variant);
+            spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * opacity, Rotation, frame.Size() * 0.5f, Scale * 2f, 0, 0f);
         }
     }
 }
