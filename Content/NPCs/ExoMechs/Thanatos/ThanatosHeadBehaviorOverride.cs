@@ -2,6 +2,7 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Particles;
+using DifferentExoMechs.Content.Particles;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -115,13 +116,18 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             }
 
             NPC.Opacity = 1f;
-            NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionTo(Main.MouseWorld) * 23f, 0.032f);
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
+            Vector2 idealVelocity = NPC.DirectionTo(Main.MouseWorld) * 23f;
 
             if (Main.mouseRight)
-                BodyAction = new(EveryNthSegment(2), OpenSegment());
+            {
+                BodyAction = new(EveryNthSegment(6, 3), OpenSegment());
+                idealVelocity *= 0.2f;
+                NPC.velocity *= 0.9f;
+            }
             else
-                BodyAction = new(EveryNthSegment(2), CloseSegment());
+                BodyAction = new(EveryNthSegment(6, 3), CloseSegment());
+            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.032f);
         }
 
         /// <summary>
@@ -189,9 +195,20 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 if (behaviorOverride.SegmentOpenInterpolant > 0f && oldInterpolant <= 0f)
                     SoundEngine.PlaySound(ThanatosHead.VentSound with { MaxInstances = 8, Volume = 0.3f }, behaviorOverride.NPC.Center);
 
-                ThanatosSmokeParticleSet smoke = behaviorOverride.NPC.As<ThanatosBody1>().SmokeDrawer;
-                if (behaviorOverride.SegmentOpenInterpolant > 0f)
-                    smoke.ParticleSpawnRate = ThanatosHead.ventCloudSpawnRate;
+                if (behaviorOverride.SegmentOpenInterpolant > 0.95f)
+                {
+                    int smokeLifetime = Main.rand.Next(24, 36);
+                    float smokeSpeed = Main.rand.NextFloat(15f, 29f);
+                    Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
+                    if (Main.rand.NextBool(4))
+                        smokeColor = Color.DarkRed;
+                    smokeColor.A /= 2;
+
+                    Vector2 perpendicular = behaviorOverride.NPC.rotation.ToRotationVector2();
+                    Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
+                    SmokeParticle smoke = new(behaviorOverride.NPC.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.25f);
+                    GeneralParticleHandler.SpawnParticle(smoke);
+                }
             });
         }
 

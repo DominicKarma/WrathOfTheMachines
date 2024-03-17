@@ -1,7 +1,6 @@
 ﻿using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using CalamityMod.Particles;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,10 +77,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             NPC.rotation = directionToNextSegment.ToRotation() + MathHelper.PiOver2;
             NPC.spriteDirection = directionToNextSegment.X.NonZeroSign();
 
-            NPC.As<ThanatosBody1>().SmokeDrawer.ParticleSpawnRate = int.MaxValue;
             ListenToHeadInstructions();
-            UpdateVentSmoke();
-
             ModifyDRBasedOnOpenInterpolant();
         }
 
@@ -113,16 +109,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             globalNPC.unbreakableDR = damageReduction >= 0.999f;
             globalNPC.DR = damageReduction;
             NPC.chaseable = !globalNPC.unbreakableDR;
-        }
-
-        /// <summary>
-        /// Updates the vent smoke that Thanatos emits.
-        /// </summary>
-        public void UpdateVentSmoke()
-        {
-            ThanatosSmokeParticleSet smoke = NPC.As<ThanatosBody1>().SmokeDrawer;
-            smoke.BaseMoveRotation = NPC.rotation - MathHelper.PiOver2;
-            smoke.Update();
         }
 
         /// <summary>
@@ -179,11 +165,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Main.spriteBatch.Draw(glowmask, drawPosition, rectangleFrame, NPC.GetAlpha(Color.White), NPC.rotation, rectangleFrame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
             float bloomOpacity = SegmentOpenInterpolant.Squared() * 0.56f;
-            Vector2 bloomDrawPosition = drawPosition + (NPC.rotation - MathHelper.PiOver2).ToRotationVector2() * NPC.scale * 26f;
+            Vector2 bloomDrawPosition = drawPosition + (NPC.rotation - MathHelper.PiOver2).ToRotationVector2() * NPC.scale * 14f;
             Main.spriteBatch.Draw(bloom, bloomDrawPosition, null, NPC.GetAlpha(Color.Red with { A = 0 }) * bloomOpacity, 0f, bloom.Size() * 0.5f, NPC.scale * 0.4f, 0, 0f);
             Main.spriteBatch.Draw(bloom, bloomDrawPosition, null, NPC.GetAlpha(Color.Wheat with { A = 0 }) * bloomOpacity * 0.5f, 0f, bloom.Size() * 0.5f, NPC.scale * 0.2f, 0, 0f);
-
-            NPC.As<ThanatosBody1>().SmokeDrawer.DrawSet(NPC.Center);
 
             return false;
         }
