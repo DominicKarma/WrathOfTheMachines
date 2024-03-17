@@ -2,7 +2,6 @@
 using System.IO;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using CalamityMod.Particles;
 using DifferentExoMechs.Content.Particles;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -288,7 +287,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 Vector2 perpendicular = npc.rotation.ToRotationVector2();
                 Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
                 SmokeParticle smoke = new(npc.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
-                GeneralParticleHandler.SpawnParticle(smoke);
+                smoke.Spawn();
             }
         }
 

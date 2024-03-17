@@ -1,32 +1,31 @@
 ﻿using System;
-using CalamityMod.Particles;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.Particles
 {
     public class SmokeParticle : Particle
     {
+        public int Variant;
+
         public float ScaleGrowRate;
 
-        public override int FrameVariants => 8;
+        public override int FrameCount => 8;
 
-        public override bool UseHalfTransparency => true;
+        public override string AtlasTextureName => "DifferentExoMechs.SmokeParticle.png";
 
-        public override bool UseCustomDraw => true;
-
-        public override string Texture => "DifferentExoMechs/Content/Particles/SmokeParticle";
+        public override BlendState BlendState => BlendState.NonPremultiplied;
 
         public SmokeParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale, float scaleGrowRate)
         {
             Position = position;
             Velocity = velocity;
-            Color = color;
-            Scale = scale;
-            Variant = Main.rand.Next(FrameVariants);
+            DrawColor = color;
+            Scale = Vector2.One * scale;
+            Variant = Main.rand.Next(FrameCount);
             Lifetime = lifetime;
             ScaleGrowRate = scaleGrowRate;
         }
@@ -35,22 +34,19 @@ namespace DifferentExoMechs.Content.Particles
         {
             Rotation = Velocity.ToRotation() - MathHelper.PiOver2;
             Velocity *= 0.89f;
-            Scale += LifetimeCompletion * ScaleGrowRate;
+            Scale += Vector2.One * LifetimeRatio * ScaleGrowRate;
 
-            Color = Color.Lerp(Color, Color.White, 0.055f);
-
-            if (LifetimeCompletion >= 1f)
-                Kill();
+            DrawColor = Color.Lerp(DrawColor, Color.White, 0.055f);
         }
 
-        public override void CustomDraw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-
-            float opacity = Utilities.InverseLerpBump(0f, 0.02f, 0.4f, 1f, LifetimeCompletion) * 0.75f;
-            int horizontalFrame = (int)MathF.Round(MathHelper.Lerp(0f, 2f, LifetimeCompletion));
-            Rectangle frame = texture.Frame(3, FrameVariants, horizontalFrame, Variant);
-            spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * opacity, Rotation, frame.Size() * 0.5f, Scale * 2f, 0, 0f);
+            float opacity = Utilities.InverseLerpBump(0f, 0.02f, 0.4f, 1f, LifetimeRatio) * 0.75f;
+            int horizontalFrame = (int)MathF.Round(MathHelper.Lerp(0f, 2f, LifetimeRatio));
+            int width = 28;
+            int height = 28;
+            Rectangle frame = new(width * horizontalFrame, height * Variant, width, height);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, DrawColor * opacity, Rotation, null, Scale * 2f, 0);
         }
     }
 }

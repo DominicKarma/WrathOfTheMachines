@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using CalamityMod.Particles;
 using DifferentExoMechs.Content.Particles;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -56,8 +55,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             int sparkLifetime = Main.rand.Next(10, 21);
             Vector2 sparkVelocity = Main.rand.NextVector2Circular(4f, 4f);
             Color sparkColor = Color.Lerp(Color.Wheat, new(1f, 0.02f, 0.22f), Main.rand.NextFloat());
-            ElectricSparkParticle spark = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f) - Projectile.velocity * 1.1f, sparkVelocity, sparkColor, sparkLifetime, 0.19f);
-            GeneralParticleHandler.SpawnParticle(spark);
+            ElectricSparkParticle spark = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f) - Projectile.velocity * 1.1f, sparkVelocity, sparkColor, sparkLifetime, Vector2.One * 0.19f);
+            spark.Spawn();
         }
 
         /// <summary>

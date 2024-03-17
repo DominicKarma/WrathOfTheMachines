@@ -1,0 +1,63 @@
+{
+  "frames": {
+    "ElectricSparkParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 500
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 500
+      },
+      "sourceSize": {
+        "w": 125,
+        "h": 500
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "SmokeParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 500,
+        "w": 80,
+        "h": 218
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 2,
+        "w": 80,
+        "h": 218
+      },
+      "sourceSize": {
+        "w": 84,
+        "h": 224
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "texture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 125,
+      "h": 718
+    },
+    "scale": 1
+  }
+}

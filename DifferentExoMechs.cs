@@ -1,7 +1,4 @@
-﻿using CalamityMod.Particles;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace DifferentExoMechs
 {
@@ -9,8 +6,7 @@ namespace DifferentExoMechs
     {
         public override void Load()
         {
-            if (Main.netMode != NetmodeID.Server)
-                GeneralParticleHandler.LoadModParticleInstances(this);
+            Luminance.Luminance.InitializeMod(this);
         }
     }
 }
