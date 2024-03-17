@@ -29,8 +29,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
         public override void SetDefaults()
         {
-            Projectile.width = 46;
-            Projectile.height = 46;
+            Projectile.width = 40;
+            Projectile.height = 40;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;

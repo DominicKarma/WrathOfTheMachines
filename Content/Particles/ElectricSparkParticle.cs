@@ -29,7 +29,7 @@ namespace DifferentExoMechs.Content.Particles
             if (Time >= Lifetime - 5)
                 Opacity *= 0.9f;
 
-            Velocity *= 0.94f;
+            Velocity *= 0.89f;
             Rotation += Velocity.X * 0.12f;
         }
     }

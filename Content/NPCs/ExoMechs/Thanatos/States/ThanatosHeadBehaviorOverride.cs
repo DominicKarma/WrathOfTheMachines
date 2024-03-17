@@ -208,7 +208,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Effect effect = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             effect.Parameters["centerOpacity"].SetValue(0.4f);
             effect.Parameters["mainOpacity"].SetValue(opacity);
-            effect.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.6f);
+            effect.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.89f);
             effect.Parameters["edgeColor"].SetValue(Vector3.Lerp(new(1.3f, 0.1f, 0.67f), new(4f, 0f, 0f), telegraphIntensityFactor));
             effect.Parameters["centerColor"].SetValue(new Vector3(1f, 0.1f, 0.1f));
             effect.Parameters["edgeBlendLength"].SetValue(0.07f);
