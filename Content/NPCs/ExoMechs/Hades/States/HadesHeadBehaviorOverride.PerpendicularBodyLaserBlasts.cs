@@ -187,8 +187,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 // TODO -- This is probably bad for performance?
                 Main.spriteBatch.PrepareForShaders();
 
-                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, -behaviorOverride.NPC.rotation.ToRotationVector2());
-                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, behaviorOverride.NPC.rotation.ToRotationVector2());
+                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, -behaviorOverride.NPC.rotation.ToRotationVector2());
+                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, behaviorOverride.NPC.rotation.ToRotationVector2());
 
                 Main.spriteBatch.ResetToDefault();
             }));
@@ -212,13 +212,14 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// Renders a laser telegraph for a given <see cref="HadesBodyBehaviorOverride"/> in a given direction.
         /// </summary>
-        /// <param name="behaviorOverride"></param>
-        /// <param name="telegraphIntensityFactor"></param>
-        /// <param name="perpendicularOffset"></param>
-        public static void RenderLaserTelegraph(HadesBodyBehaviorOverride behaviorOverride, float telegraphIntensityFactor, Vector2 perpendicularOffset)
+        /// <param name="behaviorOverride">The behavior override responsible for the segment.</param>
+        /// <param name="telegraphIntensityFactor">The intensity factor of the telegraph.</param>
+        /// <param name="telegraphSize">How big the telegraph should be by default.</param>
+        /// <param name="telegraphDirection">The direction of the telegraph</param>
+        public static void RenderLaserTelegraph(HadesBodyBehaviorOverride behaviorOverride, float telegraphIntensityFactor, float telegraphSize, Vector2 telegraphDirection)
         {
             float opacity = behaviorOverride.SegmentOpenInterpolant.Cubed();
-            Vector2 start = behaviorOverride.TurretPosition - perpendicularOffset * 12f;
+            Vector2 start = behaviorOverride.TurretPosition;
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
             float fadeOut = Utilities.InverseLerp(1f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, telegraphIntensityFactor).Squared();
@@ -231,7 +232,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             effect.Parameters["edgeBlendLength"].SetValue(0.07f);
             effect.Parameters["edgeBlendStrength"].SetValue(32f);
             effect.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(invisible, start - Main.screenPosition, null, Color.White, perpendicularOffset.ToRotation(), invisible.Size() * 0.5f, Vector2.One * fadeOut * 1000f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(invisible, start - Main.screenPosition, null, Color.White, telegraphDirection.ToRotation(), invisible.Size() * 0.5f, Vector2.One * fadeOut * telegraphSize, SpriteEffects.None, 0f);
         }
 
         public static float LaserTelegraphWidthFunction(float completionRatio, float telegraphIntensity) => MathF.Pow(telegraphIntensity, 2.5f) * 10f;

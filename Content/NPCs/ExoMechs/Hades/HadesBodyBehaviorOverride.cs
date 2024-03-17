@@ -59,6 +59,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public int RelativeIndex => (int)NPC.ai[3];
 
         /// <summary>
+        /// A generic countdown variable that can be used for whatever during AI states.
+        /// </summary>
+        public ref float GenericCountdown => ref NPC.ai[0];
+
+        /// <summary>
         /// The position of the turret on this index.
         /// </summary>
         public Vector2 TurretPosition
@@ -111,6 +116,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             ListenToHeadInstructions();
             ModifyDRBasedOnOpenInterpolant();
+
+            if (GenericCountdown > 0f)
+                GenericCountdown--;
         }
 
         /// <summary>

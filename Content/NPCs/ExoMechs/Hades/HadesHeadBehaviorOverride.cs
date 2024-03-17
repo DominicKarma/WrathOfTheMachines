@@ -19,7 +19,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
     {
         public enum HadesAIState
         {
-            PerpendicularBodyLaserBlasts
+            PerpendicularBodyLaserBlasts,
+            ContinuousLaserBarrage,
         }
 
         /// <summary>
@@ -217,10 +218,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public void ExecuteCurrentState()
         {
+            CurrentState = HadesAIState.ContinuousLaserBarrage;
+
             switch (CurrentState)
             {
                 case HadesAIState.PerpendicularBodyLaserBlasts:
                     DoBehavior_PerpendicularBodyLaserBlasts();
+                    break;
+                case HadesAIState.ContinuousLaserBarrage:
+                    DoBehavior_ContinuousLaserBarrage();
                     break;
             }
         }
@@ -241,7 +247,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// An action that opens a segment's vents. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
         /// </summary>
         /// <param name="segmentOpenRate">The amount by which the segment open interpolant changes every frame.</param>
-        public static BodySegmentAction OpenSegment(float segmentOpenRate = StandardSegmentOpenRate)
+        /// <param name="smokeQuantityInterpolant">A multiplier for how much smoke should be released.</param>
+        public static BodySegmentAction OpenSegment(float segmentOpenRate = StandardSegmentOpenRate, float smokeQuantityInterpolant = 1f)
         {
             return new(behaviorOverride =>
             {
@@ -254,7 +261,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                 float bigInterpolant = Utilities.InverseLerp(1f, 0.91f, behaviorOverride.SegmentOpenInterpolant);
                 if (behaviorOverride.SegmentOpenInterpolant >= 0.91f)
-                    CreateSmoke(behaviorOverride, bigInterpolant);
+                    CreateSmoke(behaviorOverride, bigInterpolant, smokeQuantityInterpolant);
             });
         }
 
@@ -263,7 +270,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         /// <param name="behaviorOverride">The segment.</param>
         /// <param name="bigInterpolant">How big the smoke should be.</param>
-        public static void CreateSmoke(HadesBodyBehaviorOverride behaviorOverride, float bigInterpolant)
+        /// <param name="quantityInterpolant">A multiplier for how much smoke should be released.</param>
+        public static void CreateSmoke(HadesBodyBehaviorOverride behaviorOverride, float bigInterpolant, float quantityInterpolant = 1f)
         {
             NPC npc = behaviorOverride.NPC;
             if (!npc.WithinRange(Main.LocalPlayer.Center, 1200f))
@@ -272,6 +280,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             int smokeCount = (int)MathHelper.Lerp(2f, 40f, bigInterpolant);
             for (int i = 0; i < smokeCount; i++)
             {
+                if (!Main.rand.NextBool(quantityInterpolant))
+                    continue;
+
                 int smokeLifetime = Main.rand.Next(20, 30);
                 float smokeSpeed = Main.rand.NextFloat(15f, 29f);
                 Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
