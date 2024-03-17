@@ -14,10 +14,10 @@ using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public sealed partial class ThanatosHeadBehaviorOverride : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride
     {
         /// <summary>
-        /// Whether Thanatos has successfully reached his destination or not during his PerpendicularBodyLaserBlasts attack.
+        /// Whether Hades has successfully reached his destination or not during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public bool PerpendicularBodyLaserBlasts_HasReachedDestination
         {
@@ -26,7 +26,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// The fly direction Thanatos attempts to move in during his PerpendicularBodyLaserBlasts attack.
+        /// The fly direction Hades attempts to move in during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public Vector2 PerpendicularBodyLaserBlasts_StartingDirection
         {
@@ -35,26 +35,26 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// How long Thanatos spends snaking around into position in anticipation of attacking during his PerpendicularBodyLaserBlasts attack.
+        /// How long Hades spends snaking around into position in anticipation of attacking during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public static int PerpendicularBodyLaserBlasts_RedirectTime => Utilities.SecondsToFrames(3f);
 
         /// <summary>
-        /// How long Thanatos spends telegraphing prior to firing lasers during his PerpendicularBodyLaserBlasts attack.
+        /// How long Hades spends telegraphing prior to firing lasers during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public static int PerpendicularBodyLaserBlasts_BlastTelegraphTime => Utilities.SecondsToFrames(1.9f);
 
         /// <summary>
-        /// The 'n' in 'every Nth segment should fire' for Thanatos' PerpendicularBodyLaserBlasts attack.
+        /// The 'n' in 'every Nth segment should fire' for Hades' PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public static int PerpendicularBodyLaserBlasts_SegmentUsageCycle => 3;
 
         /// <summary>
-        /// The amount of damage basic lasers from Thanatos do.
+        /// The amount of damage basic lasers from Hades do.
         /// </summary>
         public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
 
-        public static readonly SoundStyle LaserChargeUpSound = new("DifferentExoMechs/Assets/Sounds/Custom/Thanatos/LaserChargeUp");
+        public static readonly SoundStyle LaserChargeUpSound = new("DifferentExoMechs/Assets/Sounds/Custom/Hades/LaserChargeUp");
 
         /// <summary>
         /// AI update loop method for the PerpendicularBodyLaserBlasts attack.
@@ -77,7 +77,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Makes Thanatos move around during his PerpendicularBodyLaserBlasts attack.
+        /// Makes Hades move around during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public void DoBehavior_PerpendicularBodyLaserBlasts_MoveNearPlayer()
         {
@@ -114,7 +114,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Makes Thanatos slow down and cast telegraphs during his PerpendicularBodyLaserBlasts attack.
+        /// Makes Hades slow down and cast telegraphs during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public void DoBehavior_PerpendicularBodyLaserBlasts_CreateBlastTelegraphs()
         {
@@ -153,8 +153,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         float laserShootSpeed = 27f;
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * laserShootSpeed, ModContent.ProjectileType<ThanatosLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -laserShootSpeed, ModContent.ProjectileType<ThanatosLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * laserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
+                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -laserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
                     }
                 }
 
@@ -181,7 +181,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Determines whether a body segment on Thanatos can fire during the PerpendicularBodyLaserBlasts attack.
+        /// Determines whether a body segment on Hades can fire during the PerpendicularBodyLaserBlasts attack.
         /// </summary>
         /// <param name="segment">The segment NPC instance.</param>
         /// <param name="head">The head NPC instance.</param>
@@ -193,12 +193,12 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Renders a laser telegraph for a given <see cref="ThanatosBodyBehaviorOverride"/> in a given direction.
+        /// Renders a laser telegraph for a given <see cref="HadesBodyBehaviorOverride"/> in a given direction.
         /// </summary>
         /// <param name="behaviorOverride"></param>
         /// <param name="telegraphIntensityFactor"></param>
         /// <param name="perpendicularOffset"></param>
-        public static void RenderLaserTelegraph(ThanatosBodyBehaviorOverride behaviorOverride, float telegraphIntensityFactor, Vector2 perpendicularOffset)
+        public static void RenderLaserTelegraph(HadesBodyBehaviorOverride behaviorOverride, float telegraphIntensityFactor, Vector2 perpendicularOffset)
         {
             float opacity = behaviorOverride.SegmentOpenInterpolant.Cubed();
             Vector2 start = behaviorOverride.TurretPosition - perpendicularOffset * 12f;

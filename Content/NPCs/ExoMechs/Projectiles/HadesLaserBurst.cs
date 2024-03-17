@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public class ThanatosLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>
+    public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>
     {
         /// <summary>
         /// How long this laser burst has existed, in frames.
@@ -94,7 +94,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("ThanatosLaserShader");
+            ManagedShader shader = ShaderManager.GetShader("HadesLaserShader");
             shader.TrySetParameter("glowIntensity", 1f);
             shader.TrySetParameter("noiseScrollOffset", Projectile.identity * 0.3149f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"), 1, SamplerState.LinearWrap);

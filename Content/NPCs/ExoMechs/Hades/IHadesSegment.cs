@@ -1,6 +1,6 @@
 ﻿namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public interface IThanatosSegment
+    public interface IHadesSegment
     {
         /// <summary>
         /// How open this segment is.

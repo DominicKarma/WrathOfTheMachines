@@ -1,2 +1,6 @@
 NPCs.ThanatosRename: XM-05 Hades
-Projectiles.ThanatosLaserBurst.DisplayName: Laser Burst
+
+Projectiles: {
+	ThanatosLaserBurst.DisplayName: Laser Burst
+	HadesLaserBurst.DisplayName: Hades Laser Burst
+}

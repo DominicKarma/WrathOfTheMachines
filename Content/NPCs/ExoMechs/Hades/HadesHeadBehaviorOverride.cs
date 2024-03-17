@@ -15,24 +15,24 @@ using Terraria.ModLoader.IO;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public sealed partial class ThanatosHeadBehaviorOverride : NPCBehaviorOverride, IThanatosSegment
+    public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {
-        public enum ThanatosAIState
+        public enum HadesAIState
         {
             PerpendicularBodyLaserBlasts
         }
 
         /// <summary>
-        /// Thanatos' current, non-combo state.
+        /// Hades' current, non-combo state.
         /// </summary>
-        public ThanatosAIState CurrentState
+        public HadesAIState CurrentState
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Thanatos' current AI timer.
+        /// Hades' current AI timer.
         /// </summary>
         public int AITimer
         {
@@ -41,7 +41,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Whether Thanatos has created his body segments yet or not.
+        /// Whether Hades has created his body segments yet or not.
         /// </summary>
         public bool HasCreatedSegments
         {
@@ -85,17 +85,17 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Unimplemented, since Thanatos' head doesn't have an ahead segment. Do not use.
+        /// Unimplemented, since Hades' head doesn't have an ahead segment. Do not use.
         /// </summary>
         public int AheadSegmentIndex => throw new NotImplementedException();
 
         /// <summary>
-        /// The target that Thanatos will attempt to attack.
+        /// The target that Hades will attempt to attack.
         /// </summary>
         public static Player Target => ExoMechTargetSelector.Target;
 
         /// <summary>
-        /// The amount of body segments Thanatos spawns with.
+        /// The amount of body segments Hades spawns with.
         /// </summary>
         public const int BodySegmentCount = 67;
 
@@ -110,26 +110,26 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public const float StandardSegmentCloseRate = 0.067f;
 
         /// <summary>
-        /// Represents an action that should be performed by segments on Thanatos' body.
+        /// Represents an action that should be performed by segments on Hades' body.
         /// </summary>
         /// <param name="behaviorOverride">The segment's overriding instance.</param>
-        public delegate void BodySegmentAction(ThanatosBodyBehaviorOverride behaviorOverride);
+        public delegate void BodySegmentAction(HadesBodyBehaviorOverride behaviorOverride);
 
         /// <summary>
-        /// Represents a condition that should be applied to Thanatos' body segments.
+        /// Represents a condition that should be applied to Hades' body segments.
         /// </summary>
         /// <param name="segment">The segment's NPC instance.</param>
         /// <param name="segmentIndex">The index of the segment being evaluated.</param>
         public delegate bool BodySegmentCondition(NPC segment, int segmentIndex);
 
         /// <summary>
-        /// Represents an action that should be taken conditionally across Thanatos' body segments.
+        /// Represents an action that should be taken conditionally across Hades' body segments.
         /// </summary>
         /// <param name="Condition">The condition that dictates whether the <paramref name="Action"/> should occur.</param>
         /// <param name="Action">The action that the body segments should perform.</param>
         public record BodySegmentInstructions(BodySegmentCondition Condition, BodySegmentAction Action);
 
-        public override int NPCOverrideID => ExoMechNPCIDs.ThanatosHeadID;
+        public override int NPCOverrideID => ExoMechNPCIDs.HadesHeadID;
 
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
@@ -146,7 +146,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             SegmentOpenInterpolant = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
-            CurrentState = (ThanatosAIState)binaryReader.ReadInt32();
+            CurrentState = (HadesAIState)binaryReader.ReadInt32();
         }
 
         public override void AI()
@@ -194,7 +194,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
-            // The tail and body2 NPC variants are unused in favor of varied drawing so as to minimize the amount of code generalizations/copy-pasting necessary to get Thanatos working.
+            // The tail and body2 NPC variants are unused in favor of varied drawing so as to minimize the amount of code generalizations/copy-pasting necessary to get Hades working.
             int segmentID = ModContent.NPCType<ThanatosBody1>();
             int previousSegmentIndex = NPC.whoAmI;
             for (int i = 0; i < BodySegmentCount; i++)
@@ -213,13 +213,13 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Performs Thanatos' current state.
+        /// Performs Hades' current state.
         /// </summary>
         public void ExecuteCurrentState()
         {
             switch (CurrentState)
             {
-                case ThanatosAIState.PerpendicularBodyLaserBlasts:
+                case HadesAIState.PerpendicularBodyLaserBlasts:
                     DoBehavior_PerpendicularBodyLaserBlasts();
                     break;
             }

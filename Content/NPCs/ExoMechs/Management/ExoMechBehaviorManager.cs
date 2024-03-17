@@ -129,10 +129,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         private static void DetermineBattleState()
         {
-            bool thanatosIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.ThanatosHeadID);
+            bool hadesIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.HadesHeadID);
             bool aresIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.AresBodyID);
             bool artemisAndApolloArePresent = NPC.AnyNPCs(ExoMechNPCIDs.ArtemisID) || NPC.AnyNPCs(ExoMechNPCIDs.ApolloID);
-            bool fightIsOngoing = thanatosIsPresent || aresIsPresent || artemisAndApolloArePresent;
+            bool fightIsOngoing = hadesIsPresent || aresIsPresent || artemisAndApolloArePresent;
             if (!fightIsOngoing)
             {
                 CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);

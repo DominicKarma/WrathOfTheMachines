@@ -11,10 +11,10 @@ using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.Bosses
 {
-    public sealed class ThanatosBodyBehaviorOverride : NPCBehaviorOverride, IThanatosSegment
+    public sealed class HadesBodyBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {
-        // This uses newAI[2] of all things because that happens to coincide with the immunity timer base Thanatos has, which makes incoming hits basically not matter if it hasn't exceeded a certain threshold.
-        // By using it for the general existence timer, that guarantees that the immunity timer doesn't stay at zero 24/7 and effectively make Thanatos unable to be damaged.
+        // This uses newAI[2] of all things because that happens to coincide with the immunity timer base Hades has, which makes incoming hits basically not matter if it hasn't exceeded a certain threshold.
+        // By using it for the general existence timer, that guarantees that the immunity timer doesn't stay at zero 24/7 and effectively make Hades unable to be damaged.
         /// <summary>
         /// How long this body segment has existed, in frames.
         /// </summary>
@@ -114,39 +114,39 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Listens to incoming instructions from the head's <see cref="ThanatosHeadBehaviorOverride.BodyBehaviorAction"/>.
+        /// Listens to incoming instructions from the head's <see cref="HadesHeadBehaviorOverride.BodyBehaviorAction"/>.
         /// </summary>
         public void ListenToHeadInstructions()
         {
             if (CalamityGlobalNPC.draedonExoMechWorm == -1)
                 return;
 
-            NPC thanatos = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!thanatos.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not ThanatosHeadBehaviorOverride thanatosAI)
+            NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
+            if (!hades.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not HadesHeadBehaviorOverride hadesAI)
                 return;
 
-            if (!thanatosAI.BodyBehaviorAction?.Condition(NPC, RelativeIndex) ?? false)
+            if (!hadesAI.BodyBehaviorAction?.Condition(NPC, RelativeIndex) ?? false)
                 return;
 
-            thanatosAI.BodyBehaviorAction?.Action(this);
+            hadesAI.BodyBehaviorAction?.Action(this);
         }
 
         /// <summary>
-        /// Listens to incoming instructions from the head's <see cref="ThanatosHeadBehaviorOverride.BodyRenderAction"/> that dictate optional draw data.
+        /// Listens to incoming instructions from the head's <see cref="HadesHeadBehaviorOverride.BodyRenderAction"/> that dictate optional draw data.
         /// </summary>
         public void RenderInAccordanceWithHeadInstructions()
         {
             if (CalamityGlobalNPC.draedonExoMechWorm == -1)
                 return;
 
-            NPC thanatos = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!thanatos.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not ThanatosHeadBehaviorOverride thanatosAI)
+            NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
+            if (!hades.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not HadesHeadBehaviorOverride hadesAI)
                 return;
 
-            if (!thanatosAI.BodyRenderAction?.Condition(NPC, RelativeIndex) ?? false)
+            if (!hadesAI.BodyRenderAction?.Condition(NPC, RelativeIndex) ?? false)
                 return;
 
-            thanatosAI.BodyRenderAction?.Action(this);
+            hadesAI.BodyRenderAction?.Action(this);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             NPC aheadSegment = Main.npc[AheadSegmentIndex];
             bool connectedToSameWorm = NPC.realLife == aheadSegment.realLife;
-            bool aheadSegmentIsHead = aheadSegment.type == ExoMechNPCIDs.ThanatosHeadID;
+            bool aheadSegmentIsHead = aheadSegment.type == ExoMechNPCIDs.HadesHeadID;
             if (!connectedToSameWorm && !aheadSegmentIsHead)
                 return false;
 

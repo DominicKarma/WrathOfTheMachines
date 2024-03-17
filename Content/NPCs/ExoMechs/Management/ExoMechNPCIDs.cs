@@ -38,9 +38,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// The NPC ID of Thanatos' head.
+        /// The NPC ID of Hades' head.
         /// </summary>
-        public static int ThanatosHeadID
+        public static int HadesHeadID
         {
             get;
             private set;
@@ -69,10 +69,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             ArtemisID = ModContent.NPCType<Artemis>();
             ApolloID = ModContent.NPCType<Apollo>();
             AresBodyID = ModContent.NPCType<AresBody>();
-            ThanatosHeadID = ModContent.NPCType<ThanatosHead>();
+            HadesHeadID = ModContent.NPCType<ThanatosHead>();
 
-            ExoMechIDs = new([AresBodyID, ThanatosHeadID, ArtemisID, ApolloID]);
-            ManagingExoMechIDs = new([AresBodyID, ThanatosHeadID, ApolloID]);
+            ExoMechIDs = new([AresBodyID, HadesHeadID, ArtemisID, ApolloID]);
+            ManagingExoMechIDs = new([AresBodyID, HadesHeadID, ApolloID]);
         }
 
         /// <summary>
