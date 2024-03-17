@@ -254,24 +254,25 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                 float bigInterpolant = Utilities.InverseLerp(1f, 0.91f, behaviorOverride.SegmentOpenInterpolant);
                 if (behaviorOverride.SegmentOpenInterpolant >= 0.91f)
-                    CreateSmoke(behaviorOverride.NPC, bigInterpolant);
+                    CreateSmoke(behaviorOverride, bigInterpolant);
             });
         }
 
         /// <summary>
         /// Creates smoke particles perpendicular to a segment NPC.
         /// </summary>
-        /// <param name="npc">The segment NPC instance.</param>
+        /// <param name="behaviorOverride">The segment.</param>
         /// <param name="bigInterpolant">How big the smoke should be.</param>
-        public static void CreateSmoke(NPC npc, float bigInterpolant)
+        public static void CreateSmoke(HadesBodyBehaviorOverride behaviorOverride, float bigInterpolant)
         {
-            if (!npc.WithinRange(Main.LocalPlayer.Center, 1500f))
+            NPC npc = behaviorOverride.NPC;
+            if (!npc.WithinRange(Main.LocalPlayer.Center, 1200f))
                 return;
 
             int smokeCount = (int)MathHelper.Lerp(2f, 40f, bigInterpolant);
             for (int i = 0; i < smokeCount; i++)
             {
-                int smokeLifetime = Main.rand.Next(24, 36);
+                int smokeLifetime = Main.rand.Next(20, 30);
                 float smokeSpeed = Main.rand.NextFloat(15f, 29f);
                 Color smokeColor = Color.Lerp(Color.Red, Color.Gray, 0.6f);
                 if (Main.rand.NextBool(4))
@@ -286,7 +287,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                 Vector2 perpendicular = npc.rotation.ToRotationVector2();
                 Vector2 smokeVelocity = perpendicular.RotatedByRandom(0.2f) * Main.rand.NextFromList(-1f, 1f) * smokeSpeed;
-                SmokeParticle smoke = new(npc.Center, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
+                SmokeParticle smoke = new(behaviorOverride.TurretPosition, smokeVelocity, smokeColor, smokeLifetime, 0.6f, 0.18f);
                 smoke.Spawn();
             }
         }

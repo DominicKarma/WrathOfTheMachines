@@ -47,7 +47,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// The 'n' in 'every Nth segment should fire' for Hades' PerpendicularBodyLaserBlasts attack.
         /// </summary>
-        public static int PerpendicularBodyLaserBlasts_SegmentUsageCycle => 3;
+        public static int PerpendicularBodyLaserBlasts_SegmentUsageCycle => Main.expertMode ? 3 : 2;
 
         /// <summary>
         /// The amount of damage basic lasers from Hades do.
