@@ -68,7 +68,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 NPC.netUpdate = true;
             }
 
-            // Use base Calamity's ChargeCombo AIState at all times, Artemis Artemis needs that to be enabled for his CanHitPlayer hook to run.
+            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to run.
             NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
 
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
