@@ -18,15 +18,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         {
             int hoverTime = 50;
             int reelBackTime = 20;
-            int dashTime = 8;
+            int dashTime = 7;
             int slowDownTime = 10;
             bool artemis = npc.type == ExoMechNPCIDs.ArtemisID;
-            float driftAngularVelocity = AITimer >= hoverTime / 2 ? (artemis.ToDirectionInt() * 0.25f) : 0f;
+            float driftAngularVelocity = AITimer >= hoverTime / 2 ? (artemis.ToDirectionInt() * 0.21f) : 0f;
 
             Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(npc.Center).RotatedBy(driftAngularVelocity) * new Vector2(650f, 450f);
             if (AITimer <= hoverTime)
             {
-                npc.SmoothFlyNear(hoverDestination, 0.2f, 0.8f);
+                npc.SmoothFlyNear(hoverDestination, 0.2f, 0.4f);
                 npc.rotation = npc.AngleTo(Target.Center);
                 twinAttributes.Animation = ExoTwinAnimation.Idle;
                 twinAttributes.Frame = twinAttributes.Animation.CalculateFrame(AITimer / (float)hoverTime, twinAttributes.InPhase2);
@@ -70,7 +70,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (AITimer <= hoverTime + reelBackTime + dashTime + slowDownTime)
             {
                 npc.velocity *= 0.64f;
-                npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.2f);
+                npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.1f);
 
                 return;
             }
