@@ -4,10 +4,13 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 {
     public static partial class ExoTwinsStates
     {
+        // Just a useful shorthand so that ExoTwinsStateManager doesn't have to be typed out each time when working with state data in this class.
+        private static SharedExoTwinState SharedState => ExoTwinsStateManager.SharedState;
+
         /// <summary>
         /// The shared AI timer by both Artemis and Apollo.
         /// </summary>
-        public static ref int AITimer => ref ExoTwinsStateManager.SharedState.AITimer;
+        public static ref int AITimer => ref SharedState.AITimer;
 
         /// <summary>
         /// The target that Artemis and Apollo will attempt to attack.
