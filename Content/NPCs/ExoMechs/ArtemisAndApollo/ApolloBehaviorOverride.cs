@@ -55,6 +55,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             set;
         } = ExoTwinAnimation.Idle;
 
+        /// <summary>
+        /// Apollo's optic nerve colors.
+        /// </summary>
+        public Color[] OpticNervePalette => [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)];
+
         public override int NPCOverrideID => ExoMechNPCIDs.ApolloID;
 
         public override void AI()
@@ -68,7 +73,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 NPC.netUpdate = true;
             }
 
-            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to run.
+            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
             NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
 
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
@@ -79,7 +84,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Apollo/ApolloGlow").Value;
-            CommonExoTwinFunctionalities.DrawBase(NPC, glowmask, lightColor, screenPos, Frame, [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)]);
+            CommonExoTwinFunctionalities.DrawBase(NPC, this, glowmask, lightColor, screenPos, Frame);
             return false;
         }
     }

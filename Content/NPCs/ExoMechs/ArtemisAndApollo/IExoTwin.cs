@@ -1,4 +1,6 @@
-﻿namespace DifferentExoMechs.Content.NPCs.Bosses
+﻿using Microsoft.Xna.Framework;
+
+namespace DifferentExoMechs.Content.NPCs.Bosses
 {
     public interface IExoTwin
     {
@@ -31,6 +33,14 @@
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// The palette of the optic nerve of this Exo Twin.
+        /// </summary>
+        public Color[] OpticNervePalette
+        {
+            get;
         }
     }
 }

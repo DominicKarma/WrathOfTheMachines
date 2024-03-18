@@ -46,11 +46,16 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             set;
         } = ExoTwinAnimation.Idle;
 
+        /// <summary>
+        /// Artemis' optic nerve colors.
+        /// </summary>
+        public Color[] OpticNervePalette => [new(75, 14, 6), new(145, 35, 4), new(204, 101, 24), new(254, 172, 84), new(224, 147, 40)];
+
         public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
 
         public override void AI()
         {
-            // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to run.
+            // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
@@ -61,7 +66,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Artemis/ArtemisGlow").Value;
-            CommonExoTwinFunctionalities.DrawBase(NPC, glowmask, lightColor, screenPos, Frame, [new(75, 14, 6), new(145, 35, 4), new(204, 101, 24), new(254, 172, 84), new(224, 147, 40)]);
+            CommonExoTwinFunctionalities.DrawBase(NPC, this, glowmask, lightColor, screenPos, Frame);
             return false;
         }
     }

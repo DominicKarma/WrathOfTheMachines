@@ -63,15 +63,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// Draws an Exo Twin's barest things.
         /// </summary>
         /// <param name="twin">The Exo Twin's NPC data.</param>
+        /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
         /// <param name="glowmask">The glowmask texture.</param>
         /// <param name="lightColor">The color of light at the Exo Twin's position.</param>
         /// <param name="screenPos">The screen position offset.</param>
         /// <param name="frame">The frame of the Exo Twin.</param>
-        /// <param name="nerveEndingPalette">The palette for the nerve endings.</param>
-        public static void DrawBase(NPC twin, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame, Color[] nerveEndingPalette)
+        public static void DrawBase(NPC twin, IExoTwin twinInterface, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame)
         {
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            DrawNerveEndings(twin, nerveEndingPalette);
+            DrawNerveEndings(twin, twinInterface.OpticNervePalette);
 
             Texture2D texture = TextureAssets.Npc[twin.type].Value;
             Vector2 drawPosition = twin.Center - screenPos;
