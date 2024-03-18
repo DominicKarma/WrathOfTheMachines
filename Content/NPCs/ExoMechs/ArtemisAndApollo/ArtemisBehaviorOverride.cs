@@ -38,6 +38,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
+        /// Whether Artemis has verified that Apollo is alive or not.
+        /// </summary>
+        public bool ApolloSummonCheckPerformed
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Artemis's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
@@ -55,6 +64,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
         public override void AI()
         {
+            if (!ApolloSummonCheckPerformed)
+            {
+                if (!NPC.AnyNPCs(ExoMechNPCIDs.ApolloID))
+                    NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ExoMechNPCIDs.ApolloID, NPC.whoAmI);
+
+                ApolloSummonCheckPerformed = true;
+                NPC.netUpdate = true;
+            }
+
             // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
