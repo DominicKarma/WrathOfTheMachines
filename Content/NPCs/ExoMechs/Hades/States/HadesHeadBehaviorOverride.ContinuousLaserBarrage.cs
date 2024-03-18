@@ -1,6 +1,7 @@
 ﻿using System;
 using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -62,7 +63,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 float indexRatioAlongHades = behaviorOverride.RelativeIndex / (float)BodySegmentCount;
                 float closenessToFiring = Utilities.InverseLerp(-0.1f, 0.01f, fireCompletion - indexRatioAlongHades);
                 float fadeOutDueToOncomingFiring = (1f - closenessToFiring).Squared();
-                ContinuousLaserBarrage_CreateTelegraphsOnSegments(behaviorOverride, telegraphCompletion, MathF.Sqrt(telegraphCompletion) * fadeOutDueToOncomingFiring * 2485f);
+                PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+                {
+                    ContinuousLaserBarrage_CreateTelegraphsOnSegments(behaviorOverride, telegraphCompletion, MathF.Sqrt(telegraphCompletion) * fadeOutDueToOncomingFiring * 2485f);
+                }, PixelationPrimitiveLayer.AfterNPCs);
             }));
         }
 
@@ -131,13 +135,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (!ContinuousLaserBarrage_SegmentCanFire(behaviorOverride.NPC, NPC))
                 return;
 
-            // TODO -- This is probably bad for performance?
-            Main.spriteBatch.PrepareForShaders();
-
             Vector2 telegraphDirection = behaviorOverride.NPC.SafeDirectionTo(Target.Center);
             RenderLaserTelegraph(behaviorOverride, telegraphCompletion, telegraphSize, telegraphDirection);
-
-            Main.spriteBatch.ResetToDefault();
         }
 
         /// <summary>

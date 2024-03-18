@@ -184,13 +184,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 if (!PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
                     return;
 
-                // TODO -- This is probably bad for performance?
-                Main.spriteBatch.PrepareForShaders();
-
-                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, -behaviorOverride.NPC.rotation.ToRotationVector2());
-                RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, behaviorOverride.NPC.rotation.ToRotationVector2());
-
-                Main.spriteBatch.ResetToDefault();
+                PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+                {
+                    RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, -behaviorOverride.NPC.rotation.ToRotationVector2());
+                    RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, behaviorOverride.NPC.rotation.ToRotationVector2());
+                }, PixelationPrimitiveLayer.AfterNPCs);
             }));
 
             float rumblePower = Utilities.InverseLerpBump(0f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio + 0.04f, telegraphCompletion);
@@ -222,17 +220,20 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Vector2 start = behaviorOverride.TurretPosition;
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
+            // The multiplication by 0.5 is because this is being rendered to the pixelation target, wherein everything is downscaled by a factor of two, so that it can be upscaled later.
+            Vector2 drawPosition = (start - Main.screenPosition) * 0.5f;
+
             float fadeOut = Utilities.InverseLerp(1f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, telegraphIntensityFactor).Squared();
             Effect effect = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             effect.Parameters["centerOpacity"].SetValue(0.4f);
-            effect.Parameters["mainOpacity"].SetValue(opacity);
+            effect.Parameters["mainOpacity"].SetValue(opacity * 0.4f);
             effect.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.89f);
             effect.Parameters["edgeColor"].SetValue(Vector3.Lerp(new(1.3f, 0.1f, 0.67f), new(4f, 0f, 0f), telegraphIntensityFactor));
             effect.Parameters["centerColor"].SetValue(new Vector3(1f, 0.1f, 0.1f));
             effect.Parameters["edgeBlendLength"].SetValue(0.07f);
             effect.Parameters["edgeBlendStrength"].SetValue(32f);
             effect.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(invisible, start - Main.screenPosition, null, Color.White, telegraphDirection.ToRotation(), invisible.Size() * 0.5f, Vector2.One * fadeOut * telegraphSize, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(invisible, drawPosition, null, Color.White, telegraphDirection.ToRotation(), invisible.Size() * 0.5f, Vector2.One * fadeOut * telegraphSize, SpriteEffects.None, 0f);
         }
 
         public static float LaserTelegraphWidthFunction(float completionRatio, float telegraphIntensity) => MathF.Pow(telegraphIntensity, 2.5f) * 10f;
