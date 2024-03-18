@@ -15,8 +15,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public int AITimer
         {
-            get;
-            set;
+            get => (int)NPC.ai[1];
+            set => NPC.ai[1] = value;
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public bool InPhase2
         {
-            get;
-            set;
+            get => NPC.ai[0] == 1f;
+            set => NPC.ai[0] = value.ToInt();
         }
 
         /// <summary>
