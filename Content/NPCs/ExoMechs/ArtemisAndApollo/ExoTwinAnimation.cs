@@ -12,7 +12,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
     /// Since Artemis and Apollo have the same sheet layout, this type can be used for both of them without issue.
     /// </remarks>
     /// <param name="StartingFrame">The starting frame of the animation.</param>
-    /// <param name="EndingFrame"></param>
+    /// <param name="EndingFrame">The ending frame of the animation</param>
     public record ExoTwinAnimation(int StartingFrame, int EndingFrame)
     {
         /// <summary>
@@ -20,6 +20,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public const int Phase2FrameOffset = 60;
 
+        // TODO -- Would this be better in the phase 2 transition state, when it gets made?
         /// <summary>
         /// The frame that should be used when a lens pops off during the <see cref="EnteringSecondPhase"/> animation.
         /// </summary>
