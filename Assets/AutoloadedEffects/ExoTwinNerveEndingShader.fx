@@ -37,13 +37,13 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Account for texture distortion artifacts in accordance with the primitive distortion fixes.
     coords.y = (coords.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
-    float darkeningShading = 1 - tex2D(shadingTexture, coords * float2(8, 1) * 0.2);
+    float darkeningShading = 0.7 - tex2D(shadingTexture, coords * float2(8, 1) * 0.2);
     float distanceFromCenter = distance(coords.y, 0.5);
-    darkeningShading += smoothstep(0.2, 0.4, distanceFromCenter) * pow(1 - coords.x, 2) * 4;
+    darkeningShading += smoothstep(0.2, 0.4, distanceFromCenter) * pow(1 - coords.x, 2) * 3;
     
     darkeningShading += smoothstep(0.1, 0.4, distanceFromCenter) * smoothstep(0.745, 1, coords.x) * 2;
     
-    color.rgb *= lerp(1, 0.6, darkeningShading);
+    color.rgb *= lerp(1, 0.7, darkeningShading);
         
     return color;
 }
