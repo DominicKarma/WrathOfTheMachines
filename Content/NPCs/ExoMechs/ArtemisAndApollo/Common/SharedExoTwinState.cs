@@ -57,6 +57,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <param name="writer">The binary writer.</param>
         public void WriteTo(BinaryWriter writer)
         {
+            writer.Write((int)AIState);
             writer.Write(StateNumbers.Length);
             for (int i = 0; i < StateNumbers.Length; i++)
                 writer.Write(StateNumbers[i]);
@@ -69,8 +70,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void ReadFrom(BinaryReader reader)
         {
             AIState = (ExoTwinsAIState)reader.ReadInt32();
+            int totalStates = reader.ReadInt32();
 
-            StateNumbers = new float[reader.ReadInt32()];
+            StateNumbers = new float[totalStates];
             for (int i = 0; i < StateNumbers.Length; i++)
                 StateNumbers[i] = reader.ReadSingle();
         }

@@ -1,4 +1,4 @@
 displayName = Calamity: Wrath of the Machines
 author = Dominic Karma
 version = 1.0.0
-modReferences = CalamityMod, SubworldLibrary, Luminance
+modReferences = CalamityMod, Luminance
