@@ -8,14 +8,22 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
     public class SharedExoTwinState
     {
         /// <summary>
+        /// The AI timer shared by Artemis and Apollo.
+        /// </summary>
+        public int AITimer;
+
+        /// <summary>
         /// The current state that both Artemis and Apollo are performing.
         /// </summary>
         public ExoTwinsAIState AIState
         {
             get;
-            private set;
+            set;
         }
 
+        /// <summary>
+        /// Arbitrary numbers that are state-specific and shared mutually by Artemis and Apollo.
+        /// </summary>
         public float[] StateNumbers
         {
             get;
@@ -26,6 +34,21 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         {
             AIState = state;
             StateNumbers = stateNumbers;
+        }
+
+        /// <summary>
+        /// Updates this state.
+        /// </summary>
+        public void Update() => AITimer++;
+
+        /// <summary>
+        /// Resets all mutable data for this state in anticipation of a different one.
+        /// </summary>
+        public void Reset()
+        {
+            AITimer = 0;
+            for (int i = 0; i < StateNumbers.Length; i++)
+                StateNumbers[i] = 0f;
         }
 
         /// <summary>

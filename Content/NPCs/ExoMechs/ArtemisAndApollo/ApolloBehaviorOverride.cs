@@ -1,4 +1,6 @@
 ﻿using CalamityMod.NPCs;
+using CalamityMod.NPCs.ExoMechs.Apollo;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -66,6 +68,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 NPC.netUpdate = true;
             }
 
+            // Use base Calamity's ChargeCombo AIState at all times, Artemis Artemis needs that to be enabled for his CanHitPlayer hook to run.
+            NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
+
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.Opacity = 1f;
             AITimer++;
@@ -74,7 +79,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Apollo/ApolloGlow").Value;
-            CommonExoTwinFunctionalities.DrawBase(NPC, glowmask, lightColor, screenPos, Frame);
+            CommonExoTwinFunctionalities.DrawBase(NPC, glowmask, lightColor, screenPos, Frame, [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)]);
             return false;
         }
     }

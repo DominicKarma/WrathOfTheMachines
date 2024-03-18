@@ -12,11 +12,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 {
     public static class CommonExoTwinFunctionalities
     {
-        /// <summary>
-        /// The target that Artemis and Apollo will attempt to attack.
-        /// </summary>
-        public static Player Target => ExoMechTargetSelector.Target;
-
         private static float NerveEndingWidthFunction(float completionRatio)
         {
             float baseWidth = Utilities.InverseLerp(1f, 0.54f, completionRatio) * 6f;
@@ -72,9 +67,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <param name="lightColor">The color of light at the Exo Twin's position.</param>
         /// <param name="screenPos">The screen position offset.</param>
         /// <param name="frame">The frame of the Exo Twin.</param>
-        public static void DrawBase(NPC twin, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame)
+        /// <param name="nerveEndingPalette">The palette for the nerve endings.</param>
+        public static void DrawBase(NPC twin, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame, Color[] nerveEndingPalette)
         {
-            DrawNerveEndings(twin, [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)]);
+            Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            DrawNerveEndings(twin, nerveEndingPalette);
 
             Texture2D texture = TextureAssets.Npc[twin.type].Value;
             Vector2 drawPosition = twin.Center - screenPos;
