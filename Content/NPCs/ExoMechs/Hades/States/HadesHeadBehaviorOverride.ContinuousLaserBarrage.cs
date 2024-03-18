@@ -21,7 +21,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// How long Hades spends shooting lasers during his ContinuousLaserBarrage attack.
         /// </summary>
-        public static int ContinuousLaserBarrage_ShootTime => Utilities.SecondsToFrames(1.85f);
+        public static int ContinuousLaserBarrage_ShootTime => Utilities.SecondsToFrames(2.3f);
 
         /// <summary>
         /// The standard fly speed at which Hades moves during his ContinuousLaserBarrage attack.
@@ -36,7 +36,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// How close one of Hades' segments has to be to a target in order to fire.
         /// </summary>
-        public static float ContinuousLaserBarrage_ShootProximityRequirement => 1485f;
+        public static float ContinuousLaserBarrage_ShootProximityRequirement => 1085f;
 
         /// <summary>
         /// AI update loop method for the ContinuousLaserBarrage attack.
@@ -56,7 +56,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void DoBehavior_ContinuousLaserBarrage_PerformTelegraphing()
         {
             float telegraphCompletion = Utilities.InverseLerp(0f, ContinuousLaserBarrage_TelegraphTime, AITimer);
-            BodyRenderAction = new(EveryNthSegment(2), new(behaviorOverride =>
+            BodyRenderAction = new(AllSegments(), new(behaviorOverride =>
             {
                 float fireCompletion = ContinuousLaserBarrage_FireCompletion;
                 float indexRatioAlongHades = behaviorOverride.RelativeIndex / (float)BodySegmentCount;
@@ -72,10 +72,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             float idealFlySpeed = slowdownFactor * ContinuousLaserBarrage_StandardFlySpeed;
             float newSpeed = MathHelper.Lerp(NPC.velocity.Length(), idealFlySpeed, 0.005f);
 
-            Vector2 flyDestination = Target.Center + Vector2.UnitY * 650f;
+            Vector2 flyDestination = Target.Center + Vector2.UnitY * 450f;
             float idealDirection = NPC.AngleTo(flyDestination);
             float currentDirection = NPC.velocity.ToRotation();
-            if (NPC.WithinRange(flyDestination, 300f))
+            if (NPC.WithinRange(flyDestination, 800f))
                 idealDirection = currentDirection;
 
             NPC.velocity = currentDirection.AngleTowards(idealDirection, 0.1f).ToRotationVector2() * newSpeed;
@@ -86,11 +86,17 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (ContinuousLaserBarrage_FireCompletion >= 1f)
                 AITimer = 0;
 
-            BodyBehaviorAction = new(EveryNthSegment(2), new(behaviorOverride =>
+            BodyBehaviorAction = new(AllSegments(), new(behaviorOverride =>
             {
                 float fireCompletion = ContinuousLaserBarrage_FireCompletion;
                 NPC segment = behaviorOverride.NPC;
                 float indexRatioAlongHades = behaviorOverride.RelativeIndex / (float)BodySegmentCount;
+
+                if (behaviorOverride.RelativeIndex % 2 == 0)
+                    indexRatioAlongHades *= 0.5f;
+                else
+                    indexRatioAlongHades = indexRatioAlongHades * 0.5f + 0.5f;
+
                 bool readyToFire = fireCompletion > 0f && MathHelper.Distance(indexRatioAlongHades, fireCompletion) <= 0.01f && behaviorOverride.GenericCountdown <= 0f;
                 if (readyToFire && ContinuousLaserBarrage_SegmentCanFire(segment, NPC))
                 {
@@ -99,7 +105,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        float slowdownFactor = Utils.Remap(Target.Distance(laserSpawnPosition), 775f, 1300f, 0.4f, 1f);
+                        float slowdownFactor = Utils.Remap(Target.Distance(laserSpawnPosition), 775f, 1300f, 0.5f, 1f);
                         Vector2 laserVelocity = (Target.Center - laserSpawnPosition).SafeNormalize(Vector2.UnitY) * slowdownFactor * ContinuousLaserBarrage_LaserShootSpeed;
                         Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, laserVelocity, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
 
@@ -109,7 +115,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 }
 
                 bool hasFired = fireCompletion - indexRatioAlongHades >= 0f;
-                if (hasFired || indexRatioAlongHades >= 0.98f)
+                if (hasFired)
                     CloseSegment().Invoke(behaviorOverride);
                 else
                     OpenSegment(smokeQuantityInterpolant: 0.45f).Invoke(behaviorOverride);
@@ -139,6 +145,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         /// <param name="segment">The segment NPC instance.</param>
         /// <param name="head">The head NPC instance.</param>
-        public static bool ContinuousLaserBarrage_SegmentCanFire(NPC segment, NPC head) => segment.WithinRange(Target.Center, ContinuousLaserBarrage_ShootProximityRequirement);
+        public static bool ContinuousLaserBarrage_SegmentCanFire(NPC segment, NPC head) =>
+            segment.WithinRange(Target.Center, ContinuousLaserBarrage_ShootProximityRequirement) && !segment.WithinRange(Target.Center, 300f);
     }
 }

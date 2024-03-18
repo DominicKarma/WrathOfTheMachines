@@ -37,6 +37,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Projectile.hostile = true;
             Projectile.MaxUpdates = 3;
             Projectile.timeLeft = Projectile.MaxUpdates * 240;
+            CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void AI()
@@ -87,11 +88,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <param name="completionRatio">How far along the trail the sampled position is.</param>
         public Color LaserColorFunctionBloom(float completionRatio) => LaserColorFunction(completionRatio) * 0.3f;
 
-        public override bool PreDraw(ref Color lightColor)
-        {
-            return false;
-        }
-
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             ManagedShader shader = ShaderManager.GetShader("HadesLaserShader");
@@ -105,7 +101,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             shader.TrySetParameter("glowIntensity", 0.76f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"), 1, SamplerState.LinearWrap);
 
-            PrimitiveSettings bloomSettings = new(LaserWidthFunctionBloom, LaserColorFunctionBloom, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: shader);
+            PrimitiveSettings bloomSettings = new(LaserWidthFunctionBloom, LaserColorFunctionBloom, _ => Projectile.Size * 0.5f + Projectile.velocity * 3f, Pixelate: true, Shader: shader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, bloomSettings, 21);
         }
     }
