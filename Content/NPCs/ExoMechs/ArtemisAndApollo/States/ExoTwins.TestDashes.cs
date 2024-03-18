@@ -12,10 +12,12 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// AI update loop method for the TestDashes attack.
         /// </summary>
-        /// <param name="twin">The Exo Twin's NPC instance.</param>
+        /// <param name="npc">The Exo Twin's NPC instance.</param>
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void DoBehavior_TestDashes(NPC npc, IExoTwin twinAttributes)
         {
+            twinAttributes.InPhase2 = false;
+
             int hoverTime = 50;
             int reelBackTime = 20;
             int dashTime = 7;
@@ -75,7 +77,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 return;
             }
 
+            SharedState.AIState = ExoTwinsAIState.EnterSecondPhase;
             AITimer = 0;
+            twinAttributes.InPhase2 = false;
         }
     }
 }

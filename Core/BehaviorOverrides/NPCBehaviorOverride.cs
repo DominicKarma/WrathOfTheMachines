@@ -68,6 +68,13 @@ namespace DifferentExoMechs
         public virtual void FindFrame(int frameHeight) { }
 
         /// <summary>
+        /// Allows you to modify the damage, knockback, etc., that an NPC takes from a projectile.
+        /// </summary>
+        /// <param name="projectile">The harming projectile.</param>
+        /// <param name="modifiers">The hit modifier information.</param>
+        public virtual void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers) { }
+
+        /// <summary>
         /// The central rendering method.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to draw with.</param>

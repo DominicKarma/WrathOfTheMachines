@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs;
+﻿using CalamityMod;
+using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -86,6 +87,16 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Apollo/ApolloGlow").Value;
             CommonExoTwinFunctionalities.DrawBase(NPC, this, glowmask, lightColor, screenPos, Frame);
             return false;
+        }
+
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (ExoTwinsStates.DoBehavior_EnterSecondPhase_ApolloIsProtectingArtemis(this))
+            {
+                modifiers.FinalDamage *= ExoTwinsStates.EnterSecondPhase_ApolloDamageProtectionFactor;
+                if (!CalamityLists.projectileDestroyExceptionList.Contains(projectile.type))
+                    projectile.Kill();
+            }
         }
     }
 }

@@ -56,11 +56,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             {
                 Vector2 backwards = -twin.rotation.ToRotationVector2();
                 List<Vector2> nerveDrawPositions = new();
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     float angularChange = MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]);
 
-                    float completionRatio = i / 11f;
+                    float completionRatio = i / 7f;
                     float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
                     Vector2 backwardsOffset = backwards.RotatedBy(angularChange * -0.8f) * completionRatio * 540f;

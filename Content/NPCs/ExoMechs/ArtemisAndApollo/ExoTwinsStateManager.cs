@@ -55,6 +55,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 case ExoTwinsAIState.TestDashes:
                     ExoTwinsStates.DoBehavior_TestDashes(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.EnterSecondPhase:
+                    ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);
+                    break;
             }
         }
     }

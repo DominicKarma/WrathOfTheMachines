@@ -60,6 +60,14 @@ namespace DifferentExoMechs
 
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) => BehaviorOverride?.ReceiveExtraAI(bitReader, binaryReader);
 
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.ModifyHitByProjectile(projectile, ref modifiers);
+        }
+
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (InfernumModeCompatibility.InfernumModeIsActive)
