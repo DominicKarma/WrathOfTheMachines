@@ -119,6 +119,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             else
             {
+                npc.chaseable = false;
+
                 float animationCompletion = Utilities.InverseLerp(0f, EnterSecondPhase_SecondPhaseAnimationTime, AITimer - EnterSecondPhase_SlowDownTime - EnterSecondPhase_ArtemisPhaseTransitionDelay);
                 PerformPhase2TransitionAnimations(npc, twinAttributes, animationCompletion);
 
@@ -127,7 +129,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 {
                     npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center) + 0.5f, 0.1f);
                     npc.velocity *= 0.9f;
-                    npc.chaseable = false;
                 }
 
                 // Otherwise, stick behind Apollo, waiting for his transition animation to finish.
