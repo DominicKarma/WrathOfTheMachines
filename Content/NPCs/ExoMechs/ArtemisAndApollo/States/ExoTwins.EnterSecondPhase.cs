@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs;
+﻿using System;
+using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
 using DifferentExoMechs.Content.Particles;
@@ -183,12 +184,26 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <param name="artemis">Apollo's designated generic attributes.</param>
         public static void ProtectArtemis(NPC apollo, NPC artemis, IExoTwin apolloAttributes)
         {
-            Vector2 guardDestination = artemis.Center + artemis.SafeDirectionTo(Target.Center) * 285f;
+            float guardOffset = MathF.Min(artemis.Distance(Target.Center), 285f);
+            Vector2 guardDestination = artemis.Center + artemis.SafeDirectionTo(Target.Center) * guardOffset;
             apollo.SmoothFlyNear(guardDestination, 0.15f, 0.45f);
             apollo.rotation = apollo.AngleTo(Target.Center);
 
             apolloAttributes.Animation = ExoTwinAnimation.Idle;
-            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / 50f % 1f, apolloAttributes.InPhase2);
+            float animationCompletion = AITimer / 50f % 1f;
+
+            bool playerIsUncomfortablyCloseToArtemis = Target.WithinRange(artemis.Center, 600f);
+            if (playerIsUncomfortablyCloseToArtemis)
+            {
+                apollo.damage = apollo.defDamage;
+                apolloAttributes.Animation = ExoTwinAnimation.Attacking;
+                animationCompletion = SharedState.StateNumbers[0] / 50f % 1f;
+                SharedState.StateNumbers[0]++;
+            }
+            else
+                SharedState.StateNumbers[0] = 0f;
+
+            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
         }
     }
 }
