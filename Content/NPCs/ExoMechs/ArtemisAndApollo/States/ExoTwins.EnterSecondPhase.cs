@@ -1,7 +1,7 @@
 ﻿using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
-using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Projectiles.Boss;
+using DifferentExoMechs.Content.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -37,17 +37,34 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// The offset at which the lens is spawned from the Exo Twins.
         /// </summary>
-        public static float EnterSecondPhase_LensCenterOffset => 70f;
+        public static float EnterSecondPhase_LensCenterOffset => 62f;
 
         /// <summary>
         /// What damage is multiplied by if Apollo is hit by a projectile while protecting Artemis.
         /// </summary>
         public static float EnterSecondPhase_ApolloDamageProtectionFactor => 0.2f;
 
+        /// <summary>
+        /// The sound the Exo Twins make when ejecting their lens.
+        /// </summary>
+        public static readonly SoundStyle LensEjectSound = new("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/LensEject");
+
         public static void ReleaseLens(NPC npc)
         {
-            SoundEngine.PlaySound(Artemis.LensSound, npc.Center);
+            SoundEngine.PlaySound(LensEjectSound, npc.Center);
             ScreenShakeSystem.StartShakeAtPoint(npc.Center, 5f);
+
+            Vector2 lensDirection = npc.rotation.ToRotationVector2();
+            Vector2 lensOffset = lensDirection * EnterSecondPhase_LensCenterOffset;
+            Vector2 lensPosition = npc.Center + lensOffset;
+            for (int i = 0; i < 45; i++)
+            {
+                Color smokeColor = Color.Lerp(Color.White, Color.Gray, Main.rand.NextFloat(0.85f));
+                Vector2 smokeVelocity = lensDirection.RotatedByRandom(0.5f) * Main.rand.NextFloat(4f, 60f);
+                int smokeLifetime = (int)Utils.Remap(smokeVelocity.Length(), 5f, 60f, 50f, 18f) + Main.rand.Next(-5, 10);
+                SmokeParticle smoke = new(lensPosition, smokeVelocity, smokeColor, smokeLifetime, Main.rand.NextFloat(0.7f, 1.3f), 0.15f);
+                smoke.Spawn();
+            }
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -55,10 +72,10 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 if (npc.type == ModContent.NPCType<Apollo>())
                     lensProjectileID = ModContent.ProjectileType<BrokenApolloLens>();
 
-                Vector2 lensDirection = npc.rotation.ToRotationVector2();
-                Vector2 lensOffset = lensDirection * EnterSecondPhase_LensCenterOffset;
                 Vector2 lensPopOffVelocity = lensDirection * EnterSecondPhase_LensPopOffSpeed;
-                Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center + lensOffset, lensPopOffVelocity, lensProjectileID, 0, 0f);
+                Utilities.NewProjectileBetter(npc.GetSource_FromAI(), lensPosition, lensPopOffVelocity, lensProjectileID, 0, 0f);
+
+                npc.netUpdate = true;
             }
         }
 
@@ -104,9 +121,13 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 float animationCompletion = Utilities.InverseLerp(0f, EnterSecondPhase_SecondPhaseAnimationTime, AITimer - EnterSecondPhase_SlowDownTime - EnterSecondPhase_ArtemisPhaseTransitionDelay);
                 PerformPhase2TransitionAnimations(npc, twinAttributes, animationCompletion);
 
-                // Twirl around if Artemis' animation completion is ongoing.
+                // Look to the side if Artemis' animation completion is ongoing.
                 if (animationCompletion > 0f)
-                    npc.rotation += Utilities.Convert01To010(animationCompletion).Cubed() * 0.25f;
+                {
+                    npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center) + 0.5f, 0.1f);
+                    npc.velocity *= 0.9f;
+                    npc.chaseable = false;
+                }
 
                 // Otherwise, stick behind Apollo, waiting for his transition animation to finish.
                 // The intent with this is that Artemis is trying to hide behind him.
@@ -136,9 +157,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public static void PerformPhase2TransitionAnimations(NPC npc, IExoTwin twinAttributes, float animationCompletion)
         {
             if (Collision.SolidCollision(npc.TopLeft - Vector2.One * 150f, npc.width + 300, npc.height + 300))
-                npc.velocity.Y -= 1.5f;
+                npc.velocity.Y -= 2.54f;
             else
-                npc.velocity *= 0.85f;
+                npc.velocity *= 0.81f;
 
             int previousFrame = twinAttributes.Frame;
             twinAttributes.Animation = ExoTwinAnimation.EnteringSecondPhase;
