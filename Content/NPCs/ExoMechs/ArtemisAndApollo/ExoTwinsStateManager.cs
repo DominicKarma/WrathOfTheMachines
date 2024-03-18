@@ -23,15 +23,15 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1)
             {
                 NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
-                if (apollo.active && apollo.type == ExoMechNPCIDs.ApolloID && apollo.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) && behaviorOverride.BehaviorOverride is ApolloBehaviorOverride apolloOverride)
-                    PerformUpdateLoop(apollo, apolloOverride);
+                if (apollo.active && apollo.TryGetBehavior(out ApolloBehaviorOverride apolloAI))
+                    PerformUpdateLoop(apollo, apolloAI);
             }
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1)
             {
                 NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
-                if (artemis.active && artemis.type == ExoMechNPCIDs.ArtemisID && artemis.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) && behaviorOverride.BehaviorOverride is ArtemisBehaviorOverride artemisOverride)
-                    PerformUpdateLoop(artemis, artemisOverride);
+                if (artemis.active && artemis.TryGetBehavior(out ArtemisBehaviorOverride artemisAI))
+                    PerformUpdateLoop(artemis, artemisAI);
             }
         }
 

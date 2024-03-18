@@ -130,7 +130,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 return;
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!hades.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not HadesHeadBehaviorOverride hadesAI)
+            if (!hades.TryGetBehavior(out HadesHeadBehaviorOverride hadesAI))
                 return;
 
             if (!hadesAI.BodyBehaviorAction?.Condition(NPC, RelativeIndex) ?? false)
@@ -148,7 +148,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 return;
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!hades.TryGetGlobalNPC(out NPCOverrideGlobalManager behaviorOverride) || behaviorOverride.BehaviorOverride is not HadesHeadBehaviorOverride hadesAI)
+            if (!hades.TryGetBehavior(out HadesHeadBehaviorOverride hadesAI))
                 return;
 
             if (!hadesAI.BodyRenderAction?.Condition(NPC, RelativeIndex) ?? false)
