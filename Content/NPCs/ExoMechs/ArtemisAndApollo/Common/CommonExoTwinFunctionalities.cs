@@ -12,6 +12,21 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 {
     public static class CommonExoTwinFunctionalities
     {
+        /// <summary>
+        /// How perpendicularly offset the optic nerves next to the Exo Twins' thrusters are at the start of the rendered primitive.
+        /// </summary>
+        public const float StartingOpticNerveExtrusion = 32f;
+
+        /// <summary>
+        /// How perpendicularly offset the optic nerves next to the Exo Twins' thrusters are at the end of the rendered primitive.
+        /// </summary>
+        public const float EndingOpticNerveExtrusion = 6f;
+
+        /// <summary>
+        /// How long the optic nerves behind the Exo Twins are.
+        /// </summary>
+        public const float EndingOpticLength = 540f;
+
         private static float NerveEndingWidthFunction(float completionRatio)
         {
             float baseWidth = Utilities.InverseLerp(1f, 0.54f, completionRatio) * 6f;
@@ -20,7 +35,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         }
 
         /// <summary>
-        /// Draws nerve endings for a given Exo Twin.
+        /// Draws optic nerve endings for a given Exo Twin.
         /// </summary>
         /// <param name="twin">The Exo Twin's NPC instance.</param>
         /// <param name="nerveEndingPalette">The palette for the nerve endings.</param>
@@ -40,22 +55,22 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             for (int direction = -1; direction <= 1; direction += 2)
             {
                 Vector2 backwards = -twin.rotation.ToRotationVector2();
-                List<Vector2> ribbonDrawPositions = new();
+                List<Vector2> nerveDrawPositions = new();
                 for (int i = 0; i < 12; i++)
                 {
                     float angularChange = MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]);
 
-                    float ribbonCompletionRatio = i / 11f;
-                    float inwardBendInterpolant = MathF.Pow(Utilities.InverseLerp(0f, 0.38f, ribbonCompletionRatio) * ribbonCompletionRatio, 1.2f);
-                    float outwardExtrusion = MathHelper.Lerp(32f, 6f, inwardBendInterpolant);
-                    Vector2 ribbonSegmentOffset = backwards.RotatedBy(angularChange * -0.8f) * ribbonCompletionRatio * 540f;
-                    Vector2 ribbonOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2);
+                    float completionRatio = i / 11f;
+                    float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
+                    float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
+                    Vector2 backwardsOffset = backwards.RotatedBy(angularChange * -0.8f) * completionRatio * 540f;
+                    Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2);
 
-                    ribbonDrawPositions.Add(twin.Center + ribbonSegmentOffset + ribbonOffset);
+                    nerveDrawPositions.Add(twin.Center + backwardsOffset + perpendicularOffset);
                 }
 
                 PrimitiveSettings settings = new(NerveEndingWidthFunction, nerveEndingColorFunction, Shader: nerveEndingShader);
-                PrimitiveRenderer.RenderTrail(ribbonDrawPositions, settings, 41);
+                PrimitiveRenderer.RenderTrail(nerveDrawPositions, settings, 40);
             }
         }
 
@@ -77,7 +92,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             Vector2 drawPosition = twin.Center - screenPos;
             Rectangle frameRectangle = texture.Frame(10, 9, frame / 9, frame % 9);
 
-            // The sheet appears to be malformed? Not doing this causes single-frame jitters when updating the horizontal frame.
+            // The Exo Twin sheets appear to be malformed? Not doing this causes single-pixel jitters when increasing the horizontal frame.
+            // This just corrects that erroneous behavior by offsetting the frame's position by 1 for every horizontal frame past the first one.
             frameRectangle.X += frame / 9;
 
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
