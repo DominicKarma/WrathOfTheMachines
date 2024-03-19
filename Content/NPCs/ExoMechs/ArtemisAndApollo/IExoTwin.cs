@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
@@ -41,6 +42,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public Color[] OpticNervePalette
         {
             get;
+        }
+
+        /// <summary>
+        /// A specific, optionally definable draw action that may be used for specific, circumstantial effects.
+        /// </summary>
+        public Action? SpecificDrawAction
+        {
+            get;
+            set;
         }
     }
 }

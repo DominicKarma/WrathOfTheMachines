@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs;
+﻿using System;
+using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -56,6 +57,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         } = ExoTwinAnimation.Idle;
 
         /// <summary>
+        /// Artemis' specific draw action.
+        /// </summary>
+        public Action? SpecificDrawAction
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Artemis' optic nerve colors.
         /// </summary>
         public Color[] OpticNervePalette => [new(75, 14, 6), new(145, 35, 4), new(204, 101, 24), new(254, 172, 84), new(224, 147, 40)];
@@ -77,6 +87,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
+            SpecificDrawAction = null;
             NPC.Opacity = 1f;
             AITimer++;
         }

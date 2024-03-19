@@ -98,6 +98,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
+
+            twinInterface.SpecificDrawAction?.Invoke();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System;
+using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using Luminance.Common.Utilities;
@@ -57,6 +58,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         } = ExoTwinAnimation.Idle;
 
         /// <summary>
+        /// Apollo's specific draw action.
+        /// </summary>
+        public Action? SpecificDrawAction
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Apollo's optic nerve colors.
         /// </summary>
         public Color[] OpticNervePalette => [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)];
@@ -78,6 +88,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
 
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
+            SpecificDrawAction = null;
             NPC.Opacity = 1f;
             AITimer++;
         }
