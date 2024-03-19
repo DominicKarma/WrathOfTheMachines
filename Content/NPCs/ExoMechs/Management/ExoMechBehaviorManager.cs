@@ -121,6 +121,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (PreviouslySummonedMechIDs.Count >= 1)
                 PreviouslySummonedMechIDs.Clear();
 
+            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
             FightState = ExoMechFightState.UndefinedFightState;
         }
 
@@ -135,7 +136,6 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             bool fightIsOngoing = hadesIsPresent || aresIsPresent || artemisAndApolloArePresent;
             if (!fightIsOngoing)
             {
-                CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
                 ResetBattleState();
                 return;
             }

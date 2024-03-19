@@ -218,7 +218,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// </summary>
         public void ExecuteCurrentState()
         {
-            CurrentState = HadesAIState.PerpendicularBodyLaserBlasts;
+            CurrentState = HadesAIState.ContinuousLaserBarrage;
 
             switch (CurrentState)
             {

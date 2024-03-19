@@ -86,7 +86,16 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             if (AITimer < PerpendicularBodyLaserBlasts_RedirectTime)
                 DoBehavior_PerpendicularBodyLaserBlasts_MoveNearPlayer();
             else if (AITimer < PerpendicularBodyLaserBlasts_RedirectTime + PerpendicularBodyLaserBlasts_BlastTelegraphTime)
+            {
                 DoBehavior_PerpendicularBodyLaserBlasts_CreateBlastTelegraphs();
+                DoBehavior_PerpendicularBodyLaserBlasts_UpdateSegments();
+
+                if (AITimer == PerpendicularBodyLaserBlasts_RedirectTime + 1)
+                    SoundEngine.PlaySound(LaserChargeUpSound);
+
+                // Slow down.
+                NPC.velocity *= 0.97f;
+            }
             else
             {
                 PerpendicularBodyLaserBlasts_HasReachedDestination = false;
@@ -139,51 +148,13 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void DoBehavior_PerpendicularBodyLaserBlasts_CreateBlastTelegraphs()
         {
             int localAITimer = AITimer - PerpendicularBodyLaserBlasts_RedirectTime;
-            if (localAITimer == 1)
-                SoundEngine.PlaySound(LaserChargeUpSound);
-
-            NPC.velocity *= 0.97f;
-
-            var bodySegmentCondition = EveryNthSegment(PerpendicularBodyLaserBlasts_SegmentUsageCycle, PerpendicularBodyLaserBlasts_SegmentUsageCycle - 1);
             float telegraphCompletion = localAITimer / (float)PerpendicularBodyLaserBlasts_BlastTelegraphTime;
-            BodyBehaviorAction = new(bodySegmentCondition, new(behaviorOverride =>
-            {
-                if (localAITimer == (int)(PerpendicularBodyLaserBlasts_BlastTelegraphTime * PerpendicularBodyLaserBlasts_BurstShootCompletionRatio) && PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
-                {
-                    ScreenShakeSystem.StartShake(3.2f);
-
-                    NPC segment = behaviorOverride.NPC;
-                    SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { MaxInstances = 0, Volume = 0.15f }, segment.Center);
-
-                    Vector2 perpendicular = segment.rotation.ToRotationVector2();
-                    Vector2 laserSpawnPosition = behaviorOverride.TurretPosition;
-                    for (int i = 0; i < 10; i++)
-                    {
-                        int laserLineLifetime = Main.rand.Next(10, 30);
-                        float laserLineSpeed = Main.rand.NextFloat(9f, 20f);
-                        LineParticle line = new(laserSpawnPosition, perpendicular.RotatedByRandom(0.5f) * laserLineSpeed, false, laserLineLifetime, 1f, Color.Red);
-                        GeneralParticleHandler.SpawnParticle(line);
-
-                        line = new(laserSpawnPosition, perpendicular.RotatedByRandom(0.5f) * -laserLineSpeed, false, laserLineLifetime, 1f, Color.Red);
-                        GeneralParticleHandler.SpawnParticle(line);
-                    }
-
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
-                        Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicular * -PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1, 60f, -1f);
-                    }
-                }
-
-                behaviorOverride.ShouldReorientDirection = false;
-
-                OpenSegment().Invoke(behaviorOverride);
-            }));
-            BodyRenderAction = new(bodySegmentCondition, new(behaviorOverride =>
+            BodyRenderAction = new(EveryNthSegment(PerpendicularBodyLaserBlasts_SegmentUsageCycle), new(behaviorOverride =>
             {
                 if (!PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
                     return;
 
+                // Render laser telegraphs.
                 PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
                 {
                     RenderLaserTelegraph(behaviorOverride, telegraphCompletion, 1000f, -behaviorOverride.NPC.rotation.ToRotationVector2());
@@ -191,8 +162,68 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
                 }, PixelationPrimitiveLayer.AfterNPCs);
             }));
 
-            float rumblePower = Utilities.InverseLerpBump(0f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio + 0.04f, telegraphCompletion);
+            float shootCompletionRatio = PerpendicularBodyLaserBlasts_BurstShootCompletionRatio;
+            float rumblePower = Utilities.InverseLerpBump(0f, shootCompletionRatio, shootCompletionRatio, shootCompletionRatio + 0.04f, telegraphCompletion);
             ScreenShakeSystem.SetUniversalRumble(rumblePower * 1.3f);
+        }
+
+        /// <summary>
+        /// Makes Hades update all of his segments in preparation of his PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public void DoBehavior_PerpendicularBodyLaserBlasts_UpdateSegments()
+        {
+            int localAITimer = AITimer - PerpendicularBodyLaserBlasts_RedirectTime;
+            BodyBehaviorAction = new(EveryNthSegment(PerpendicularBodyLaserBlasts_SegmentUsageCycle), new(behaviorOverride =>
+            {
+                bool timeToFire = localAITimer == (int)(PerpendicularBodyLaserBlasts_BlastTelegraphTime * PerpendicularBodyLaserBlasts_BurstShootCompletionRatio);
+                if (timeToFire && PerpendicularBodyLaserBlasts_SegmentCanFire(behaviorOverride.NPC, NPC))
+                    PerpendicularBodyLaserBlasts_FireLaser(behaviorOverride);
+
+                // Disable natural reorientation of segments, to ensure that they stay in the same place before they fire.
+                behaviorOverride.ShouldReorientDirection = false;
+
+                OpenSegment().Invoke(behaviorOverride);
+            }));
+        }
+
+        /// <summary>
+        /// Creates a burst of particles at a given point in a given direction. Meant to be used in conjunction with laser bursts spawns on one of Hades' segments.
+        /// </summary>
+        /// <param name="laserSpawnPosition">The spawn position of the laser particles.</param>
+        /// <param name="laserShootDirection">The shoot direction of the laser particles.</param>
+        public static void PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(Vector2 laserSpawnPosition, Vector2 laserShootDirection)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                int laserLineLifetime = Main.rand.Next(10, 30);
+                float laserLineSpeed = Main.rand.NextFloat(9f, 20f);
+                LineParticle line = new(laserSpawnPosition, laserShootDirection.RotatedByRandom(0.5f) * laserLineSpeed, false, laserLineLifetime, 1f, Color.Red);
+                GeneralParticleHandler.SpawnParticle(line);
+            }
+        }
+
+        /// <summary>
+        /// Fires two lasers perpendicular to a given segment of Hades'.
+        /// </summary>
+        /// <param name="bodyAI">The behavior override of the body segment that should fire.</param>
+        public static void PerpendicularBodyLaserBlasts_FireLaser(HadesBodyBehaviorOverride bodyAI)
+        {
+            NPC segment = bodyAI.NPC;
+            Vector2 laserSpawnPosition = bodyAI.TurretPosition;
+
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { MaxInstances = 0, Volume = 0.15f }, laserSpawnPosition);
+
+            Vector2 perpendicularDirection = segment.rotation.ToRotationVector2();
+            PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, -perpendicularDirection);
+            PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, perpendicularDirection);
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1);
+                Utilities.NewProjectileBetter(segment.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * -PerpendicularBodyLaserBlasts_LaserShootSpeed, ModContent.ProjectileType<HadesLaserBurst>(), BasicLaserDamage, 0f, -1);
+            }
+
+            ScreenShakeSystem.StartShake(3.2f);
         }
 
         /// <summary>
@@ -226,7 +257,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             float fadeOut = Utilities.InverseLerp(1f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, telegraphIntensityFactor).Squared();
             Effect effect = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             effect.Parameters["centerOpacity"].SetValue(0.4f);
-            effect.Parameters["mainOpacity"].SetValue(opacity * 0.4f);
+            effect.Parameters["mainOpacity"].SetValue(opacity * 0.3f);
             effect.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.89f);
             effect.Parameters["edgeColor"].SetValue(Vector3.Lerp(new(1.3f, 0.1f, 0.67f), new(4f, 0f, 0f), telegraphIntensityFactor));
             effect.Parameters["centerColor"].SetValue(new Vector3(1f, 0.1f, 0.1f));
