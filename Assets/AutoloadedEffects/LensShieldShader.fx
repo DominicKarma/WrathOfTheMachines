@@ -32,8 +32,8 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float glow = edgeGlow + centerGlow;
     
     // Calculate noise values.
-    float2 noiseCoords = RotatedBy(coords - 0.5, globalTime * 0.3) + 0.5;
-    float noiseResult = clamp(tex2D(noiseTexture, noiseCoords).r + tex2D(techyNoiseTexture, coords * 0.5).r, 0, 2);
+    float2 noiseCoords = RotatedBy(coords - 0.5, globalTime * 1.75) + 0.5;
+    float noiseResult = clamp(tex2D(noiseTexture, noiseCoords).r + tex2D(techyNoiseTexture, coords * 0.5 + float2(0, globalTime * 0.08)).r, 0, 2);
     
     // Combine everything together.
     float4 color = glowColor * pow(noiseResult, 3.5 + (0.5 - distanceFromCenter) * 10) * 0.63;
