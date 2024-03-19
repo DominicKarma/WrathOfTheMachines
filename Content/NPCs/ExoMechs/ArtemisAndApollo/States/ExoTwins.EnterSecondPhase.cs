@@ -11,7 +11,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public static partial class ExoTwinsStates
     {
@@ -143,7 +143,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
                 if (twinAttributes.InPhase2)
                 {
-                    SharedState.AIState = ExoTwinsAIState.TestDashes;
+                    SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
                     AITimer = 0;
                     twinAttributes.InPhase2 = false;
                 }
@@ -198,11 +198,11 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             {
                 apollo.damage = apollo.defDamage;
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
-                animationCompletion = SharedState.StateNumbers[0] / 50f % 1f;
-                SharedState.StateNumbers[0]++;
+                animationCompletion = SharedState.Values[0] / 50f % 1f;
+                SharedState.Values[0]++;
             }
             else
-                SharedState.StateNumbers[0] = 0f;
+                SharedState.Values[0] = 0f;
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
         }

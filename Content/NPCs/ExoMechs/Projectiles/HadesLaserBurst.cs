@@ -10,7 +10,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>
     {

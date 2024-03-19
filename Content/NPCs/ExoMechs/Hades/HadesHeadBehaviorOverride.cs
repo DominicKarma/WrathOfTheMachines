@@ -13,7 +13,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {

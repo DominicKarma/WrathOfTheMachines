@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public sealed class HadesBodyBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {

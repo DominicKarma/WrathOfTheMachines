@@ -1,4 +1,4 @@
-﻿namespace DifferentExoMechs.Content.NPCs.Bosses
+﻿namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public interface IHadesSegment
     {

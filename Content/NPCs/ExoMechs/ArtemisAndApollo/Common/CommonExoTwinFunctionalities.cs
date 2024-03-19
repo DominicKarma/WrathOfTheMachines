@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public static class CommonExoTwinFunctionalities
     {

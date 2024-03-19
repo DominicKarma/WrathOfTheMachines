@@ -3,7 +3,7 @@ using CalamityMod.NPCs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public class ExoTwinsStateManager : ModSystem
     {
@@ -52,8 +52,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
 
             switch (SharedState.AIState)
             {
-                case ExoTwinsAIState.TestDashes:
-                    ExoTwinsStates.DoBehavior_TestDashes(twin, twinAttributes);
+                case ExoTwinsAIState.DashesAndLasers:
+                    ExoTwinsStates.DoBehavior_DashesAndLasers(twin, twinAttributes);
                     break;
                 case ExoTwinsAIState.EnterSecondPhase:
                     ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);

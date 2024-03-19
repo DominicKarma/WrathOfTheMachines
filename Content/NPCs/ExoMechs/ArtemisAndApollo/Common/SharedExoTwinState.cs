@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// A representation of a shared collection of state variables, that both Artemis and Apollo access for their attacks.
@@ -24,7 +24,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         /// <summary>
         /// Arbitrary numbers that are state-specific and shared mutually by Artemis and Apollo.
         /// </summary>
-        public float[] StateNumbers
+        public float[] Values
         {
             get;
             private set;
@@ -33,7 +33,7 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public SharedExoTwinState(ExoTwinsAIState state, float[] stateNumbers)
         {
             AIState = state;
-            StateNumbers = stateNumbers;
+            Values = stateNumbers;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void Reset()
         {
             AITimer = 0;
-            for (int i = 0; i < StateNumbers.Length; i++)
-                StateNumbers[i] = 0f;
+            for (int i = 0; i < Values.Length; i++)
+                Values[i] = 0f;
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
         public void WriteTo(BinaryWriter writer)
         {
             writer.Write((int)AIState);
-            writer.Write(StateNumbers.Length);
-            for (int i = 0; i < StateNumbers.Length; i++)
-                writer.Write(StateNumbers[i]);
+            writer.Write(Values.Length);
+            for (int i = 0; i < Values.Length; i++)
+                writer.Write(Values[i]);
         }
 
         /// <summary>
@@ -72,9 +72,9 @@ namespace DifferentExoMechs.Content.NPCs.Bosses
             AIState = (ExoTwinsAIState)reader.ReadInt32();
             int totalStates = reader.ReadInt32();
 
-            StateNumbers = new float[totalStates];
-            for (int i = 0; i < StateNumbers.Length; i++)
-                StateNumbers[i] = reader.ReadSingle();
+            Values = new float[totalStates];
+            for (int i = 0; i < Values.Length; i++)
+                Values[i] = reader.ReadSingle();
         }
     }
 }

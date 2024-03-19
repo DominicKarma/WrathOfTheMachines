@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.Sounds;
+using DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -8,7 +9,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride
     {

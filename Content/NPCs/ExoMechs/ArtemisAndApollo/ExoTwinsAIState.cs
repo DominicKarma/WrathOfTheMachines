@@ -1,8 +1,8 @@
-﻿namespace DifferentExoMechs.Content.NPCs.Bosses
+﻿namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public enum ExoTwinsAIState
     {
         EnterSecondPhase,
-        TestDashes
+        DashesAndLasers
     }
 }

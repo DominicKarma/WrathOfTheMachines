@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.Bosses
+namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public sealed partial class ArtemisBehaviorOverride : NPCBehaviorOverride, IExoTwin
     {
