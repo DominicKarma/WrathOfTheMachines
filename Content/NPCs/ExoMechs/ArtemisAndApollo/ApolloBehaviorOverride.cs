@@ -90,6 +90,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
+            NPC.damage = 0;
             AITimer++;
         }
 

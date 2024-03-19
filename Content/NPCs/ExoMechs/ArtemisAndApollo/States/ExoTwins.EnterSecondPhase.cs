@@ -2,10 +2,12 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
+using DifferentExoMechs.Assets;
 using DifferentExoMechs.Content.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -15,6 +17,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
     public static partial class ExoTwinsStates
     {
+        /// <summary>
+        /// The opacity of Apollo's forcefield while protecting Artemis.
+        /// </summary>
+        public static ref float EnterSecondPhase_ProtectiveForcefieldOpacity => ref SharedState.Values[1];
+
         /// <summary>
         /// How long the Exo Twins spend slowing down in place before beginning their phase transition.
         /// </summary>
@@ -205,6 +212,29 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 SharedState.Values[0] = 0f;
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
+            apolloAttributes.SpecificDrawAction = () => ProjectLensShield(apollo);
+            EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity + 0.05f);
+        }
+
+        public static void ProjectLensShield(NPC apollo)
+        {
+            Main.spriteBatch.PrepareForShaders();
+
+            ManagedShader shieldShader = ShaderManager.GetShader("LensShieldShader");
+            shieldShader.TrySetParameter("glowColor", new Vector4(0.3f, 1.1f, 1f, 1f));
+            shieldShader.TrySetParameter("edgeGlowIntensity", 0.041f);
+            shieldShader.TrySetParameter("centerGlowIntensity", 0.06f);
+            shieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
+            shieldShader.Apply();
+
+            Texture2D noise = MiscTexturesRegistry.RadialNoise.Value;
+            Vector2 drawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
+            Vector2 scale = new Vector2(150f, 400f) / noise.Size() * EnterSecondPhase_ProtectiveForcefieldOpacity;
+
+            float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Main.spriteBatch.Draw(noise, drawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, scale, 0, 0f);
+
+            Main.spriteBatch.ResetToDefault();
         }
     }
 }
