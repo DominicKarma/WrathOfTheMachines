@@ -133,9 +133,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 PerformPhase2TransitionAnimations(npc, twinAttributes, animationCompletion);
 
                 // Look to the side if Artemis' animation completion is ongoing.
+                NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
                 if (animationCompletion > 0f)
                 {
-                    npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center) + 0.5f, 0.1f);
+                    npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(apollo.Center) + 0.5f, 0.28f);
                     npc.velocity *= 0.9f;
                 }
 
@@ -143,7 +144,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 // The intent with this is that Artemis is trying to hide behind him.
                 else
                 {
-                    NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
                     Vector2 behindApollo = apollo.Center + Target.SafeDirectionTo(apollo.Center) * 360f;
                     npc.SmoothFlyNear(behindApollo, 0.11f, 0.8f);
                     npc.rotation = npc.AngleTo(Target.Center);
@@ -213,42 +213,57 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 SharedState.Values[0] = 0f;
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
-            apolloAttributes.SpecificDrawAction = () => ProjectLensShield(apollo);
             EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity + 0.05f);
+            apolloAttributes.SpecificDrawAction = () =>
+            {
+                ProjectLensShield(apollo, false);
+                //PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
+            };
         }
 
-        public static void ProjectLensShield(NPC apollo)
+        public static void ProjectLensShield(NPC apollo, bool pixelated)
         {
-            Main.spriteBatch.PrepareForShaders();
-
-            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-
-            float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
-            Effect spread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
-            Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
-            spread.Parameters["centerOpacity"].SetValue(1f);
-            spread.Parameters["mainOpacity"].SetValue(0.5f);
-            spread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.12f);
-            spread.Parameters["edgeColor"].SetValue(new Vector3(0f, 3f, 3f));
-            spread.Parameters["centerColor"].SetValue(new Vector3(0f, 1f, 0.7f));
-            spread.Parameters["edgeBlendLength"].SetValue(0.07f);
-            spread.Parameters["edgeBlendStrength"].SetValue(32f);
-            spread.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * 500f, SpriteEffects.None, 0f);
-
-            ManagedShader shieldShader = ShaderManager.GetShader("LensShieldShader");
-            shieldShader.TrySetParameter("glowColor", new Vector4(0.3f, 1.1f, 1f, 1f));
-            shieldShader.TrySetParameter("edgeGlowIntensity", 0.041f);
-            shieldShader.TrySetParameter("centerGlowIntensity", 0.06f);
-            shieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
-            shieldShader.Apply();
+            if (!pixelated)
+                Main.spriteBatch.PrepareForShaders();
 
             Texture2D noise = MiscTexturesRegistry.RadialNoise.Value;
-            Vector2 scale = new Vector2(150f, 400f) / noise.Size() * EnterSecondPhase_ProtectiveForcefieldOpacity;
-            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
-            Main.spriteBatch.Draw(noise, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, scale, 0, 0f);
+            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
-            Main.spriteBatch.ResetToDefault();
+            float spreadScale = 500f;
+            float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Vector2 forcefieldScale = new Vector2(150f, 400f) / noise.Size() * EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
+            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
+            if (pixelated)
+            {
+                spreadScale *= 0.5f;
+                forcefieldScale *= 0.5f;
+                spreadDrawPosition *= 0.5f;
+                forcefieldDrawPosition *= 0.5f;
+            }
+
+            Effect hologramSpread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
+            hologramSpread.Parameters["centerOpacity"].SetValue(1f);
+            hologramSpread.Parameters["mainOpacity"].SetValue(0.3f);
+            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.12f);
+            hologramSpread.Parameters["edgeColor"].SetValue(new Vector3(0f, 5f, 2.25f));
+            hologramSpread.Parameters["centerColor"].SetValue(new Vector3(0f, 0.9f, 0.6f));
+            hologramSpread.Parameters["edgeBlendLength"].SetValue(0.04f);
+            hologramSpread.Parameters["edgeBlendStrength"].SetValue(100f);
+            hologramSpread.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, SpriteEffects.None, 0f);
+
+            ManagedShader forcefieldShader = ShaderManager.GetShader("LensShieldShader");
+            forcefieldShader.TrySetParameter("glowColor", new Vector4(0.3f, 1.1f, 1f, 1f));
+            forcefieldShader.TrySetParameter("edgeGlowIntensity", 0.0178f);
+            forcefieldShader.TrySetParameter("centerGlowIntensity", 0.03f);
+            forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
+            forcefieldShader.Apply();
+
+            Main.spriteBatch.Draw(noise, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, forcefieldScale, 0, 0f);
+
+            if (!pixelated)
+                Main.spriteBatch.ResetToDefault();
         }
     }
 }
