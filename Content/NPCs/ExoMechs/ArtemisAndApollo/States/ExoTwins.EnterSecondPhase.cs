@@ -2,7 +2,6 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
-using DifferentExoMechs.Assets;
 using DifferentExoMechs.Content.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -213,11 +212,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 SharedState.Values[0] = 0f;
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
+
             EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity + 0.05f);
             apolloAttributes.SpecificDrawAction = () =>
             {
                 ProjectLensShield(apollo, false);
-                //PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
             };
         }
 
@@ -226,12 +225,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (!pixelated)
                 Main.spriteBatch.PrepareForShaders();
 
-            Texture2D noise = MiscTexturesRegistry.RadialNoise.Value;
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
+            Texture2D forcefield = ModContent.Request<Texture2D>("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
             float spreadScale = 500f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
-            Vector2 forcefieldScale = new Vector2(150f, 400f) / noise.Size() * EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Vector2 forcefieldScale = Vector2.One * EnterSecondPhase_ProtectiveForcefieldOpacity;
             Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
             Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
             if (pixelated)
@@ -260,7 +259,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
             forcefieldShader.Apply();
 
-            Main.spriteBatch.Draw(noise, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, forcefieldScale, 0, 0f);
+            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
 
             if (!pixelated)
                 Main.spriteBatch.ResetToDefault();

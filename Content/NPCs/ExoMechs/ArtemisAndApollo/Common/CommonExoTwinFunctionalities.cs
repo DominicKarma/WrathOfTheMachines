@@ -92,9 +92,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Vector2 drawPosition = twin.Center - screenPos;
             Rectangle frameRectangle = texture.Frame(10, 9, frame / 9, frame % 9);
 
-            // The Exo Twin sheets appear to be malformed? Not doing this causes single-pixel jitters when increasing the horizontal frame.
+            // Apollo's sheet appears to be malformed? Not doing this causes single-pixel jitters when increasing the horizontal frame.
             // This just corrects that erroneous behavior by offsetting the frame's position by 1 for every horizontal frame past the first one.
-            frameRectangle.X += frame / 9;
+            if (twin.type == ExoMechNPCIDs.ApolloID)
+                frameRectangle.X += frame / 9;
 
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
