@@ -82,6 +82,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 ApolloSummonCheckPerformed = true;
                 NPC.netUpdate = true;
             }
+            else if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].type == ExoMechNPCIDs.ApolloID)
+            {
+                NPC.realLife = CalamityGlobalNPC.draedonExoMechTwinGreen;
+                NPC.life = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].life;
+            }
 
             // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
