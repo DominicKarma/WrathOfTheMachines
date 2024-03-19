@@ -256,15 +256,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Vector2 drawPosition = (start - Main.screenPosition) * 0.5f;
 
             float fadeOut = Utilities.InverseLerp(1f, PerpendicularBodyLaserBlasts_BurstShootCompletionRatio, telegraphIntensityFactor).Squared();
-            Effect effect = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
-            effect.Parameters["centerOpacity"].SetValue(0.4f);
-            effect.Parameters["mainOpacity"].SetValue(opacity * 0.3f);
-            effect.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.89f);
-            effect.Parameters["edgeColor"].SetValue(Vector3.Lerp(new(1.3f, 0.1f, 0.67f), new(4f, 0f, 0f), telegraphIntensityFactor));
-            effect.Parameters["centerColor"].SetValue(new Vector3(1f, 0.1f, 0.1f));
-            effect.Parameters["edgeBlendLength"].SetValue(0.07f);
-            effect.Parameters["edgeBlendStrength"].SetValue(32f);
-            effect.CurrentTechnique.Passes[0].Apply();
+            Effect spread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
+            spread.Parameters["centerOpacity"].SetValue(0.4f);
+            spread.Parameters["mainOpacity"].SetValue(opacity * 0.3f);
+            spread.Parameters["halfSpreadAngle"].SetValue((1.1f - opacity) * fadeOut * 0.89f);
+            spread.Parameters["edgeColor"].SetValue(Vector3.Lerp(new(1.3f, 0.1f, 0.67f), new(4f, 0f, 0f), telegraphIntensityFactor));
+            spread.Parameters["centerColor"].SetValue(new Vector3(1f, 0.1f, 0.1f));
+            spread.Parameters["edgeBlendLength"].SetValue(0.07f);
+            spread.Parameters["edgeBlendStrength"].SetValue(32f);
+            spread.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.Draw(invisible, drawPosition, null, Color.White, telegraphDirection.ToRotation(), invisible.Size() * 0.5f, Vector2.One * fadeOut * telegraphSize, SpriteEffects.None, 0f);
         }
 

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -220,6 +221,21 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         {
             Main.spriteBatch.PrepareForShaders();
 
+            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
+
+            float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Effect spread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
+            Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
+            spread.Parameters["centerOpacity"].SetValue(1f);
+            spread.Parameters["mainOpacity"].SetValue(0.5f);
+            spread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.12f);
+            spread.Parameters["edgeColor"].SetValue(new Vector3(0f, 3f, 3f));
+            spread.Parameters["centerColor"].SetValue(new Vector3(0f, 1f, 0.7f));
+            spread.Parameters["edgeBlendLength"].SetValue(0.07f);
+            spread.Parameters["edgeBlendStrength"].SetValue(32f);
+            spread.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * 500f, SpriteEffects.None, 0f);
+
             ManagedShader shieldShader = ShaderManager.GetShader("LensShieldShader");
             shieldShader.TrySetParameter("glowColor", new Vector4(0.3f, 1.1f, 1f, 1f));
             shieldShader.TrySetParameter("edgeGlowIntensity", 0.041f);
@@ -228,11 +244,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             shieldShader.Apply();
 
             Texture2D noise = MiscTexturesRegistry.RadialNoise.Value;
-            Vector2 drawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
             Vector2 scale = new Vector2(150f, 400f) / noise.Size() * EnterSecondPhase_ProtectiveForcefieldOpacity;
-
-            float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
-            Main.spriteBatch.Draw(noise, drawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, scale, 0, 0f);
+            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
+            Main.spriteBatch.Draw(noise, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, noise.Size() * 0.5f, scale, 0, 0f);
 
             Main.spriteBatch.ResetToDefault();
         }
