@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
@@ -18,6 +19,56 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// The amount of damage basic lasers from Artemis do.
         /// </summary>
         public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
+
+        /// <summary>
+        /// How long Apollo spends hovering during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ApolloHoverTime => Utilities.SecondsToFrames(0.667f);
+
+        /// <summary>
+        /// How long Apollo spends reeling back during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ApolloReelBackTime => Utilities.SecondsToFrames(0.6f);
+
+        /// <summary>
+        /// How long Apollo spends dashing during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ApolloDashTime => Utilities.SecondsToFrames(0.156f);
+
+        /// <summary>
+        /// How long Apollo spends slowing down after dashing in the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ApolloSlowDownTime => Utilities.SecondsToFrames(0.3f);
+
+        /// <summary>
+        /// How long attack cycles go on for during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_AttackCycleTime => DashesAndLasers_ApolloHoverTime + DashesAndLasers_ApolloReelBackTime + DashesAndLasers_ApolloDashTime + DashesAndLasers_ApolloSlowDownTime;
+
+        /// <summary>
+        /// The rate at which Artemis shoots lasers during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ArtemisShootRate => Utilities.SecondsToFrames(0.075f);
+
+        /// <summary>
+        /// How long Artemis spends shoots lasers during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_ArtemisShootTime => DashesAndLasers_ApolloHoverTime;
+
+        /// <summary>
+        /// How much Artemis arcs around when firing lasers during the DashesAndLasers attack.
+        /// </summary>
+        public static float DashesAndLasers_ArtemisShootArc => MathHelper.ToRadians(42f);
+
+        /// <summary>
+        /// The speed at which Apollo dashes during the DashesAndLasers attack.
+        /// </summary>
+        public static float DashesAndLasers_ApolloDashSpeed => 150f;
+
+        /// <summary>
+        /// The speed at which lasers are shot by Artemis during the DashesAndLasers attack.
+        /// </summary>
+        public static float DashesAndLasers_ArtemisLaserShootSpeed => 19.5f;
 
         /// <summary>
         /// AI update loop method for the DashesAndLasers attack.
@@ -40,49 +91,46 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <param name="apolloAttributes">Apollo's designated generic attributes.</param>
         public static void DoBehavior_DashesAndLasers_ApolloDashes(NPC npc, IExoTwin apolloAttributes)
         {
-            int hoverTime = 40;
-            int reelBackTime = 14;
-            int dashTime = 8;
-            int slowDownTime = 18;
-            bool artemis = npc.type == ExoMechNPCIDs.ArtemisID;
+            int hoverTime = DashesAndLasers_ApolloHoverTime;
+            int reelBackTime = DashesAndLasers_ApolloReelBackTime;
+            int dashTime = DashesAndLasers_ApolloDashTime;
+            int slowDownTime = DashesAndLasers_ApolloSlowDownTime;
+            int wrappedTime = AITimer % DashesAndLasers_AttackCycleTime;
             Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(npc.Center) * new Vector2(650f, 450f);
 
-            if (npc.life < npc.lifeMax * 0.95f)
+            if (wrappedTime <= hoverTime)
             {
-                SharedState.Reset();
-                SharedState.AIState = ExoTwinsAIState.EnterSecondPhase;
-            }
-
-            if (AITimer <= hoverTime)
-            {
-                npc.SmoothFlyNear(hoverDestination, 0.2f, 0.4f);
-                npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), AITimer / (float)hoverTime);
+                float flySpeed = Utilities.InverseLerp(0f, hoverTime, AITimer).Cubed() * 0.15f + 0.01f;
+                npc.SmoothFlyNear(hoverDestination, flySpeed, 1f - flySpeed);
+                npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), wrappedTime / (float)hoverTime);
                 apolloAttributes.Animation = ExoTwinAnimation.Idle;
-                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / (float)hoverTime, apolloAttributes.InPhase2);
+                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(wrappedTime / (float)hoverTime, apolloAttributes.InPhase2);
 
                 return;
             }
 
-            if (AITimer <= hoverTime + reelBackTime)
+            if (wrappedTime <= hoverTime + reelBackTime)
             {
-                if (AITimer == hoverTime + 1 && artemis)
+                if (wrappedTime == hoverTime + 1)
                     SoundEngine.PlaySound(Artemis.AttackSelectionSound);
 
-                float lookAngularVelocity = Utils.Remap(AITimer - hoverTime, 0f, reelBackTime, 0.1f, 0.006f);
+                float reelBackSpeed = Utilities.InverseLerp(0f, reelBackTime, wrappedTime - hoverTime).Squared() * 40f;
+                float lookAngularVelocity = Utils.Remap(wrappedTime - hoverTime, 0f, reelBackTime, 0.4f, 0.029f);
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), lookAngularVelocity);
+                npc.velocity = npc.rotation.ToRotationVector2() * -reelBackSpeed;
                 npc.velocity *= 0.9f;
 
                 apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
-                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, reelBackTime, AITimer - hoverTime), apolloAttributes.InPhase2);
+                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, reelBackTime, wrappedTime - hoverTime), apolloAttributes.InPhase2);
 
                 return;
             }
 
-            if (AITimer <= hoverTime + reelBackTime + dashTime)
+            if (wrappedTime <= hoverTime + reelBackTime + dashTime)
             {
-                if (AITimer == hoverTime + reelBackTime + 1)
+                if (wrappedTime == hoverTime + reelBackTime + 1)
                 {
-                    ScreenShakeSystem.StartShake(14f, shakeStrengthDissipationIncrement: 0.35f);
+                    ScreenShakeSystem.StartShake(10f, shakeStrengthDissipationIncrement: 0.4f);
                     SoundEngine.PlaySound(Artemis.ChargeSound);
                     npc.velocity = npc.rotation.ToRotationVector2() * 150f;
                     npc.netUpdate = true;
@@ -91,23 +139,22 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 npc.damage = npc.defDamage;
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
-                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, dashTime, AITimer - hoverTime - reelBackTime), apolloAttributes.InPhase2);
+                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, dashTime, wrappedTime - hoverTime - reelBackTime), apolloAttributes.InPhase2);
 
                 return;
             }
 
-            if (AITimer <= hoverTime + reelBackTime + dashTime + slowDownTime)
+            if (wrappedTime <= hoverTime + reelBackTime + dashTime + slowDownTime)
             {
-                npc.velocity *= 0.64f;
+                npc.velocity *= 0.75f;
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.1f);
 
+                if (npc.velocity.Length() >= 20f)
+                    npc.damage = npc.defDamage;
+
                 apolloAttributes.Animation = ExoTwinAnimation.Idle;
-                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, slowDownTime, AITimer - hoverTime - reelBackTime - dashTime), apolloAttributes.InPhase2);
-
-                return;
+                apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, slowDownTime, wrappedTime - hoverTime - reelBackTime - dashTime), apolloAttributes.InPhase2);
             }
-
-            AITimer = 0;
         }
 
         /// <summary>
@@ -117,35 +164,54 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <param name="artemisAttributes">Artemis' designated generic attributes.</param>
         public static void DoBehavior_DashesAndLasers_ArtemisLasers(NPC npc, IExoTwin artemisAttributes)
         {
-            artemisAttributes.Animation = ExoTwinAnimation.ChargingUp;
+            int wrappedTime = AITimer % DashesAndLasers_AttackCycleTime;
+            float lookOffsetAngle = 0f;
 
-            int shootTime = 40;
-            int shootRate = 6;
-            float aimOffsetAngle = 0f;
-            if (AITimer <= shootTime)
+            if (wrappedTime <= DashesAndLasers_ArtemisShootTime)
             {
+                if (wrappedTime % DashesAndLasers_ArtemisShootRate == DashesAndLasers_ArtemisShootRate - 1)
+                    ShootArtemisLaser(npc, DashesAndLasers_ArtemisLaserShootSpeed);
+
+                lookOffsetAngle = MathF.Sin(MathHelper.TwoPi * wrappedTime / DashesAndLasers_ArtemisShootTime) * DashesAndLasers_ArtemisShootArc * 0.5f;
                 artemisAttributes.Animation = ExoTwinAnimation.Attacking;
+            }
+            else
+                artemisAttributes.Animation = ExoTwinAnimation.ChargingUp;
 
-                aimOffsetAngle = MathF.Sin(MathHelper.TwoPi * AITimer / shootTime) * 0.7f;
+            Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X - npc.Center.X).NonZeroSign() * -600f, -300f) - npc.velocity * 3f;
+            npc.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.038f, 0.74f, 74f);
+            npc.rotation = npc.AngleTo(Target.Center + Target.velocity * 10f) + lookOffsetAngle;
 
-                if (AITimer % shootRate == shootRate - 1)
-                {
-                    SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, npc.Center);
+            artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(wrappedTime / 50f % 1f, artemisAttributes.InPhase2);
+        }
 
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        Vector2 aimDirection = npc.rotation.ToRotationVector2();
-                        Vector2 laserShootVelocity = aimDirection * 20f / ArtemisLaserImproved.TotalUpdates;
-                        Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center + aimDirection * 100f, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicLaserDamage, 0f);
-                    }
-                }
+        /// <summary>
+        /// Shoots a simple laser from Artemis' main shooting source, be it her pupil or orange exo crystal in phase 2.
+        /// </summary>
+        /// <param name="artemis">Artemis' NPC instance.</param>
+        /// <param name="laserShootSpeed">How fast the lasers should be shot.</param>
+        public static void ShootArtemisLaser(NPC artemis, float laserShootSpeed)
+        {
+            Vector2 aimDirection = artemis.rotation.ToRotationVector2();
+            Vector2 laserShootVelocity = aimDirection * laserShootSpeed / ArtemisLaserImproved.TotalUpdates;
+            Vector2 laserSpawnPosition = artemis.Center + aimDirection * 76f;
+
+            for (int i = 0; i < 5; i++)
+            {
+                int particleLifetime = Main.rand.Next(4, 11);
+                float particleSpeed = Main.rand.NextFloat(9f, 38f);
+                Color particleColor = Color.Lerp(Color.Orange, Color.Red, Main.rand.NextFloat(0.9f));
+                LineParticle line = new(laserSpawnPosition, aimDirection.RotatedByRandom(0.5f) * particleSpeed, false, particleLifetime, 1f, particleColor);
+                GeneralParticleHandler.SpawnParticle(line);
             }
 
-            Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X - npc.Center.X).NonZeroSign() * -600f, -350f) - npc.velocity * 3f;
-            npc.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.04f, 0.7f, 50f);
-            npc.rotation = npc.AngleTo(Target.Center) + aimOffsetAngle;
+            CritSpark spark = new(laserSpawnPosition, Vector2.Zero, Color.Yellow, Color.OrangeRed, 2.2f, 11, 0.1f, 3f);
+            GeneralParticleHandler.SpawnParticle(spark);
 
-            artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(AITimer / 50f % 1f, artemisAttributes.InPhase2);
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, laserSpawnPosition);
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                Utilities.NewProjectileBetter(artemis.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicLaserDamage, 0f);
         }
     }
 }

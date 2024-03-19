@@ -19,7 +19,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The amount of max updates this laser has.
         /// </summary>
-        public static int TotalUpdates => 3;
+        public static int TotalUpdates => 4;
 
         public override void SetStaticDefaults()
         {
@@ -47,7 +47,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.frame = (int)Time / TotalUpdates / 5 % Main.projFrames[Type];
 
-            if (Time >= TotalUpdates * 20f)
+            if (Time >= TotalUpdates * 35f)
                 Projectile.velocity *= 1.0189f;
 
             Time++;

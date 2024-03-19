@@ -93,8 +93,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             BodyBehaviorAction = new(AllSegments(), new(behaviorOverride =>
             {
-                float fireCompletion = ContinuousLaserBarrage_FireCompletion;
                 NPC segment = behaviorOverride.NPC;
+                float fireCompletion = ContinuousLaserBarrage_FireCompletion;
                 float indexRatioAlongHades = behaviorOverride.RelativeIndex / (float)BodySegmentCount;
 
                 if (behaviorOverride.RelativeIndex % 2 == 0)

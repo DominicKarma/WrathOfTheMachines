@@ -14,7 +14,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         {
             get;
             set;
-        } = new(ExoTwinsAIState.EnterSecondPhase, new float[5]);
+        } = new(ExoTwinsAIState.DashesAndLasers, new float[5]);
 
         public override void PostUpdateNPCs()
         {
