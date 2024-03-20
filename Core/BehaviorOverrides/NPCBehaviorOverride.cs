@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -35,6 +36,12 @@ namespace DifferentExoMechs
         }
 
         protected override NPC CreateTemplateEntity() => new();
+
+        /// <summary>
+        /// Gets called when the NPC spawns in the world.
+        /// </summary>
+        /// <param name="source">The spawn context of the NPC.</param>
+        public virtual void OnSpawn(IEntitySource source) { }
 
         /// <summary>
         /// Modifies the type name of the NPC.

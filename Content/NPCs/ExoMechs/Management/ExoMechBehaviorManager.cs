@@ -18,6 +18,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         internal static List<PhaseDefinition> ExoMechPhases = [];
 
         /// <summary>
+        /// Whether any Exo Mechs are currently present in the world.
+        /// </summary>
+        public static bool AnyExoMechsPresent
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The current phase of the Exo Mechs fight, as calculated via the <see cref="PreUpdateEntities"/> hook in this system every frame.
         /// </summary>
         public static PhaseDefinition CurrentPhase
@@ -90,6 +99,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             }
 
             FightState = new(ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
+
+            AnyExoMechsPresent = true;
         }
 
         // The wasSummoned parameter is necessary because it's sometimes not possible to check PreviouslySummonedMechIDs in this method, due to the NPC itself being null.
@@ -114,20 +125,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Resets various battle state variables in this class due to the Exo Mechs battle not happening.
-        /// </summary>
-        private static void ResetBattleState()
-        {
-            if (PreviouslySummonedMechIDs.Count >= 1)
-                PreviouslySummonedMechIDs.Clear();
-
-            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
-            FightState = ExoMechFightState.UndefinedFightState;
-            ExoTwinsStateManager.SharedState.Reset();
-            ExoTwinsStateManager.SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
-        }
-
-        /// <summary>
         /// Evaluates the overall battle state, keeping track of the current phase and list of Exo Mechs that have been summoned throughout the battle.
         /// </summary>
         private static void DetermineBattleState()
@@ -144,6 +141,21 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             RecordPreviouslySummonedMechs();
             CalculateFightState();
+        }
+
+        /// <summary>
+        /// Resets various battle state variables in this class due to the Exo Mechs battle not happening.
+        /// </summary>
+        private static void ResetBattleState()
+        {
+            if (PreviouslySummonedMechIDs.Count >= 1)
+                PreviouslySummonedMechIDs.Clear();
+
+            AnyExoMechsPresent = false;
+            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
+            FightState = ExoMechFightState.UndefinedFightState;
+            ExoTwinsStateManager.SharedState.Reset();
+            ExoTwinsStateManager.SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
         }
 
         /// <summary>

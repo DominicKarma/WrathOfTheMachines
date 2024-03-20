@@ -1,6 +1,17 @@
-NPCs.ThanatosRename: XM-04 Hades
-
 Projectiles: {
 	HadesLaserBurst.DisplayName: Laser Burst
 	ArtemisLaserImproved.DisplayName: Thermal Laser
+}
+
+NPCs: {
+	ThanatosRename: XM-04 Hades
+
+	Draedon: {
+		IntroductionMonologue1: I have waited long for this moment.
+		IntroductionMonologue2: Your nature fascinates me, for I do not understand it.
+		IntroductionMonologue3: You will face my creations, which have surpassed gods.
+		IntroductionMonologue4: And you will show me your disposition through battle.
+		IntroductionMonologue5: Now, choose.
+		IntroductionMonologueBrief: Make your choice.
+	}
 }

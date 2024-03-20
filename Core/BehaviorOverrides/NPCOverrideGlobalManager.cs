@@ -26,7 +26,10 @@ namespace DifferentExoMechs
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (NPCOverrideRelationship.TryGetValue(npc.type, out NPCBehaviorOverride? behaviorOverride))
+            {
                 BehaviorOverride = behaviorOverride!.Clone(npc);
+                BehaviorOverride.OnSpawn(source);
+            }
         }
 
         public override bool PreAI(NPC npc)
