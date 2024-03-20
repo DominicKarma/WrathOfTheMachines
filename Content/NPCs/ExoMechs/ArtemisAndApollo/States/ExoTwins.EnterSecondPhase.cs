@@ -217,6 +217,16 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             {
                 PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
             };
+
+            if (Main.rand.NextBool(EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f))
+            {
+                Vector2 hologramDustPosition = apollo.Center + (apollo.rotation + Main.rand.NextFloatDirection() * 0.7f).ToRotationVector2() * Main.rand.NextFloat(60f, 185f);
+                Dust hologramDust = Dust.NewDustPerfect(hologramDustPosition, 261);
+                hologramDust.velocity = apollo.SafeDirectionTo(hologramDustPosition).RotatedBy(Main.rand.NextFromList(-1f, 1f) * MathHelper.PiOver2) * Main.rand.NextFloatDirection() * 5f;
+                hologramDust.color = Color.Lerp(Color.Lime, Color.Teal, Main.rand.NextFloat());
+                hologramDust.scale *= 0.85f;
+                hologramDust.noGravity = true;
+            }
         }
 
         public static void ProjectLensShield(NPC apollo, bool pixelated)
@@ -230,8 +240,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             float spreadScale = 425f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
             Vector2 forcefieldScale = Vector2.One * EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f;
-            Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
-            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 160f;
+            Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 22f;
+            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 220f;
 
             // This is necessary since the pixelation target is downscaled by 2x.
             if (pixelated)
@@ -244,14 +254,25 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             Effect hologramSpread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             hologramSpread.Parameters["centerOpacity"].SetValue(1f);
-            hologramSpread.Parameters["mainOpacity"].SetValue(0.2f);
+            hologramSpread.Parameters["mainOpacity"].SetValue(0.3f);
             hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.09f);
             hologramSpread.Parameters["edgeColor"].SetValue(new Vector3(0f, 5f, 2.25f));
             hologramSpread.Parameters["centerColor"].SetValue(new Vector3(0f, 0.9f, 0.6f));
             hologramSpread.Parameters["edgeBlendLength"].SetValue(0.04f);
-            hologramSpread.Parameters["edgeBlendStrength"].SetValue(100f);
+            hologramSpread.Parameters["edgeBlendStrength"].SetValue(10f);
             hologramSpread.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale * 1.6f, 0, 0f);
+
+            hologramSpread.Parameters["mainOpacity"].SetValue(0.2f);
+            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 0.57f);
+            hologramSpread.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation + 0.09f, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, 0, 0f);
+
+            hologramSpread.Parameters["mainOpacity"].SetValue(0.1f);
+            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 0.46f);
+            hologramSpread.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation - 0.07f, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, 0, 0f);
+            Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation - 0.1967f, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, 0, 0f);
 
             if (!pixelated)
                 Main.spriteBatch.PrepareForShaders(BlendState.NonPremultiplied);
@@ -268,7 +289,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Main.instance.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 
             Color forcefieldColor = new(42, 209, 128);
-            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, forcefieldColor * opacity * 0.4f, apollo.rotation + MathHelper.PiOver2, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
+            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, forcefieldColor * opacity * 0.6f, apollo.rotation + MathHelper.PiOver2, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
 
             Main.spriteBatch.ResetToDefault();
         }

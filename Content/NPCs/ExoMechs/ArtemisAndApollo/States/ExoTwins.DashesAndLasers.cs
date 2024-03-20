@@ -77,7 +77,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void DoBehavior_DashesAndLasers(NPC npc, IExoTwin twinAttributes)
         {
-            if (npc.life < npc.lifeMax * 0.9f && !twinAttributes.InPhase2)
+            twinAttributes.InPhase2 = false;
+            if ((npc.life < npc.lifeMax * 0.5f && !twinAttributes.InPhase2) || Main.mouseRight)
             {
                 SharedState.Reset();
                 SharedState.AIState = ExoTwinsAIState.EnterSecondPhase;
