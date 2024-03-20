@@ -16,8 +16,8 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     
     // Brighten colors based on the red color channel.
     float brightnessPulse = sin(coords.x * 20 + globalTime * 15);
-    float brightness = textureData.r * (brightnessPulse * 0.5 + 1.5);
-    color = lerp(color, color.a, brightness);
+    float brightness = textureData.r * (brightnessPulse * 0.1 + 1.1);
+    color += brightness * color.a * 0.93;
     
     // Darken colors based on the green color channel.
     color -= float4(0, 0.81, 0.44, 0) * textureData.g * 0.5;
@@ -32,7 +32,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     
     // Apply noise based on the blue color channel.
     float noise = tex2D(techyNoiseTexture, polar * 2 + float2(0, globalTime * 0.15));
-    color += noise * color.a * textureData.b;
+    color += noise * color.a * textureData.b * 0.9;
 
     // Bias colors towards yellows slightly.
     float yellowInfluence = saturate(textureData.b + distanceFromPupil * 0.5);

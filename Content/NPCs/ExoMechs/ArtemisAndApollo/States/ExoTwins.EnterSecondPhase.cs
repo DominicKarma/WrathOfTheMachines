@@ -243,7 +243,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             Effect hologramSpread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             hologramSpread.Parameters["centerOpacity"].SetValue(1f);
-            hologramSpread.Parameters["mainOpacity"].SetValue(0.3f);
+            hologramSpread.Parameters["mainOpacity"].SetValue(0.2f);
             hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.09f);
             hologramSpread.Parameters["edgeColor"].SetValue(new Vector3(0f, 5f, 2.25f));
             hologramSpread.Parameters["centerColor"].SetValue(new Vector3(0f, 0.9f, 0.6f));
@@ -267,7 +267,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Main.instance.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 
             Color forcefieldColor = new(42, 209, 128);
-            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, forcefieldColor * opacity, apollo.rotation + MathHelper.PiOver2, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
+            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, forcefieldColor * opacity * 0.4f, apollo.rotation + MathHelper.PiOver2, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
 
             Main.spriteBatch.ResetToDefault();
         }
