@@ -216,7 +216,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity + 0.05f);
             apolloAttributes.SpecificDrawAction = () =>
             {
-                ProjectLensShield(apollo, false);
+                PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
             };
         }
 
@@ -228,11 +228,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Texture2D forcefield = ModContent.Request<Texture2D>("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
-            float spreadScale = 500f;
+            float spreadScale = 425f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
-            Vector2 forcefieldScale = Vector2.One * EnterSecondPhase_ProtectiveForcefieldOpacity;
+            Vector2 forcefieldScale = Vector2.One * EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f;
             Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
-            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 120f;
+            Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 160f;
             if (pixelated)
             {
                 spreadScale *= 0.5f;
@@ -244,7 +244,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Effect hologramSpread = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             hologramSpread.Parameters["centerOpacity"].SetValue(1f);
             hologramSpread.Parameters["mainOpacity"].SetValue(0.3f);
-            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.12f);
+            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 1.09f);
             hologramSpread.Parameters["edgeColor"].SetValue(new Vector3(0f, 5f, 2.25f));
             hologramSpread.Parameters["centerColor"].SetValue(new Vector3(0f, 0.9f, 0.6f));
             hologramSpread.Parameters["edgeBlendLength"].SetValue(0.04f);
@@ -252,17 +252,24 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             hologramSpread.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, SpriteEffects.None, 0f);
 
+            if (!pixelated)
+                Main.spriteBatch.PrepareForShaders(BlendState.NonPremultiplied);
+            else
+            {
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+            }
+
             ManagedShader forcefieldShader = ShaderManager.GetShader("LensShieldShader");
-            forcefieldShader.TrySetParameter("glowColor", new Vector4(0.3f, 1.1f, 1f, 1f));
-            forcefieldShader.TrySetParameter("edgeGlowIntensity", 0.0178f);
-            forcefieldShader.TrySetParameter("centerGlowIntensity", 0.03f);
             forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
             forcefieldShader.Apply();
 
-            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, new Color(0.5f, 0.8f, 0.6f) * opacity, apollo.rotation, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
+            Main.instance.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
 
-            if (!pixelated)
-                Main.spriteBatch.ResetToDefault();
+            Color forcefieldColor = new(42, 209, 128);
+            Main.spriteBatch.Draw(forcefield, forcefieldDrawPosition, null, forcefieldColor * opacity, apollo.rotation + MathHelper.PiOver2, forcefield.Size() * 0.5f, forcefieldScale, 0, 0f);
+
+            Main.spriteBatch.ResetToDefault();
         }
     }
 }

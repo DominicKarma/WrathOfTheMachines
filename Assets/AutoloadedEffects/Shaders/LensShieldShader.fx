@@ -2,54 +2,47 @@ sampler noiseTexture : register(s0);
 sampler techyNoiseTexture : register(s1);
 
 float globalTime;
-float edgeGlowIntensity;
-float centerGlowIntensity;
-float4 glowColor;
-
-float2 RotatedBy(float2 v, float angle)
-{
-    float cosine = cos(angle);
-    float sine = sin(angle);
-    return float2(v.x * cosine - v.y * sine, v.x * sine + v.y * cosine);
-}
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
-    // Distort coordinates so that they resemble a pupil, somewhat.
-    coords.x = (coords.x - 0.5) * 1.5 + 0.5;
-    coords.x -= sin(coords.y * 3.141) * 0.18;
+    // Decide color data, starting with the sample color as a base.
+    float4 color = sampleColor;
     
-    // Calculate distance values.
-    float distanceFromCenter = distance(coords, 0.5);
-    float distanceFromEdge = distance(distanceFromCenter, 0.45);
+    // Acquire texture data on a per-fragment basis. Each color channel encodes a specific thing.
+    // Blue = influence of noise.
+    // Red = Tendency towards white.
+    // Green = Shade.
+    float4 textureData = tex2D(noiseTexture, coords);
     
-    // Calculate and combine glow colors.
-    float edgeFadeOut = smoothstep(0.5, 0.4, distanceFromCenter);
-    float edgeGlowFactor = (1 + sin(globalTime * 60) * 0.045) * edgeGlowIntensity;
-    float centerGlowFactor = (1 + cos(globalTime * 40) * 0.048) * centerGlowIntensity;
-    float edgeGlow = pow(edgeGlowFactor / distanceFromEdge, 0.8);
-    float centerGlow = pow(centerGlowFactor / distanceFromCenter, 2.5);
-    float glow = edgeGlow + centerGlow;
+    // Brighten colors based on the red color channel.
+    float brightnessPulse = sin(coords.x * 20 + globalTime * 15);
+    float brightness = textureData.r * (brightnessPulse * 0.5 + 1.5);
+    color = lerp(color, color.a, brightness);
     
-    // Calculate noise values.
-    float2 noiseCoords = RotatedBy(coords - 0.5, globalTime * 1.75) + 0.5;
-    float2 techNoiseCoords = coords * 0.45;
-    float radialNoise = tex2D(noiseTexture, noiseCoords).r;
-    float techNoise = 0;
-    float techNoiseAmplitude = 0.75;
-    float techNoiseFrequency = 1;
-    for (int i = 0; i < 4; i++)
-    {
-        techNoise += tex2D(techyNoiseTexture, techNoiseCoords + float2(0, globalTime * 0.03) * techNoiseFrequency + radialNoise * 0.02).r * techNoiseAmplitude;
-        techNoiseFrequency *= 1.67;
-        techNoiseAmplitude *= 0.6;
-    }
+    // Darken colors based on the green color channel.
+    color -= float4(0, 0.81, 0.44, 0) * textureData.g * 0.5;
     
-    float noiseResult = clamp(radialNoise + techNoise, 0, 2);
+    // Calculate polar coordinates relative to the pupil position for the upcoming noise calculations.
+    float2 pupilPosition = float2(0.5, 0.34);
+    float angleToPupil = atan2(pupilPosition.y - coords.y, pupilPosition.x - coords.x);
+    float distanceFromPupil = distance(coords, pupilPosition);
+    float2 polar = float2(angleToPupil / 6.283 + 0.5, distanceFromPupil);
+    polar.x += globalTime * 0.2;
+    polar.y = frac(polar.y + globalTime * 0.5);
     
-    // Combine everything together.
-    float4 color = glowColor * pow(noiseResult, 3.5 + (0.5 - distanceFromCenter) * 10) * 0.83;
-    return (glow + color * saturate(1 - glow)) * sampleColor * edgeFadeOut;
+    // Apply noise based on the blue color channel.
+    float noise = tex2D(techyNoiseTexture, polar * 2 + float2(0, globalTime * 0.15));
+    color += noise * color.a * textureData.b;
+
+    // Bias colors towards yellows slightly.
+    float yellowInfluence = saturate(textureData.b + distanceFromPupil * 0.5);
+    color += float4(1, 0.2, -1, 0) * yellowInfluence * 0.2;
+    
+    // Brighten the overall result.
+    float generalBrightness = sin(globalTime * 5 - yellowInfluence * 10) * 0.5 + 0.5;
+    color *= generalBrightness * 0.15 + 1;
+    
+    return color * textureData.a;
 }
 technique Technique1
 {
