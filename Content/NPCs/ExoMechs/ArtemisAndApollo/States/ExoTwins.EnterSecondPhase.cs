@@ -152,7 +152,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 {
                     SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
                     AITimer = 0;
-                    twinAttributes.InPhase2 = false;
                 }
             }
         }
@@ -233,6 +232,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Vector2 forcefieldScale = Vector2.One * EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f;
             Vector2 spreadDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 30f;
             Vector2 forcefieldDrawPosition = apollo.Center - Main.screenPosition + apollo.rotation.ToRotationVector2() * 160f;
+
+            // This is necessary since the pixelation target is downscaled by 2x.
             if (pixelated)
             {
                 spreadScale *= 0.5f;
