@@ -17,7 +17,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public enum DraedonAIState
         {
             AppearAsHologram,
-            StartingMonologue
+            StartingMonologue,
+            ExoMechSpawnAnimation
         }
 
         public Player PlayerToFollow => Main.player[NPC.target];
@@ -35,6 +36,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// Draedon's AI timer.
         /// </summary>
         public ref float AITimer => ref NPC.ai[1];
+
+        /// <summary>
+        /// The maximum intensity that the Exo Mechs sky can be drawn at.
+        /// </summary>
+        public ref float MaxSkyOpacity => ref NPC.ai[2];
 
         /// <summary>
         /// Draedon's current frame.
@@ -70,7 +76,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// Draedon's starting monologue. This is spoken in successive battles.
         /// </summary>
         public static readonly DraedonDialogueChain StartingMonologueBrief = new DraedonDialogueChain("Mods.DifferentExoMechs.NPCs.Draedon.").
-            Add("IntroductionMonologueBrief", Draedon.TextColorEdgy);
+            Add("IntroductionMonologueBrief", Draedon.TextColorEdgy, 1);
 
         public override int NPCOverrideID => ModContent.NPCType<Draedon>();
 
@@ -120,6 +126,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 case DraedonAIState.StartingMonologue:
                     DoBehavior_StartingMonologue();
                     break;
+                case DraedonAIState.ExoMechSpawnAnimation:
+                    DoBehavior_ExoMechSpawnAnimation();
+                    break;
             }
 
             // Stay within the world.
@@ -127,6 +136,19 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             AITimer++;
             FrameTimer++;
+        }
+
+        /// <summary>
+        /// Performs Draedon's standard framing, with him sitting down in a thinking pose.
+        /// </summary>
+        public void PerformStandardFraming()
+        {
+            if (FrameTimer % 7f == 6f)
+            {
+                Frame++;
+                if (Frame >= 48f)
+                    Frame = 23f;
+            }
         }
 
         /// <summary>

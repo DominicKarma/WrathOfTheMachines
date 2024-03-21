@@ -13,5 +13,7 @@ NPCs: {
 		IntroductionMonologue4: And you will show me your disposition through battle.
 		IntroductionMonologue5: Now, choose.
 		IntroductionMonologueBrief: Make your choice.
+		ExoMechChoiceResponse1: Excellent.
+		ExoMechChoiceResponse2: They will arrive shortly.
 	}
 }

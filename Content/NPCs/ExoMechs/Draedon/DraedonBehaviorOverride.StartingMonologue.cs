@@ -16,19 +16,22 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// </summary>
         public void DoBehavior_StartingMonologue()
         {
+            int speakTimer = (int)AITimer - 90;
             var monologue = StartingMonologueToUse;
             for (int i = 0; i < monologue.Count; i++)
             {
-                if (AITimer == monologue[i].SpeakDelay + 1f)
+                if (speakTimer == monologue[i].SpeakDelay)
                     monologue[i].SayInChat();
             }
 
-            bool monologueIsFinished = AITimer >= monologue.OverallDuration;
+            bool monologueIsFinished = speakTimer >= monologue.OverallDuration;
             bool playerHasSelectedExoMech = CalamityWorld.DraedonMechToSummon != ExoMech.None;
             if (monologueIsFinished)
             {
                 if (!playerHasSelectedExoMech)
                     PlayerToFollow.Calamity().AbleToSelectExoMech = true;
+                else
+                    ChangeAIState(DraedonAIState.ExoMechSpawnAnimation);
 
                 // Mark Draedon as talked to.
                 if (!CalamityWorld.TalkedToDraedon)
