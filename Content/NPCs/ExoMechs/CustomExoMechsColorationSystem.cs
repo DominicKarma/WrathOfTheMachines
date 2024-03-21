@@ -7,10 +7,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
     {
         public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
         {
-            backgroundColor = Color.Lerp(backgroundColor, new(72, 72, 92), CustomExoMechsSky.Opacity);
-            tileColor = Color.Lerp(backgroundColor, new(72, 72, 92), CustomExoMechsSky.Opacity * 0.85f);
+            backgroundColor = Color.Lerp(backgroundColor, new(52, 52, 62), CustomExoMechsSky.Opacity);
+            tileColor = Color.Lerp(backgroundColor, new(52, 52, 62), CustomExoMechsSky.Opacity * 0.85f);
 
-            float redSirenInterpolant = CustomExoMechsSky.RedSirensIntensity;
+            float redSirenInterpolant = CustomExoMechsSky.RedSirensIntensity * 0.7f;
             backgroundColor = Color.Lerp(backgroundColor, new(255, 79, 72), redSirenInterpolant);
             tileColor = Color.Lerp(tileColor, new(206, 97, 95), redSirenInterpolant);
         }

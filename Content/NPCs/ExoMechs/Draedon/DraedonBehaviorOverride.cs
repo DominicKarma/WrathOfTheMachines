@@ -58,6 +58,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public ref float FrameTimer => ref NPC.localAI[2];
 
         /// <summary>
+        /// How far forward the summon animation plane is.
+        /// </summary>
+        public ref float PlaneFlyForwardInterpolant => ref NPC.localAI[3];
+
+        /// <summary>
         /// How long Draedon typically waits between spoken dialogue.
         /// </summary>
         public static readonly int StandardSpeakTime = Utilities.SecondsToFrames(2f);
@@ -130,6 +135,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                     DoBehavior_ExoMechSpawnAnimation();
                     break;
             }
+
+            Lighting.AddLight(NPC.Center, Vector3.One * 0.76f);
 
             // Stay within the world.
             NPC.position.Y = MathHelper.Clamp(NPC.position.Y, 150f, Main.maxTilesY * 16f - 150f);
