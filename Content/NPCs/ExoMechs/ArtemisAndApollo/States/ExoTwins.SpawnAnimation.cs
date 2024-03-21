@@ -28,7 +28,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             if (AITimer == 1f)
             {
-                npc.velocity = Vector2.UnitY.RotatedByRandom(0.3f) * 120f;
+                npc.velocity = Vector2.UnitY.RotatedByRandom(0.11f) * 120f;
                 npc.netUpdate = true;
 
                 ScreenShakeSystem.StartShake(20f);

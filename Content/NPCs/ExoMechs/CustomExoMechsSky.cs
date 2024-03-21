@@ -59,7 +59,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 DrawGreySky();
 
             if (minDepth <= float.MinValue)
-                DrawPlane(planeForwardInterpolant);
+            {
+                PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+                {
+                    DrawPlane(planeForwardInterpolant);
+                }, PixelationPrimitiveLayer.AfterProjectiles);
+            }
         }
 
         public static void DrawGreySky()
@@ -93,9 +98,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 return;
 
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.45f), MathHelper.Lerp(65f, -0.92f, MathF.Pow(1f - forwardInterpolant, 0.67f)));
+            Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.45f), MathHelper.Lerp(100f, -0.95f, MathF.Pow(1f - forwardInterpolant, 0.67f)));
             float scale = 0.7f / (planePosition.Z + 1f);
-            planePosition.Y -= scale * 560f;
+            float opacity = Utilities.InverseLerp(100f, 54f, planePosition.Z);
+            planePosition.Y -= scale * 1560f;
 
             Matrix rotation = Matrix.CreateRotationX((1f - forwardInterpolant) * 0.5f) * Matrix.CreateRotationZ(MathHelper.Pi);
 
@@ -115,6 +121,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 {
                     if (part.PrimitiveCount > 0)
                     {
+                        shader.TrySetParameter("opacity", opacity);
                         shader.TrySetParameter("uWorldViewProjection", mesh.ParentBone.Transform * world * projection);
                         shader.Apply();
 

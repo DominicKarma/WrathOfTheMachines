@@ -30,7 +30,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public static int ExoMechSummonDelay => Utilities.SecondsToFrames(5f);
 
-        public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.8f);
+        public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.2f);
 
         public static readonly SoundStyle SirenSound = new("DifferentExoMechs/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
 
@@ -48,7 +48,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             if (AITimer >= SirenDelay)
             {
-                MaxSkyOpacity = Utilities.Saturate(MaxSkyOpacity + 0.002f);
                 Main.numCloudsTemp = (int)Utils.Remap(MaxSkyOpacity, 0f, 1f, Main.numCloudsTemp, Main.maxClouds);
 
                 Vector2 hoverDestination = PlayerToFollow.Center + PlayerToFollow.SafeDirectionTo(NPC.Center) * new Vector2(820f, 560f);
@@ -66,6 +65,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 sound.Volume = Utilities.InverseLerp(0f, SirenFadeInTime, AITimer) * Utilities.InverseLerp(30f, 0f, AITimer - ExoMechPlaneFlyTime - ExoMechSummonDelay);
             });
 
+            MaxSkyOpacity = Utilities.Saturate(MaxSkyOpacity + 0.05f);
             PlaneFlyForwardInterpolant = Utilities.InverseLerp(0f, ExoMechPlaneFlyTime, AITimer - ExoMechSummonDelay);
             CustomExoMechsSky.RedSirensIntensity = MathF.Pow(Utilities.Sin01(MathHelper.TwoPi * (AITimer - SirenDelay) / 240f), 0.7f) * (1f - PlaneFlyForwardInterpolant) * 0.7f;
 

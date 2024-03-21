@@ -1,6 +1,7 @@
 sampler modelTexture : register(s0);
 
 float globalTime;
+float opacity;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -33,7 +34,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float brightness = dot(normalize(input.Normal), float3(0, 0, 1));
     float4 result = tex2D(modelTexture, input.TextureCoordinates);
-    return result * float4(brightness, brightness, brightness, 1);
+    return result * float4(brightness, brightness, brightness, 1) * opacity;
 }
 
 technique Technique1
