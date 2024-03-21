@@ -2,7 +2,7 @@
 {
     public enum ExoTwinsAIState
     {
-        SpawnAnimation
+        SpawnAnimation,
         EnterSecondPhase,
         DashesAndLasers
     }

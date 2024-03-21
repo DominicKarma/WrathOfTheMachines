@@ -155,7 +155,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.Reset();
-            ExoTwinsStateManager.SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
+            ExoTwinsStateManager.SharedState.AIState = ExoTwinsAIState.SpawnAnimation;
         }
 
         /// <summary>

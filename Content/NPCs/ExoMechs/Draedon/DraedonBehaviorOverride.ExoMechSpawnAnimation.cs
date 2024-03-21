@@ -24,6 +24,14 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             set;
         }
 
+        public static int SirenDelay => Utilities.SecondsToFrames(1.5f);
+
+        public static int SirenFadeInTime => Utilities.SecondsToFrames(0.9f);
+
+        public static int ExoMechSummonDelay => Utilities.SecondsToFrames(5f);
+
+        public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.8f);
+
         public static readonly SoundStyle SirenSound = new("DifferentExoMechs/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
 
         /// <summary>
@@ -33,12 +41,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         {
             if (AITimer == 1f)
                 CalamityUtils.DisplayLocalizedText("Mods.DifferentExoMechs.NPCs.Draedon.ExoMechChoiceResponse1", Draedon.TextColor);
-            if (AITimer == 90f)
+            if (AITimer == SirenDelay)
                 CalamityUtils.DisplayLocalizedText("Mods.DifferentExoMechs.NPCs.Draedon.ExoMechChoiceResponse2", Draedon.TextColorEdgy);
 
             PerformStandardFraming();
 
-            if (AITimer >= 90f)
+            if (AITimer >= SirenDelay)
             {
                 MaxSkyOpacity = Utilities.Saturate(MaxSkyOpacity + 0.002f);
                 Main.numCloudsTemp = (int)Utils.Remap(MaxSkyOpacity, 0f, 1f, Main.numCloudsTemp, Main.maxClouds);
@@ -47,26 +55,23 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.06f, 0.9f, 60f);
 
                 Main.windSpeedTarget = 1.1f;
-
-                SirenSoundInstance ??= LoopedSoundManager.CreateNew(SirenSound, () =>
-                {
-                    return !NPC.active || AIState != DraedonAIState.ExoMechSpawnAnimation || AITimer >= 450f;
-                });
-                SirenSoundInstance.Update(Main.LocalPlayer.Center, sound =>
-                {
-                    sound.Volume = Utilities.InverseLerp(0f, 120f, AITimer - 90f).Squared() * Utilities.InverseLerp(450f, 420f, AITimer);
-                });
             }
 
-            if (Main.mouseRight)
-                AITimer = 0;
-
-            PlaneFlyForwardInterpolant = Utilities.InverseLerp(360f, 420f, AITimer);
-            CustomExoMechsSky.RedSirensIntensity = MathF.Pow(Utilities.Sin01(MathHelper.TwoPi * (AITimer - 90f) / 240f), 0.7f) * (1f - PlaneFlyForwardInterpolant) * 0.7f;
-
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == 418f)
+            SirenSoundInstance ??= LoopedSoundManager.CreateNew(SirenSound, () =>
             {
-                Vector2 exoMechSpawnPosition = PlayerToFollow.Center - Vector2.UnitY * 1200f;
+                return !NPC.active || AIState != DraedonAIState.ExoMechSpawnAnimation || AITimer >= ExoMechPlaneFlyTime + ExoMechSummonDelay + 30f;
+            });
+            SirenSoundInstance.Update(Main.LocalPlayer.Center, sound =>
+            {
+                sound.Volume = Utilities.InverseLerp(0f, SirenFadeInTime, AITimer) * Utilities.InverseLerp(30f, 0f, AITimer - ExoMechPlaneFlyTime - ExoMechSummonDelay);
+            });
+
+            PlaneFlyForwardInterpolant = Utilities.InverseLerp(0f, ExoMechPlaneFlyTime, AITimer - ExoMechSummonDelay);
+            CustomExoMechsSky.RedSirensIntensity = MathF.Pow(Utilities.Sin01(MathHelper.TwoPi * (AITimer - SirenDelay) / 240f), 0.7f) * (1f - PlaneFlyForwardInterpolant) * 0.7f;
+
+            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ExoMechPlaneFlyTime + ExoMechSummonDelay - 2f)
+            {
+                Vector2 exoMechSpawnPosition = PlayerToFollow.Center - Vector2.UnitY * 1900f;
                 switch (CalamityWorld.DraedonMechToSummon)
                 {
                     case ExoMech.Destroyer:
@@ -76,8 +81,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                         CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<AresBody>());
                         break;
                     case ExoMech.Twins:
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition - Vector2.UnitX * 150f, ModContent.NPCType<Artemis>());
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition + Vector2.UnitX * 150f, ModContent.NPCType<Apollo>());
+                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition - Vector2.UnitX * 350f, ModContent.NPCType<Artemis>());
+                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition + Vector2.UnitX * 350f, ModContent.NPCType<Apollo>());
                         break;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs.ExoMechs;
+﻿using System;
+using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -92,9 +93,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 return;
 
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.4f), MathHelper.Lerp(-0.99f, 25f, forwardInterpolant));
-            float scale = 0.2f / (planePosition.Z + 1f);
-            planePosition.Y -= scale * 1400f;
+            Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.45f), MathHelper.Lerp(65f, -0.92f, MathF.Pow(1f - forwardInterpolant, 0.67f)));
+            float scale = 0.7f / (planePosition.Z + 1f);
+            planePosition.Y -= scale * 560f;
 
             Matrix rotation = Matrix.CreateRotationX((1f - forwardInterpolant) * 0.5f) * Matrix.CreateRotationZ(MathHelper.Pi);
 

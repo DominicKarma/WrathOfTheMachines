@@ -52,6 +52,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             switch (SharedState.AIState)
             {
+                case ExoTwinsAIState.SpawnAnimation:
+                    ExoTwinsStates.DoBehavior_SpawnAnimation(twin, twinAttributes);
+                    break;
                 case ExoTwinsAIState.DashesAndLasers:
                     ExoTwinsStates.DoBehavior_DashesAndLasers(twin, twinAttributes);
                     break;
