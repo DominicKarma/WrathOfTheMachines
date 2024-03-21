@@ -97,11 +97,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 float fireCompletion = ContinuousLaserBarrage_FireCompletion;
                 float indexRatioAlongHades = behaviorOverride.RelativeIndex / (float)BodySegmentCount;
 
-                if (behaviorOverride.RelativeIndex % 2 == 0)
-                    indexRatioAlongHades *= 0.5f;
-                else
-                    indexRatioAlongHades = indexRatioAlongHades * 0.5f + 0.5f;
-
                 bool readyToFire = fireCompletion > 0f && MathHelper.Distance(indexRatioAlongHades, fireCompletion) <= 0.01f && behaviorOverride.GenericCountdown <= 0f;
                 if (readyToFire && ContinuousLaserBarrage_SegmentCanFire(segment, NPC))
                 {

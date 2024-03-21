@@ -68,7 +68,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The speed at which lasers are shot by Artemis during the DashesAndLasers attack.
         /// </summary>
-        public static float DashesAndLasers_ArtemisLaserShootSpeed => 19.5f;
+        public static float DashesAndLasers_ArtemisLaserShootSpeed => 15.25f;
 
         /// <summary>
         /// AI update loop method for the DashesAndLasers attack.
@@ -139,7 +139,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 {
                     ScreenShakeSystem.StartShake(10f, shakeStrengthDissipationIncrement: 0.4f);
                     SoundEngine.PlaySound(Artemis.ChargeSound);
-                    npc.velocity = npc.rotation.ToRotationVector2() * 150f;
+                    npc.velocity = npc.rotation.ToRotationVector2() * 172f;
                     npc.netUpdate = true;
                 }
 
@@ -153,7 +153,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             if (wrappedTime <= hoverTime + reelBackTime + dashTime + slowDownTime)
             {
-                npc.velocity *= 0.75f;
+                npc.velocity *= 0.65f;
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.1f);
 
                 if (npc.velocity.Length() >= 20f)
