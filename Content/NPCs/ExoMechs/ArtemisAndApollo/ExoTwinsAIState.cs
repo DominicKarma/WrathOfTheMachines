@@ -4,6 +4,7 @@
     {
         SpawnAnimation,
         DashesAndLasers,
+        LoopDashBombardment,
         EnterSecondPhase,
     }
 }

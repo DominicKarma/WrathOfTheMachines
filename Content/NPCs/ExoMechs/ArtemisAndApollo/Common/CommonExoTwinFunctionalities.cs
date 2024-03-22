@@ -56,14 +56,17 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             {
                 Vector2 backwards = -twin.rotation.ToRotationVector2();
                 List<Vector2> nerveDrawPositions = new();
+
+                float totalAngularChange = 0f;
+                for (int i = 0; i < 8; i++)
+                    totalAngularChange += MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]) / 8f;
+
                 for (int i = 0; i < 8; i++)
                 {
-                    float angularChange = MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]);
-
                     float completionRatio = i / 7f;
                     float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
-                    Vector2 backwardsOffset = backwards.RotatedBy(angularChange * -0.8f) * completionRatio * 540f;
+                    Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * 540f;
                     Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2);
 
                     nerveDrawPositions.Add(twin.Center + backwardsOffset + perpendicularOffset);

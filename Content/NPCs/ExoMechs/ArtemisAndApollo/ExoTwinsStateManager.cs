@@ -59,6 +59,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.DashesAndLasers:
                     ExoTwinsStates.DoBehavior_DashesAndLasers(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.LoopDashBombardment:
+                    ExoTwinsStates.DoBehavior_LoopDashBombardment(twin, twinAttributes);
+                    break;
                 case ExoTwinsAIState.EnterSecondPhase:
                     ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);
                     break;
@@ -77,7 +80,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (target.WithinRange(twinsCenterOfMass, 600f) && Main.rand.NextBool())
                 return ExoTwinsAIState.DashesAndLasers;
 
-            return ExoTwinsAIState.DashesAndLasers;
+            return ExoTwinsAIState.LoopDashBombardment;
         }
 
         /// <summary>
