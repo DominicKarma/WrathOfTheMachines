@@ -12,21 +12,21 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
     public sealed partial class ArtemisBehaviorOverride : NPCBehaviorOverride, IExoTwin
     {
         /// <summary>
-        /// Apollo's current AI timer.
-        /// </summary>
-        public int AITimer
-        {
-            get => (int)NPC.ai[1];
-            set => NPC.ai[1] = value;
-        }
-
-        /// <summary>
-        /// Apollo's current frame.
+        /// Artemis' current frame.
         /// </summary>
         public int Frame
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Artemis' current AI timer.
+        /// </summary>
+        public int AITimer
+        {
+            get => (int)NPC.ai[1];
+            set => NPC.ai[1] = value;
         }
 
         /// <summary>
@@ -72,6 +72,14 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
 
+        public void ResetLocalStateData()
+        {
+            AITimer = 0;
+            NPC.ai[2] = 0f;
+            NPC.ai[3] = 0f;
+            NPC.netUpdate = true;
+        }
+
         public override void AI()
         {
             if (!ApolloSummonCheckPerformed)
@@ -87,6 +95,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 NPC.realLife = CalamityGlobalNPC.draedonExoMechTwinGreen;
                 NPC.life = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].life;
             }
+            else
+                NPC.active = false;
 
             // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;

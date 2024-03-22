@@ -54,7 +54,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(projHitbox.Center(), Projectile.width * 0.5f, targetHitbox);
+            Utilities.CircularHitboxCollision(projHitbox.Center(), Projectile.width * 0.4f, targetHitbox);
 
         public override bool PreDraw(ref Color lightColor)
         {

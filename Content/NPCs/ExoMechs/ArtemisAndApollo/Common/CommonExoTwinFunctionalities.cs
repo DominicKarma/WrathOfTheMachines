@@ -97,8 +97,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (twin.type == ExoMechNPCIDs.ApolloID)
                 frameRectangle.X += frame / 9;
 
-            Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
-            Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, twin.scale, 0, 0f);
+            Vector2 scale = Vector2.One * twin.scale;
+            Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+            Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
 
             twinInterface.SpecificDrawAction?.Invoke();
         }

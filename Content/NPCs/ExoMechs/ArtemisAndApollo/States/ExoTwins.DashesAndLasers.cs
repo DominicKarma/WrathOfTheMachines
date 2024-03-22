@@ -16,9 +16,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
     public static partial class ExoTwinsStates
     {
         /// <summary>
-        /// The amount of damage basic lasers from Artemis do.
+        /// The amount of attack cycles performed so far for the DashesAndLasers attack.
         /// </summary>
-        public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
+        public static ref float DashesAndLasers_AttackCycleCounter => ref SharedState.Values[0];
+
+        // TODO -- Move this somewhere else.
+        /// <summary>
+        /// The amount of damage basic shots from the Exo Twins do.
+        /// </summary>
+        public static int BasicShotDamage => Main.expertMode ? 400 : 250;
 
         /// <summary>
         /// How long Apollo spends hovering during the DashesAndLasers attack.
@@ -51,6 +57,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public static int DashesAndLasers_ArtemisShootRate => Utilities.SecondsToFrames(0.075f);
 
         /// <summary>
+        /// The amount of cycles Artemis and Apollo do before transitioning to the next attack during the DashesAndLasers attack.
+        /// </summary>
+        public static int DashesAndLasers_TotalAttackCycles => 3;
+
+        /// <summary>
         /// How long Artemis spends shoots lasers during the DashesAndLasers attack.
         /// </summary>
         public static int DashesAndLasers_ArtemisShootTime => DashesAndLasers_ApolloHoverTime;
@@ -77,18 +88,18 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void DoBehavior_DashesAndLasers(NPC npc, IExoTwin twinAttributes)
         {
-            twinAttributes.InPhase2 = false;
-            if ((npc.life < npc.lifeMax * 0.5f && !twinAttributes.InPhase2) || Main.mouseRight)
-            {
-                SharedState.Reset();
-                SharedState.AIState = ExoTwinsAIState.EnterSecondPhase;
-            }
-
             bool isApollo = npc.type == ExoMechNPCIDs.ApolloID;
             if (isApollo)
                 DoBehavior_DashesAndLasers_ApolloDashes(npc, twinAttributes);
             else
                 DoBehavior_DashesAndLasers_ArtemisLasers(npc, twinAttributes);
+
+            if (AITimer % DashesAndLasers_AttackCycleTime == DashesAndLasers_AttackCycleTime - 1f)
+            {
+                DashesAndLasers_AttackCycleCounter++;
+                if (DashesAndLasers_AttackCycleCounter >= DashesAndLasers_TotalAttackCycles)
+                    ExoTwinsStateManager.TransitionToNextState();
+            }
         }
 
         /// <summary>
@@ -218,7 +229,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, laserSpawnPosition);
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                Utilities.NewProjectileBetter(artemis.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicLaserDamage, 0f);
+                Utilities.NewProjectileBetter(artemis.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicShotDamage, 0f);
         }
     }
 }

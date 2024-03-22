@@ -52,5 +52,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             get;
             set;
         }
+
+        /// <summary>
+        /// Resets local data for this Exo Twin due to an AI state transition.
+        /// </summary>
+        public void ResetLocalStateData();
     }
 }

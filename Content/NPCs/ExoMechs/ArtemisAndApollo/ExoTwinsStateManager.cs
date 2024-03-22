@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using CalamityMod.NPCs;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -62,6 +63,36 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                     ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Picks an attack that Artemis and Apollo should adhere to.
+        /// </summary>
+        public static ExoTwinsAIState MakeAIStateChoice()
+        {
+            Player target = ExoMechTargetSelector.Target;
+            NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
+            NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
+            Vector2 twinsCenterOfMass = (artemis.Center + apollo.Center) * 0.5f;
+            if (target.WithinRange(twinsCenterOfMass, 600f) && Main.rand.NextBool())
+                return ExoTwinsAIState.DashesAndLasers;
+
+            return ExoTwinsAIState.DashesAndLasers;
+        }
+
+        /// <summary>
+        /// Selects and uses a new AI state for the Exo Twins.
+        /// </summary>
+        public static void TransitionToNextState(ExoTwinsAIState? stateToUse = null)
+        {
+            SharedState.Reset();
+            SharedState.AIState = stateToUse ?? MakeAIStateChoice();
+
+            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
+                artemis.ResetLocalStateData();
+
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ArtemisBehaviorOverride apollo))
+                apollo.ResetLocalStateData();
         }
     }
 }

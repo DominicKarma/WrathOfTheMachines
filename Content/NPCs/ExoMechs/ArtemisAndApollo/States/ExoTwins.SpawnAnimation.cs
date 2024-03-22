@@ -42,10 +42,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 SoundEngine.PlaySound(Artemis.AttackSelectionSound);
 
             if (AITimer >= SpawnAnimation_AttackTransitionDelay)
-            {
-                SharedState.Reset();
-                SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
-            }
+                ExoTwinsStateManager.TransitionToNextState();
 
             if (AITimer == 1f)
             {

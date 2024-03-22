@@ -13,21 +13,21 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
     public sealed partial class ApolloBehaviorOverride : NPCBehaviorOverride, IExoTwin
     {
         /// <summary>
-        /// Apollo's current AI timer.
-        /// </summary>
-        public int AITimer
-        {
-            get => (int)NPC.ai[1];
-            set => NPC.ai[1] = value;
-        }
-
-        /// <summary>
         /// Apollo's current frame.
         /// </summary>
         public int Frame
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Apollo's current AI timer.
+        /// </summary>
+        public int AITimer
+        {
+            get => (int)NPC.ai[1];
+            set => NPC.ai[1] = value;
         }
 
         /// <summary>
@@ -73,6 +73,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override int NPCOverrideID => ExoMechNPCIDs.ApolloID;
 
+        public void ResetLocalStateData()
+        {
+            NPC.ai[2] = 0f;
+            NPC.ai[3] = 0f;
+        }
+
         public override void AI()
         {
             if (!ArtemisSummonCheckPerformed)
@@ -83,6 +89,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 ArtemisSummonCheckPerformed = true;
                 NPC.netUpdate = true;
             }
+            else if (CalamityGlobalNPC.draedonExoMechTwinRed == -1)
+                NPC.active = false;
 
             // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
             NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
