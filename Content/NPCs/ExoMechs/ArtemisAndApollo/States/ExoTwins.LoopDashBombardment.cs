@@ -43,7 +43,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (AITimer <= hoverTime)
             {
                 if (AITimer == hoverTime - telegraphSoundBuffer)
-                    SoundEngine.PlaySound(Artemis.ChargeTelegraphSound);
+                    SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
 
                 Vector2 reelBackOffset = Target.SafeDirectionTo(npc.Center) * MathF.Pow(AITimer / (float)hoverTime, 8f) * 350f;
                 Vector2 hoverOffset = Target.SafeDirectionTo(npc.Center) * new Vector2(1f, 0.94f);
