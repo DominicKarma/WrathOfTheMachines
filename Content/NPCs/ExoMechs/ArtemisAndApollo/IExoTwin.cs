@@ -37,6 +37,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The intensity boost of thrusters for this Exo Twin.
+        /// </summary>
+        public float ThrusterBoost
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The current animation of this Exo Twin.
         /// </summary>
         public ExoTwinAnimation Animation

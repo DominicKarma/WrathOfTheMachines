@@ -132,7 +132,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             }
 
             if (performingStraightDash)
+            {
                 npc.velocity *= 1.014f;
+                apolloAttributes.ThrusterBoost = MathHelper.Lerp(apolloAttributes.ThrusterBoost, 1.1f, 0.2f);
+            }
 
             if (pastSpinTime)
             {
@@ -157,10 +160,16 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 DoBehavior_LoopDashBombardment_ReleasePlasmaMissile(npc);
 
             if (acceleratingAfterSpin && npc.velocity.Length() <= LoopDashBombardment_MaxApolloFinalDashSpeed)
+            {
                 npc.velocity += npc.velocity.SafeNormalize(Vector2.UnitY) * LoopDashBombardment_ApolloFinalDashAcceleration;
+                apolloAttributes.ThrusterBoost = MathHelper.Clamp(apolloAttributes.ThrusterBoost + 0.25f, 0f, 2f);
+            }
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / 40f % 1f, apolloAttributes.InPhase2);
             apolloAttributes.WingtipVorticesOpacity = Utilities.InverseLerp(30f, 45f, npc.velocity.Length());
+
+            if (Main.mouseRight)
+                AITimer = 0;
         }
 
         /// <summary>

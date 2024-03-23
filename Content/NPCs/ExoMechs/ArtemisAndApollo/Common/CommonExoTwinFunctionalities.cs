@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.ExoMechs
@@ -45,7 +45,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             {
                 float blackInterpolant = Utilities.InverseLerp(0.17f, 0.34f, completionRatio);
                 Color paletteColor = Utilities.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
-                return Color.Lerp(Color.Black, paletteColor, blackInterpolant);
+                return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant);
             }
 
             ManagedShader nerveEndingShader = ShaderManager.GetShader("ExoTwinNerveEndingShader");
@@ -120,33 +120,79 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Draws an Exo Twin's back thrusters.
+        /// </summary>
+        /// <param name="twin">The Exo Twin's NPC data.</param>
+        /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
+        public static void DrawThrusters(NPC twin, IExoTwin twinInterface)
+        {
+            float thrusterWidth = twinInterface.ThrusterBoost * 20f + 15f;
+
+            float thrusterWidthFunction(float completionRatio)
+            {
+                float thrusterPulse = Utilities.Cos01(Main.GlobalTimeWrappedHourly * -42.3f + twin.whoAmI + completionRatio * 5f) * (1f - completionRatio) * 0.5f;
+                return (MathHelper.Lerp(1f, 0.1f, MathF.Pow(completionRatio, 0.5f)) + thrusterPulse) * thrusterWidth;
+            }
+            Color thrusterColorFunction(float completionRatio)
+            {
+                Color baseColor = twin.GetAlpha(new(0.3f, 0.5f, 1f));
+                float completionRatioOpacity = MathF.Pow(Utilities.InverseLerp(0.9f, 0f, completionRatio), 1.85f);
+                float generalOpacity = twin.Opacity;
+                return baseColor * completionRatioOpacity * generalOpacity;
+            }
+
+            // Draw some bloom over everything.
+            Vector2 thrusterBloomPosition = twin.Center - Main.screenPosition - twin.rotation.ToRotationVector2() * twin.scale * 12f;
+            Texture2D thrusterBloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Color thrusterBloomColor = Color.SkyBlue * (twinInterface.ThrusterBoost * 0.6f + 0.33f);
+            thrusterBloomColor.A = 0;
+            Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor, 0f, thrusterBloom.Size() * 0.5f, 0.5f, 0, 0f);
+            Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor * 0.5f, 0f, thrusterBloom.Size() * 0.5f, 1f, 0, 0f);
+
+            PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+            {
+                Vector2 backward = Vector2.UnitY.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * 6f;
+                Vector2[] flameTrailCache = new Vector2[twin.oldPos.Length];
+                for (int i = 0; i < flameTrailCache.Length; i++)
+                    flameTrailCache[i] = Vector2.Lerp(twin.oldPos[i], twin.position, 0.6f) - twin.rotation.ToRotationVector2() * i / (float)(flameTrailCache.Length - 1f) * 200f;
+
+                ManagedShader shader = ShaderManager.GetShader("ExoTwinThrusterShader");
+                shader.TrySetParameter("whiteHotNoiseInterpolant", twinInterface.ThrusterBoost);
+                shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+
+                PrimitiveSettings settings = new(thrusterWidthFunction, thrusterColorFunction, _ =>
+                {
+                    return twin.Size * 0.5f + backward;
+                }, Pixelate: true, Shader: shader);
+                PrimitiveRenderer.RenderTrail(flameTrailCache, settings, 32);
+
+            }, PixelationPrimitiveLayer.BeforeNPCs);
+        }
+
+        /// <summary>
         /// Draws an Exo Twin's barest things.
         /// </summary>
         /// <param name="twin">The Exo Twin's NPC data.</param>
         /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
+        /// <param name="texture">The base texture.</param>
         /// <param name="glowmask">The glowmask texture.</param>
         /// <param name="lightColor">The color of light at the Exo Twin's position.</param>
         /// <param name="screenPos">The screen position offset.</param>
         /// <param name="frame">The frame of the Exo Twin.</param>
-        public static void DrawBase(NPC twin, IExoTwin twinInterface, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame)
+        public static void DrawBase(NPC twin, IExoTwin twinInterface, Texture2D texture, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame)
         {
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             DrawNerveEndings(twin, twinInterface.OpticNervePalette);
 
-            Texture2D texture = TextureAssets.Npc[twin.type].Value;
             Vector2 drawPosition = twin.Center - screenPos;
             Rectangle frameRectangle = texture.Frame(10, 9, frame / 9, frame % 9);
-
-            // Apollo's sheet appears to be malformed? Not doing this causes single-pixel jitters when increasing the horizontal frame.
-            // This just corrects that erroneous behavior by offsetting the frame's position by 1 for every horizontal frame past the first one.
-            if (twin.type == ExoMechNPCIDs.ApolloID)
-                frameRectangle.X += frame / 9;
 
             Vector2 scale = Vector2.One * twin.scale;
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
 
             DrawWingtipVortices(twin, twinInterface);
+            DrawThrusters(twin, twinInterface);
 
             twinInterface.SpecificDrawAction?.Invoke();
         }

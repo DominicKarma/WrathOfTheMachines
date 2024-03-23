@@ -1,11 +1,12 @@
 ﻿using System;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace DifferentExoMechs.Content.NPCs.ExoMechs
 {
@@ -57,6 +58,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The intensity boost of thrusters for Artemis.
+        /// </summary>
+        public float ThrusterBoost
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Artemis's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
@@ -79,7 +89,26 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// </summary>
         public Color[] OpticNervePalette => [new(75, 14, 6), new(145, 35, 4), new(204, 101, 24), new(254, 172, 84), new(224, 147, 40)];
 
+        /// <summary>
+        /// Artemis' base texture.
+        /// </summary>
+        internal static LazyAsset<Texture2D> BaseTexture;
+
+        /// <summary>
+        /// Artemis' glowmask texture.
+        /// </summary>
+        internal static LazyAsset<Texture2D> Glowmask;
+
         public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
+
+        public override void SetStaticDefaults()
+        {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
+            BaseTexture = LazyAsset<Texture2D>.Request("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Artemis");
+            Glowmask = LazyAsset<Texture2D>.Request("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
+        }
 
         public void ResetLocalStateData()
         {
@@ -111,6 +140,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
+            ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
             NPC.damage = 0;
@@ -119,8 +149,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
-            Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Artemis/ArtemisGlow").Value;
-            CommonExoTwinFunctionalities.DrawBase(NPC, this, glowmask, lightColor, screenPos, Frame);
+            CommonExoTwinFunctionalities.DrawBase(NPC, this, BaseTexture.Value, Glowmask.Value, lightColor, screenPos, Frame);
             return false;
         }
     }
