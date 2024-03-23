@@ -35,13 +35,37 @@
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
-        "y": 2,
+        "y": 0,
         "w": 80,
         "h": 218
       },
       "sourceSize": {
-        "w": 84,
-        "h": 224
+        "w": 125,
+        "h": 218
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BasicMetaballCircle.png": {
+      "frame": {
+        "x": 0,
+        "y": 718,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
       },
       "pivot": {
         "x": 0.5,
@@ -56,7 +80,7 @@
     "format": "RGBA8888",
     "size": {
       "w": 125,
-      "h": 718
+      "h": 818
     },
     "scale": 1
   }

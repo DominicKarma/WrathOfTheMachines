@@ -12,8 +12,6 @@ namespace DifferentExoMechs
     // This is FUCKED!
     public class ModelRegistry : ModSystem
     {
-        private static ContentManager contentManager;
-
         private static ConstructorInfo contentReaderConstructor;
 
         private static Func<ContentReader, object> readAsset;
@@ -46,7 +44,6 @@ namespace DifferentExoMechs
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            contentManager = new ContentManager(Main.ShaderContentManager.ServiceProvider);
             contentReaderConstructor = typeof(ContentReader).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, [typeof(ContentManager), typeof(Stream), typeof(string), typeof(int), typeof(char), typeof(Action<IDisposable>)])!;
             var readAssetMethod = typeof(ContentReader).GetMethod("ReadAsset", BindingFlags.NonPublic | BindingFlags.Instance)!.MakeGenericMethod(typeof(object));
             readAsset = (Func<ContentReader, object>)Delegate.CreateDelegate(typeof(Func<ContentReader, object>), readAssetMethod);

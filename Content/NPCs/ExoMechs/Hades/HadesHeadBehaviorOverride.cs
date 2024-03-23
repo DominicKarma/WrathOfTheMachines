@@ -3,6 +3,7 @@ using System.IO;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using DifferentExoMechs.Content.Particles;
+using DifferentExoMechs.Content.Particles.Metaballs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -218,7 +219,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
-            CurrentState = HadesAIState.ContinuousLaserBarrage;
+            CurrentState = HadesAIState.PerpendicularBodyLaserBlasts;
 
             switch (CurrentState)
             {
@@ -261,7 +262,10 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
                 float bigInterpolant = Utilities.InverseLerp(1f, 0.91f, behaviorOverride.SegmentOpenInterpolant);
                 if (behaviorOverride.SegmentOpenInterpolant >= 0.91f)
+                {
                     CreateSmoke(behaviorOverride, bigInterpolant, smokeQuantityInterpolant);
+                    ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(behaviorOverride.TurretPosition, Main.rand.NextVector2Circular(3f, 3f), 70f);
+                }
             });
         }
 
