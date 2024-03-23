@@ -7,10 +7,12 @@ using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,6 +20,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
 {
     public class ApolloMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer
     {
+        /// <summary>
+        /// The loop sound for this missile.
+        /// </summary>
+        internal LoopedSoundInstance LoopInstance;
+
         /// <summary>
         /// The texture this missile should use.
         /// </summary>
@@ -41,12 +48,17 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long missiles spend homing towards players before accelerating.
         /// </summary>
-        public static int ChaseTime => Utilities.SecondsToFrames(0.95f);
+        public static int ChaseTime => Utilities.SecondsToFrames(0.81f);
 
         /// <summary>
         /// The maximum speed that this missile can reach after it begins accelerating.
         /// </summary>
         public static float MaxSpeedup => 33f;
+
+        /// <summary>
+        /// The sound the plasma missiles play idly on loop.
+        /// </summary>
+        public static readonly SoundStyle LoopSound = new SoundStyle("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.48f };
 
         public override void SetStaticDefaults()
         {
@@ -74,6 +86,14 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
+        public override void OnSpawn(IEntitySource source)
+        {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
+            LoopInstance = LoopedSoundManager.CreateNew(LoopSound, () => !Projectile.active);
+        }
+
         public override void AI()
         {
             if (Time <= ChaseTime)
@@ -90,13 +110,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
 
             EmitBackSmoke();
 
+            LoopInstance?.Update(Projectile.Center);
+
             Time++;
         }
 
         public void ChasePlayers()
         {
             Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 20f, 0.051f);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 20f, 0.072f);
         }
 
         public void EmitBackSmoke()

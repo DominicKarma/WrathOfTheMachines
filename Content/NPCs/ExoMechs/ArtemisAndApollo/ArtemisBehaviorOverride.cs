@@ -48,6 +48,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The opacity of wingtip vortices on Artemis.
+        /// </summary>
+        public float WingtipVorticesOpacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Artemis's current animation.
         /// </summary>
         public ExoTwinAnimation Animation

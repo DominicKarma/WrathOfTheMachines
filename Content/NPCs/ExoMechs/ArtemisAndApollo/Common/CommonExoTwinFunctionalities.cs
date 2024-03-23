@@ -78,6 +78,48 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Draws an Exo Twin's wingtip vortices.
+        /// </summary>
+        /// <param name="twin">The Exo Twin's NPC data.</param>
+        /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
+        public static void DrawWingtipVortices(NPC twin, IExoTwin twinInterface)
+        {
+            if (twinInterface.WingtipVorticesOpacity <= 0f || Vector2.Dot(twin.velocity, twin.rotation.ToRotationVector2()) < 0f)
+                return;
+
+            float windWidthFunction(float completionRatio) => 6f - completionRatio * 5f;
+            Color windColorFunction(float completionRatio)
+            {
+                Color baseColor = twin.GetAlpha(Color.Gray);
+                float completionRatioOpacity = MathF.Pow(1f - completionRatio, (1f - twinInterface.WingtipVorticesOpacity) * 5f + 1f);
+                float generalOpacity = twin.Opacity * twinInterface.WingtipVorticesOpacity * 0.65f;
+                return baseColor * completionRatioOpacity * generalOpacity;
+            }
+
+            ManagedShader shader = ShaderManager.GetShader("WingtipVortexTrailShader");
+            shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1, SamplerState.LinearWrap);
+
+            PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+            {
+                Vector2 forward = Vector2.UnitY.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * 32f;
+                Vector2 side = Vector2.UnitX.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * -95f;
+
+                PrimitiveSettings leftSettings = new(windWidthFunction, windColorFunction, _ =>
+                {
+                    return twin.Size * 0.5f - side + forward;
+                }, Pixelate: true, Shader: shader);
+                PrimitiveSettings rightSettings = new(windWidthFunction, windColorFunction, _ =>
+                {
+                    return twin.Size * 0.5f + side + forward;
+                }, Pixelate: true, Shader: shader);
+
+                PrimitiveRenderer.RenderTrail(twin.oldPos, leftSettings, 24);
+                PrimitiveRenderer.RenderTrail(twin.oldPos, rightSettings, 24);
+
+            }, PixelationPrimitiveLayer.BeforeNPCs);
+        }
+
+        /// <summary>
         /// Draws an Exo Twin's barest things.
         /// </summary>
         /// <param name="twin">The Exo Twin's NPC data.</param>
@@ -103,6 +145,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             Vector2 scale = Vector2.One * twin.scale;
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+
+            DrawWingtipVortices(twin, twinInterface);
 
             twinInterface.SpecificDrawAction?.Invoke();
         }

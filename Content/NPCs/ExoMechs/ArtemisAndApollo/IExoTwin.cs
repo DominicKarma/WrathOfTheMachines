@@ -28,6 +28,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The opacity of wingtip vortices on this Exo Twin.
+        /// </summary>
+        public float WingtipVorticesOpacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The current animation of this Exo Twin.
         /// </summary>
         public ExoTwinAnimation Animation

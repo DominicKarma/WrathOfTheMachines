@@ -49,6 +49,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The opacity of wingtip vortices on Apollo.
+        /// </summary>
+        public float WingtipVorticesOpacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Apollo's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
