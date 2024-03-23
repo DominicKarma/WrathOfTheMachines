@@ -57,10 +57,18 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// </summary>
         public static readonly SoundStyle LensEjectSound = new("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/LensEject");
 
+        /// <summary>
+        /// The sound the Exo Twins make when entering their second phase.
+        /// </summary>
+        public static readonly SoundStyle Phase2TransitionSound = new("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/Phase2Transition");
+
         public static void ReleaseLens(NPC npc)
         {
             SoundEngine.PlaySound(LensEjectSound, npc.Center);
             ScreenShakeSystem.StartShakeAtPoint(npc.Center, 5f);
+
+            if (npc.type == ExoMechNPCIDs.ApolloID)
+                SoundEngine.PlaySound(Phase2TransitionSound);
 
             Vector2 lensDirection = npc.rotation.ToRotationVector2();
             Vector2 lensOffset = lensDirection * EnterSecondPhase_LensCenterOffset;

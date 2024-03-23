@@ -79,6 +79,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 DoBehavior_LoopDashBombardment_ApolloDashes(npc, twinAttributes);
             else
                 DoBehavior_LoopDashBombardment_ArtemisLasers(npc, twinAttributes);
+            twinAttributes.InPhase2 = false;
         }
 
         /// <summary>

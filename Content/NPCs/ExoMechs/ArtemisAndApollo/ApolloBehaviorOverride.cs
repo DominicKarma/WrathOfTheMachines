@@ -131,7 +131,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 NPC.active = false;
 
             Vector2 actualHitboxSize = new(164f, 164f);
-            if (NPC.Size != actualHitboxSize && false)
+            if (NPC.Size != actualHitboxSize)
                 NPC.Size = actualHitboxSize;
 
             // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
