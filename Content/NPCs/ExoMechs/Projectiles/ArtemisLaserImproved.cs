@@ -51,8 +51,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            if (Time >= 16f)
-                Projectile.velocity *= 1.017f;
+            if (Time >= 24f)
+                Projectile.velocity *= 1.016f;
 
             if (Projectile.FinalExtraUpdate())
                 Time++;

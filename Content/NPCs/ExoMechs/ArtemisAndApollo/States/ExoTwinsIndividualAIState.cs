@@ -8,6 +8,6 @@
 
         // Passive attacks.
         Artemis_SimpleLaserShots,
-        Apollo_Passive,
+        Apollo_SimpleLoopDashes,
     }
 }

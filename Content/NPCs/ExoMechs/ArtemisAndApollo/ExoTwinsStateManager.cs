@@ -21,7 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all passive individual AI states the Exo Twins can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] PassiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Apollo_Passive];
+        public static ExoTwinsIndividualAIState[] PassiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes];
 
         /// <summary>
         /// The set of all active individual AI states the Exo Twins can perform.
@@ -36,7 +36,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all active individual AI states that Apollo can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] IndividualApolloStates => [ExoTwinsIndividualAIState.Apollo_Passive, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
+        public static ExoTwinsIndividualAIState[] IndividualApolloStates => [ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
 
         public override void PostUpdateNPCs()
         {
@@ -107,9 +107,13 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             switch (twinAttributes.IndividualState.AIState)
             {
+                case ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes:
+                    ExoTwinsStates.DoBehavior_SimpleLoopDashes(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
+                    break;
                 case ExoTwinsIndividualAIState.Apollo_LoopDashBombardment:
                     ExoTwinsStates.DoBehavior_LoopDashBombardment(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
                     break;
+
                 case ExoTwinsIndividualAIState.Artemis_SimpleLaserShots:
                     ExoTwinsStates.DoBehavior_SimpleLaserShots(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
                     break;
@@ -162,7 +166,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // DEBUG, REMOVE LATER
-            apolloState = ExoTwinsIndividualAIState.Apollo_Passive;
+            apolloState = ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes;
             artemisState = ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts;
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))

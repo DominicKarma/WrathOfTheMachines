@@ -1,5 +1,5 @@
-﻿using CalamityMod.Particles;
-using CalamityMod.Sounds;
+﻿using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -16,7 +16,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Artemis speeds charging up energy during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_ChargeUpTime => Utilities.SecondsToFrames(0.9f);
+        public static int FocusedLaserBursts_ChargeUpTime => Utilities.SecondsToFrames(1.475f);
 
         /// <summary>
         /// How long Artemis spends recoiling after doing the initial spread burst during the FocusedLaserBursts attack.
@@ -94,9 +94,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (wrappedAITimer == FocusedLaserBursts_ChargeUpTime)
             {
-                SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, npc.Center);
-                FocusedLaserBursts_FireSpreadOfLasers(npc, 4, 1.5f, 0.51f);
-                FocusedLaserBursts_FireSpreadOfLasers(npc, 9, 7f, 0.98f);
+                SoundEngine.PlaySound(Artemis.LaserShotgunSound, npc.Center);
+                FocusedLaserBursts_FireSpreadOfLasers(npc, 4, 3f, 0.51f);
+                FocusedLaserBursts_FireSpreadOfLasers(npc, 7, 5f, 0.91f);
 
                 npc.velocity -= npc.rotation.ToRotationVector2() * 30f;
                 npc.netUpdate = true;
@@ -115,7 +115,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!npc.WithinRange(Target.Center, 700f))
                 npc.SmoothFlyNear(Target.Center, 0.03f, 0.93f);
             else
-                npc.velocity *= 0.97f;
+                npc.velocity *= 0.96f;
 
             if (AITimer % FocusedLaserBursts_RapidShotRate == FocusedLaserBursts_RapidShotRate - 1)
                 ShootArtemisLaser(npc, FocusedLaserBursts_RapidShotShootSpeed);
