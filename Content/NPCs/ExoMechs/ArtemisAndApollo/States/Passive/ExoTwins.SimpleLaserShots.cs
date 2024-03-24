@@ -41,6 +41,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             {
                 ShootArtemisLaser(npc, SimpleLaserShots_ArtemisShootSpeed);
                 npc.velocity -= npc.rotation.ToRotationVector2() * 7.4f;
+                npc.netUpdate = true;
             }
         }
     }
