@@ -34,7 +34,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             // Make Artemis fire her lasers. Lasers are not fired if she's close to the player.
             // This would normally be a baffling design decision, since it would result in the player simply invalidating attacks by getting near the boss.
-            // However, given that this is a passive attack, this comes with the interesting tradeoff of being able to negative the passive aspect if they divert their attention
+            // However, given that this is a passive attack, this comes with the interesting tradeoff of being able to negate the passive aspect if they divert their attention
             // from Apollo (who will be doing an active attack) a bit in favor of trying to maintain distance to Artemis. This also naturally lends itself to kiting movement as the
             // player attempts to stay near Artemis while she tries to fly away.
             if (localAITimer % SimpleLaserShots_ArtemisShootRate == SimpleLaserShots_ArtemisShootRate - 1 && !npc.WithinRange(Target.Center, 300f))
