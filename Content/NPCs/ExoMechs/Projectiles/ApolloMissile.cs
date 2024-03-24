@@ -48,12 +48,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long missiles spend homing towards players before accelerating.
         /// </summary>
-        public static int ChaseTime => Utilities.SecondsToFrames(0.81f);
+        public static int ChaseTime => Utilities.SecondsToFrames(0.75f);
 
         /// <summary>
         /// The maximum speed that this missile can reach after it begins accelerating.
         /// </summary>
-        public static float MaxSpeedup => 33f;
+        public static float MaxSpeedup => 30f;
 
         /// <summary>
         /// The sound the plasma missiles play idly on loop.

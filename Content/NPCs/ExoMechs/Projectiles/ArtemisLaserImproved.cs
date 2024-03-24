@@ -1,16 +1,22 @@
-﻿using CalamityMod;
+﻿using System;
+using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Artemis;
+using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ArtemisLaserImproved : ModProjectile, IProjOwnedByBoss<Artemis>
+    public class ArtemisLaserImproved : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>
     {
+        public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterProjectiles;
+
         /// <summary>
         /// How long this laser has existed, in frames.
         /// </summary>
@@ -21,11 +27,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public static int TotalUpdates => 4;
 
+        public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
+
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Type] = 4;
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 4;
+            ProjectileID.Sets.TrailCacheLength[Type] = 18;
         }
 
         public override void SetDefaults()
@@ -44,23 +51,51 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.frame = (int)Time / TotalUpdates / 5 % Main.projFrames[Type];
+            if (Time >= 16f)
+                Projectile.velocity *= 1.017f;
 
-            if (Time >= TotalUpdates * 35f)
-                Projectile.velocity *= 1.0189f;
+            if (Projectile.FinalExtraUpdate())
+                Time++;
 
-            Time++;
+            if (Main.rand.NextBool(10))
+            {
+                Dust spark = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), 261);
+                spark.velocity = Main.rand.NextVector2Circular(1.5f, 1.5f);
+                spark.scale = 0.9f;
+                spark.color = Color.Lerp(Color.Yellow, Color.OrangeRed, Main.rand.NextFloat());
+                spark.noGravity = true;
+            }
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(projHitbox.Center(), Projectile.width * 0.4f, targetHitbox);
+        public float LaserWidthFunction(float completionRatio)
+        {
+            float tipSqueeze = MathF.Pow(Utilities.InverseLerp(0f, 0.15f, completionRatio), 1.5f);
+            return (1f - completionRatio) * tipSqueeze * Projectile.width * 0.67f + 0.5f;
+        }
+
+        public Color LaserColorFunction(float completionRatio)
+        {
+            return Color.Lerp(Color.Orange, Color.Red, completionRatio * 0.76f) * Projectile.Opacity;
+        }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            int trailingMode = ProjectileID.Sets.TrailingMode[Type];
-            Utilities.DrawAfterimagesCentered(Projectile, trailingMode, Color.White, positionClumpInterpolant: 0.25f);
+            float opacityFactor = MathHelper.Clamp((Projectile.velocity.Length() - 3f) * 0.7f, 1f, 20f);
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition - Projectile.velocity * 2f;
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(Color.Orange) with { A = 0 } * opacityFactor * 0.4f, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.5f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(Color.Yellow) with { A = 0 } * opacityFactor * 0.7f, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.24f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(Color.Wheat) with { A = 0 } * (opacityFactor - 1f) * 0.95f, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.189f, 0, 0f);
             return false;
+        }
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            ManagedShader trailShader = ShaderManager.GetShader("ArtemisLaserShotShader");
+            trailShader.Apply();
+
+            PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 36);
         }
     }
 }

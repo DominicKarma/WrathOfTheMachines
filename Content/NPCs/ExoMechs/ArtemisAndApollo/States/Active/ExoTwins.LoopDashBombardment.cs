@@ -60,12 +60,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The closest distance Apollo can be to his targets before he ceases to fire rockets during the LoopDashBombardment attack.
         /// </summary>
-        public static float LoopDashBombardment_ApolloMissileSpawnDistanceThreshold => 256f;
+        public static float LoopDashBombardment_ApolloMissileSpawnDistanceThreshold => 320f;
 
         /// <summary>
         /// The acceleration of Apollo when performing his final straight dash during the LoopDashBombardment attack.
         /// </summary>
-        public static float LoopDashBombardment_ApolloFinalDashAcceleration => 5f;
+        public static float LoopDashBombardment_ApolloFinalDashAcceleration => 2.6f;
 
         /// <summary>
         /// The max speed of Apollo when performing his final straight dash during the LoopDashBombardment attack.
@@ -135,12 +135,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 if (performingSpinDash)
                 {
                     npc.velocity = npc.velocity.RotatedBy(MathHelper.TwoPi / spinTime * spinDirection);
-                    if (localAITimer >= hoverTime + straightDashTime + 8 && npc.velocity.AngleBetween(npc.SafeDirectionTo(Target.Center + Target.velocity * 18f)) < 0.16f)
+                    if (localAITimer >= hoverTime + straightDashTime + 8 && npc.velocity.AngleBetween(npc.SafeDirectionTo(Target.Center + Target.velocity * 17f)) < 0.16f)
                         localAITimer = hoverTime + straightDashTime + spinTime;
                 }
 
                 if (npc.velocity.Length() > LoopDashBombardment_MaxApolloSpinSpeed && !acceleratingAfterSpin)
-                    npc.velocity *= 0.925f;
+                    npc.velocity *= 0.94f;
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
                 npc.rotation = npc.velocity.ToRotation();
@@ -149,7 +149,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             // Release missiles.
             bool canFireMissiles = localAITimer >= hoverTime + straightDashTime && npc.velocity.Length() <= 150f;
             bool tooCloseToFireMissiles = npc.WithinRange(Target.Center, LoopDashBombardment_ApolloMissileSpawnDistanceThreshold);
-            if (localAITimer % 4 == 3 && canFireMissiles && !tooCloseToFireMissiles)
+            if (localAITimer % 6 == 5 && canFireMissiles && !tooCloseToFireMissiles)
                 DoBehavior_LoopDashBombardment_ReleasePlasmaMissile(npc);
 
             if (acceleratingAfterSpin && npc.velocity.Length() <= LoopDashBombardment_MaxApolloFinalDashSpeed)

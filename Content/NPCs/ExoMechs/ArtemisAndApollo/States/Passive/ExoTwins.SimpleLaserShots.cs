@@ -9,12 +9,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The rate at which Artemis shoots lasers forward during the SimpleLaserShots attack.
         /// </summary>
-        public static int SimpleLaserShots_ArtemisShootRate => Utilities.SecondsToFrames(0.8f);
+        public static int SimpleLaserShots_ArtemisShootRate => Utilities.SecondsToFrames(0.75f);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the SimpleLaserShots attack should be.
         /// </summary>
-        public static float SimpleLaserShots_ArtemisShootSpeed => 19f;
+        public static float SimpleLaserShots_ArtemisShootSpeed => 16f;
 
         /// <summary>
         /// AI update loop method for the SimpleLaserShots attack.
@@ -25,7 +25,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public static void DoBehavior_SimpleLaserShots(NPC npc, IExoTwin artemisAttributes, ref int localAITimer)
         {
             Vector2 hoverOffsetDirection = Target.SafeDirectionTo(npc.Center) * new Vector2(1f, 0.97f);
-            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(600f, 480f);
+            Vector2 hoverDestination = Target.Center + hoverOffsetDirection * new Vector2(550f, 450f);
             npc.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.061f, 0.91f, 30f);
             npc.rotation = npc.AngleTo(Target.Center);
 
@@ -37,7 +37,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             // However, given that this is a passive attack, this comes with the interesting tradeoff of being able to negative the passive aspect if they divert their attention
             // from Apollo (who will be doing an active attack) a bit in favor of trying to maintain distance to Artemis. This also naturally lends itself to kiting movement as the
             // player attempts to stay near Artemis while she tries to fly away.
-            if (localAITimer % SimpleLaserShots_ArtemisShootRate == SimpleLaserShots_ArtemisShootRate - 1 && !npc.WithinRange(Target.Center, 270f))
+            if (localAITimer % SimpleLaserShots_ArtemisShootRate == SimpleLaserShots_ArtemisShootRate - 1 && !npc.WithinRange(Target.Center, 300f))
             {
                 ShootArtemisLaser(npc, SimpleLaserShots_ArtemisShootSpeed);
                 npc.velocity -= npc.rotation.ToRotationVector2() * 7.4f;
