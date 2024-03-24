@@ -90,7 +90,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
-            // TODO -- Implement segment opening.
             return true;
         }
     }
