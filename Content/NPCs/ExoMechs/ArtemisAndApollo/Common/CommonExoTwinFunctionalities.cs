@@ -101,8 +101,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
             {
-                Vector2 forward = Vector2.UnitY.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * 32f;
-                Vector2 side = Vector2.UnitX.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * -95f;
+                bool isArtemis = twin.type == ExoMechNPCIDs.ArtemisID;
+                Vector2 forward = Vector2.UnitY.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * (isArtemis ? 10f : 32f);
+                Vector2 side = Vector2.UnitX.RotatedBy(twin.rotation + MathHelper.PiOver2) * -twin.scale * 96f;
 
                 PrimitiveSettings leftSettings = new(windWidthFunction, windColorFunction, _ =>
                 {

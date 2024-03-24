@@ -113,6 +113,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsIndividualAIState.Artemis_SimpleLaserShots:
                     ExoTwinsStates.DoBehavior_SimpleLaserShots(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
                     break;
+                case ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts:
+                    ExoTwinsStates.DoBehavior_FocusedLaserBursts(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
+                    break;
             }
             twinAttributes.IndividualState.AITimer++;
         }
@@ -158,8 +161,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 artemisState = Main.rand.Next(passiveApolloStates.ToList());
             }
 
-            apolloState = ExoTwinsIndividualAIState.Apollo_LoopDashBombardment;
-            artemisState = ExoTwinsIndividualAIState.Artemis_SimpleLaserShots;
+            // DEBUG, REMOVE LATER
+            apolloState = ExoTwinsIndividualAIState.Apollo_Passive;
+            artemisState = ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts;
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
             {
