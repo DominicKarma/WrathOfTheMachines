@@ -40,6 +40,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int LoopDashBombardment_FinalDashTime => Utilities.SecondsToFrames(1.3f);
 
         /// <summary>
+        /// How many cycles that occur during the LoopDashBombardment attack before a new one is selected.
+        /// </summary>
+        public static int LoopDashBombardment_CycleCount => 2;
+
+        /// <summary>
         /// The speed Apollo starts his straight dash at during the LoopDashBombardment attack.
         /// </summary>
         public static float LoopDashBombardment_InitialApolloDashSpeed => 60f;
@@ -165,6 +170,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 localAITimer = 0;
                 cycleCounter++;
+                if (cycleCounter >= LoopDashBombardment_CycleCount)
+                    ExoTwinsStateManager.TransitionToNextState();
+
                 npc.netUpdate = true;
             }
         }

@@ -29,9 +29,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int FocusedLaserBursts_RapidShotsTime => Utilities.SecondsToFrames(2.3f);
 
         /// <summary>
-        /// The rate at which Artemis shoots lasers during during the FocusedLaserBursts attack.
+        /// The rate at which Artemis shoots lasers during the FocusedLaserBursts attack.
         /// </summary>
         public static int FocusedLaserBursts_RapidShotRate => Utilities.SecondsToFrames(0.133f);
+
+        /// <summary>
+        /// The amount of cycles that happen during the FocusedLaserBursts attack before the mechs choose another one.
+        /// </summary>
+        public static int FocusedLaserBursts_CycleCount => 2;
 
         /// <summary>
         /// The speed of rapid-fire lasers shot during the FocusedLaserBursts attack.
@@ -57,6 +62,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
             else
                 DoBehavior_FocusedLaserBursts_FireRapidShots(npc, artemisAttributes, wrappedAITimer);
+
+            if (localAITimer >= (FocusedLaserBursts_ChargeUpTime + FocusedLaserBursts_ChargeRecoilTime + FocusedLaserBursts_RapidShotsTime) * FocusedLaserBursts_CycleCount)
+                ExoTwinsStateManager.TransitionToNextState();
         }
 
         public static void DoBehavior_FocusedLaserBursts_FireLaserSpread(NPC npc, IExoTwin artemisAttributes, int wrappedAITimer)

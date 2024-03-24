@@ -158,16 +158,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
             else
             {
-                var activeArtemisStates = IndividualArtemisStates.Where(ActiveIndividualStates.Contains);
-                apolloState = Main.rand.Next(activeArtemisStates.ToList());
-
                 var passiveApolloStates = IndividualApolloStates.Where(PassiveIndividualStates.Contains);
-                artemisState = Main.rand.Next(passiveApolloStates.ToList());
-            }
+                apolloState = Main.rand.Next(passiveApolloStates.ToList());
 
-            // DEBUG, REMOVE LATER
-            apolloState = ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes;
-            artemisState = ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts;
+                var activeArtemisStates = IndividualArtemisStates.Where(ActiveIndividualStates.Contains);
+                artemisState = Main.rand.Next(activeArtemisStates.ToList());
+            }
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
             {
