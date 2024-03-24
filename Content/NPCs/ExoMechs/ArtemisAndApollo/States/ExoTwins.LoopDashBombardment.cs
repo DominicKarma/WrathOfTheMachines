@@ -70,59 +70,45 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// AI update loop method for the LoopDashBombardment attack.
         /// </summary>
-        /// <param name="npc">The Exo Twin's NPC instance.</param>
-        /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
-        public static void DoBehavior_LoopDashBombardment(NPC npc, IExoTwin twinAttributes)
-        {
-            bool isApollo = npc.type == ExoMechNPCIDs.ApolloID;
-            if (isApollo)
-                DoBehavior_LoopDashBombardment_ApolloDashes(npc, twinAttributes);
-            else
-                DoBehavior_LoopDashBombardment_ArtemisLasers(npc, twinAttributes);
-            twinAttributes.InPhase2 = false;
-        }
-
-        /// <summary>
-        /// AI update loop method for Apollo during the LoopDashBombardment.
-        /// </summary>
         /// <param name="npc">Apollo's NPC instance.</param>
         /// <param name="apolloAttributes">Apollo's designated generic attributes.</param>
-        public static void DoBehavior_LoopDashBombardment_ApolloDashes(NPC npc, IExoTwin apolloAttributes)
+        /// <param name="localAITimer">Apollo's local AI timer.</param>
+        public static void DoBehavior_LoopDashBombardment(NPC npc, IExoTwin apolloAttributes, ref int localAITimer)
         {
             int hoverTime = LoopDashBombardment_HoverTime;
             int telegraphSoundBuffer = LoopDashBombardment_TelegraphSoundBuffer;
             int straightDashTime = LoopDashBombardment_StraightDashTime;
             int spinTime = LoopDashBombardment_SpinTime;
-            bool doneHovering = AITimer >= hoverTime;
-            bool performingStraightDash = AITimer >= hoverTime && AITimer <= hoverTime + straightDashTime;
-            bool pastSpinTime = AITimer >= hoverTime + straightDashTime;
-            bool performingSpinDash = pastSpinTime && AITimer <= hoverTime + straightDashTime + spinTime;
-            bool acceleratingAfterSpin = AITimer >= hoverTime + straightDashTime + spinTime + 10;
+            bool doneHovering = localAITimer >= hoverTime;
+            bool performingStraightDash = localAITimer >= hoverTime && localAITimer <= hoverTime + straightDashTime;
+            bool pastSpinTime = localAITimer >= hoverTime + straightDashTime;
+            bool performingSpinDash = pastSpinTime && localAITimer <= hoverTime + straightDashTime + spinTime;
+            bool acceleratingAfterSpin = localAITimer >= hoverTime + straightDashTime + spinTime + 10;
             ref float spinDirection = ref npc.ai[2];
 
             if (!doneHovering)
             {
-                if (AITimer == hoverTime - telegraphSoundBuffer)
+                if (localAITimer == hoverTime - telegraphSoundBuffer)
                     SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
 
                 // Hover to the side of the target at first. The hover offset calculation is the unit direction from the target to Apollo.
                 // By default, using this would make Apollo attempt to stay a direction from the target, merely adjusting his radius.
                 // However, since the Y position is multiplied every frame, this causes him to gradually level out and hover to the side of the target as time passes.
-                Vector2 reelBackOffset = Target.SafeDirectionTo(npc.Center) * MathF.Pow(AITimer / (float)hoverTime, 8f) * 350f;
+                Vector2 reelBackOffset = Target.SafeDirectionTo(npc.Center) * MathF.Pow(localAITimer / (float)hoverTime, 8f) * 350f;
                 Vector2 hoverOffset = Target.SafeDirectionTo(npc.Center) * new Vector2(1f, 0.94f);
                 Vector2 hoverDestination = Target.Center + hoverOffset * new Vector2(750f, 400f) + reelBackOffset;
-                npc.SmoothFlyNear(hoverDestination, AITimer / (float)hoverTime * 0.6f, 0.71f);
+                npc.SmoothFlyNear(hoverDestination, localAITimer / (float)hoverTime * 0.6f, 0.71f);
                 npc.rotation = npc.AngleTo(Target.Center);
 
                 apolloAttributes.Animation = ExoTwinAnimation.Idle;
-                if (AITimer >= hoverTime - telegraphSoundBuffer)
+                if (localAITimer >= hoverTime - telegraphSoundBuffer)
                     apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
             }
 
             if (doneHovering)
                 npc.damage = npc.defDamage;
 
-            if (AITimer == hoverTime)
+            if (localAITimer == hoverTime)
             {
                 ScreenShakeSystem.StartShakeAtPoint(npc.Center, 7.5f);
                 npc.velocity = npc.SafeDirectionTo(Target.Center) * LoopDashBombardment_InitialApolloDashSpeed;
@@ -143,8 +129,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 if (performingSpinDash)
                 {
                     npc.velocity = npc.velocity.RotatedBy(MathHelper.TwoPi / spinTime * spinDirection);
-                    if (AITimer >= hoverTime + straightDashTime + 8 && npc.velocity.AngleBetween(npc.SafeDirectionTo(Target.Center + Target.velocity * 18f)) < 0.16f)
-                        AITimer = hoverTime + straightDashTime + spinTime;
+                    if (localAITimer >= hoverTime + straightDashTime + 8 && npc.velocity.AngleBetween(npc.SafeDirectionTo(Target.Center + Target.velocity * 18f)) < 0.16f)
+                        localAITimer = hoverTime + straightDashTime + spinTime;
                 }
 
                 if (npc.velocity.Length() > LoopDashBombardment_MaxApolloSpinSpeed && !acceleratingAfterSpin)
@@ -155,9 +141,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             }
 
             // Release missiles.
-            bool canFireMissiles = AITimer >= hoverTime + straightDashTime && npc.velocity.Length() <= 150f;
+            bool canFireMissiles = localAITimer >= hoverTime + straightDashTime && npc.velocity.Length() <= 150f;
             bool tooCloseToFireMissiles = npc.WithinRange(Target.Center, LoopDashBombardment_ApolloMissileSpawnDistanceThreshold);
-            if (AITimer % 4 == 3 && canFireMissiles && !tooCloseToFireMissiles)
+            if (localAITimer % 4 == 3 && canFireMissiles && !tooCloseToFireMissiles)
                 DoBehavior_LoopDashBombardment_ReleasePlasmaMissile(npc);
 
             if (acceleratingAfterSpin && npc.velocity.Length() <= LoopDashBombardment_MaxApolloFinalDashSpeed)
@@ -166,11 +152,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 apolloAttributes.ThrusterBoost = MathHelper.Clamp(apolloAttributes.ThrusterBoost + 0.25f, 0f, 2f);
             }
 
-            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / 40f % 1f, apolloAttributes.InPhase2);
+            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(localAITimer / 40f % 1f, apolloAttributes.InPhase2);
             apolloAttributes.WingtipVorticesOpacity = Utilities.InverseLerp(30f, 45f, npc.velocity.Length());
-
-            if (Main.mouseRight)
-                AITimer = 0;
         }
 
         /// <summary>
@@ -186,16 +169,6 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 Vector2 missileSpawnPosition = apollo.Center + apollo.rotation.ToRotationVector2() * 70f;
                 Utilities.NewProjectileBetter(apollo.GetSource_FromAI(), missileSpawnPosition, missileVelocity, ModContent.ProjectileType<ApolloMissile>(), BasicShotDamage, 0f, Main.myPlayer, Target.Center.Y);
             }
-        }
-
-        /// <summary>
-        /// AI update loop method for Artemis during the LoopDashBombardment.
-        /// </summary>
-        /// <param name="npc">Artemis' NPC instance.</param>
-        /// <param name="artemisAttributes">Artemis' designated generic attributes.</param>
-        public static void DoBehavior_LoopDashBombardment_ArtemisLasers(NPC npc, IExoTwin artemisAttributes)
-        {
-            npc.velocity *= 0.6f;
         }
     }
 }

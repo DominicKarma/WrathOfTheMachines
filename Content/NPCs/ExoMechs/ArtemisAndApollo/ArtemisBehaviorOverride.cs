@@ -76,6 +76,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         } = ExoTwinAnimation.Idle;
 
         /// <summary>
+        /// The individual AI state of Artemis. Only used if the shared AI state is <see cref="ExoTwinsAIState.PerformIndividualAttacks"/>.
+        /// </summary>
+        public IndividualExoTwinStateHandler IndividualState
+        {
+            get;
+            set;
+        } = new(0);
+
+        /// <summary>
         /// Artemis' specific draw action.
         /// </summary>
         public Action? SpecificDrawAction

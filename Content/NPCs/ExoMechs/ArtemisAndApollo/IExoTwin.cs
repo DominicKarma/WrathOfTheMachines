@@ -55,6 +55,15 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The individual AI state of this Exo Twin. Only used if the shared AI state is <see cref="ExoTwinsAIState.PerformIndividualAttacks"/>.
+        /// </summary>
+        public IndividualExoTwinStateHandler IndividualState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The palette of the optic nerve of this Exo Twin.
         /// </summary>
         public Color[] OpticNervePalette

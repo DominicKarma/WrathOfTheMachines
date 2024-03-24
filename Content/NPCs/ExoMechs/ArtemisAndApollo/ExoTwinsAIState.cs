@@ -4,7 +4,8 @@
     {
         SpawnAnimation,
         DashesAndLasers,
-        LoopDashBombardment,
         EnterSecondPhase,
+
+        PerformIndividualAttacks
     }
 }
