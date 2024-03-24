@@ -3,7 +3,7 @@
     public enum ExoTwinsIndividualAIState
     {
         // Active attacks.
-        Artemis_Active,
+        Artemis_FocusedLaserBursts,
         Apollo_LoopDashBombardment,
 
         // Passive attacks.

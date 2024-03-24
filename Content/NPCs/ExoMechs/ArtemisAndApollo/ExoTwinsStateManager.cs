@@ -26,12 +26,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all active individual AI states the Exo Twins can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] ActiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_Active, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
+        public static ExoTwinsIndividualAIState[] ActiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
 
         /// <summary>
         /// The set of all active individual AI states that Artemis can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Artemis_Active];
+        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts];
 
         /// <summary>
         /// The set of all active individual AI states that Apollo can perform.
