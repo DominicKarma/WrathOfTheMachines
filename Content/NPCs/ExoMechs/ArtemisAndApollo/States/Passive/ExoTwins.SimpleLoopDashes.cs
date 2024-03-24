@@ -15,6 +15,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="localAITimer">Apollo's local AI timer.</param>
         public static void DoBehavior_SimpleLoopDashes(NPC npc, IExoTwin apolloAttributes, ref int localAITimer)
         {
+            if (!npc.WithinRange(Target.Center, 1200f))
+                npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.15f, 0.85f, 900f);
+
             if (npc.WithinRange(Target.Center, 400f))
             {
                 if (npc.velocity.AngleBetween(npc.SafeDirectionTo(Target.Center)) < 0.4f)
