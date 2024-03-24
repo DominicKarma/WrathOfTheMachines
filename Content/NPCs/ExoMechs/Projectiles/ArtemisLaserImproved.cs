@@ -8,6 +8,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,6 +19,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterProjectiles;
 
         /// <summary>
+        /// Whether this laser should play a graze sound or not.
+        /// </summary>
+        public bool UsesGrazeSound => Projectile.ai[1] == 1f;
+
+        /// <summary>
         /// How long this laser has existed, in frames.
         /// </summary>
         public ref float Time => ref Projectile.ai[0];
@@ -26,6 +32,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The amount of max updates this laser has.
         /// </summary>
         public static int TotalUpdates => 4;
+
+        /// <summary>
+        /// The sound played upon grazing the player.
+        /// </summary>
+        public static readonly SoundStyle GrazeSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/LaserGraze", 2) with { Volume = 1.2f };
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -56,6 +67,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             if (Projectile.FinalExtraUpdate())
                 Time++;
+
+            if (UsesGrazeSound && Vector2.Dot(Projectile.velocity.SafeNormalize(Vector2.Zero), Projectile.SafeDirectionTo(Main.LocalPlayer.Center)) < 0.5f && Projectile.localAI[0] == 0f)
+            {
+                if (Projectile.WithinRange(Main.LocalPlayer.Center, 540f) && !Projectile.WithinRange(Main.LocalPlayer.Center, 60f))
+                    SoundEngine.PlaySound(GrazeSound with { MaxInstances = 0 });
+                Projectile.localAI[0] = 1f;
+            }
 
             if (Main.rand.NextBool(10))
             {

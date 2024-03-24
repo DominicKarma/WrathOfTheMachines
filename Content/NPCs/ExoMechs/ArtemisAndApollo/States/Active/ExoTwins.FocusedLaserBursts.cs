@@ -21,7 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Artemis spends recoiling after doing the initial spread burst during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_ChargeRecoilTime => Utilities.SecondsToFrames(0.967f);
+        public static int FocusedLaserBursts_ChargeRecoilTime => Utilities.SecondsToFrames(1.567f);
 
         /// <summary>
         /// How long Artemis spends firing rapid shots during the FocusedLaserBursts attack.
@@ -138,6 +138,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             for (int i = 0; i < laserCount; i++)
             {
+                bool playsGrazeSound = i == laserCount / 2;
                 Vector2 aimDirection = (npc.rotation + MathHelper.Lerp(-spread, spread, i / (float)(laserCount - 1f))).ToRotationVector2();
                 Vector2 laserSpawnPosition = npc.Center + aimDirection * 76f;
                 Vector2 laserShootVelocity = aimDirection * laserShootSpeed / ArtemisLaserImproved.TotalUpdates;
@@ -155,7 +156,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 GeneralParticleHandler.SpawnParticle(spark);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Utilities.NewProjectileBetter(npc.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicShotDamage, 0f);
+                    Utilities.NewProjectileBetter(npc.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicShotDamage, 0f, -1, 0f, playsGrazeSound.ToInt());
             }
         }
     }

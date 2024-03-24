@@ -165,6 +165,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 artemisState = Main.rand.Next(activeArtemisStates.ToList());
             }
 
+            artemisState = ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts;
+            apolloState = ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes;
+
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
             {
                 artemis.IndividualState.AITimer = 0;
