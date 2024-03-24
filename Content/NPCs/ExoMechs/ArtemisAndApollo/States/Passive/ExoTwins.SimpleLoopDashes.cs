@@ -16,7 +16,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static void DoBehavior_SimpleLoopDashes(NPC npc, IExoTwin apolloAttributes, ref int localAITimer)
         {
             if (!npc.WithinRange(Target.Center, 1200f))
-                npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.15f, 0.85f, 900f);
+                npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.05f, 0.85f, 900f);
 
             if (npc.WithinRange(Target.Center, 400f))
             {
@@ -34,10 +34,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
             {
                 float idealDirection = npc.AngleTo(Target.Center);
-                float currentDirection = npc.velocity.ToRotation();
-                float nextDirection = currentDirection.AngleTowards(idealDirection, 0.009f).AngleLerp(idealDirection, 0.005f);
-                npc.velocity = nextDirection.ToRotationVector2() * npc.velocity.Length();
-                npc.velocity += idealDirection.ToRotationVector2() * 1.04f;
+                npc.velocity += idealDirection.ToRotationVector2() * 1.015f;
                 if (npc.velocity.Length() > 25f)
                     npc.velocity *= 0.98f;
                 if (npc.velocity.Length() > 40f)

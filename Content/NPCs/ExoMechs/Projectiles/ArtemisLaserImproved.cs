@@ -70,7 +70,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             if (UsesGrazeSound && Vector2.Dot(Projectile.velocity.SafeNormalize(Vector2.Zero), Projectile.SafeDirectionTo(Main.LocalPlayer.Center)) < 0.5f && Projectile.localAI[0] == 0f)
             {
-                if (Projectile.WithinRange(Main.LocalPlayer.Center, 540f) && !Projectile.WithinRange(Main.LocalPlayer.Center, 60f))
+                if (Main.LocalPlayer.WithinRange(Projectile.Center + Projectile.velocity * Projectile.MaxUpdates * 4f, 450f) && !Projectile.WithinRange(Main.LocalPlayer.Center, 60f))
                     SoundEngine.PlaySound(GrazeSound with { MaxInstances = 0 });
                 Projectile.localAI[0] = 1f;
             }
