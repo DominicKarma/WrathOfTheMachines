@@ -35,6 +35,11 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public static int LoopDashBombardment_SpinTime => Utilities.SecondsToFrames(0.8f);
 
         /// <summary>
+        /// How long Apollo spends dashing after spinning during the LoopDashBombardment attack.
+        /// </summary>
+        public static int LoopDashBombardment_FinalDashTime => Utilities.SecondsToFrames(1.3f);
+
+        /// <summary>
         /// The speed Apollo starts his straight dash at during the LoopDashBombardment attack.
         /// </summary>
         public static float LoopDashBombardment_InitialApolloDashSpeed => 60f;
@@ -42,7 +47,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The maximum speed that Apollo flies at while spinning during the LoopDashBombardment attack. When above this speed he will slow down.
         /// </summary>
-        public static float LoopDashBombardment_MaxApolloSpinSpeed => 40f;
+        public static float LoopDashBombardment_MaxApolloSpinSpeed => 33f;
 
         /// <summary>
         /// The speed of missiles shot by Apollo during the LoopDashBombardment attack.
@@ -85,6 +90,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             bool performingSpinDash = pastSpinTime && localAITimer <= hoverTime + straightDashTime + spinTime;
             bool acceleratingAfterSpin = localAITimer >= hoverTime + straightDashTime + spinTime + 10;
             ref float spinDirection = ref npc.ai[2];
+            ref float cycleCounter = ref npc.ai[3];
 
             if (!doneHovering)
             {
@@ -134,7 +140,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 }
 
                 if (npc.velocity.Length() > LoopDashBombardment_MaxApolloSpinSpeed && !acceleratingAfterSpin)
-                    npc.velocity *= 0.94f;
+                    npc.velocity *= 0.925f;
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
                 npc.rotation = npc.velocity.ToRotation();
@@ -154,6 +160,13 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(localAITimer / 40f % 1f, apolloAttributes.InPhase2);
             apolloAttributes.WingtipVorticesOpacity = Utilities.InverseLerp(30f, 45f, npc.velocity.Length());
+
+            if (localAITimer >= hoverTime + straightDashTime + spinTime + LoopDashBombardment_FinalDashTime)
+            {
+                localAITimer = 0;
+                cycleCounter++;
+                npc.netUpdate = true;
+            }
         }
 
         /// <summary>

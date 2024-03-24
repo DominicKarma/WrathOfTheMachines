@@ -7,7 +7,7 @@
         Apollo_LoopDashBombardment,
 
         // Passive attacks.
-        Artemis_Passive,
+        Artemis_SimpleLaserShots,
         Apollo_Passive,
     }
 }

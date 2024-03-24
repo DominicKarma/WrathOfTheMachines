@@ -21,7 +21,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all passive individual AI states the Exo Twins can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] PassiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_Passive, ExoTwinsIndividualAIState.Artemis_Passive];
+        public static ExoTwinsIndividualAIState[] PassiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Apollo_Passive];
 
         /// <summary>
         /// The set of all active individual AI states the Exo Twins can perform.
@@ -31,7 +31,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all active individual AI states that Artemis can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_Passive, ExoTwinsIndividualAIState.Artemis_Active];
+        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Artemis_Active];
 
         /// <summary>
         /// The set of all active individual AI states that Apollo can perform.
@@ -107,6 +107,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 case ExoTwinsIndividualAIState.Apollo_LoopDashBombardment:
                     ExoTwinsStates.DoBehavior_LoopDashBombardment(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
                     break;
+                case ExoTwinsIndividualAIState.Artemis_SimpleLaserShots:
+                    ExoTwinsStates.DoBehavior_SimpleLaserShots(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
+                    break;
             }
             twinAttributes.IndividualState.AITimer++;
         }
@@ -152,13 +155,16 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 artemisState = Main.rand.Next(passiveApolloStates.ToList());
             }
 
+            apolloState = ExoTwinsIndividualAIState.Apollo_LoopDashBombardment;
+            artemisState = ExoTwinsIndividualAIState.Artemis_SimpleLaserShots;
+
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
             {
                 artemis.IndividualState.AITimer = 0;
                 artemis.IndividualState.AIState = artemisState;
                 artemis.NPC.netUpdate = true;
             }
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ArtemisBehaviorOverride apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
             {
                 apollo.IndividualState.AITimer = 0;
                 apollo.IndividualState.AIState = apolloState;
@@ -177,7 +183,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
                 artemis.ResetLocalStateData();
 
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ArtemisBehaviorOverride apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
                 apollo.ResetLocalStateData();
 
             if (SharedState.AIState == ExoTwinsAIState.PerformIndividualAttacks)
