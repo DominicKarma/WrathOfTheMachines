@@ -2,7 +2,7 @@
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using DifferentExoMechs.Content.Particles;
+using WoTM.Content.Particles;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -16,7 +16,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ApolloMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer
     {
@@ -58,7 +58,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound the plasma missiles play idly on loop.
         /// </summary>
-        public static readonly SoundStyle LoopSound = new SoundStyle("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.48f };
+        public static readonly SoundStyle LoopSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.48f };
 
         public override void SetStaticDefaults()
         {

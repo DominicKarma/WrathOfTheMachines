@@ -2,7 +2,7 @@
 using Luminance.Common.Utilities;
 using Terraria.Audio;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class DraedonBehaviorOverride : NPCBehaviorOverride
     {

@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace DifferentExoMechs.Content.Particles
+namespace WoTM.Content.Particles
 {
     public class ElectricSparkParticle : Particle
     {
         public override int FrameCount => 4;
 
-        public override string AtlasTextureName => "DifferentExoMechs.ElectricSparkParticle.png";
+        public override string AtlasTextureName => "WoTM.ElectricSparkParticle.png";
 
         public override BlendState BlendState => BlendState.Additive;
 

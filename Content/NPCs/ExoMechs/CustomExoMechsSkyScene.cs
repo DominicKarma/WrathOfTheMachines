@@ -5,7 +5,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsSkyScene : ModSceneEffect
     {

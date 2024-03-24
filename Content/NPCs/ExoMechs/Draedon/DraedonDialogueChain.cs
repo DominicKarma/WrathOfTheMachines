@@ -2,7 +2,7 @@
 using CalamityMod.NPCs.ExoMechs;
 using Microsoft.Xna.Framework;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// Represents a collection of <see cref="DraedonDialogue"/> instances in a chain.

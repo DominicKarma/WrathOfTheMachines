@@ -2,7 +2,7 @@
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class DraedonBehaviorOverride : NPCBehaviorOverride
     {

@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed class HadesBodyBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {
@@ -198,7 +198,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override void ModifyTypeName(ref string typeName)
         {
-            typeName = Language.GetTextValue("Mods.DifferentExoMechs.NPCs.ThanatosRename");
+            typeName = Language.GetTextValue("Mods.WoTM.NPCs.ThanatosRename");
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)

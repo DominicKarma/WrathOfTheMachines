@@ -2,8 +2,8 @@
 using System.IO;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using DifferentExoMechs.Content.Particles;
-using DifferentExoMechs.Content.Particles.Metaballs;
+using WoTM.Content.Particles;
+using WoTM.Content.Particles.Metaballs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +14,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride, IHadesSegment
     {
@@ -315,7 +315,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public override void ModifyTypeName(ref string typeName)
         {
-            typeName = Language.GetTextValue("Mods.DifferentExoMechs.NPCs.ThanatosRename");
+            typeName = Language.GetTextValue("Mods.WoTM.NPCs.ThanatosRename");
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)

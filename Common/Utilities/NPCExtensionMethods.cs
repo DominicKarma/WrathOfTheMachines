@@ -1,6 +1,6 @@
 ﻿using Terraria;
 
-namespace DifferentExoMechs
+namespace WoTM
 {
     public static class NPCExtensionMethods
     {

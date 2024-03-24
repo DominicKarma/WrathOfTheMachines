@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace DifferentExoMechs.Content.Particles
+namespace WoTM.Content.Particles
 {
     public class SmokeParticle : Particle
     {
@@ -15,7 +15,7 @@ namespace DifferentExoMechs.Content.Particles
 
         public override int FrameCount => 8;
 
-        public override string AtlasTextureName => "DifferentExoMechs.SmokeParticle.png";
+        public override string AtlasTextureName => "WoTM.SmokeParticle.png";
 
         public override BlendState BlendState => BlendState.NonPremultiplied;
 

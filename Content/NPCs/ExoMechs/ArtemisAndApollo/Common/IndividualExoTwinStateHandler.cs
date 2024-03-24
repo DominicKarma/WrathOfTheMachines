@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public class IndividualExoTwinStateHandler
     {

@@ -1,4 +1,4 @@
-﻿namespace DifferentExoMechs.Content.NPCs.ExoMechs
+﻿namespace WoTM.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// A representation of the state of the <i>overall</i> Exo Mechs fight, holding all of the Exo Mech NPC data.

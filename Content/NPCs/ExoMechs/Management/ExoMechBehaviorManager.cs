@@ -3,7 +3,7 @@ using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed class ExoMechBehaviorManager : ModSystem
     {

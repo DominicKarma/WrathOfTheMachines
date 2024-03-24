@@ -2,7 +2,7 @@
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -11,7 +11,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public static partial class ExoTwinsStates
     {

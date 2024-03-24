@@ -7,7 +7,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DifferentExoMechs
+namespace WoTM
 {
     public class NPCOverrideGlobalManager : GlobalNPC
     {

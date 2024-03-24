@@ -1,6 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using DifferentExoMechs.Content.Particles;
+using WoTM.Content.Particles;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -10,7 +10,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>
     {

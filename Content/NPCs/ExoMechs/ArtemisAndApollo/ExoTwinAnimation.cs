@@ -2,7 +2,7 @@
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// Represents a sequence of animation frames that the Exo Twins can perform.

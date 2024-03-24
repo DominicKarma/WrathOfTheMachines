@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class ArtemisBehaviorOverride : NPCBehaviorOverride, IExoTwin
     {
@@ -115,8 +115,8 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            BaseTexture = LazyAsset<Texture2D>.Request("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Artemis");
-            Glowmask = LazyAsset<Texture2D>.Request("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
+            BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Artemis");
+            Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
         }
 
         public void ResetLocalStateData()

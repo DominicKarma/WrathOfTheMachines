@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ArtemisLaserImproved : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>
     {

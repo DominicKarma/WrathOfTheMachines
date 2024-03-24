@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace DifferentExoMechs.Content.Particles.Metaballs
+namespace WoTM.Content.Particles.Metaballs
 {
     public class HeatDistortionMetaball : MetaballType
     {
-        public override string MetaballAtlasTextureToUse => "DifferentExoMechs.BasicMetaballCircle.png";
+        public override string MetaballAtlasTextureToUse => "WoTM.BasicMetaballCircle.png";
 
         public override Color EdgeColor => Color.Transparent;
 

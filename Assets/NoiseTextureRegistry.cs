@@ -5,13 +5,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Assets
+namespace WoTM.Assets
 {
     public class MiscTexturesRegistry : ModSystem
     {
         #region Texture Path Constants
 
-        public const string ExtraTexturesPath = "DifferentExoMechs/Assets/ExtraTextures";
+        public const string ExtraTexturesPath = "WoTM/Assets/ExtraTextures";
 
         #endregion Texture Path Constants
 

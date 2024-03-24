@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader;
 
-namespace DifferentExoMechs
+namespace WoTM
 {
     public class InfernumModeCompatibility : ModSystem
     {

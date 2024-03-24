@@ -2,7 +2,7 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
-using DifferentExoMechs.Content.Particles;
+using WoTM.Content.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,7 +13,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public static partial class ExoTwinsStates
     {
@@ -55,12 +55,12 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The sound the Exo Twins make when ejecting their lens.
         /// </summary>
-        public static readonly SoundStyle LensEjectSound = new("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/LensEject");
+        public static readonly SoundStyle LensEjectSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/LensEject");
 
         /// <summary>
         /// The sound the Exo Twins make when entering their second phase.
         /// </summary>
-        public static readonly SoundStyle Phase2TransitionSound = new("DifferentExoMechs/Assets/Sounds/Custom/ExoTwins/Phase2Transition");
+        public static readonly SoundStyle Phase2TransitionSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/Phase2Transition");
 
         public static void ReleaseLens(NPC npc)
         {
@@ -243,7 +243,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
                 Main.spriteBatch.PrepareForShaders();
 
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-            Texture2D forcefield = ModContent.Request<Texture2D>("DifferentExoMechs/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
+            Texture2D forcefield = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
             float spreadScale = 425f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;

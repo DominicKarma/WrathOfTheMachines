@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// A representation of a shared collection of state variables, that both Artemis and Apollo access for their attacks.

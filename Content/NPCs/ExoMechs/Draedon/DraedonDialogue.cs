@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     /// <summary>
     /// Represents a single unit of dialogue that Draedon can say.

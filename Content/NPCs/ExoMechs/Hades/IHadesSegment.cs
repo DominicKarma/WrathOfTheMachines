@@ -1,4 +1,4 @@
-﻿namespace DifferentExoMechs.Content.NPCs.ExoMechs
+﻿namespace WoTM.Content.NPCs.ExoMechs
 {
     public interface IHadesSegment
     {

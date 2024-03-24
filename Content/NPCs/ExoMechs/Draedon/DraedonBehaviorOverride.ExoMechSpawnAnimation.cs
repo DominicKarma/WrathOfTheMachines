@@ -14,7 +14,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class DraedonBehaviorOverride : NPCBehaviorOverride
     {
@@ -32,7 +32,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
         public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.2f);
 
-        public static readonly SoundStyle SirenSound = new("DifferentExoMechs/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
+        public static readonly SoundStyle SirenSound = new("WoTM/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
 
         /// <summary>
         /// The AI method that makes Draedon handle the Exo Mech spawning.
@@ -40,9 +40,9 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         public void DoBehavior_ExoMechSpawnAnimation()
         {
             if (AITimer == 1f)
-                CalamityUtils.DisplayLocalizedText("Mods.DifferentExoMechs.NPCs.Draedon.ExoMechChoiceResponse1", Draedon.TextColor);
+                CalamityUtils.DisplayLocalizedText("Mods.WoTM.NPCs.Draedon.ExoMechChoiceResponse1", Draedon.TextColor);
             if (AITimer == SirenDelay)
-                CalamityUtils.DisplayLocalizedText("Mods.DifferentExoMechs.NPCs.Draedon.ExoMechChoiceResponse2", Draedon.TextColorEdgy);
+                CalamityUtils.DisplayLocalizedText("Mods.WoTM.NPCs.Draedon.ExoMechChoiceResponse2", Draedon.TextColorEdgy);
 
             PerformStandardFraming();
 

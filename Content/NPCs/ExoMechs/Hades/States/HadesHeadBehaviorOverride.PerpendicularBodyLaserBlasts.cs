@@ -2,7 +2,7 @@
 using CalamityMod;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using DifferentExoMechs.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,7 +13,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride
     {
@@ -75,7 +75,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// </summary>
         public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
 
-        public static readonly SoundStyle LaserChargeUpSound = new("DifferentExoMechs/Assets/Sounds/Custom/Hades/LaserChargeUp");
+        public static readonly SoundStyle LaserChargeUpSound = new("WoTM/Assets/Sounds/Custom/Hades/LaserChargeUp");
 
         /// <summary>
         /// AI update loop method for the PerpendicularBodyLaserBlasts attack.

@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs
+namespace WoTM
 {
     // This is FUCKED!
     public class ModelRegistry : ModSystem
@@ -27,7 +27,7 @@ namespace DifferentExoMechs
 
         public static Model LoadModel(string modelName)
         {
-            byte[] modelData = ModContent.GetFileBytes($"DifferentExoMechs/Assets/Models/{modelName}.xnc");
+            byte[] modelData = ModContent.GetFileBytes($"WoTM/Assets/Models/{modelName}.xnc");
             using MemoryStream stream = new(modelData);
             return LoadAsset<Model>(new MemoryStream(modelData), modelName);
         }

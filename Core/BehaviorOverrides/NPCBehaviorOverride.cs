@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace DifferentExoMechs
+namespace WoTM
 {
     public abstract class NPCBehaviorOverride : ModType<NPC, NPCBehaviorOverride>
     {

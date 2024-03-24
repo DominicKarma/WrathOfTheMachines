@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsColorationSystem : ModSystem
     {

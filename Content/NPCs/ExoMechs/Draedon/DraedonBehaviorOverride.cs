@@ -10,7 +10,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class DraedonBehaviorOverride : NPCBehaviorOverride
     {
@@ -70,7 +70,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// Draedon's starting monologue. This is spoken the first time the player interacts with him.
         /// </summary>
-        public static readonly DraedonDialogueChain StartingMonologue = new DraedonDialogueChain("Mods.DifferentExoMechs.NPCs.Draedon.").
+        public static readonly DraedonDialogueChain StartingMonologue = new DraedonDialogueChain("Mods.WoTM.NPCs.Draedon.").
             Add("IntroductionMonologue1").
             Add("IntroductionMonologue2").
             Add("IntroductionMonologue3").
@@ -80,7 +80,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// Draedon's starting monologue. This is spoken in successive battles.
         /// </summary>
-        public static readonly DraedonDialogueChain StartingMonologueBrief = new DraedonDialogueChain("Mods.DifferentExoMechs.NPCs.Draedon.").
+        public static readonly DraedonDialogueChain StartingMonologueBrief = new DraedonDialogueChain("Mods.WoTM.NPCs.Draedon.").
             Add("IntroductionMonologueBrief", Draedon.TextColorEdgy, 1);
 
         public override int NPCOverrideID => ModContent.NPCType<Draedon>();

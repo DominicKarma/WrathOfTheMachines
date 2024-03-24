@@ -1,6 +1,6 @@
 ﻿using Terraria;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public static partial class ExoTwinsStates
     {

@@ -1,4 +1,4 @@
-﻿using DifferentExoMechs.Content.Particles.Metaballs;
+﻿using WoTM.Content.Particles.Metaballs;
 using Luminance.Assets;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Core.Graphics.EffectManagers
+namespace WoTM.Core.Graphics.EffectManagers
 {
     [Autoload(Side = ModSide.Client)]
     public class HeatDistortionSystem : ModSystem

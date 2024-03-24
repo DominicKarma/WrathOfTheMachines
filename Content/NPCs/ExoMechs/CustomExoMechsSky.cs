@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace DifferentExoMechs.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsSky : CustomSky
     {
@@ -36,7 +36,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
         /// <summary>
         /// The identifier key for this sky.
         /// </summary>
-        public const string SkyKey = "DifferentExoMechs:ExoMechsSky";
+        public const string SkyKey = "WoTM:ExoMechsSky";
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
@@ -111,7 +111,7 @@ namespace DifferentExoMechs.Content.NPCs.ExoMechs
 
             // Prepare shaders.
             ManagedShader shader = ShaderManager.GetShader("ModelPrimitiveShader");
-            Main.instance.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("DifferentExoMechs/Content/NPCs/ExoMechs/CargoPlaneModelTexture").Value;
+            Main.instance.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/CargoPlaneModelTexture").Value;
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             Main.instance.GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
 
