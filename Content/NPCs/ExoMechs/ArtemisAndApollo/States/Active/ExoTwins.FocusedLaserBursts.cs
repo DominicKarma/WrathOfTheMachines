@@ -21,7 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Artemis spends recoiling after doing the initial spread burst during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_ChargeRecoilTime => Utilities.SecondsToFrames(1.567f);
+        public static int FocusedLaserBursts_ChargeRecoilTime => Utilities.SecondsToFrames(1.267f);
 
         /// <summary>
         /// How long Artemis spends firing rapid shots during the FocusedLaserBursts attack.
