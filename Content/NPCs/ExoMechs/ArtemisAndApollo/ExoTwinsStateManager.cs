@@ -196,7 +196,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Selects and uses a new AI state for the Exo Twins.
+        /// Selects and uses a new AI state for the Exo Twins, resetting attack-state-specific variables in the process.
         /// </summary>
         public static void TransitionToNextState(ExoTwinsAIState? stateToUse = null)
         {
