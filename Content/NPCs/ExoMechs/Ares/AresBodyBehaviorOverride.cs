@@ -145,6 +145,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.Frame = (AITimer / 5 + 12) % 11;
             });
 
+            NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.Opacity = 1f;
 
             AITimer++;

@@ -5,6 +5,7 @@ using CalamityMod.NPCs;
 using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,6 +13,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -171,9 +173,27 @@ namespace WoTM.Content.NPCs.ExoMechs
             return false;
         }
 
-        public void DrawMagneticLine(Vector2 start, Vector2 end)
+        public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end)
         {
+            Vector2[] controlPoints = new Vector2[8];
+            for (int i = 0; i < controlPoints.Length; i++)
+                controlPoints[i] = Vector2.Lerp(start, end, i / 7f);
 
+            Vector2 distortionVelocity = (end - start).RotatedByRandom(0.4f) * 0.01f;
+            ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(Vector2.Lerp(start, end, Main.rand.NextFloat(0.45f, 0.7f)), distortionVelocity, 18f);
+
+            float magnetismWidthFunction(float completionRatio) => aresBody.Opacity * 12f;
+            Color magnetismColorFunction(float completionRatio) => aresBody.GetAlpha(Color.Cyan) * 0.45f;
+
+            PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
+            {
+                ManagedShader magnetismShader = ShaderManager.GetShader("WoTM.AresMagneticConnectionShader");
+                magnetismShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
+
+                PrimitiveSettings magnetismLineSettings = new(magnetismWidthFunction, magnetismColorFunction, Pixelate: true, Shader: magnetismShader);
+                PrimitiveRenderer.RenderTrail(controlPoints, magnetismLineSettings, 24);
+
+            }, PixelationPrimitiveLayer.BeforeNPCs);
         }
 
         /// <summary>
@@ -243,7 +263,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(shoulderTexture, shoulderDrawPosition, shoulderFrame, shoulderColor, 0f, shoulderFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection(), 0f);
             spriteBatch.Draw(shoulderTextureGlowmask, shoulderDrawPosition, shoulderFrame, glowmaskColor, 0f, shoulderFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection(), 0f);
 
-            return armStart + armRotation.ToRotationVector2() * aresBody.scale * ArmSide * 92f;
+            Vector2 armEnd = armStart + armRotation.ToRotationVector2() * aresBody.scale * ArmSide * 92f;
+
+            return armEnd;
         }
 
         /// <summary>
@@ -277,13 +299,15 @@ namespace WoTM.Content.NPCs.ExoMechs
                 forearmRotation += MathHelper.Pi;
             }
 
-            forearmDrawPosition += new Vector2(ArmSide * 20f, 16f).RotatedBy(forearmRotation);
+            forearmDrawPosition += new Vector2(ArmSide * 20f, 16f).RotatedBy(forearmRotation) * aresBody.scale;
 
             spriteBatch.Draw(armSegmentTexture, segmentDrawPosition, shoulderFrame, segmentColor, segmentRotation, shoulderFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(armSegmentTextureGlowmask, segmentDrawPosition, shoulderFrame, glowmaskColor, segmentRotation, shoulderFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
             spriteBatch.Draw(forearmTexture, forearmDrawPosition, forearmFrame, segmentColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, forearmDrawPosition, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
+
+            DrawMagneticLine(aresBody, forearmDrawPosition + Main.screenPosition - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 20f, ArmEndpoint - new Vector2(ArmSide * -60f, 8f).RotatedBy(forearmRotation) * aresBody.scale);
         }
 
         /// <summary>
@@ -336,6 +360,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(armTexture, armStart, armFrame, armColor, armRotation, armOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(armTextureGlowmask, armStart, armFrame, glowmaskColor, armRotation, armOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
+            Vector2 magnetLineOffset = new Vector2(ArmSide * 50f, -10f).RotatedBy(armRotation) + Main.screenPosition;
+            DrawMagneticLine(aresBody, armStart + magnetLineOffset, elbowDrawPosition + magnetLineOffset);
+
             return elbowDrawPosition;
         }
 
@@ -366,6 +393,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             Color glowmaskColor = aresBody.GetAlpha(Color.Wheat);
             spriteBatch.Draw(forearmTexture, armStart, forearmFrame, forearmColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, armStart, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
+
+            DrawMagneticLine(aresBody, armStart + Main.screenPosition, ArmEndpoint);
         }
 
         public override void DrawBehind(int index)

@@ -96,8 +96,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return baseColor * completionRatioOpacity * generalOpacity;
             }
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.WingtipVortexTrailShader");
-            shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1, SamplerState.LinearWrap);
+            ManagedShader windShader = ShaderManager.GetShader("WoTM.WingtipVortexTrailShader");
+            windShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1, SamplerState.LinearWrap);
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
             {
@@ -108,11 +108,11 @@ namespace WoTM.Content.NPCs.ExoMechs
                 PrimitiveSettings leftSettings = new(windWidthFunction, windColorFunction, _ =>
                 {
                     return twin.Size * 0.5f - side + forward;
-                }, Pixelate: true, Shader: shader);
+                }, Pixelate: true, Shader: windShader);
                 PrimitiveSettings rightSettings = new(windWidthFunction, windColorFunction, _ =>
                 {
                     return twin.Size * 0.5f + side + forward;
-                }, Pixelate: true, Shader: shader);
+                }, Pixelate: true, Shader: windShader);
 
                 PrimitiveRenderer.RenderTrail(twin.oldPos, leftSettings, 24);
                 PrimitiveRenderer.RenderTrail(twin.oldPos, rightSettings, 24);

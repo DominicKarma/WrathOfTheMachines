@@ -1,7 +1,6 @@
-sampler whiteHotNoiseTexture : register(s1);
+sampler magnetLineShapeNoiseTexture : register(s1);
 
 float globalTime;
-float whiteHotNoiseInterpolant;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -38,21 +37,20 @@ float QuadraticBump(float x)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float2 coords = input.TextureCoordinates;
+    float4 color = input.Color;
     
     // Account for texture distortion artifacts in accordance with the primitive distortion fixes.
     coords.y = (coords.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
-    float whiteHotNoise = 1 - tex2D(whiteHotNoiseTexture, coords + float2(globalTime * -5.4, 0));
-    float whiteHotBrightness = pow(QuadraticBump(coords.y) * (1 - coords.x), 5) * whiteHotNoise * lerp(0.5, 3.3, whiteHotNoiseInterpolant);
+    float horizontalFade = QuadraticBump(coords.y);
+    float topBottomFade = pow(QuadraticBump(coords.x), 2);
+    float shapeOffset = tex2D(magnetLineShapeNoiseTexture, coords * 0.4 + float2(0, globalTime * 0.7)).r;
+    float pulse = sin(coords.x * 75 - horizontalFade * 2 - globalTime * -16 + shapeOffset * 6);
     
-    float edgeOpacity = QuadraticBump(coords.y);
-    float4 color = input.Color * edgeOpacity * 1.6;
+    float4 base = color * topBottomFade * pulse;
     
-    color -= float4(0.01, 0.31, 0.08, 0) * tex2D(whiteHotNoiseTexture, coords * float2(0.7, 2) + float2(globalTime * -3.1, 0.16)) * color.a;
-    
-    return color + whiteHotBrightness * color.a;
+    return base + smoothstep(0.5, 0.75, horizontalFade) * base.a * 1.5;
 }
-
 technique Technique1
 {
     pass AutoloadPass
