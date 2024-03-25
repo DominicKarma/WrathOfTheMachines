@@ -106,44 +106,15 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformPreUpdateResets();
             ExecuteCurrentState();
 
-            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 14f, 0.3f);
+            if (NPC.WithinRange(Target.Center, 56f))
+                NPC.velocity *= 0.94f;
+            else
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 14f, 0.3f);
 
-            InstructionsForHand[0] = new(hand =>
-            {
-                hand.NPC.Opacity = 1f;
-                hand.UsesBackArm = true;
-                hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(-420f, 80f), 0.2f, 0.84f);
-                hand.RotateToLookAt(Target.Center);
-                hand.ArmSide = -1;
-                hand.Frame = (AITimer / 5 + 9) % 11;
-            });
-            InstructionsForHand[1] = new(hand =>
-            {
-                hand.NPC.Opacity = 1f;
-                hand.UsesBackArm = false;
-                hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(-300f, 224f), 0.2f, 0.84f);
-                hand.RotateToLookAt(Target.Center);
-                hand.ArmSide = -1;
-                hand.Frame = (AITimer / 5 + 7) % 11;
-            });
-            InstructionsForHand[2] = new(hand =>
-            {
-                hand.NPC.Opacity = 1f;
-                hand.UsesBackArm = false;
-                hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(300f, 224f), 0.2f, 0.84f);
-                hand.RotateToLookAt(Target.Center);
-                hand.ArmSide = 1;
-                hand.Frame = (AITimer / 5 + 2) % 11;
-            });
-            InstructionsForHand[3] = new(hand =>
-            {
-                hand.NPC.Opacity = 1f;
-                hand.UsesBackArm = true;
-                hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(420f, 80f), 0.2f, 0.84f);
-                hand.RotateToLookAt(Target.Center);
-                hand.ArmSide = 1;
-                hand.Frame = (AITimer / 5 + 12) % 11;
-            });
+            InstructionsForHand[0] = new(h => StandardHandUpdate(h, new Vector2(-400f, 80f), -1, true));
+            InstructionsForHand[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), -1, false));
+            InstructionsForHand[2] = new(h => StandardHandUpdate(h, new Vector2(300f, 224f), 1, false));
+            InstructionsForHand[3] = new(h => StandardHandUpdate(h, new Vector2(400f, 80f), 1, true));
 
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.Opacity = 1f;
@@ -161,6 +132,16 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             for (int i = 0; i < ArmCount; i++)
                 NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<AresHand>(), NPC.whoAmI, i);
+        }
+
+        public void StandardHandUpdate(AresHand hand, Vector2 hoverOffset, int armSide, bool usesBackArm)
+        {
+            hand.NPC.SmoothFlyNear(NPC.Center + hoverOffset, 0.2f, 0.84f);
+            hand.RotateToLookAt(Target.Center);
+            hand.NPC.Opacity = Utilities.Saturate(hand.NPC.Opacity + 0.2f);
+            hand.UsesBackArm = usesBackArm;
+            hand.ArmSide = armSide;
+            hand.Frame = (AITimer / 5 + 12) % 11;
         }
 
         /// <summary>

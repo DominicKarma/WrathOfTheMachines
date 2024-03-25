@@ -131,10 +131,29 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
-            ArmEndpoint = NPC.Center;
-            body.InstructionsForHand[LocalIndex]?.Action?.Invoke(this);
-            NPC.Calamity().ShouldCloseHPBar = true;
+            NPC.noTileCollide = true;
+            if (Main.mouseRight)
+            {
+                NPC.noTileCollide = false;
+                NPC.velocity.X *= 0.95f;
+                NPC.velocity.Y += 0.7f;
+                NPC.Opacity = Utilities.Saturate(NPC.Opacity - 0.04f);
+                NPC.rotation = NPC.rotation.AngleLerp(0f, 0.15f);
+                ArmEndpoint += Main.rand.NextVector2Circular(1f, 2f) * NPC.Opacity;
 
+                if (NPC.Opacity <= 0f)
+                {
+                    HandType = AresHandType.LaserCannon;
+                    NPC.Center = ArmEndpoint + Vector2.UnitY * 240f;
+                }
+            }
+            else
+                ArmEndpoint = NPC.Center;
+
+            NPC.Calamity().ShouldCloseHPBar = true;
+            body.InstructionsForHand[LocalIndex]?.Action?.Invoke(this);
+
+            NPC.dontTakeDamage = NPC.Opacity < 0.95f;
             NPC.realLife = CalamityGlobalNPC.draedonExoMechPrime;
         }
 
@@ -173,17 +192,17 @@ namespace WoTM.Content.NPCs.ExoMechs
             return false;
         }
 
-        public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end)
+        public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end, float opacity = 1f)
         {
             Vector2[] controlPoints = new Vector2[8];
             for (int i = 0; i < controlPoints.Length; i++)
                 controlPoints[i] = Vector2.Lerp(start, end, i / 7f);
 
             Vector2 distortionVelocity = (end - start).RotatedByRandom(0.4f) * 0.01f;
-            ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(Vector2.Lerp(start, end, Main.rand.NextFloat(0.45f, 0.7f)), distortionVelocity, 18f);
+            ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(Vector2.Lerp(start, end, Main.rand.NextFloat(0.45f, 0.7f)), distortionVelocity, opacity * 18f);
 
             float magnetismWidthFunction(float completionRatio) => aresBody.Opacity * 12f;
-            Color magnetismColorFunction(float completionRatio) => aresBody.GetAlpha(Color.Cyan) * 0.45f;
+            Color magnetismColorFunction(float completionRatio) => aresBody.GetAlpha(Color.Cyan) * opacity * 0.45f;
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
             {
@@ -307,7 +326,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(forearmTexture, forearmDrawPosition, forearmFrame, segmentColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, forearmDrawPosition, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
-            DrawMagneticLine(aresBody, forearmDrawPosition + Main.screenPosition - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 20f, ArmEndpoint - new Vector2(ArmSide * -60f, 8f).RotatedBy(forearmRotation) * aresBody.scale);
+            Vector2 magnetismStart = forearmDrawPosition + Main.screenPosition - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 20f;
+            Vector2 magnetismEnd = ArmEndpoint - new Vector2(ArmSide * -60f, 8f).RotatedBy(forearmRotation) * aresBody.scale;
+            DrawMagneticLine(aresBody, magnetismStart, magnetismEnd, NPC.Opacity.Cubed());
         }
 
         /// <summary>
@@ -394,7 +415,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(forearmTexture, armStart, forearmFrame, forearmColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, armStart, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
-            DrawMagneticLine(aresBody, armStart + Main.screenPosition, ArmEndpoint);
+            DrawMagneticLine(aresBody, armStart + Main.screenPosition, ArmEndpoint, NPC.Opacity.Cubed());
         }
 
         public override void DrawBehind(int index)
