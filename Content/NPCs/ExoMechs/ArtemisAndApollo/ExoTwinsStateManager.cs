@@ -142,7 +142,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Picks a set of two individualized AI states for Artemis and Apollo, at random, with there being one passive attack and one active one.
+        /// Picks a new set of two individualized AI states for Artemis and Apollo, at random, with there being one passive attack and one active one.
         /// </summary>
         public static void PickIndividualAIStates()
         {
@@ -158,7 +158,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ExoTwinsIndividualAIState apolloState = previousApolloState;
             ExoTwinsIndividualAIState artemisState = previousArtemisState;
 
-            for (int i = 0; i < 100; i++)
+            for (int tries = 0; tries < 100; tries++)
             {
                 if (apolloWillPerformActiveState)
                 {
@@ -177,7 +177,12 @@ namespace WoTM.Content.NPCs.ExoMechs
                     artemisState = Main.rand.Next(activeArtemisStates.ToList());
                 }
 
-                if (artemisState != previousArtemisState && apolloState != previousApolloState)
+                // Toggle the apolloWillPerformActiveState variable, so that if there is no set of new individual states with the selected leading mech it's possible to alternate
+                // to a case that is valid.
+                apolloWillPerformActiveState = !apolloWillPerformActiveState;
+
+                bool newAttackComboSelected = artemisState != previousArtemisState && apolloState != previousApolloState;
+                if (newAttackComboSelected)
                     break;
             }
 
