@@ -5,7 +5,7 @@ Projectiles: {
 }
 
 NPCs: {
-	ThanatosRename: XM-04 Hades
+	AresHand.DisplayName: Ares Hand
 
 	Draedon: {
 		IntroductionMonologue1: I have waited long for this moment.
@@ -17,4 +17,6 @@ NPCs: {
 		ExoMechChoiceResponse1: Excellent.
 		ExoMechChoiceResponse2: They will arrive shortly.
 	}
+
+	ThanatosRename: XM-04 Hades
 }
