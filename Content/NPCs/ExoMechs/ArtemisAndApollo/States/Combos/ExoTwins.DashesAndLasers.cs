@@ -129,9 +129,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (wrappedTime <= hoverTime + reelBackTime)
             {
-                if (wrappedTime == hoverTime + 1)
-                    SoundEngine.PlaySound(Artemis.AttackSelectionSound);
-
                 float reelBackSpeed = Utilities.InverseLerp(0f, reelBackTime, wrappedTime - hoverTime).Squared() * 40f;
                 float lookAngularVelocity = Utils.Remap(wrappedTime - hoverTime, 0f, reelBackTime, 0.4f, 0.029f);
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), lookAngularVelocity);
@@ -158,6 +155,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
                 apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(Utilities.InverseLerp(0f, dashTime, wrappedTime - hoverTime - reelBackTime), apolloAttributes.InPhase2);
+                apolloAttributes.ThrusterBoost = MathHelper.Lerp(apolloAttributes.ThrusterBoost, 1.3f, 0.2f);
 
                 return;
             }
@@ -226,7 +224,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             CritSpark spark = new(laserSpawnPosition, Vector2.Zero, Color.Yellow, Color.OrangeRed, 2.2f, 11, 0.1f, 3f);
             GeneralParticleHandler.SpawnParticle(spark);
 
-            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, laserSpawnPosition);
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { Volume = 0.8f }, laserSpawnPosition);
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
                 Utilities.NewProjectileBetter(artemis.GetSource_FromAI(), laserSpawnPosition, laserShootVelocity, ModContent.ProjectileType<ArtemisLaserImproved>(), BasicShotDamage, 0f);

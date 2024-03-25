@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using CalamityMod.NPCs;
+using CalamityMod.NPCs.ExoMechs.Artemis;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -144,42 +146,48 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static void PickIndividualAIStates()
         {
+            if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
+                return;
+
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
+                return;
+
             bool apolloWillPerformActiveState = Main.rand.NextBool();
-            ExoTwinsIndividualAIState apolloState;
-            ExoTwinsIndividualAIState artemisState;
+            ExoTwinsIndividualAIState previousArtemisState = artemis.IndividualState.AIState;
+            ExoTwinsIndividualAIState previousApolloState = apollo.IndividualState.AIState;
+            ExoTwinsIndividualAIState apolloState = previousApolloState;
+            ExoTwinsIndividualAIState artemisState = previousArtemisState;
 
-            if (apolloWillPerformActiveState)
+            for (int i = 0; i < 100; i++)
             {
-                var activeApolloStates = IndividualApolloStates.Where(ActiveIndividualStates.Contains);
-                apolloState = Main.rand.Next(activeApolloStates.ToList());
+                if (apolloWillPerformActiveState)
+                {
+                    var activeApolloStates = IndividualApolloStates.Where(ActiveIndividualStates.Contains);
+                    apolloState = Main.rand.Next(activeApolloStates.ToList());
 
-                var passiveArtemisStates = IndividualArtemisStates.Where(PassiveIndividualStates.Contains);
-                artemisState = Main.rand.Next(passiveArtemisStates.ToList());
-            }
-            else
-            {
-                var passiveApolloStates = IndividualApolloStates.Where(PassiveIndividualStates.Contains);
-                apolloState = Main.rand.Next(passiveApolloStates.ToList());
+                    var passiveArtemisStates = IndividualArtemisStates.Where(PassiveIndividualStates.Contains);
+                    artemisState = Main.rand.Next(passiveArtemisStates.ToList());
+                }
+                else
+                {
+                    var passiveApolloStates = IndividualApolloStates.Where(PassiveIndividualStates.Contains);
+                    apolloState = Main.rand.Next(passiveApolloStates.ToList());
 
-                var activeArtemisStates = IndividualArtemisStates.Where(ActiveIndividualStates.Contains);
-                artemisState = Main.rand.Next(activeArtemisStates.ToList());
+                    var activeArtemisStates = IndividualArtemisStates.Where(ActiveIndividualStates.Contains);
+                    artemisState = Main.rand.Next(activeArtemisStates.ToList());
+                }
+
+                if (artemisState != previousArtemisState && apolloState != previousApolloState)
+                    break;
             }
 
-            artemisState = ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts;
-            apolloState = ExoTwinsIndividualAIState.Apollo_SimpleLoopDashes;
+            artemis.IndividualState.AITimer = 0;
+            artemis.IndividualState.AIState = artemisState;
+            artemis.NPC.netUpdate = true;
 
-            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
-            {
-                artemis.IndividualState.AITimer = 0;
-                artemis.IndividualState.AIState = artemisState;
-                artemis.NPC.netUpdate = true;
-            }
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
-            {
-                apollo.IndividualState.AITimer = 0;
-                apollo.IndividualState.AIState = apolloState;
-                apollo.NPC.netUpdate = true;
-            }
+            apollo.IndividualState.AITimer = 0;
+            apollo.IndividualState.AIState = apolloState;
+            apollo.NPC.netUpdate = true;
         }
 
         /// <summary>
@@ -189,6 +197,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             SharedState.Reset();
             SharedState.AIState = stateToUse ?? MakeAIStateChoice();
+
+            SoundEngine.PlaySound(Artemis.AttackSelectionSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
                 artemis.ResetLocalStateData();

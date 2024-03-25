@@ -1,4 +1,5 @@
 ﻿using System;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -49,6 +50,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The current animation of this Exo Twin.
         /// </summary>
         public ExoTwinAnimation Animation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The engine sound this Exo Twin plays.
+        /// </summary>
+        public LoopedSoundInstance EngineLoopSound
         {
             get;
             set;

@@ -3,9 +3,11 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -76,6 +78,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         } = ExoTwinAnimation.Idle;
 
         /// <summary>
+        /// The engine sound Artemis plays.
+        /// </summary>
+        public LoopedSoundInstance EngineLoopSound
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The individual AI state of Artemis. Only used if the shared AI state is <see cref="ExoTwinsAIState.PerformIndividualAttacks"/>.
         /// </summary>
         public IndividualExoTwinStateHandler IndividualState
@@ -107,6 +118,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Artemis' glowmask texture.
         /// </summary>
         internal static LazyAsset<Texture2D> Glowmask;
+
+        /// <summary>
+        /// The engine loop sound Artemis and Apollo idly play.
+        /// </summary>
+        public static readonly SoundStyle EngineSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/EngineLoop");
 
         public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
 
@@ -148,12 +164,30 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
+            UpdateEngineSound();
+
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
             NPC.damage = 0;
             AITimer++;
+        }
+
+        public void UpdateEngineSound()
+        {
+            EngineLoopSound ??= LoopedSoundManager.CreateNew(EngineSound, () =>
+            {
+                return !NPC.active;
+            });
+            EngineLoopSound.Update(NPC.Center, s =>
+            {
+                if (s.Sound is null)
+                    return;
+
+                s.Volume = Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
+                s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+            });
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)

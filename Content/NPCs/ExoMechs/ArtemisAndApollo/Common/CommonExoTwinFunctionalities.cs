@@ -155,7 +155,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 backward = Vector2.UnitY.RotatedBy(twin.rotation + MathHelper.PiOver2) * twin.scale * 6f;
                 Vector2[] flameTrailCache = new Vector2[twin.oldPos.Length];
                 for (int i = 0; i < flameTrailCache.Length; i++)
-                    flameTrailCache[i] = Vector2.Lerp(twin.oldPos[i], twin.position, 0.6f) - twin.rotation.ToRotationVector2() * i / (float)(flameTrailCache.Length - 1f) * 200f;
+                {
+                    Vector2 oldPosition = twin.oldPos[i];
+                    if (oldPosition == Vector2.Zero)
+                        continue;
+
+                    flameTrailCache[i] = Vector2.Lerp(oldPosition, twin.position, 0.6f) - twin.rotation.ToRotationVector2() * i / (float)(flameTrailCache.Length - 1f) * 200f;
+                }
 
                 ManagedShader shader = ShaderManager.GetShader("ExoTwinThrusterShader");
                 shader.TrySetParameter("whiteHotNoiseInterpolant", twinInterface.ThrusterBoost);
