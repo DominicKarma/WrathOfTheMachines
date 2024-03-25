@@ -290,7 +290,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
             }
 
-            ManagedShader forcefieldShader = ShaderManager.GetShader("LensShieldShader");
+            ManagedShader forcefieldShader = ShaderManager.GetShader("WoTM.LensShieldShader");
             forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
             forcefieldShader.Apply();
 

@@ -182,7 +182,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.PrepareForShaders();
 
                 Vector4 frameArea = new(frame.Left / (float)texture.Width, frame.Top / (float)texture.Height, frame.Right / (float)texture.Width, frame.Bottom / (float)texture.Height);
-                ManagedShader hologramShader = ShaderManager.GetShader("HologramShader");
+                ManagedShader hologramShader = ShaderManager.GetShader("WoTM.HologramShader");
                 hologramShader.TrySetParameter("hologramInterpolant", HologramInterpolant);
                 hologramShader.TrySetParameter("hologramSinusoidalOffset", MathF.Pow(HologramInterpolant, 7f) * 0.02f + Utilities.InverseLerp(0.4f, 1f, HologramInterpolant) * 0.04f);
                 hologramShader.TrySetParameter("textureSize0", texture.Size());

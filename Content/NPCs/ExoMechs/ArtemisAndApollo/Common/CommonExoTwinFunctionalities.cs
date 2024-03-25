@@ -48,7 +48,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant);
             }
 
-            ManagedShader nerveEndingShader = ShaderManager.GetShader("ExoTwinNerveEndingShader");
+            ManagedShader nerveEndingShader = ShaderManager.GetShader("WoTM.ExoTwinNerveEndingShader");
             nerveEndingShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 1, SamplerState.LinearWrap);
 
             // Draw nerve endings near the main thruster
@@ -96,7 +96,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return baseColor * completionRatioOpacity * generalOpacity;
             }
 
-            ManagedShader shader = ShaderManager.GetShader("WingtipVortexTrailShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.WingtipVortexTrailShader");
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1, SamplerState.LinearWrap);
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
@@ -163,7 +163,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     flameTrailCache[i] = Vector2.Lerp(oldPosition, twin.position, 0.6f) - twin.rotation.ToRotationVector2() * i / (float)(flameTrailCache.Length - 1f) * 200f;
                 }
 
-                ManagedShader shader = ShaderManager.GetShader("ExoTwinThrusterShader");
+                ManagedShader shader = ShaderManager.GetShader("WoTM.ExoTwinThrusterShader");
                 shader.TrySetParameter("whiteHotNoiseInterpolant", twinInterface.ThrusterBoost);
                 shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
 

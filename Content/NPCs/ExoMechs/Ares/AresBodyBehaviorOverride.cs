@@ -115,6 +115,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(-420f, 80f), 0.2f, 0.84f);
                 hand.RotateToLookAt(Target.Center);
                 hand.ArmSide = -1;
+                hand.Frame = (AITimer / 5 + 9) % 11;
             });
             InstructionsForHand[1] = new(hand =>
             {
@@ -123,6 +124,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(-300f, 224f), 0.2f, 0.84f);
                 hand.RotateToLookAt(Target.Center);
                 hand.ArmSide = -1;
+                hand.Frame = (AITimer / 5 + 7) % 11;
             });
             InstructionsForHand[2] = new(hand =>
             {
@@ -131,6 +133,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(300f, 224f), 0.2f, 0.84f);
                 hand.RotateToLookAt(Target.Center);
                 hand.ArmSide = 1;
+                hand.Frame = (AITimer / 5 + 2) % 11;
             });
             InstructionsForHand[3] = new(hand =>
             {
@@ -139,6 +142,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.NPC.SmoothFlyNear(NPC.Center + new Vector2(420f, 80f), 0.2f, 0.84f);
                 hand.RotateToLookAt(Target.Center);
                 hand.ArmSide = 1;
+                hand.Frame = (AITimer / 5 + 12) % 11;
             });
 
             NPC.Opacity = 1f;

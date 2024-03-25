@@ -110,7 +110,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Model plane = ModelRegistry.CargoPlane;
 
             // Prepare shaders.
-            ManagedShader shader = ShaderManager.GetShader("ModelPrimitiveShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.ModelPrimitiveShader");
             Main.instance.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/CargoPlaneModelTexture").Value;
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             Main.instance.GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;

@@ -1,11 +1,11 @@
-﻿using WoTM.Content.Particles.Metaballs;
-using Luminance.Assets;
+﻿using Luminance.Assets;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
+using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Core.Graphics.EffectManagers
 {
@@ -16,7 +16,7 @@ namespace WoTM.Core.Graphics.EffectManagers
 
         private void SupplyHeatDistortionTextures(On_FilterManager.orig_EndCapture orig, FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D screenTarget2, Color clearColor)
         {
-            if (ShaderManager.TryGetFilter("HeatDistortionFilter", out ManagedScreenFilter distortion) && distortion.IsActive)
+            if (ShaderManager.TryGetFilter("WoTM.HeatDistortionFilter", out ManagedScreenFilter distortion) && distortion.IsActive)
             {
                 distortion.WrappedEffect.Parameters["screenZoom"]?.SetValue(Main.GameViewMatrix.Zoom);
                 Main.instance.GraphicsDevice.Textures[2] = ModContent.GetInstance<HeatDistortionMetaball>().LayerTargets[0];
@@ -30,7 +30,7 @@ namespace WoTM.Core.Graphics.EffectManagers
 
         public override void PostUpdateEverything()
         {
-            ManagedScreenFilter distortion = ShaderManager.GetFilter("HeatDistortionFilter");
+            ManagedScreenFilter distortion = ShaderManager.GetFilter("WoTM.HeatDistortionFilter");
 
             bool shouldBeActive = ModContent.GetInstance<HeatDistortionMetaball>().ActiveParticleCount >= 1;
             if (!distortion.IsActive && shouldBeActive)

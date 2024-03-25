@@ -1,4 +1,5 @@
-﻿using Luminance.Assets;
+﻿using System;
+using Luminance.Assets;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,7 @@ namespace WoTM.Content.Particles.Metaballs
 
         public override bool DrawnManually => true;
 
-        public override Texture2D[] LayerTextures => [MiscTexturesRegistry.Pixel.Value];
+        public override Func<Texture2D>[] LayerTextures => [() => MiscTexturesRegistry.Pixel.Value];
 
         public override bool LayerIsFixedToScreen(int layerIndex) => true;
 

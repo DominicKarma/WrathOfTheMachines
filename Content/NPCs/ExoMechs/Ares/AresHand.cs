@@ -41,6 +41,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The frame of this arm.
+        /// </summary>
+        public int Frame
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Whether this hand uses a back arm or not.
         /// </summary>
         public bool UsesBackArm
@@ -152,12 +161,19 @@ namespace WoTM.Content.NPCs.ExoMechs
             Texture2D glowmask = ModContent.Request<Texture2D>(HandType.GlowmaskPath).Value;
             Vector2 drawPosition = NPC.Center - screenPos;
 
-            NPC.frame = texture.Frame(6, 8);
+            int frameX = Frame / HandType.TotalHorizontalFrames;
+            int frameY = Frame % HandType.TotalHorizontalFrames;
+            NPC.frame = texture.Frame(HandType.TotalHorizontalFrames, HandType.TotalVerticalFrames, frameX, frameY);
 
             Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
             return false;
+        }
+
+        public void DrawMagneticLine(Vector2 start, Vector2 end)
+        {
+
         }
 
         /// <summary>
@@ -182,6 +198,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
         }
 
+        /// <summary>
+        /// Draws the shoulder and arm of this hand's back arm.
+        /// </summary>
+        /// <param name="aresBody">Ares' body NPC instance.</param>
+        /// <param name="spriteBatch">The sprite batch.</param>
+        /// <param name="screenPosition">The position of the screen. Used for draw offsets.</param>
+        /// <returns>The end position of the arm in screen space.</returns>
         public Vector2 DrawBackArmShoulderAndArm(NPC aresBody, SpriteBatch spriteBatch, Vector2 screenPosition)
         {
             Texture2D shoulderTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresArmTopShoulder").Value;
@@ -223,7 +246,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             return armStart + armRotation.ToRotationVector2() * aresBody.scale * ArmSide * 92f;
         }
 
-        public Vector2 DrawBackArmForearm(NPC aresBody, Vector2 shoulderDrawPosition, SpriteBatch spriteBatch, Vector2 screenPosition)
+        /// <summary>
+        /// Draws the forearm of this hand's front arm.
+        /// </summary>
+        /// <param name="aresBody">Ares' body NPC instance.</param>
+        /// <param name="shoulderDrawPosition">The position of the shoulder in screen space.</param>
+        /// <param name="spriteBatch">The sprite batch.</param>
+        /// <param name="screenPosition">The position of the screen. Used for draw offsets.</param>
+        public void DrawBackArmForearm(NPC aresBody, Vector2 shoulderDrawPosition, SpriteBatch spriteBatch, Vector2 screenPosition)
         {
             Texture2D armSegmentTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresArmTopSegment").Value;
             Texture2D armSegmentTextureGlowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresArmTopSegmentGlow").Value;
@@ -254,8 +284,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             spriteBatch.Draw(forearmTexture, forearmDrawPosition, forearmFrame, segmentColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, forearmDrawPosition, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
-
-            return shoulderDrawPosition;
         }
 
         /// <summary>
