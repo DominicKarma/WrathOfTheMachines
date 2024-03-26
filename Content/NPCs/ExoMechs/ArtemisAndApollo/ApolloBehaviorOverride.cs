@@ -1,19 +1,29 @@
 ﻿using System;
+using System.Reflection;
 using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
+using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
+using Luminance.Core.ILWrappers;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class ApolloBehaviorOverride : NPCBehaviorOverride, IExoTwin
     {
+        private static ILHook? hitEffectHook;
+
         /// <summary>
         /// Apollo's current frame.
         /// </summary>
@@ -129,11 +139,30 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void SetStaticDefaults()
         {
+            MethodInfo? hitEffectMethod = typeof(Apollo).GetMethod("HitEffect");
+            if (hitEffectMethod is not null)
+            {
+                new ManagedILEdit("Change Apollo's on hit visuals", Mod, edit =>
+                {
+                    hitEffectHook = new(hitEffectMethod, new(c => edit.EditingFunction(c, edit)));
+                }, edit =>
+                {
+                    hitEffectHook?.Undo();
+                    hitEffectHook?.Dispose();
+                }, HitEffectILEdit).Apply();
+            }
+
             if (Main.netMode == NetmodeID.Server)
                 return;
 
             BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Apollo");
             Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ApolloGlow");
+        }
+
+        public override void Unload()
+        {
+            hitEffectHook?.Undo();
+            hitEffectHook?.Dispose();
         }
 
         public override void AI()
@@ -159,6 +188,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             UpdateEngineSound();
 
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
+            NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
@@ -180,6 +210,26 @@ namespace WoTM.Content.NPCs.ExoMechs
                 s.Volume = Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
                 s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
             });
+        }
+
+        public static void HitEffect(ModNPC apollo)
+        {
+            NPC npc = apollo.NPC;
+
+            if (npc.soundDelay <= 0)
+            {
+                SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound, npc.Center);
+                npc.soundDelay = 3;
+            }
+        }
+
+        public static void HitEffectILEdit(ILContext context, ManagedILEdit edit)
+        {
+            ILCursor cursor = new(context);
+
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.EmitDelegate(HitEffect);
+            cursor.Emit(OpCodes.Ret);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
