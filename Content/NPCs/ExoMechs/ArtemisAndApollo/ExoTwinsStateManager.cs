@@ -139,12 +139,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
             Vector2 twinsCenterOfMass = (artemis.Center + apollo.Center) * 0.5f;
 
-            return ExoTwinsAIState.CloseShots;
+            if (SharedState.TotalFinishedAttacks % 2 == 1)
+                return ExoTwinsAIState.PerformIndividualAttacks;
 
-            if (target.WithinRange(twinsCenterOfMass, 600f) && Main.rand.NextBool())
-                return ExoTwinsAIState.DashesAndLasers;
-
-            return ExoTwinsAIState.PerformIndividualAttacks;
+            return Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots);
         }
 
         /// <summary>
@@ -206,7 +204,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static void TransitionToNextState(ExoTwinsAIState? stateToUse = null)
         {
-            SharedState.Reset();
+            SharedState.ResetForNextState();
             SharedState.AIState = stateToUse ?? MakeAIStateChoice();
 
             SoundEngine.PlaySound(Artemis.AttackSelectionSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });

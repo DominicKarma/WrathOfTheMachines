@@ -45,6 +45,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int CloseShots_ApolloShootRate => Utilities.SecondsToFrames(0.333f);
 
         /// <summary>
+        /// The amount of attack cycles performed during the CloseShots attack.
+        /// </summary>
+        public static int CloseShots_AttackCycleCount => 3;
+
+        /// <summary>
         /// How fast Artemis and Apollo dash during the CloseShots attack.
         /// </summary>
         public static float CloseShots_DashSpeed => 100f;
@@ -71,9 +76,16 @@ namespace WoTM.Content.NPCs.ExoMechs
             int redirectTime = CloseShots_RedirectTime;
             int dashSlowdownTime = CloseShots_DashSlowdownTime;
             int maxDashTime = CloseShots_MaxDashTime;
-            int wrappedTimer = AITimer % (redirectTime + dashSlowdownTime + maxDashTime + CloseShots_ShootAtPlayerTime);
+            int attackCycleDuration = redirectTime + dashSlowdownTime + maxDashTime + CloseShots_ShootAtPlayerTime;
+            int wrappedTimer = AITimer % attackCycleDuration;
             ref float idealRotation = ref npc.ai[2];
             ref float spinDirection = ref npc.ai[3];
+
+            if (AITimer >= attackCycleDuration * CloseShots_AttackCycleCount)
+            {
+                ExoTwinsStateManager.TransitionToNextState();
+                return;
+            }
 
             if (wrappedTimer <= redirectTime)
             {

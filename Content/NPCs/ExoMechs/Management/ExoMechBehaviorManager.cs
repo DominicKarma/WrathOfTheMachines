@@ -154,8 +154,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             AnyExoMechsPresent = false;
             CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
             FightState = ExoMechFightState.UndefinedFightState;
-            ExoTwinsStateManager.SharedState.Reset();
-            ExoTwinsStateManager.SharedState.AIState = ExoTwinsAIState.SpawnAnimation;
+            ExoTwinsStateManager.SharedState.ResetForEntireBattle();
         }
 
         /// <summary>

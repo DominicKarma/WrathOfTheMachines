@@ -162,7 +162,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 }
 
                 if (twinAttributes.InPhase2)
+                {
                     ExoTwinsStateManager.TransitionToNextState(ExoTwinsAIState.DashesAndLasers);
+                    ExoTwinsStateManager.SharedState.TotalFinishedAttacks = 0;
+                }
             }
         }
 

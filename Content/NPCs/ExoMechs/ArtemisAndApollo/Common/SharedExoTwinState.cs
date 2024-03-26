@@ -13,6 +13,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public int AITimer;
 
         /// <summary>
+        /// How many attacks Artemis and Apollo has performed.
+        /// </summary>
+        public int TotalFinishedAttacks;
+
+        /// <summary>
         /// The current state that both Artemis and Apollo are performing.
         /// </summary>
         public ExoTwinsAIState AIState
@@ -44,11 +49,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// Resets all mutable data for this state in anticipation of a different one.
         /// </summary>
-        public void Reset()
+        public void ResetForNextState()
         {
             AITimer = 0;
+            TotalFinishedAttacks++;
             for (int i = 0; i < Values.Length; i++)
                 Values[i] = 0f;
+        }
+
+        /// <summary>
+        /// Resets all mutable data for this state as a consequence of the battle finishing.
+        /// </summary>
+        public void ResetForEntireBattle()
+        {
+            TotalFinishedAttacks = 0;
+            AIState = ExoTwinsAIState.SpawnAnimation;
+            ResetForNextState();
         }
 
         /// <summary>
