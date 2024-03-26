@@ -2,7 +2,6 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
-using WoTM.Content.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -12,6 +11,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -36,6 +36,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// How long Artemis waits before she enters her second phase. This should be at least <see cref="EnterSecondPhase_SecondPhaseAnimationTime"/>, since she's meant to transition after Apollo does.
         /// </summary>
         public static int EnterSecondPhase_ArtemisPhaseTransitionDelay => EnterSecondPhase_SecondPhaseAnimationTime + Utilities.SecondsToFrames(1f);
+
+        /// <summary>
+        /// How long Apollo spends lowering the forcefield during the second phase transition.
+        /// </summary>
+        public static int EnterSecondPhase_LowerForcefieldTime => Utilities.SecondsToFrames(0.67f);
 
         /// <summary>
         /// The speed at which the Exo Twins shoot their lens upon releasing it.
@@ -157,10 +162,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 }
 
                 if (twinAttributes.InPhase2)
-                {
-                    SharedState.AIState = ExoTwinsAIState.DashesAndLasers;
-                    AITimer = 0;
-                }
+                    ExoTwinsStateManager.TransitionToNextState(ExoTwinsAIState.DashesAndLasers);
             }
         }
 
@@ -205,36 +207,55 @@ namespace WoTM.Content.NPCs.ExoMechs
             apollo.rotation = apollo.AngleTo(Target.Center);
 
             apolloAttributes.Animation = ExoTwinAnimation.Idle;
-            float animationCompletion = AITimer / 50f % 1f;
+            float frameAnimationCompletion = AITimer / 50f % 1f;
 
             bool playerIsUncomfortablyCloseToArtemis = Target.WithinRange(artemis.Center, 600f);
             if (playerIsUncomfortablyCloseToArtemis)
             {
                 apollo.damage = apollo.defDamage;
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
-                animationCompletion = SharedState.Values[0] / 50f % 1f;
+                frameAnimationCompletion = SharedState.Values[0] / 50f % 1f;
                 SharedState.Values[0]++;
             }
             else
                 SharedState.Values[0] = 0f;
 
-            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(animationCompletion, apolloAttributes.InPhase2);
+            float artemisAnimationCompletion = Utilities.InverseLerp(0f, EnterSecondPhase_SecondPhaseAnimationTime, AITimer - EnterSecondPhase_SlowDownTime - EnterSecondPhase_ArtemisPhaseTransitionDelay);
+            bool lowerForcefield = artemisAnimationCompletion >= 0.78f;
+            UpdateForcefieldOpacity(lowerForcefield);
 
-            EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity + 0.05f);
+            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(frameAnimationCompletion, apolloAttributes.InPhase2);
             apolloAttributes.SpecificDrawAction = () =>
             {
                 PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
             };
 
             if (Main.rand.NextBool(EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f))
-            {
-                Vector2 hologramDustPosition = apollo.Center + (apollo.rotation + Main.rand.NextFloatDirection() * 0.7f).ToRotationVector2() * Main.rand.NextFloat(60f, 185f);
-                Dust hologramDust = Dust.NewDustPerfect(hologramDustPosition, 261);
-                hologramDust.velocity = apollo.SafeDirectionTo(hologramDustPosition).RotatedBy(Main.rand.NextFromList(-1f, 1f) * MathHelper.PiOver2) * Main.rand.NextFloatDirection() * 5f;
-                hologramDust.color = Color.Lerp(Color.Lime, Color.Teal, Main.rand.NextFloat());
-                hologramDust.scale *= 0.85f;
-                hologramDust.noGravity = true;
-            }
+                CreateForcefieldHologramDust(apollo);
+        }
+
+        /// <summary>
+        /// Updates Apollo's protective forcefield opacity in a given direction.
+        /// </summary>
+        /// <param name="lowerForcefield">Whether the forcefield should be lowered or not.</param>
+        public static void UpdateForcefieldOpacity(bool lowerForcefield)
+        {
+            float opacityUpdateRate = 0.05f;
+            EnterSecondPhase_ProtectiveForcefieldOpacity = Utilities.Saturate(EnterSecondPhase_ProtectiveForcefieldOpacity - lowerForcefield.ToDirectionInt() * opacityUpdateRate);
+        }
+
+        /// <summary>
+        /// Creates a single dust instance as a result of Apollo's forcefield.
+        /// </summary>
+        /// <param name="apollo">Apollo's NPC instance.</param>
+        public static void CreateForcefieldHologramDust(NPC apollo)
+        {
+            Vector2 hologramDustPosition = apollo.Center + (apollo.rotation + Main.rand.NextFloatDirection() * 0.7f).ToRotationVector2() * Main.rand.NextFloat(60f, 185f);
+            Dust hologramDust = Dust.NewDustPerfect(hologramDustPosition, 261);
+            hologramDust.velocity = apollo.SafeDirectionTo(hologramDustPosition).RotatedBy(Main.rand.NextFromList(-1f, 1f) * MathHelper.PiOver2) * Main.rand.NextFloatDirection() * 5f;
+            hologramDust.color = Color.Lerp(Color.Lime, Color.Teal, Main.rand.NextFloat());
+            hologramDust.scale *= 0.85f;
+            hologramDust.noGravity = true;
         }
 
         public static void ProjectLensShield(NPC apollo, bool pixelated)
