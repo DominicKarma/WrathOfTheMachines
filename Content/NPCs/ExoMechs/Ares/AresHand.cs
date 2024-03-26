@@ -251,7 +251,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Texture2D shoulderPaddingTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmShoulder").Value;
             Texture2D shoulderPaddingTextureGlowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmShoulderGlow").Value;
             Vector2 shoulderDrawPosition = aresBody.Center + aresBody.scale * new Vector2(ArmSide * 164f, -54f) - screenPosition;
-            Vector2 shoulderPaddingDrawPosition = aresBody.Center + aresBody.scale * new Vector2(ArmSide * 100f, -96f) - screenPosition;
+            Vector2 shoulderPaddingDrawPosition = aresBody.Center + aresBody.scale * new Vector2(ArmSide * 100f, -72f) - screenPosition;
 
             Color shoulderColor = aresBody.GetAlpha(Lighting.GetColor((shoulderDrawPosition + screenPosition).ToTileCoordinates()));
             Color shoulderPaddingColor = aresBody.GetAlpha(Lighting.GetColor((shoulderPaddingDrawPosition + screenPosition).ToTileCoordinates()));
