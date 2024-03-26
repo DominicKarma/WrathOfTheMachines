@@ -16,6 +16,7 @@ using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
@@ -240,6 +241,15 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound, npc.Center);
                 npc.soundDelay = 3;
+            }
+
+            if (Main.netMode != NetmodeID.Server && npc.life <= 0)
+            {
+                IEntitySource deathSource = npc.GetSource_Death();
+                Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
+
+                for (int i = 1; i <= 5; i++)
+                    Gore.NewGore(deathSource, npc.position, npc.velocity, calamity.Find<ModGore>($"Apollo{i}").Type, npc.scale);
             }
         }
 
