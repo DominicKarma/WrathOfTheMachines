@@ -20,7 +20,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public const int Phase2FrameOffset = 60;
 
-        // TODO -- Would this be better in the phase 2 transition state, when it gets made?
         /// <summary>
         /// The frame that should be used when a lens pops off during the <see cref="EnteringSecondPhase"/> animation.
         /// </summary>

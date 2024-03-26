@@ -71,6 +71,30 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "Pixel.png": {
+      "frame": {
+        "x": 80,
+        "y": 500,
+        "w": 2,
+        "h": 2
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 2,
+        "h": 2
+      },
+      "sourceSize": {
+        "w": 2,
+        "h": 2
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {

@@ -142,10 +142,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 ArmEndpoint += Main.rand.NextVector2Circular(1f, 2f) * NPC.Opacity;
 
                 if (NPC.Opacity <= 0f)
-                {
-                    HandType = AresHandType.LaserCannon;
                     NPC.Center = ArmEndpoint + Vector2.UnitY * 240f;
-                }
             }
             else
                 ArmEndpoint = NPC.Center;
@@ -429,13 +426,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 typeName = Language.GetTextValue(HandType.NameLocalizationKey);
         }
 
-        // TODO -- Improve this.
-        // TODO -- Add gores.
+        // TODO -- Add on-death gores.
         public override void HitEffect(NPC.HitInfo hit)
         {
-            for (int k = 0; k < 3; k++)
-                Dust.NewDust(new Vector2(NPC.position.X, NPC.position.Y), NPC.width, NPC.height, 107, 0f, 0f, 100, new Color(0, 255, 255), 1f);
-
             if (NPC.soundDelay == 0)
             {
                 NPC.soundDelay = 3;

@@ -2,6 +2,7 @@
 using System.Reflection;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
@@ -16,6 +17,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -189,6 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             UpdateEngineSound();
 
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
+            NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
@@ -215,6 +218,24 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static void HitEffect(ModNPC artemis)
         {
             NPC npc = artemis.NPC;
+
+            if (Main.rand.NextBool())
+            {
+                int pixelLifetime = Main.rand.Next(12, 19);
+                Color pixelColor = Color.Lerp(Color.Yellow, Color.White, Main.rand.NextFloat(0.5f, 1f));
+                Color pixelBloom = Color.Lerp(Color.Yellow, Color.OrangeRed, Main.rand.NextFloat()) * 0.45f;
+                Vector2 pixelScale = Vector2.One * Main.rand.NextFloat(0.67f, 1.5f);
+                Vector2 pixelVelocity = Main.LocalPlayer.SafeDirectionTo(npc.Center).RotatedByRandom(0.95f) * Main.rand.NextFloat(3f, 35f);
+                BloomPixelParticle pixel = new(npc.Center - pixelVelocity * 3.1f, pixelVelocity, pixelColor, pixelBloom, pixelLifetime, pixelScale);
+                pixel.Spawn();
+            }
+
+            if (Main.rand.NextBool(10))
+            {
+                Vector2 lineVelocity = Main.LocalPlayer.SafeDirectionTo(npc.Center).RotatedByRandom(0.7f) * Main.rand.NextFloat(16f, 35f);
+                LineParticle line = new(npc.Center + Main.rand.NextVector2Circular(30f, 30f), lineVelocity, Main.rand.NextBool(4), 20, 0.8f, Color.Orange);
+                GeneralParticleHandler.SpawnParticle(line);
+            }
 
             if (npc.soundDelay <= 0)
             {
