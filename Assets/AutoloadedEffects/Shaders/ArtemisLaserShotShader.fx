@@ -36,6 +36,15 @@ float QuadraticBump(float x)
     return x * (4 - x * 4);
 }
 
+float4 Posterize(float4 color)
+{
+    float gamma = 0.96;
+    color = pow(color, gamma);
+    color = floor(color * 6) / 6;
+    color = pow(color, 1.0 / gamma);
+    return color;
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float2 coords = input.TextureCoordinates;
@@ -47,7 +56,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float yellowInterpolant = saturate(QuadraticBump(coords.y) - coords.x * 1.2);
     float whiteInterpolant = saturate(pow(QuadraticBump(coords.y), 1.5) - lerp(-0.1, 1, coords.x) * 2.5);
     
-    return color + float4(1, 1, 0, 0) * yellowInterpolant + whiteInterpolant * 2;
+    float4 baseResult = color + float4(1, 1, 0, 0) * yellowInterpolant + whiteInterpolant * 2;
+    float4 posterizedResult = Posterize(baseResult);
+    
+    return posterizedResult;
 }
 
 technique Technique1

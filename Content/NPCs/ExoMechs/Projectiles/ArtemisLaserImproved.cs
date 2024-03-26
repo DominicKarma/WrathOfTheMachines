@@ -93,7 +93,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public Color LaserColorFunction(float completionRatio)
         {
-            return Color.Lerp(Color.Orange, Color.Red, completionRatio * 0.76f) * Projectile.Opacity;
+            return Color.Lerp(Color.Orange, new Color(1f, 0.1f, 0.31f), completionRatio * 0.76f) * Projectile.Opacity;
         }
 
         public override bool PreDraw(ref Color lightColor)
