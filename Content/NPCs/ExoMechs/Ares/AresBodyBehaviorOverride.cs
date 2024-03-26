@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CalamityMod;
 using CalamityMod.NPCs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -111,10 +112,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 14f, 0.3f);
 
-            InstructionsForHand[0] = new(h => StandardHandUpdate(h, new Vector2(-400f, 80f), -1, true));
+            InstructionsForHand[0] = new(h => StandardHandUpdate(h, new Vector2(-430f, 40f), -1, true));
             InstructionsForHand[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), -1, false));
             InstructionsForHand[2] = new(h => StandardHandUpdate(h, new Vector2(300f, 224f), 1, false));
-            InstructionsForHand[3] = new(h => StandardHandUpdate(h, new Vector2(400f, 80f), 1, true));
+            InstructionsForHand[3] = new(h => StandardHandUpdate(h, new Vector2(430f, 40f), 1, true));
 
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.Opacity = 1f;
@@ -137,11 +138,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void StandardHandUpdate(AresHand hand, Vector2 hoverOffset, int armSide, bool usesBackArm)
         {
             hand.NPC.SmoothFlyNear(NPC.Center + hoverOffset, 0.2f, 0.84f);
+            hand.NPC.Center = NPC.Center + hoverOffset;
             hand.RotateToLookAt(Target.Center);
             hand.NPC.Opacity = Utilities.Saturate(hand.NPC.Opacity + 0.2f);
             hand.UsesBackArm = usesBackArm;
             hand.ArmSide = armSide;
-            hand.Frame = (AITimer / 5 + 12) % 11;
+
+            int animateRate = 3;
+            hand.Frame = AITimer / animateRate % 11;
+
+            hand.HandType = AresHandType.LaserCannon;
         }
 
         /// <summary>
