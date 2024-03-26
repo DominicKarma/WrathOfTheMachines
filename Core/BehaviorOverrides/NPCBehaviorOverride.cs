@@ -69,6 +69,12 @@ namespace WoTM
         public virtual void AI() { }
 
         /// <summary>
+        /// Allows you to determine the color and transparency in which an NPC is drawn. Return null to use the default color (normally light and buff color). Returns null by default.
+        /// </summary>
+        /// <param name="drawColor">The base color of the NPC.</param>
+        public virtual Color? GetAlpha(Color drawColor) => null;
+
+        /// <summary>
         /// Allows you to modify the frame from an NPC's texture that is drawn, which is necessary in order to animate NPCs.
         /// </summary>
         /// <param name="frameHeight">The height of a single frame from the overall texture.</param>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CalamityMod;
@@ -33,6 +34,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Ares' current AI timer.
         /// </summary>
         public int AITimer
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Ares' Z position.
+        /// </summary>
+        public float ZPosition
         {
             get;
             set;
@@ -83,6 +93,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
             bitWriter.WriteBit(HasCreatedArms);
+            binaryWriter.Write(ZPosition);
             binaryWriter.Write(AITimer);
             binaryWriter.Write((int)CurrentState);
         }
@@ -90,6 +101,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
             HasCreatedArms = bitReader.ReadBit();
+            ZPosition = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
             CurrentState = (AresAIState)binaryReader.ReadInt32();
         }
@@ -100,8 +112,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (Main.netMode != NetmodeID.MultiplayerClient && !HasCreatedArms)
             {
                 CreateArms();
-                HasCreatedArms = true;
-                NPC.netUpdate = true;
             }
 
             PerformPreUpdateResets();
@@ -118,7 +128,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHand[3] = new(h => StandardHandUpdate(h, new Vector2(430f, 40f), 1, true));
 
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
-            NPC.Opacity = 1f;
+            NPC.scale = 1f / (ZPosition + 1f);
+            NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
 
             AITimer++;
         }
@@ -133,12 +144,15 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             for (int i = 0; i < ArmCount; i++)
                 NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<AresHand>(), NPC.whoAmI, i);
+
+            HasCreatedArms = true;
+            NPC.netUpdate = true;
         }
 
         public void StandardHandUpdate(AresHand hand, Vector2 hoverOffset, int armSide, bool usesBackArm)
         {
-            hand.NPC.SmoothFlyNear(NPC.Center + hoverOffset, 0.2f, 0.84f);
-            hand.NPC.Center = NPC.Center + hoverOffset;
+            hand.NPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.2f, 0.84f);
+            hand.NPC.Center = NPC.Center + hoverOffset * NPC.scale;
             hand.RotateToLookAt(Target.Center);
             hand.NPC.Opacity = Utilities.Saturate(hand.NPC.Opacity + 0.2f);
             hand.UsesBackArm = usesBackArm;
@@ -176,6 +190,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
             }
         }
+
+        public override Color? GetAlpha(Color drawColor) => Color.Lerp(drawColor, Main.ColorOfTheSkies, MathF.Cbrt(1f - NPC.Opacity)) * NPC.Opacity;
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {

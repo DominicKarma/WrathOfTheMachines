@@ -71,6 +71,14 @@ namespace WoTM
             BehaviorOverride?.ModifyHitByProjectile(projectile, ref modifiers);
         }
 
+        public override Color? GetAlpha(NPC npc, Color drawColor)
+        {
+            if (!InfernumModeCompatibility.InfernumModeIsActive && BehaviorOverride is not null)
+                return BehaviorOverride.GetAlpha(drawColor);
+
+            return null;
+        }
+
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (InfernumModeCompatibility.InfernumModeIsActive)

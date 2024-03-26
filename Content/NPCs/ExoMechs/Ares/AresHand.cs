@@ -131,6 +131,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
+            NPC aresBody = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
+
             NPC.noTileCollide = true;
             if (Main.mouseRight)
             {
@@ -152,6 +154,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.dontTakeDamage = NPC.Opacity < 0.95f;
             NPC.realLife = CalamityGlobalNPC.draedonExoMechPrime;
+            NPC.scale = aresBody.scale;
         }
 
         public void RotateToLookAt(Vector2 lookDestination)
@@ -168,6 +171,14 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void FindFrame(int frameHeight)
         {
+        }
+
+        public override Color? GetAlpha(Color drawColor)
+        {
+            if (CalamityGlobalNPC.draedonExoMechPrime == -1)
+                return drawColor * NPC.Opacity;
+
+            return Main.npc[CalamityGlobalNPC.draedonExoMechPrime].GetAlpha(drawColor);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
@@ -195,10 +206,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < controlPoints.Length; i++)
                 controlPoints[i] = Vector2.Lerp(start, end, i / 7f);
 
-            Vector2 distortionVelocity = (end - start).RotatedByRandom(0.4f) * 0.01f;
-            ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(Vector2.Lerp(start, end, Main.rand.NextFloat(0.45f, 0.7f)), distortionVelocity, opacity * 18f);
+            if (!Main.gamePaused)
+            {
+                Vector2 distortionVelocity = (end - start).RotatedByRandom(0.4f) * 0.01f;
+                ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(Vector2.Lerp(start, end, Main.rand.NextFloat(0.45f, 0.7f)), distortionVelocity, opacity * NPC.scale * 18f);
+            }
 
-            float magnetismWidthFunction(float completionRatio) => aresBody.Opacity * 12f;
+            float magnetismWidthFunction(float completionRatio) => aresBody.Opacity * aresBody.scale * 12f;
             Color magnetismColorFunction(float completionRatio) => aresBody.GetAlpha(Color.Cyan) * opacity * 0.45f;
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
@@ -378,7 +392,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(armTexture, armStart, armFrame, armColor, armRotation, armOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(armTextureGlowmask, armStart, armFrame, glowmaskColor, armRotation, armOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
-            Vector2 magnetLineOffset = new Vector2(ArmSide * 50f, -10f).RotatedBy(armRotation) + Main.screenPosition;
+            Vector2 magnetLineOffset = new Vector2(ArmSide * 50f, -10f).RotatedBy(armRotation) * NPC.scale + Main.screenPosition;
             DrawMagneticLine(aresBody, armStart + magnetLineOffset, elbowDrawPosition + magnetLineOffset);
 
             return elbowDrawPosition;
