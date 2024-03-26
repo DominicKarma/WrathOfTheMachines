@@ -24,7 +24,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The amount of damage basic shots from the Exo Twins do.
         /// </summary>
-        public static int BasicShotDamage => Main.expertMode ? 400 : 250;
+        public static int BasicShotDamage => Main.expertMode ? 350 : 250;
 
         /// <summary>
         /// How long Apollo spends hovering during the DashesAndLasers attack.
@@ -79,7 +79,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The speed at which lasers are shot by Artemis during the DashesAndLasers attack.
         /// </summary>
-        public static float DashesAndLasers_ArtemisLaserShootSpeed => 15.25f;
+        public static float DashesAndLasers_ArtemisLaserShootSpeed => 13.25f;
 
         /// <summary>
         /// AI update loop method for the DashesAndLasers attack.
@@ -186,7 +186,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (wrappedTime <= DashesAndLasers_ArtemisShootTime)
             {
                 if (wrappedTime % DashesAndLasers_ArtemisShootRate == DashesAndLasers_ArtemisShootRate - 1)
-                    ShootArtemisLaser(npc, DashesAndLasers_ArtemisLaserShootSpeed);
+                {
+                    // This ensures that the attack winds up a bit when it starts, so that the player has time to adequately prepare themselves for the lasers.
+                    // Not having this resulted in telefrags due to the fact that the attack immediately started shooting after a previous attack.
+                    float shootSpeedFactor = Utils.Remap(wrappedTime, 0f, 60f, 0.2f, 1f);
+
+                    ShootArtemisLaser(npc, DashesAndLasers_ArtemisLaserShootSpeed * shootSpeedFactor);
+                }
 
                 lookOffsetAngle = MathF.Sin(MathHelper.TwoPi * wrappedTime / DashesAndLasers_ArtemisShootTime) * DashesAndLasers_ArtemisShootArc * 0.5f;
                 artemisAttributes.Animation = ExoTwinAnimation.Attacking;

@@ -123,7 +123,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!npc.WithinRange(Target.Center, 700f))
                 npc.SmoothFlyNear(Target.Center, 0.03f, 0.93f);
             else
-                npc.velocity *= 0.96f;
+                npc.velocity *= 0.951f;
 
             if (AITimer % FocusedLaserBursts_RapidShotRate == FocusedLaserBursts_RapidShotRate - 1)
                 ShootArtemisLaser(npc, FocusedLaserBursts_RapidShotShootSpeed);

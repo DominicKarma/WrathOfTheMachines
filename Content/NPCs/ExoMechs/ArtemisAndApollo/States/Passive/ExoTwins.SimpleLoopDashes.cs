@@ -30,6 +30,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                     npc.velocity *= 1.15f;
                 }
+
+                if (npc.velocity.Length() <= 2f)
+                    npc.velocity.Y -= 20f;
             }
             else
             {
@@ -45,7 +48,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             npc.rotation = npc.velocity.ToRotation();
 
-            npc.damage = npc.defDamage;
+            if (localAITimer >= 60)
+                npc.damage = npc.defDamage;
 
             apolloAttributes.WingtipVorticesOpacity = Utilities.InverseLerp(16f, 32f, npc.velocity.Length());
             apolloAttributes.ThrusterBoost = Utilities.InverseLerp(20f, 30f, npc.velocity.Length());

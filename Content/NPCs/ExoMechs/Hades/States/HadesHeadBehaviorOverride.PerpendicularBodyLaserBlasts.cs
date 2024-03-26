@@ -2,7 +2,6 @@
 using CalamityMod;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -12,6 +11,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -73,7 +73,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The amount of damage basic lasers from Hades do.
         /// </summary>
-        public static int BasicLaserDamage => Main.expertMode ? 400 : 250;
+        public static int BasicLaserDamage => Main.expertMode ? 350 : 250;
 
         public static readonly SoundStyle LaserChargeUpSound = new("WoTM/Assets/Sounds/Custom/Hades/LaserChargeUp");
 
