@@ -17,12 +17,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Artemis and Apollo spend redirecting in anticipation of the dash during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_RedirectTime => Utilities.SecondsToFrames(0.667f);
+        public static int CloseShots_RedirectTime => Utilities.SecondsToFrames(0.6f);
 
         /// <summary>
         /// How long Artemis and Apollo spend slowing down in anticipation of the dash during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_DashSlowdownTime => Utilities.SecondsToFrames(0.233f);
+        public static int CloseShots_DashSlowdownTime => Utilities.SecondsToFrames(0.3f);
 
         /// <summary>
         /// How long Artemis and Apollo spend dashing at the player at maximum during the CloseShots attack.
@@ -47,7 +47,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How fast Artemis and Apollo dash during the CloseShots attack.
         /// </summary>
-        public static float CloseShots_DashSpeed => 120f;
+        public static float CloseShots_DashSpeed => 100f;
 
         /// <summary>
         /// How fast Artemis' shot lasers are during the CloseShots attack.
@@ -78,7 +78,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (wrappedTimer <= redirectTime)
             {
                 float redirectInterpolant = (wrappedTimer / (float)redirectTime).Squared() * 0.09f + 0.01f;
-                npc.Center = Vector2.Lerp(npc.Center, Target.Center + new Vector2(isApollo.ToDirectionInt() * 400f, -240f), redirectInterpolant);
+                npc.Center = Vector2.Lerp(npc.Center, Target.Center + new Vector2(isApollo.ToDirectionInt() * 540f, -240f), redirectInterpolant);
                 npc.velocity.X *= 0.9f;
                 npc.velocity.Y -= 0.5f;
                 npc.velocity.Y *= 1.01f;
