@@ -28,7 +28,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The representation of Ares' gauss nuke.
         /// </summary>
-        public static readonly AresHandType GaussNuke = new("Mods.CalamityMod.NPCs.AresGaussNuke.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNuke", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNukeGlow", 10, 12);
+        public static readonly AresHandType GaussNuke = new("Mods.CalamityMod.NPCs.AresGaussNuke.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNuke", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNukeGlow", 9, 12);
 
         /// <summary>
         /// Writes the state of this arm type to a given <see cref="BinaryWriter"/>, for the purposes of being sent across the network.
