@@ -4,6 +4,7 @@
     {
         SpawnAnimation,
         DashesAndLasers,
+        CloseShots,
         EnterSecondPhase,
 
         PerformIndividualAttacks

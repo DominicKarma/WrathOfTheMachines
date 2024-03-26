@@ -224,6 +224,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             bool lowerForcefield = artemisAnimationCompletion >= 0.78f;
             UpdateForcefieldOpacity(lowerForcefield);
 
+            apollo.position -= apollo.SafeDirectionTo(Target.Center) * EnterSecondPhase_ProtectiveForcefieldOpacity * 6f;
+
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(frameAnimationCompletion, apolloAttributes.InPhase2);
             apolloAttributes.SpecificDrawAction = () =>
             {

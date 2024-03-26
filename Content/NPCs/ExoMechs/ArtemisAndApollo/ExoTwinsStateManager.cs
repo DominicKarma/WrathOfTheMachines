@@ -85,6 +85,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.DashesAndLasers:
                     ExoTwinsStates.DoBehavior_DashesAndLasers(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.CloseShots:
+                    ExoTwinsStates.DoBehavior_CloseShots(twin, twinAttributes);
+                    break;
                 case ExoTwinsAIState.PerformIndividualAttacks:
                     PerformIndividualizedAttacks(twin, twinAttributes);
                     break;
@@ -135,6 +138,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
             NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
             Vector2 twinsCenterOfMass = (artemis.Center + apollo.Center) * 0.5f;
+
+            return ExoTwinsAIState.CloseShots;
+
             if (target.WithinRange(twinsCenterOfMass, 600f) && Main.rand.NextBool())
                 return ExoTwinsAIState.DashesAndLasers;
 
