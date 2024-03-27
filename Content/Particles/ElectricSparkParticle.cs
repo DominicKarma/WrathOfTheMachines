@@ -1,4 +1,5 @@
-﻿using Luminance.Core.Graphics;
+﻿using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -7,20 +8,36 @@ namespace WoTM.Content.Particles
 {
     public class ElectricSparkParticle : Particle
     {
+        /// <summary>
+        /// The color of bloom behind the pixel.
+        /// </summary>
+        public Color BloomColor;
+
+        /// <summary>
+        /// The bloom texture.
+        /// </summary>
+        public static AtlasTexture BloomTexture
+        {
+            get;
+            private set;
+        }
+
         public override int FrameCount => 4;
 
         public override string AtlasTextureName => "WoTM.ElectricSparkParticle.png";
 
         public override BlendState BlendState => BlendState.Additive;
 
-        public ElectricSparkParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, Vector2 scale)
+        public ElectricSparkParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale)
         {
             Position = position;
             Velocity = velocity;
             DrawColor = color;
+            BloomColor = bloomColor;
             Scale = scale;
             Lifetime = lifetime;
             Frame = new(0, Main.rand.Next(FrameCount) * 125, 125, 125);
+            Opacity = 1f;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
         }
 
@@ -30,7 +47,14 @@ namespace WoTM.Content.Particles
                 Opacity *= 0.9f;
 
             Velocity *= 0.89f;
-            Rotation += Velocity.X * 0.12f;
+            Rotation += Velocity.X * 0.091f;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            BloomTexture ??= AtlasManager.GetTexture("WoTM.BasicMetaballCircle.png");
+            spriteBatch.Draw(BloomTexture, Position - Main.screenPosition, null, BloomColor * Opacity, 0f, null, Scale * 3f, 0);
+            base.Draw(spriteBatch);
         }
     }
 }

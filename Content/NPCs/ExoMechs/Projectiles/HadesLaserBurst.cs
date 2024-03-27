@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
+using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -19,7 +20,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public ref float Time => ref Projectile.ai[0];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Electricity;
 
@@ -58,7 +59,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             int sparkLifetime = Main.rand.Next(10, 21);
             Vector2 sparkVelocity = Main.rand.NextVector2Circular(4f, 4f);
             Color sparkColor = Color.Lerp(Color.Wheat, new(1f, 0.02f, 0.22f), Main.rand.NextFloat());
-            ElectricSparkParticle spark = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f) - Projectile.velocity * 1.1f, sparkVelocity, sparkColor, sparkLifetime, Vector2.One * 0.19f);
+            ElectricSparkParticle spark = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f) - Projectile.velocity * 1.1f, sparkVelocity, sparkColor, Color.Transparent, sparkLifetime, Vector2.One * 0.19f);
             spark.Spawn();
         }
 
@@ -92,7 +93,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("WoTM.WoTM.HadesLaserShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesLaserShader");
             shader.TrySetParameter("glowIntensity", 1f);
             shader.TrySetParameter("noiseScrollOffset", Projectile.identity * 0.3149f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"), 1, SamplerState.LinearWrap);

@@ -48,10 +48,34 @@
         "y": 0.5
       }
     },
-    "BasicMetaballCircle.png": {
+    "HollowCircle.png": {
       "frame": {
         "x": 0,
         "y": 718,
+        "w": 156,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 156,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 156,
+        "h": 156
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BasicMetaballCircle.png": {
+      "frame": {
+        "x": 80,
+        "y": 500,
         "w": 100,
         "h": 100
       },
@@ -75,7 +99,7 @@
     "Pixel.png": {
       "frame": {
         "x": 80,
-        "y": 500,
+        "y": 600,
         "w": 2,
         "h": 2
       },
@@ -103,8 +127,8 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 125,
-      "h": 818
+      "w": 180,
+      "h": 874
     },
     "scale": 1
   }

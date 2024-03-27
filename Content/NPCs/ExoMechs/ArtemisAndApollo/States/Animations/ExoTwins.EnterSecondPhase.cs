@@ -2,6 +2,7 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Projectiles.Boss;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -268,7 +269,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!pixelated)
                 Main.spriteBatch.PrepareForShaders();
 
-            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
+            Texture2D invisible = MiscTexturesRegistry.InvisiblePixel.Value;
             Texture2D forcefield = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
             float spreadScale = 425f;

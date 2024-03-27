@@ -2,6 +2,7 @@
 using CalamityMod;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -250,7 +251,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             float opacity = behaviorOverride.SegmentOpenInterpolant.Cubed();
             Vector2 start = behaviorOverride.TurretPosition;
-            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
+            Texture2D invisible = MiscTexturesRegistry.InvisiblePixel.Value;
 
             // The multiplication by 0.5 is because this is being rendered to the pixelation target, wherein everything is downscaled by a factor of two, so that it can be upscaled later.
             Vector2 drawPosition = (start - Main.screenPosition) * 0.5f;

@@ -8,8 +8,19 @@ namespace WoTM.Content.Particles
 {
     public class BloomPixelParticle : Particle
     {
+        /// <summary>
+        /// The color of bloom behind the pixel.
+        /// </summary>
         public Color BloomColor;
 
+        /// <summary>
+        /// The optional position that this pixel should try to home towards.
+        /// </summary>
+        public Vector2? HomeInDestination;
+
+        /// <summary>
+        /// The bloom texture.
+        /// </summary>
         public static AtlasTexture BloomTexture
         {
             get;
@@ -20,7 +31,7 @@ namespace WoTM.Content.Particles
 
         public override BlendState BlendState => BlendState.Additive;
 
-        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale)
+        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Vector2? homeInDestination = null)
         {
             Position = position;
             Velocity = velocity;
@@ -30,6 +41,7 @@ namespace WoTM.Content.Particles
             Lifetime = lifetime;
             Opacity = 1f;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
+            HomeInDestination = homeInDestination;
         }
 
         public override void Update()
@@ -41,7 +53,19 @@ namespace WoTM.Content.Particles
                 Velocity *= 0.94f;
             }
 
-            Velocity *= 0.96f;
+            if (HomeInDestination is null)
+                Velocity *= 0.96f;
+            else
+            {
+                float currentDirection = Velocity.ToRotation();
+                float idealDirection = (HomeInDestination.Value - Position).ToRotation();
+                Velocity = currentDirection.AngleLerp(idealDirection, 0.021f).ToRotationVector2() * Velocity.Length();
+                Velocity += (HomeInDestination.Value - Position) * 0.005f;
+
+                if (Position.WithinRange(HomeInDestination.Value, 10f))
+                    Kill();
+            }
+
             Rotation += Velocity.X * 0.07f;
         }
 

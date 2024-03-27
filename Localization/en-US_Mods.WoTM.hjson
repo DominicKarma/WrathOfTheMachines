@@ -2,6 +2,8 @@ Projectiles: {
 	HadesLaserBurst.DisplayName: Laser Burst
 	ArtemisLaserImproved.DisplayName: Thermal Laser
 	ApolloMissile.DisplayName: Plasma Missile
+	LargeTeslaSphere.DisplayName: Large Tesla Sphere
+	TeslaArc.DisplayName: Tesla Arc
 }
 
 NPCs: {

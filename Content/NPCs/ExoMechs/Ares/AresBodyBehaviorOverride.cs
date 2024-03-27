@@ -11,6 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -117,10 +118,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformPreUpdateResets();
             ExecuteCurrentState();
 
-            if (NPC.WithinRange(Target.Center, 56f))
+            Vector2 hoverDestination = Target.Center - Vector2.UnitY * 275f;
+            if (NPC.WithinRange(hoverDestination, 56f))
                 NPC.velocity *= 0.94f;
             else
-                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 14f, 0.3f);
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
 
             InstructionsForHand[0] = new(h => StandardHandUpdate(h, new Vector2(-430f, 40f), -1, true));
             InstructionsForHand[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), -1, false));
@@ -130,6 +132,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.scale = 1f / (ZPosition + 1f);
             NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
+
+            if (AITimer == 10)
+                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center - Vector2.UnitY * 300f, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphere>(), 40, 0f);
 
             AITimer++;
         }
@@ -161,7 +166,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             int animateRate = 3;
             hand.Frame = AITimer / animateRate % 11;
 
-            hand.HandType = AresHandType.LaserCannon;
+            hand.HandType = AresHandType.TeslaCannon;
         }
 
         /// <summary>
