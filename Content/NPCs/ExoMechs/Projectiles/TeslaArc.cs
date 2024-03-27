@@ -76,7 +76,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2 start = Projectile.Center;
             Vector2 end = start + Projectile.velocity * Main.rand.NextFloat(0.67f, 1.2f) + Main.rand.NextVector2Circular(30f, 30f);
             Vector2 farFront = start - Projectile.velocity.RotatedByRandom(3.1f) * Main.rand.NextFloat(0.6f, 2.54f);
-            Vector2 farEnd = end + Projectile.velocity.RotatedByRandom(3.1f) * Main.rand.NextFloat(0.6f, 2.54f);
+            Vector2 farEnd = end + Projectile.velocity.RotatedByRandom(3.1f) * 4f;
             for (int i = 0; i < ArcPoints.Length; i++)
             {
                 ArcPoints[i] = Vector2.CatmullRom(farFront, start, end, farEnd, i / (float)(ArcPoints.Length - 1f));
@@ -136,12 +136,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             ArcColor = Color.Lerp(new Color(0.3f, 0.86f, 1f), new Color(0.75f, 0.83f, 1f), Projectile.identity / 19f % 1f);
             WidthFactor = 1f;
 
-            PrimitiveRenderer.RenderTrail(ArcPoints, settings, 45);
+            PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
 
             ArcColor = new Color(1f, 1f, 1f, 0f);
             WidthFactor = 0.5f;
 
-            PrimitiveRenderer.RenderTrail(ArcPoints, settings, 45);
+            PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
         }
 
         public override bool ShouldUpdatePosition() => false;
