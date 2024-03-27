@@ -11,7 +11,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -19,7 +18,7 @@ namespace WoTM.Content.NPCs.ExoMechs
     {
         public enum AresAIState
         {
-
+            LargeTeslaOrbBlast
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of instructions that should be performed by each of Ares' arms.
         /// </summary>
-        public HandInstructions[] InstructionsForHand
+        public HandInstructions[] InstructionsForHands
         {
             get;
             set;
@@ -109,11 +108,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void AI()
         {
-            InstructionsForHand ??= new HandInstructions[ArmCount];
+            InstructionsForHands ??= new HandInstructions[ArmCount];
             if (Main.netMode != NetmodeID.MultiplayerClient && !HasCreatedArms)
-            {
                 CreateArms();
-            }
 
             PerformPreUpdateResets();
             ExecuteCurrentState();
@@ -124,17 +121,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
 
-            InstructionsForHand[0] = new(h => StandardHandUpdate(h, new Vector2(-430f, 40f), -1, true));
-            InstructionsForHand[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), -1, false));
-            InstructionsForHand[2] = new(h => StandardHandUpdate(h, new Vector2(300f, 224f), 1, false));
-            InstructionsForHand[3] = new(h => StandardHandUpdate(h, new Vector2(430f, 40f), 1, true));
+            InstructionsForHands[0] = new(h => StandardHandUpdate(h, new Vector2(-430f, 40f), 0));
+            InstructionsForHands[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), 1));
+            InstructionsForHands[2] = new(h => StandardHandUpdate(h, new Vector2(300f, 224f), 2));
+            InstructionsForHands[3] = new(h => StandardHandUpdate(h, new Vector2(430f, 40f), 3));
 
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.scale = 1f / (ZPosition + 1f);
             NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
-
-            if (AITimer == 10)
-                Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center - Vector2.UnitY * 300f, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphere>(), 40, 0f);
 
             AITimer++;
         }
@@ -154,19 +148,17 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.netUpdate = true;
         }
 
-        public void StandardHandUpdate(AresHand hand, Vector2 hoverOffset, int armSide, bool usesBackArm)
+        public void StandardHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
             hand.NPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.2f, 0.84f);
             hand.NPC.Center = NPC.Center + hoverOffset * NPC.scale;
             hand.RotateToLookAt(Target.Center);
             hand.NPC.Opacity = Utilities.Saturate(hand.NPC.Opacity + 0.2f);
-            hand.UsesBackArm = usesBackArm;
-            hand.ArmSide = armSide;
+            hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
+            hand.ArmSide = (armIndex < ArmCount / 2).ToDirectionInt();
 
             int animateRate = 3;
             hand.Frame = AITimer / animateRate % 11;
-
-            hand.HandType = AresHandType.TeslaCannon;
         }
 
         /// <summary>

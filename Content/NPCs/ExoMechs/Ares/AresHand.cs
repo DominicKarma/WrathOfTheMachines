@@ -150,7 +150,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 ArmEndpoint = NPC.Center;
 
             NPC.Calamity().ShouldCloseHPBar = true;
-            body.InstructionsForHand[LocalIndex]?.Action?.Invoke(this);
+            body.InstructionsForHands[LocalIndex]?.Action?.Invoke(this);
 
             NPC.dontTakeDamage = NPC.Opacity < 0.95f;
             NPC.realLife = CalamityGlobalNPC.draedonExoMechPrime;
