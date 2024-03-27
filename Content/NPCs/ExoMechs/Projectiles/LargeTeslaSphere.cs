@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Assets;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
@@ -72,24 +73,42 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
-            int arcLifetime = Main.rand.Next(7, 14);
-            Vector2 arcSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.05f, 0.32f) * Projectile.Size;
-            Vector2 arcLength = Main.rand.NextVector2Unit() * Main.rand.NextFloat(30f, 210f);
+            int arcLifetime = Main.rand.Next(9, 16);
+            Vector2 arcSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.2f, 0.33f) * Projectile.Size;
+            Vector2 arcLength = Main.rand.NextVector2Unit() * Main.rand.NextFloat(40f, 60f);
+
+            if (Vector2.Dot(arcLength, Projectile.Center - arcSpawnPosition) > 0f)
+                arcLength *= -1f;
+
+            if (Main.rand.NextBool(3))
+                arcLength *= 1.3f;
+            if (Main.rand.NextBool(3))
+                arcLength *= 1.3f;
+            if (Main.rand.NextBool(5))
+                arcLength *= 1.5f;
+            if (Main.rand.NextBool(5))
+                arcLength *= 1.5f;
+
             Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<TeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(new(1f, 1f, 1f, 0f)) * 0.5f, 0f, bloom.Size() * 0.5f, Projectile.Size / bloom.Size() * 1.8f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(new(0.34f, 0.5f, 1f, 0f)) * 0.4f, 0f, bloom.Size() * 0.5f, Projectile.Size / bloom.Size() * 3f, 0, 0f);
+
             Main.spriteBatch.PrepareForShaders();
 
             ManagedShader shader = ShaderManager.GetShader("WoTM.LargeTeslaSphereShader");
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/HarshNoise"), 1, SamplerState.LinearWrap);
+            shader.SetTexture(NoiseTexturesRegistry.ElectricNoise.Value, 2, SamplerState.LinearWrap);
             shader.TrySetParameter("textureSize0", Projectile.Size);
             shader.Apply();
 
             Texture2D pixel = MiscTexturesRegistry.Pixel.Value;
-            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(pixel, drawPosition, null, Projectile.GetAlpha(new(0.7f, 1f, 1f)), 0f, pixel.Size() * 0.5f, Projectile.Size * Projectile.scale / pixel.Size(), 0, 0f);
+            Main.spriteBatch.Draw(pixel, drawPosition, null, Projectile.GetAlpha(new(0.7f, 1f, 1f)), 0f, pixel.Size() * 0.5f, Projectile.Size * Projectile.scale / pixel.Size() * 1.2f, 0, 0f);
 
             Main.spriteBatch.ResetToDefault();
 

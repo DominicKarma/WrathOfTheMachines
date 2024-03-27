@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Assets
 {
-    public class MiscTexturesRegistry : ModSystem
+    public class NoiseTexturesRegistry : ModSystem
     {
         #region Texture Path Constants
 
@@ -16,6 +16,8 @@ namespace WoTM.Assets
         #endregion Texture Path Constants
 
         #region Noise Textures
+
+        public static readonly LazyAsset<Texture2D> ElectricNoise = LoadDeferred($"{ExtraTexturesPath}/ElectricNoise");
 
         public static readonly LazyAsset<Texture2D> RadialNoise = LoadDeferred($"{ExtraTexturesPath}/RadialNoise");
 
