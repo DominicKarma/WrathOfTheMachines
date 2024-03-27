@@ -105,6 +105,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/HarshNoise"), 1, SamplerState.LinearWrap);
             shader.SetTexture(NoiseTexturesRegistry.ElectricNoise.Value, 2, SamplerState.LinearWrap);
             shader.TrySetParameter("textureSize0", Projectile.Size);
+            shader.TrySetParameter("posterizationPrecision", 14f);
+            shader.TrySetParameter("ridgeNoiseInterpolationStart", 0.23f);
+            shader.TrySetParameter("ridgeNoiseInterpolationEnd", 0.09f);
             shader.Apply();
 
             Texture2D pixel = MiscTexturesRegistry.Pixel.Value;

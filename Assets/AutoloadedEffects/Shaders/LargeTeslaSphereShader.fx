@@ -3,6 +3,9 @@ sampler edgeShapeNoiseTexture : register(s1);
 sampler innerElectricityNoiseTexture : register(s2);
 
 float globalTime;
+float posterizationPrecision;
+float ridgeNoiseInterpolationStart;
+float ridgeNoiseInterpolationEnd;
 float2 textureSize0;
 
 float2 GetFakeSphereCoords(float2 coords)
@@ -34,9 +37,9 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float brightness = smoothstep(0.5, 0.1, distanceFromCenter) / distanceFromCenter * 0.4;
     float4 color = saturate(sampleColor * brightness);
     
-    float innerNoise = 0;
     float2 sphereCoords = frac(GetFakeSphereCoords(coords) + float2(globalTime * -0.41, 0));
     
+    float innerNoise = 0;
     float innerNoiseWarpAngle = tex2D(innerElectricityNoiseTexture, coords + float2(globalTime * 0.3, 0)).r * 16;
     float2 innerNoiseWarpOffset = float2(cos(innerNoiseWarpAngle), sin(innerNoiseWarpAngle)) * 2 / textureSize0;
     for (int i = 0; i < 4; i++)
@@ -45,11 +48,14 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
         innerNoise = tex2D(innerElectricityNoiseTexture, sphereCoords * pow(2, i) * 0.5 + noiseInfluence + innerNoiseWarpOffset).r;
     }
     
-    float ridgeNoise = smoothstep(0.23, 0.09, 1 - abs(innerNoise));
+    // Add detail to the core of the texture.
+    float ridgeNoise = smoothstep(ridgeNoiseInterpolationStart, ridgeNoiseInterpolationEnd, 1 - abs(innerNoise));
     color -= ridgeNoise * pow(color.a, 4.16) * float4(1, -0.15, 0, 0) * 0.09;
     
-    // Apply color posteraization.
-    color = float4(floor(color.rgb * 14) / 14, 1) * color.a;
+    // Apply color posterization.
+    color = float4(floor(color.rgb * posterizationPrecision) / posterizationPrecision, 1) * color.a;
+    
+    // Brighten edges so that sparks draw at full brightness.
     color.a = lerp(color.a, 0, smoothstep(0.15, 0.4, distanceFromCenter));
     
     return color;
