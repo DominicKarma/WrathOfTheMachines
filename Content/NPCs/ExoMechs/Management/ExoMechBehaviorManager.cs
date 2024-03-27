@@ -155,6 +155,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();
+
+            if (Main.LocalPlayer.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
+                recorderPlayer.ResetIncurredDamage();
         }
 
         /// <summary>

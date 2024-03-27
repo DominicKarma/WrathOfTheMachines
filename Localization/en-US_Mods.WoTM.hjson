@@ -16,6 +16,38 @@ NPCs: {
 		IntroductionMonologueBrief: Make your choice.
 		ExoMechChoiceResponse1: Excellent.
 		ExoMechChoiceResponse2: They will arrive shortly.
+
+		Interjection1: Hmm...
+		Interjection2_Thermal_Minor: It appears that you have thus far sustained minor thermal burns.
+		Interjection2_Thermal_Major: It appears that you have thus far sustained major thermal burns.
+		Interjection2_Thermal_NearLethal: It appears that you have thus far sustained near-lethal thermal burns.
+
+		Interjection2_Plasma_Minor: It appears that you have thus far sustained minor plasma burns.
+		Interjection2_Plasma_Major: It appears that you have thus far sustained major plasma burns.
+		Interjection2_Plasma_NearLethal: It appears that you have thus far sustained near-lethal plasma burns.
+
+		Interjection2_Electricity_Minor: It appears that you have thus far sustained minor electric shocks.
+		Interjection2_Electricity_Major: It appears that you have thus far sustained major electric shocks.
+		Interjection2_Electricity_NearLethal: It appears that you have thus far sustained near-lethal electric shocks.
+
+		Interjection2_Electricity_Minor: It appears that you have thus far sustained minor tissue damage from magnetic forces.
+		Interjection2_Electricity_Major: It appears that you have thus far sustained major tissue damage from magnetic forces.
+		Interjection2_Electricity_NearLethal: It appears that you have thus far sustained near-lethal tissue damage from magnetic forces.
+
+		Interjection2_Internal_Minor: It appears that you have thus far sustained minor internal organ damage.
+		Interjection2_Internal_Major: It appears that you have thus far sustained major internal organ damage.
+		Interjection2_Internal_NearLethal: It appears that you have thus far sustained near-lethal internal organ damage.
+
+		Interjection2_BluntForceTrauma_Minor: It appears that you have thus far sustained minor blunt force trauma.
+		Interjection2_BluntForceTrauma_Major: It appears that you have thus far sustained major blunt force trauma.
+		Interjection2_BluntForceTrauma_NearLethal: It appears that you have thus far sustained near-lethal blunt force trauma.
+
+		Interjection2_Undamaged: It appears that you have not sustained any damage.
+
+		Interjection2_Error: This text should not be displayed.
+
+		Interjection3: These results are excellent.
+		Interjection4: We shall now reset the variables to their controls for the next phase of testing.
 	}
 
 	ThanatosRename: XM-04 Hades

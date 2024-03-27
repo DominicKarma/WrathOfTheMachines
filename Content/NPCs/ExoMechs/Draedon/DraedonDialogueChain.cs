@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CalamityMod.NPCs.ExoMechs;
 using Microsoft.Xna.Framework;
 
@@ -50,7 +51,25 @@ namespace WoTM.Content.NPCs.ExoMechs
             speakTime ??= DraedonBehaviorOverride.StandardSpeakTime;
             textColor ??= Draedon.TextColor;
 
-            Dialogue.Add(new($"{LocalizationPrefix}{localizationKey}", textColor.Value, speakTime.Value, OverallDuration));
+            Dialogue.Add(new(() => $"{LocalizationPrefix}{localizationKey}", textColor.Value, speakTime.Value, OverallDuration));
+            OverallDuration += speakTime.Value;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new dialogue instance to this chain.
+        /// </summary>
+        /// <param name="localizationKey">The dialogue's localization key.</param>
+        /// <param name="textColor">The dialogue's color.</param>
+        /// <param name="speakTime">How much time, in frames, Draedon should allocate towards saying this dialogue.</param>
+        /// <returns>The original chain, for the purpose of easy method chaining.</returns>
+        public DraedonDialogueChain Add(Func<string> localizationKey, Color? textColor = null, int? speakTime = null)
+        {
+            speakTime ??= DraedonBehaviorOverride.StandardSpeakTime;
+            textColor ??= Draedon.TextColor;
+
+            Dialogue.Add(new(() => $"{LocalizationPrefix}{localizationKey()}", textColor.Value, speakTime.Value, OverallDuration));
             OverallDuration += speakTime.Value;
 
             return this;

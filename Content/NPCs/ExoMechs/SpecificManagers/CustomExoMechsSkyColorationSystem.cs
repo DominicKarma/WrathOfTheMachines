@@ -3,12 +3,12 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public class CustomExoMechsColorationSystem : ModSystem
+    public class CustomExoMechsSkyColorationSystem : ModSystem
     {
         public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
         {
             backgroundColor = Color.Lerp(backgroundColor, new(52, 52, 62), CustomExoMechsSky.Opacity);
-            tileColor = Color.Lerp(backgroundColor, new(52, 52, 62), CustomExoMechsSky.Opacity * 0.85f);
+            tileColor = Color.Lerp(tileColor, new(52, 52, 62), CustomExoMechsSky.Opacity * 0.85f);
 
             float redSirenInterpolant = CustomExoMechsSky.RedSirensIntensity * CustomExoMechsSky.Opacity * 0.7f;
             backgroundColor = Color.Lerp(backgroundColor, new(255, 79, 72), redSirenInterpolant);
