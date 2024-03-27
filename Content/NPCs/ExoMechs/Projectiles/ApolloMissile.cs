@@ -18,7 +18,7 @@ using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ApolloMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer
+    public class ApolloMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer, IExoMechProjectile
     {
         /// <summary>
         /// The loop sound for this missile.
@@ -59,6 +59,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The sound the plasma missiles play idly on loop.
         /// </summary>
         public static readonly SoundStyle LoopSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.35f };
+
+        public ExoMechDamageSource DamageType => ExoMechDamageSource.Plasma;
 
         public override void SetStaticDefaults()
         {

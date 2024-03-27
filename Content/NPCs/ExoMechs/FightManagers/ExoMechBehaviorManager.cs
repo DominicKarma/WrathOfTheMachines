@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.ModLoader;
@@ -156,7 +157,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();
 
-            if (Main.LocalPlayer.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
+            if (Main.LocalPlayer.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer) && !NPC.AnyNPCs(ModContent.NPCType<Draedon>()))
                 recorderPlayer.ResetIncurredDamage();
         }
 

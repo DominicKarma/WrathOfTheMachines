@@ -1,4 +1,6 @@
-﻿using Luminance.Core.Graphics;
+﻿using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 
@@ -26,12 +28,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void DoBehavior_FirstInterjection()
         {
             int speakTimer = (int)AITimer - 90;
-            var monologue = StartingMonologueToUse;
+            var monologue = FirstInterjection;
             for (int i = 0; i < monologue.Count; i++)
             {
                 if (speakTimer == monologue[i].SpeakDelay)
                     monologue[i].SayInChat();
             }
+
+            Vector2 hoverDestination = PlayerToFollow.Center + new Vector2((PlayerToFollow.Center.X - NPC.Center.X).NonZeroSign() * -450f, -85f);
+            NPC.SmoothFlyNear(hoverDestination, 0.05f, 0.94f);
 
             bool monologueIsFinished = speakTimer >= monologue.OverallDuration;
 
@@ -41,9 +46,11 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
                 Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax2;
 
-                ScreenShakeSystem.StartShake(4.5f);
+                ScreenShakeSystem.StartShake(3f);
                 SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
             }
+
+            PerformStandardFraming();
         }
 
         /// <summary>
@@ -53,7 +60,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             Player closest = Main.player[Player.FindClosest(Main.LocalPlayer.Center, 1, 1)];
 
-            if (closest.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
+            if (!closest.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
                 return "Interjection2_Error";
 
             ExoMechDamageSource source = recorderPlayer.MostDamagingSource;
@@ -64,7 +71,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             string damagePrefix = "Minor";
 
             bool majorDamage = damageIncurred >= MajorDamageThreshold;
-            bool nearLethalDamage = majorDamage && playerLifeRatio <= 0.2f;
+            bool nearLethalDamage = majorDamage && playerLifeRatio <= 0.25f;
 
             if (majorDamage)
                 damagePrefix = "Major";

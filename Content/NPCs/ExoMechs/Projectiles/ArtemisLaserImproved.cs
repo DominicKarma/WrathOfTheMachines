@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ArtemisLaserImproved : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>
+    public class ArtemisLaserImproved : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>, IExoMechProjectile
     {
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterProjectiles;
 
@@ -39,6 +39,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public static readonly SoundStyle GrazeSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/LaserGraze", 2) with { Volume = 1.2f };
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
+
+        public ExoMechDamageSource DamageType => ExoMechDamageSource.Thermal;
 
         public override void SetStaticDefaults()
         {

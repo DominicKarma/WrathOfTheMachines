@@ -12,7 +12,7 @@ using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>
+    public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
     {
         /// <summary>
         /// How long this laser burst has existed, in frames.
@@ -20,6 +20,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Time => ref Projectile.ai[0];
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+
+        public ExoMechDamageSource DamageType => ExoMechDamageSource.Electricity;
 
         public override void SetStaticDefaults()
         {

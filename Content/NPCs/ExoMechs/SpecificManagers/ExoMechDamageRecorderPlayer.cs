@@ -21,6 +21,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Adds damage to this player for a given source.
+        /// </summary>
+        /// <param name="source">The damage source.</param>
+        /// <param name="damage">The damage to incur.</param>
+        public void AddDamageFromSource(ExoMechDamageSource source, int damage)
+        {
+            if (damageDonePerSource.TryGetValue(source, out _))
+            {
+                damageDonePerSource[source] += damage;
+                return;
+            }
+
+            damageDonePerSource[source] = damage;
+        }
+
+        /// <summary>
         /// The damage source that has thus far done the most damage to the player.
         /// </summary>
         public ExoMechDamageSource MostDamagingSource

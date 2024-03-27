@@ -18,7 +18,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             AppearAsHologram,
             StartingMonologue,
-            ExoMechSpawnAnimation
+            ExoMechSpawnAnimation,
+            FirstInterjection
         }
 
         public Player PlayerToFollow => Main.player[NPC.target];
@@ -133,6 +134,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case DraedonAIState.ExoMechSpawnAnimation:
                     DoBehavior_ExoMechSpawnAnimation();
+                    break;
+                case DraedonAIState.FirstInterjection:
+                    DoBehavior_FirstInterjection();
                     break;
             }
 
