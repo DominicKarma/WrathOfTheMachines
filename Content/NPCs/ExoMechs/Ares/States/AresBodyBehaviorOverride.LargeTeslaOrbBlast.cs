@@ -26,7 +26,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             float reelBackInterpolant = Utilities.InverseLerp(0f, 90f, AITimer - LargeTeslaOrbBlast_OrbChargeUpTime).Squared();
-            sphereHoverDestination += NPC.SafeDirectionTo(Target.Center) * reelBackInterpolant * 320f;
+            sphereHoverDestination -= NPC.SafeDirectionTo(Target.Center) * reelBackInterpolant * new Vector2(300f, 50f);
+            sphereHoverDestination.Y += reelBackInterpolant * 100f;
 
             Projectile teslaSphere = teslaSpheres.First();
             teslaSphere.Center = Vector2.Lerp(teslaSphere.Center, sphereHoverDestination, 0.04f);
@@ -35,6 +36,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             float chargeUpInterpolant = Utilities.InverseLerp(0f, LargeTeslaOrbBlast_OrbChargeUpTime, AITimer);
             Vector2 teslaSphereSize = Vector2.Lerp(Vector2.One * 2f, Vector2.One * 750f, chargeUpInterpolant.Cubed());
             teslaSphere.Resize((int)teslaSphereSize.X, (int)teslaSphereSize.Y);
+
+            Vector2 flyDestination = Target.Center + new Vector2(reelBackInterpolant * NPC.HorizontalDirectionTo(Target.Center) * -300f, -275f);
+            StandardFlyTowards(flyDestination);
 
             if (Main.mouseRight && Main.mouseRightRelease)
             {
@@ -82,7 +86,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (Main.netMode != NetmodeID.MultiplayerClient && Main.rand.NextBool(arcCreationChance))
                 {
                     Vector2 arcLength = (teslaSphere.Center - arcSpawnPosition).RotatedByRandom(0.02f) * Main.rand.NextFloat(0.97f, 1.03f);
-                    Utilities.NewProjectileBetter(hand.NPC.GetSource_FromAI(), arcSpawnPosition, arcLength, ModContent.ProjectileType<TeslaArc>(), 0, 0f, -1, Main.rand.Next(6, 9));
+                    Utilities.NewProjectileBetter(hand.NPC.GetSource_FromAI(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, Main.rand.Next(6, 9));
                 }
             }
         }

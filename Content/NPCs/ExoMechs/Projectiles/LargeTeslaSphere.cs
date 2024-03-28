@@ -54,7 +54,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             CreateElectricPixel();
 
-            if (Time % 13 == 12)
+            if (Time % 13 == 12 && Projectile.velocity.Length() <= 11f)
                 CreateConvergingCircleParticle();
 
             Projectile.scale = MathHelper.Lerp(1f, 1.06f, Utilities.Cos01(MathHelper.TwoPi * Time / 6.3f));
@@ -88,7 +88,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.rand.NextBool(5))
                 arcLength *= 1.5f;
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<TeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
+            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
         /// <summary>

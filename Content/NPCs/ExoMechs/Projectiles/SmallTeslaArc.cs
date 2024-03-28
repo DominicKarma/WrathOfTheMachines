@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class TeslaArc : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
+    public class SmallTeslaArc : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
         /// <summary>
         /// The width factor to be used in the <see cref="ArcWidthFunction(float)"/>.

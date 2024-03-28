@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CalamityMod;
 using CalamityMod.NPCs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -115,12 +114,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformPreUpdateResets();
             ExecuteCurrentState();
 
-            Vector2 hoverDestination = Target.Center - Vector2.UnitY * 275f;
-            if (NPC.WithinRange(hoverDestination, 56f))
-                NPC.velocity *= 0.94f;
-            else
-                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
-
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.scale = 1f / (ZPosition + 1f);
             NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
@@ -154,6 +147,18 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             int animateRate = 3;
             hand.Frame = AITimer / animateRate % 11;
+        }
+
+        /// <summary>
+        /// A basic method that makes Ares fly towards a given destination.
+        /// </summary>
+        /// <param name="hoverDestination">The destination to make Ares fly towards.</param>
+        public void StandardFlyTowards(Vector2 hoverDestination)
+        {
+            if (NPC.WithinRange(hoverDestination, 56f))
+                NPC.velocity *= 0.94f;
+            else
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
         }
 
         /// <summary>
