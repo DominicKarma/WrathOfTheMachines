@@ -11,6 +11,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class AresBodyBehaviorOverride : NPCBehaviorOverride
     {
+        public static int LargeTeslaOrbBlast_OrbChargeUpTime => Utilities.SecondsToFrames(2.5f);
+
         public void DoBehavior_LargeTeslaOrbBlast()
         {
             var teslaSpheres = Utilities.AllProjectilesByID(ModContent.ProjectileType<LargeTeslaSphere>());
@@ -23,9 +25,22 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
+            float reelBackInterpolant = Utilities.InverseLerp(0f, 90f, AITimer - LargeTeslaOrbBlast_OrbChargeUpTime).Squared();
+            sphereHoverDestination += NPC.SafeDirectionTo(Target.Center) * reelBackInterpolant * 320f;
+
             Projectile teslaSphere = teslaSpheres.First();
-            teslaSphere.Center = Vector2.Lerp(teslaSphere.Center, sphereHoverDestination, 0.05f);
-            teslaSphere.velocity += (sphereHoverDestination - teslaSphere.Center) * 0.0075f;
+            teslaSphere.Center = Vector2.Lerp(teslaSphere.Center, sphereHoverDestination, 0.04f);
+            teslaSphere.velocity += (sphereHoverDestination - teslaSphere.Center) * 0.0051f;
+
+            float chargeUpInterpolant = Utilities.InverseLerp(0f, LargeTeslaOrbBlast_OrbChargeUpTime, AITimer);
+            Vector2 teslaSphereSize = Vector2.Lerp(Vector2.One * 2f, Vector2.One * 750f, chargeUpInterpolant.Cubed());
+            teslaSphere.Resize((int)teslaSphereSize.X, (int)teslaSphereSize.Y);
+
+            if (Main.mouseRight && Main.mouseRightRelease)
+            {
+                teslaSphere.Resize(120, 120);
+                AITimer = 0;
+            }
 
             InstructionsForHands[0] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-430f, 40f), 0));
             InstructionsForHands[1] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-300f, 224f), 1));
@@ -55,7 +70,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             int animateRate = 3;
             hand.Frame = AITimer / animateRate % 11;
 
+            hand.NPC.velocity += Main.rand.NextVector2Circular(3f, 3f) * hand.EnergyDrawer.chargeProgress;
+
             float arcCreationChance = Utils.Remap(teslaSphere.width, 175f, 700f, 0.05f, 1f);
+            if (AITimer >= LargeTeslaOrbBlast_OrbChargeUpTime)
+                arcCreationChance *= 0.4f;
+
             for (int i = 0; i < 2; i++)
             {
                 Vector2 arcSpawnPosition = hand.NPC.Center + new Vector2(hand.NPC.spriteDirection * 54f, 8f).RotatedBy(hand.NPC.rotation);

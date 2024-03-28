@@ -59,11 +59,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Projectile.scale = MathHelper.Lerp(1f, 1.06f, Utilities.Cos01(MathHelper.TwoPi * Time / 6.3f));
 
-            if (Projectile.width < 750)
-                Projectile.Resize((int)(Projectile.width * 1.015f) + 1, (int)(Projectile.height * 1.015f) + 1);
-            if (Main.mouseRight && Main.mouseRightRelease)
-                Projectile.Resize(120, 120);
-
             SphereSpinScrollOffset += Projectile.width * 0.000023f;
 
             Time++;
@@ -78,8 +73,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return;
 
             int arcLifetime = Main.rand.Next(9, 16);
-            Vector2 arcSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * (Projectile.width * 0.41f - Main.rand.NextFloat(20f, 85f));
-            Vector2 arcLength = Main.rand.NextVector2Unit() * Main.rand.NextFloat(40f, 60f);
+            Vector2 arcSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * (Projectile.width * 0.41f - Main.rand.NextFloat(40f, 95f));
+            Vector2 arcLength = Main.rand.NextVector2Unit() * Main.rand.NextFloat(40f, Projectile.width * 0.034f + 60f);
 
             if (Vector2.Dot(arcLength, Projectile.Center - arcSpawnPosition) > 0f)
                 arcLength *= -1f;
@@ -148,5 +143,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             return false;
         }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
+            Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.4f, targetHitbox);
     }
 }

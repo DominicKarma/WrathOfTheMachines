@@ -6,7 +6,7 @@ using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
-using Luminance.Core.ILWrappers;
+using Luminance.Core.Hooking;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

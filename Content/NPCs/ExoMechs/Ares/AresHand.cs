@@ -136,20 +136,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC aresBody = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
 
             NPC.noTileCollide = true;
-            if (Main.mouseRight)
-            {
-                NPC.noTileCollide = false;
-                NPC.velocity.X *= 0.95f;
-                NPC.velocity.Y += 0.7f;
-                NPC.Opacity = Utilities.Saturate(NPC.Opacity - 0.04f);
-                NPC.rotation = NPC.rotation.AngleLerp(0f, 0.15f);
-                ArmEndpoint += Main.rand.NextVector2Circular(1f, 2f) * NPC.Opacity;
-
-                if (NPC.Opacity <= 0f)
-                    NPC.Center = ArmEndpoint + Vector2.UnitY * 240f;
-            }
-            else
-                ArmEndpoint = NPC.Center;
+            ArmEndpoint = NPC.Center;
 
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
