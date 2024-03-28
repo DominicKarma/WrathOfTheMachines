@@ -3,6 +3,7 @@ sampler edgeShapeNoiseTexture : register(s1);
 sampler innerElectricityNoiseTexture : register(s2);
 
 float globalTime;
+float sphereSpinScrollOffset;
 float posterizationPrecision;
 float ridgeNoiseInterpolationStart;
 float ridgeNoiseInterpolationEnd;
@@ -37,7 +38,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float brightness = smoothstep(0.5, 0.1, distanceFromCenter) / distanceFromCenter * 0.4;
     float4 color = saturate(sampleColor * brightness);
     
-    float2 sphereCoords = frac(GetFakeSphereCoords(coords) + float2(globalTime * -0.41, 0));
+    float2 sphereCoords = frac(GetFakeSphereCoords(coords) + float2(-sphereSpinScrollOffset, 0));
     
     float innerNoise = 0;
     float innerNoiseWarpAngle = tex2D(innerElectricityNoiseTexture, coords + float2(globalTime * 0.3, 0)).r * 16;

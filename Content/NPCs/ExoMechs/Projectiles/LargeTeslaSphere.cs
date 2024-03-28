@@ -20,6 +20,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public ref float Time => ref Projectile.ai[0];
 
+        /// <summary>
+        /// The effective amount of spin that has elapsed thus far. Used by the sphere shader.
+        /// </summary>
+        public ref float SphereSpinScrollOffset => ref Projectile.localAI[0];
+
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Electricity;
@@ -32,8 +37,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = 320;
-            Projectile.height = 320;
+            Projectile.width = 10;
+            Projectile.height = 10;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -49,14 +54,17 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             CreateElectricPixel();
 
-            if (Time % 18 == 17)
+            if (Time % 13 == 12)
                 CreateConvergingCircleParticle();
 
-            Projectile.scale = MathHelper.Lerp(1f, 1.1f, Utilities.Cos01(MathHelper.TwoPi * Time / 6.3f));
+            Projectile.scale = MathHelper.Lerp(1f, 1.06f, Utilities.Cos01(MathHelper.TwoPi * Time / 6.3f));
 
-            Projectile.Resize((int)(Projectile.width * 1.015f), (int)(Projectile.height * 1.015f));
-            if (Projectile.width > 800)
-                Projectile.Resize(75, 75);
+            if (Projectile.width < 750)
+                Projectile.Resize((int)(Projectile.width * 1.015f) + 1, (int)(Projectile.height * 1.015f) + 1);
+            if (Main.mouseRight && Main.mouseRightRelease)
+                Projectile.Resize(120, 120);
+
+            SphereSpinScrollOffset += Projectile.width * 0.000023f;
 
             Time++;
         }
@@ -96,7 +104,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2? pixelHomeDestination = Main.rand.NextBool(6) ? Projectile.Center : null;
             float pixelOffsetAngle = Main.rand.NextBool(10) || pixelHomeDestination is not null ? Main.rand.NextFloat(0.9f, 1.4f) : Main.rand.NextFloat(-0.3f, 0.3f);
 
-            Vector2 pixelSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * (Projectile.width * 0.5f + Main.rand.NextFloat(50f, 125f));
+            Vector2 pixelSpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * (Projectile.width * 0.5f + Main.rand.NextFloat(50f, 175f));
 
             float pixelSpeedFactor = Main.rand.NextFloat(0.019f, 0.07f);
             Vector2 pixelVelocity = (Projectile.Center - pixelSpawnPosition).RotatedBy(pixelOffsetAngle) * pixelSpeedFactor;
@@ -110,7 +118,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public void CreateConvergingCircleParticle()
         {
-            HollowCircleParticle circle = new(Projectile.Center, Vector2.Zero, Color.CadetBlue, 16, Projectile.width / 85f, 0.6f, 0.72f);
+            HollowCircleParticle circle = new(Projectile.Center, Vector2.Zero, Color.CadetBlue, 11, Projectile.width / 85f, 0.6f, 0.72f);
             circle.Spawn();
         }
 
@@ -128,6 +136,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             shader.SetTexture(NoiseTexturesRegistry.ElectricNoise.Value, 2, SamplerState.LinearWrap);
             shader.TrySetParameter("textureSize0", Projectile.Size);
             shader.TrySetParameter("posterizationPrecision", 14f);
+            shader.TrySetParameter("sphereSpinScrollOffset", SphereSpinScrollOffset);
             shader.TrySetParameter("ridgeNoiseInterpolationStart", 0.23f);
             shader.TrySetParameter("ridgeNoiseInterpolationEnd", 0.09f);
             shader.Apply();

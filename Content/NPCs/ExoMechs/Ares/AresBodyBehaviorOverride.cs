@@ -121,11 +121,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
 
-            InstructionsForHands[0] = new(h => StandardHandUpdate(h, new Vector2(-430f, 40f), 0));
-            InstructionsForHands[1] = new(h => StandardHandUpdate(h, new Vector2(-300f, 224f), 1));
-            InstructionsForHands[2] = new(h => StandardHandUpdate(h, new Vector2(300f, 224f), 2));
-            InstructionsForHands[3] = new(h => StandardHandUpdate(h, new Vector2(430f, 40f), 3));
-
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.scale = 1f / (ZPosition + 1f);
             NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
@@ -155,7 +150,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.RotateToLookAt(Target.Center);
             hand.NPC.Opacity = Utilities.Saturate(hand.NPC.Opacity + 0.2f);
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
-            hand.ArmSide = (armIndex < ArmCount / 2).ToDirectionInt();
+            hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
 
             int animateRate = 3;
             hand.Frame = AITimer / animateRate % 11;
@@ -185,6 +180,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             switch (CurrentState)
             {
+                case AresAIState.LargeTeslaOrbBlast:
+                    DoBehavior_LargeTeslaOrbBlast();
+                    break;
             }
         }
 

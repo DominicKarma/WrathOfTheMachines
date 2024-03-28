@@ -38,11 +38,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Lifetime => ref Projectile.ai[0];
 
         /// <summary>
-        /// The maximum angle by which this arc should rotate.
-        /// </summary>
-        public ref float ArcAngle => ref Projectile.ai[1];
-
-        /// <summary>
         /// How long this sphere has existed, in frames.
         /// </summary>
         public ref float Time => ref Projectile.ai[2];
@@ -65,7 +60,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.timeLeft = 7200;
+            Projectile.timeLeft = 300;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
@@ -74,9 +69,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             ArcPoints = new Vector2[25];
 
             Vector2 start = Projectile.Center;
+            Vector2 lengthForPerpendicular = Projectile.velocity.ClampLength(0f, 640f);
             Vector2 end = start + Projectile.velocity * Main.rand.NextFloat(0.67f, 1.2f) + Main.rand.NextVector2Circular(30f, 30f);
-            Vector2 farFront = start - Projectile.velocity.RotatedByRandom(3.1f) * Main.rand.NextFloat(0.6f, 2.54f);
-            Vector2 farEnd = end + Projectile.velocity.RotatedByRandom(3.1f) * 4f;
+            Vector2 farFront = start - lengthForPerpendicular.RotatedByRandom(3.1f) * Main.rand.NextFloat(0.26f, 0.8f);
+            Vector2 farEnd = end + lengthForPerpendicular.RotatedByRandom(3.1f) * 4f;
             for (int i = 0; i < ArcPoints.Length; i++)
             {
                 ArcPoints[i] = Vector2.CatmullRom(farFront, start, end, farEnd, i / (float)(ArcPoints.Length - 1f));

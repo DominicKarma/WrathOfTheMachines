@@ -2,6 +2,7 @@
 using System.IO;
 using CalamityMod;
 using CalamityMod.NPCs;
+using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
@@ -20,13 +21,14 @@ namespace WoTM.Content.NPCs.ExoMechs
     public class AresHand : ModNPC
     {
         /// <summary>
+        /// The energy drawer for this arm. Used for telegraphing.
+        /// </summary>
+        public AresCannonChargeParticleSet EnergyDrawer = new(-1, 15, 40f, Color.Red);
+
+        /// <summary>
         /// The type of hand that this NPC is.
         /// </summary>
-        public AresHandType HandType
-        {
-            get;
-            set;
-        } = AresHandType.PlasmaCannon;
+        public AresHandType HandType = AresHandType.PlasmaCannon;
 
         /// <summary>
         /// The local index of this arm. This is used as a means of ensuring that the arm which instructions from Ares' body should be follows.
@@ -149,8 +151,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
                 ArmEndpoint = NPC.Center;
 
+            EnergyDrawer.ParticleSpawnRate = int.MaxValue;
+            EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
             NPC.Calamity().ShouldCloseHPBar = true;
             body.InstructionsForHands[LocalIndex]?.Action?.Invoke(this);
+
+            EnergyDrawer.Update();
 
             NPC.dontTakeDamage = NPC.Opacity < 0.95f;
             NPC.realLife = CalamityGlobalNPC.draedonExoMechPrime;
@@ -197,7 +203,32 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
+            DrawEnergyTelegraph(texture, drawPosition);
+
             return false;
+        }
+
+        public void DrawEnergyTelegraph(Texture2D texture, Vector2 drawPosition)
+        {
+            Main.spriteBatch.PrepareForShaders(BlendState.Additive);
+
+            Vector2 coreSpritePosition = NPC.Center - new Vector2(NPC.spriteDirection * 36f, -6f).RotatedBy(NPC.rotation) * NPC.scale;
+
+            // Draw a pulsing edge glow above the hand.
+            if (EnergyDrawer.chargeProgress > 0f)
+            {
+                float pulseRatio = Main.GlobalTimeWrappedHourly * 3f % 1f;
+                float pulseOpacity = MathHelper.Clamp(pulseRatio * 0.3f, 1f, 2f) * EnergyDrawer.chargeProgress;
+                Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, Color.Aqua * MathHelper.Lerp(1f, 0f, pulseRatio) * pulseOpacity, NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale + pulseRatio * EnergyDrawer.chargeProgress, NPC.spriteDirection.ToSpriteDirection(), 0f);
+
+                // Draw the bloom.
+                EnergyDrawer.DrawBloom(coreSpritePosition);
+            }
+
+            EnergyDrawer.DrawPulses(coreSpritePosition);
+            EnergyDrawer.DrawSet(coreSpritePosition);
+
+            Main.spriteBatch.ResetToDefault();
         }
 
         public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end, float opacity = 1f)
