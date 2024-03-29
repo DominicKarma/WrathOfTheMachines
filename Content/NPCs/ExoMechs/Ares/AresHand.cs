@@ -63,6 +63,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// How disabled the glowmasks are, as a 0-1 interpolant.
+        /// </summary>
+        public float GlowmaskDisabilityInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The endpoint of this arm when drawing Ares arm.
         /// </summary>
         /// 
@@ -187,8 +196,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             int frameY = Frame % HandType.TotalHorizontalFrames;
             NPC.frame = texture.Frame(HandType.TotalHorizontalFrames, HandType.TotalVerticalFrames, frameX, frameY);
 
+            Color glowmaskColor = Color.Lerp(Color.White, new(25, 25, 25), GlowmaskDisabilityInterpolant);
             Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
-            Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
+            Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(glowmaskColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
             DrawEnergyTelegraph(texture, drawPosition);
 
@@ -356,7 +366,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(forearmTextureGlowmask, forearmDrawPosition, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
             Vector2 magnetismStart = forearmDrawPosition + Main.screenPosition - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 20f;
-            Vector2 magnetismEnd = ArmEndpoint - new Vector2(ArmSide * -60f, 8f).RotatedBy(forearmRotation) * aresBody.scale;
+            Vector2 magnetismEnd = ArmEndpoint - new Vector2(ArmSide * -60f, 28f).RotatedBy(forearmRotation) * aresBody.scale;
             DrawMagneticLine(aresBody, magnetismStart, magnetismEnd, NPC.Opacity.Cubed());
         }
 

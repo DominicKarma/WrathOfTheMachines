@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs.ExoMechs.Ares;
+﻿using CalamityMod.Items.Weapons.DraedonsArsenal;
+using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -6,6 +7,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Assets;
@@ -121,22 +123,38 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void OnKill(int timeLeft)
         {
-            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 9f);
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 11f);
+            SoundEngine.PlaySound(TeslaCannon.FireSound with { Volume = 3f });
+
+            for (int i = 0; i < 35; i++)
+            {
+                Color streakColor = Color.Lerp(Color.Aqua, Color.DeepSkyBlue, Main.rand.NextFloat(0.5f));
+                streakColor = Color.Lerp(streakColor, Color.White, 0.5f);
+
+                Vector2 streakVelocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(7.5f, 40f);
+                Vector2 streakScale = new(2f, 0.028f);
+                Vector2 endingStreakScale = new(0.95f, 0.08f);
+
+                LineStreakParticle streak = new(Projectile.Center, streakVelocity, streakColor, Main.rand.Next(25, 54), streakVelocity.ToRotation(), streakScale, endingStreakScale);
+                streak.Spawn();
+            }
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
-            for (int i = 0; i < 24; i++)
+            for (int i = 0; i < 16; i++)
             {
-                Vector2 burstVelocity = (MathHelper.TwoPi * i / 24f).ToRotationVector2() * 0.5f;
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 16f).ToRotationVector2() * 0.5f;
                 Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2 burstVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 0.97f;
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 8f + MathHelper.Pi / 6f).ToRotationVector2() * 0.97f;
                 Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
+
+            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)

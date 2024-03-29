@@ -45,10 +45,10 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float horizontalDistanceFromCenter = distance(coords.y, 0.5);
     
     float glowPulse = cos(globalTime * 46 - coords.x * 9) * 0.25 + 1;
-    float glow = pow(0.1 * glowPulse / horizontalDistanceFromCenter, 2);
+    float glow = pow(0.1 * pow((1 - coords.x), 1.9) * glowPulse / horizontalDistanceFromCenter, 2);
     color += glow * color.a;
     
-    color *= smoothstep(0.4, 0.1, horizontalDistanceFromCenter / (1.25 - coords.x));
+    color *= pow(smoothstep(0.4, 0.1, horizontalDistanceFromCenter / (1.25 - coords.x)), 1.8);
     
     return color;
 }
