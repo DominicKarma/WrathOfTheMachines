@@ -1,5 +1,6 @@
 ﻿using CalamityMod.Items.Weapons.DraedonsArsenal;
 using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.Particles;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -125,6 +126,14 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 11f);
             SoundEngine.PlaySound(TeslaCannon.FireSound with { Volume = 3f });
+
+            StrongBloom impactBloom = new(Projectile.Center, Vector2.Zero, Color.White, 3f, 5);
+            GeneralParticleHandler.SpawnParticle(impactBloom);
+            impactBloom = new(Projectile.Center, Vector2.Zero, Color.White, 3f, 16);
+            GeneralParticleHandler.SpawnParticle(impactBloom);
+
+            StrongBloom backBloom = new(Projectile.Center, Vector2.Zero, new(0.34f, 0.5f, 1f), 4f, 40);
+            GeneralParticleHandler.SpawnParticle(backBloom);
 
             for (int i = 0; i < 35; i++)
             {

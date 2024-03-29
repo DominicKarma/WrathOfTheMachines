@@ -50,6 +50,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer % 21 == 20 && shootingBursts && teslaSphere is not null)
                 DoBehavior_LargeTeslaOrbBlast_ReleaseBurst(teslaSphere);
 
+            if (Main.mouseRight && Main.mouseRightRelease)
+                AITimer = 0;
+
             InstructionsForHands[0] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-430f, 40f), 0));
             InstructionsForHands[1] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-300f, 224f), 1));
             InstructionsForHands[2] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(300f, 224f), 2));
