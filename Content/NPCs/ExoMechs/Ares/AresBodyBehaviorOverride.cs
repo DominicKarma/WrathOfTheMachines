@@ -155,8 +155,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="hoverDestination">The destination to make Ares fly towards.</param>
         public void StandardFlyTowards(Vector2 hoverDestination)
         {
-            if (NPC.WithinRange(hoverDestination, 56f))
-                NPC.velocity *= 0.94f;
+            if (NPC.WithinRange(hoverDestination, 85f))
+                NPC.velocity *= 0.93f;
             else
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 14f, 0.3f);
         }

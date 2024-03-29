@@ -133,11 +133,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             WidthFactor = 1f;
 
             PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
-
-            ArcColor = new Color(1f, 1f, 1f, 0f);
-            WidthFactor = 0.5f;
-
-            PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
         }
 
         public override bool ShouldUpdatePosition() => false;

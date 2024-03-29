@@ -14,6 +14,11 @@ namespace WoTM.Content.Particles
         public Color BloomColor;
 
         /// <summary>
+        /// The scale factor of the back-bloom.
+        /// </summary>
+        public Vector2 BloomScaleFactor;
+
+        /// <summary>
         /// The optional position that this pixel should try to home towards.
         /// </summary>
         public Vector2? HomeInDestination;
@@ -31,7 +36,7 @@ namespace WoTM.Content.Particles
 
         public override BlendState BlendState => BlendState.Additive;
 
-        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Vector2? homeInDestination = null)
+        public BloomPixelParticle(Vector2 position, Vector2 velocity, Color color, Color bloomColor, int lifetime, Vector2 scale, Vector2? homeInDestination = null, Vector2? bloomScaleFactor = null)
         {
             Position = position;
             Velocity = velocity;
@@ -42,6 +47,7 @@ namespace WoTM.Content.Particles
             Opacity = 1f;
             Rotation = Main.rand.NextFloat(MathHelper.TwoPi);
             HomeInDestination = homeInDestination;
+            BloomScaleFactor = bloomScaleFactor ?? Vector2.One * 0.19f;
         }
 
         public override void Update()
@@ -72,7 +78,7 @@ namespace WoTM.Content.Particles
         public override void Draw(SpriteBatch spriteBatch)
         {
             BloomTexture ??= AtlasManager.GetTexture("WoTM.BasicMetaballCircle.png");
-            spriteBatch.Draw(BloomTexture, Position - Main.screenPosition, null, BloomColor * Opacity, 0f, null, Scale * 0.19f, 0);
+            spriteBatch.Draw(BloomTexture, Position - Main.screenPosition, null, BloomColor * Opacity, Rotation, null, Scale * BloomScaleFactor, 0);
             base.Draw(spriteBatch);
         }
     }

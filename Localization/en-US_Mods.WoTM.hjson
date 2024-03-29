@@ -4,6 +4,8 @@ Projectiles: {
 	ApolloMissile.DisplayName: Plasma Missile
 	LargeTeslaSphere.DisplayName: Large Tesla Sphere
 	TeslaArc.DisplayName: Tesla Arc
+	SmallTeslaArc.DisplayName: Small Tesla Arc
+	HomingTeslaBurst.DisplayName: Homing Tesla Burst
 }
 
 NPCs: {

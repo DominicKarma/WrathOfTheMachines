@@ -1,8 +1,6 @@
-sampler cutoffNoise : register(s1);
+sampler streakHighlightTexture : register(s1);
 
 float globalTime;
-float lifetimeRatio;
-float erasureThreshold;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -31,6 +29,11 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     return output;
 }
 
+float QuadraticBump(float x)
+{
+    return x * (4 - x * 4);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float2 coords = input.TextureCoordinates;
@@ -39,13 +42,15 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Account for texture distortion artifacts in accordance with the primitive distortion fixes.
     coords.y = (coords.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
-    float erasureNoise = tex2D(cutoffNoise, coords * float2(0.9, 0.2)).r;
-    bool erasePixel = erasureNoise + lifetimeRatio * (1 - coords.x) * 2 >= erasureThreshold;
+    float horizontalDistanceFromCenter = distance(coords.y, 0.5);
     
-    if (distance(coords.y, 0.5) < 0.18)
-        color = color.a;
+    float glowPulse = cos(globalTime * 46 - coords.x * 9) * 0.25 + 1;
+    float glow = pow(0.1 * glowPulse / horizontalDistanceFromCenter, 2);
+    color += glow * color.a;
     
-    return color * (1 - erasePixel);
+    color *= smoothstep(0.4, 0.1, horizontalDistanceFromCenter / (1.25 - coords.x));
+    
+    return color;
 }
 
 technique Technique1

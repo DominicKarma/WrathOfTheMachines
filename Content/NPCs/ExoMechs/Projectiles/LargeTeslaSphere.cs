@@ -15,6 +15,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class LargeTeslaSphere : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
+        public bool SetActiveFalseInsteadOfKill => true;
+
         /// <summary>
         /// How long this sphere has existed, in frames.
         /// </summary>
@@ -117,6 +119,26 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             circle.Spawn();
         }
 
+        public override void OnKill(int timeLeft)
+        {
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 9f);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            for (int i = 0; i < 24; i++)
+            {
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 24f).ToRotationVector2() * 0.5f;
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+            }
+
+            for (int i = 0; i < 9; i++)
+            {
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 9f).ToRotationVector2() * 0.97f;
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+            }
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
@@ -145,6 +167,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.4f, targetHitbox);
+            Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.37f, targetHitbox);
     }
 }
