@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using CalamityMod.NPCs;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -18,7 +20,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         public enum AresAIState
         {
             LargeTeslaOrbBlast,
-            DetachHands
+            DetachHands,
+            NukeAoEAndPlasmaBlasts
         }
 
         /// <summary>
@@ -147,7 +150,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
 
             int animateRate = 3;
-            hand.Frame = AITimer / animateRate % 12;
+            hand.Frame = AITimer / animateRate % 11;
         }
 
         /// <summary>
@@ -210,18 +213,51 @@ namespace WoTM.Content.NPCs.ExoMechs
                 handsToDraw.Add(n.As<AresHand>());
             }
 
-            foreach (AresHand hand in handsToDraw.OrderBy(h => h.LocalIndex - h.UsesBackArm.ToInt() * 10))
-            {
-                hand.DrawArm(spriteBatch, screenPos);
-            }
+            Main.spriteBatch.PrepareForShaders();
 
+            foreach (AresHand hand in handsToDraw.OrderBy(h => h.LocalIndex - h.UsesBackArm.ToInt() * 10))
+                hand.DrawArm(spriteBatch, screenPos);
+
+            Texture2D normalMap = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Ares/NormalMaps/Body").Value;
             Texture2D texture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBody").Value;
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBodyGlow").Value;
+
+            ApplyNormalMapLightShader(normalMap);
+
             Vector2 drawPosition = NPC.Center - screenPos;
             Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
+            Main.spriteBatch.ResetToDefault();
+
             return false;
+        }
+
+        /// <summary>
+        /// Prepares the normal map glow shader.
+        /// </summary>
+        /// <param name="normalMap">The normal map to use.</param>
+        public static void ApplyNormalMapLightShader(Texture2D normalMap)
+        {
+            var teslaSpheres = Utilities.AllProjectilesByID(ModContent.ProjectileType<LargeTeslaSphere>());
+            float glowIntensity = 0f;
+            Vector2 lightSourcePosition = Vector2.Zero;
+            if (teslaSpheres.Any())
+            {
+                Projectile teslaSphere = teslaSpheres.First();
+                glowIntensity = teslaSphere.width / 350f;
+                lightSourcePosition = teslaSphere.Center - Main.screenPosition;
+            }
+
+            // TODO -- A proper normal map set doesn't exist yet.
+            glowIntensity = 0f;
+
+            ManagedShader glowShader = ShaderManager.GetShader("WoTM.NormalMapGlowShader");
+            glowShader.TrySetParameter("glowIntensity", glowIntensity);
+            glowShader.TrySetParameter("lightSourcePosition", lightSourcePosition);
+            glowShader.TrySetParameter("lightColor", Color.DeepSkyBlue);
+            glowShader.SetTexture(normalMap, 1, SamplerState.PointClamp);
+            glowShader.Apply();
         }
     }
 }

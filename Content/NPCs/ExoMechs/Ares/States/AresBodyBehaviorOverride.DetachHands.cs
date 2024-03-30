@@ -15,6 +15,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                 int copyForDelegate = i;
                 InstructionsForHands[i] = new(h => DetachHandsUpdate(h, copyForDelegate));
             }
+
+            if (AITimer >= 40)
+            {
+                CurrentState = AresAIState.NukeAoEAndPlasmaBlasts;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
         }
 
         public void DetachHandsUpdate(AresHand hand, int armIndex)
