@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -25,14 +27,20 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public static int LargeTeslaOrbBlast_ExplodeAnticipationTime => Utilities.SecondsToFrames(1.1f);
 
+        public static int LargeTeslaOrbBlast_AttackTransitionDelay => Utilities.SecondsToFrames(3.2f);
+
+        public static int LargeTeslaOrbBlast_BurstReleaseRate => Utilities.SecondsToFrames(0.3574f);
+
         public static Vector2 LargeTeslaOrbBlast_BaseOrbOffset => Vector2.UnitY * 360f;
 
         public void DoBehavior_LargeTeslaOrbBlast()
         {
+            // Create the tesla sphere at first.
             var teslaSpheres = Utilities.AllProjectilesByID(ModContent.ProjectileType<LargeTeslaSphere>());
             float reelBackInterpolant = Utilities.InverseLerp(0f, 90f, AITimer - LargeTeslaOrbBlast_OrbChargeUpTime).Squared();
             if (!teslaSpheres.Any() && AITimer <= 10)
             {
+                SoundEngine.PlaySound(AresTeslaCannon.TelSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + LargeTeslaOrbBlast_BaseOrbOffset, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphere>(), 500, 0f);
             }
@@ -47,16 +55,20 @@ namespace WoTM.Content.NPCs.ExoMechs
             bool readyToShootBursts = AITimer >= LargeTeslaOrbBlast_OrbChargeUpTime + LargeTeslaOrbBlast_HomingBurstReleaseDelay;
             bool doneShootingBursts = AITimer >= LargeTeslaOrbBlast_OrbChargeUpTime + LargeTeslaOrbBlast_HomingBurstReleaseDelay + LargeTeslaOrbBlast_HomingBurstReleaseTime;
             bool shootingBursts = readyToShootBursts && !doneShootingBursts;
-            if (AITimer % 21 == 20 && shootingBursts && teslaSphere is not null)
+            if (AITimer % LargeTeslaOrbBlast_BurstReleaseRate == LargeTeslaOrbBlast_BurstReleaseRate - 1 && shootingBursts && teslaSphere is not null)
                 DoBehavior_LargeTeslaOrbBlast_ReleaseBurst(teslaSphere);
-
-            if (Main.mouseRight && Main.mouseRightRelease)
-                AITimer = 0;
 
             InstructionsForHands[0] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-430f, 40f), 0));
             InstructionsForHands[1] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(-300f, 224f), 1));
             InstructionsForHands[2] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(300f, 224f), 2));
             InstructionsForHands[3] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(430f, 40f), 3));
+
+            if (AITimer >= LargeTeslaOrbBlast_OrbChargeUpTime + LargeTeslaOrbBlast_HomingBurstReleaseDelay + LargeTeslaOrbBlast_HomingBurstReleaseTime + LargeTeslaOrbBlast_ExplodeAnticipationTime + LargeTeslaOrbBlast_AttackTransitionDelay)
+            {
+                CurrentState = AresAIState.DetachHands;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
         }
 
         public void DoBehavior_LargeTeslaOrbBlast_ManageSphere(Projectile teslaSphere, float reelBackInterpolant)
@@ -91,9 +103,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                         n.netUpdate = true;
                     }
                 }
-
-                // TODO -- Debug behavior. Remove later.
-                AITimer = 30;
             }
         }
 
@@ -162,7 +171,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 angularVelocity -= angularVelocity * 0.08f - MathF.Cos(teslaCannon.rotation) * 0.009f;
             }
 
-            hand.ArmEndpoint += teslaCannon.velocity;
+            hand.ArmEndpoint = teslaCannon.Center + teslaCannon.velocity;
 
             if (AITimer % 20 == 19 && hand.EnergyDrawer.chargeProgress >= 0.4f)
             {
@@ -170,8 +179,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.EnergyDrawer.AddPulse(pulseCounter);
             }
 
-            int animateRate = 3;
-            hand.Frame = AITimer / animateRate % 11;
+            hand.Frame = AITimer / 3 % 12;
         }
     }
 }

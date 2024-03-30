@@ -17,7 +17,8 @@ namespace WoTM.Content.NPCs.ExoMechs
     {
         public enum AresAIState
         {
-            LargeTeslaOrbBlast
+            LargeTeslaOrbBlast,
+            DetachHands
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
 
             int animateRate = 3;
-            hand.Frame = AITimer / animateRate % 11;
+            hand.Frame = AITimer / animateRate % 12;
         }
 
         /// <summary>
@@ -187,6 +188,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 case AresAIState.LargeTeslaOrbBlast:
                     DoBehavior_LargeTeslaOrbBlast();
+                    break;
+                case AresAIState.DetachHands:
+                    DoBehavior_DetachHands();
                     break;
             }
         }

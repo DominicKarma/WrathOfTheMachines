@@ -145,7 +145,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC aresBody = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
 
             NPC.noTileCollide = true;
-            ArmEndpoint = NPC.Center;
 
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
@@ -180,7 +179,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (CalamityGlobalNPC.draedonExoMechPrime == -1)
                 return drawColor * NPC.Opacity;
 
-            return Main.npc[CalamityGlobalNPC.draedonExoMechPrime].GetAlpha(drawColor);
+            return Main.npc[CalamityGlobalNPC.draedonExoMechPrime].GetAlpha(drawColor) * NPC.Opacity;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
