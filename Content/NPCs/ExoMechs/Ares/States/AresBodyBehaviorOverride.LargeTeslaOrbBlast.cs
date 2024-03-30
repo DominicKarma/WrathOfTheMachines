@@ -17,20 +17,44 @@ namespace WoTM.Content.NPCs.ExoMechs
         public float LargeTeslaOrbBlast_ExplodeAnticipationInterpolant =>
             Utilities.InverseLerp(0f, LargeTeslaOrbBlast_ExplodeAnticipationTime, AITimer - LargeTeslaOrbBlast_OrbChargeUpTime - LargeTeslaOrbBlast_HomingBurstReleaseDelay - LargeTeslaOrbBlast_HomingBurstReleaseTime);
 
+        /// <summary>
+        /// How much damage tesla bursts shot by Ares do.
+        /// </summary>
         public static int TeslaBurstDamage => Main.expertMode ? 350 : 225;
 
+        /// <summary>
+        /// How long the tesla orb spends charging energy before firing during the LargeTeslaOrbBlast attack.
+        /// </summary>
         public static int LargeTeslaOrbBlast_OrbChargeUpTime => Utilities.SecondsToFrames(2.5f);
 
+        /// <summary>
+        /// How long the tesla orb waits after charging energy before releasing homing bursts during the LargeTeslaOrbBlast attack.
+        /// </summary>
         public static int LargeTeslaOrbBlast_HomingBurstReleaseDelay => Utilities.SecondsToFrames(1f);
 
-        public static int LargeTeslaOrbBlast_HomingBurstReleaseTime => Utilities.SecondsToFrames(5f);
-
-        public static int LargeTeslaOrbBlast_ExplodeAnticipationTime => Utilities.SecondsToFrames(1.1f);
-
-        public static int LargeTeslaOrbBlast_AttackTransitionDelay => Utilities.SecondsToFrames(3.2f);
-
+        /// <summary>
+        /// The rate at which homing bursts are shot from the tesla orb during the LargeTeslaOrbBlast attack.
+        /// </summary>
         public static int LargeTeslaOrbBlast_BurstReleaseRate => Utilities.SecondsToFrames(0.3574f);
 
+        /// <summary>
+        /// How much time is spent releasing homing tesla bursts during the LargeTeslaOrbBlast attack.
+        /// </summary>
+        public static int LargeTeslaOrbBlast_HomingBurstReleaseTime => Utilities.SecondsToFrames(5f);
+
+        /// <summary>
+        /// How long the tesla orb spends collapsing in anticipation of its explosion during the LargeTeslaOrbBlast attack.
+        /// </summary>
+        public static int LargeTeslaOrbBlast_ExplodeAnticipationTime => Utilities.SecondsToFrames(1.1f);
+
+        /// <summary>
+        /// How long Ares waits before transitioning to the next state following the explosion during the LargeTeslaOrbBlast attack.
+        /// </summary>
+        public static int LargeTeslaOrbBlast_AttackTransitionDelay => Utilities.SecondsToFrames(3.2f);
+
+        /// <summary>
+        /// The default offset of Ares' orb during the LargeTeslaOrbBlast attack.
+        /// </summary>
         public static Vector2 LargeTeslaOrbBlast_BaseOrbOffset => Vector2.UnitY * 360f;
 
         public void DoBehavior_LargeTeslaOrbBlast()
