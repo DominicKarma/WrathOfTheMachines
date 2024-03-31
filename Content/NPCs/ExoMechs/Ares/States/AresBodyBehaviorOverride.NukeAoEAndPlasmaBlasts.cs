@@ -53,9 +53,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SoundEngine.PlaySound(AresGaussNuke.TelSound);
             }
 
-            if (Main.mouseRight)
-                AITimer = 0;
-
             float spinAngle = MathHelper.TwoPi * (AITimer - NukeAoEAndPlasmaBlasts_NukeChargeUpTime) / -150f;
             Vector2 flyDestination = Target.Center - Vector2.UnitY.RotatedBy(spinAngle) * 460f + Target.velocity * new Vector2(45f, 8f);
             NPC.Center = Vector2.Lerp(NPC.Center, flyDestination, 0.02f);
@@ -163,7 +160,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
                 Vector2 plasmaSpawnPosition = handNPC.Center + new Vector2(handNPC.spriteDirection * 50f, 10f).RotatedBy(handNPC.rotation);
 
-                for (int i = 0; i < 24; i++)
+                for (int i = 0; i < 14; i++)
                 {
                     Color gasColor = Color.Lerp(Color.Lime, Color.Yellow, Main.rand.NextFloat());
                     gasColor.A /= 6;

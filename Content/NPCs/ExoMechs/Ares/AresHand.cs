@@ -63,7 +63,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// How disabled the glowmasks are, as a 0-1 interpolant.
+        /// How disabled the glow masks are, as a 0-1 interpolant.
         /// </summary>
         public float GlowmaskDisabilityInterpolant
         {
@@ -77,7 +77,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// 
         /// <remarks>
         /// For most cases, this is equivalent to the hand's center. After all, one would usually want arms and hands to be attached.
-        /// However, there are some circumstances, such as when a hand is being attached, that it's desirable for the two to be incongruent.
+        /// However, there are some circumstances, such as when a hand is being detached, that it's desirable for the two to be incongruent.
         /// </remarks>
         public Vector2 ArmEndpoint
         {
@@ -239,6 +239,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end, float opacity = 1f)
         {
+            start += Main.screenPosition - Main.screenLastPosition;
+            end += Main.screenPosition - Main.screenLastPosition;
+
             Vector2[] controlPoints = new Vector2[8];
             for (int i = 0; i < controlPoints.Length; i++)
                 controlPoints[i] = Vector2.Lerp(start, end, i / 7f);
