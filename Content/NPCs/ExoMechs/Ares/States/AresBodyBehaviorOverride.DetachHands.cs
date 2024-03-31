@@ -29,7 +29,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC handNPC = hand.NPC;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity - 0.025f);
             handNPC.velocity.X *= 0.92f;
-            handNPC.velocity.Y += 0.37f;
+            handNPC.velocity.Y += 0.36f;
 
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();

@@ -1,0 +1,110 @@
+﻿using System;
+using CalamityMod;
+using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.Skies;
+using Luminance.Assets;
+using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.Audio;
+using Terraria.Graphics.Shaders;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+{
+    public class GaussNuke : ModProjectile, IExoMechProjectile
+    {
+        public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
+
+        /// <summary>
+        /// How long this nuke should exist before exploding, in frames.
+        /// </summary>
+        public static int Lifetime => AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDelay;
+
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 12;
+            ProjectileID.Sets.TrailingMode[Type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Type] = 4;
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2000;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 100;
+            Projectile.height = 100;
+            Projectile.hostile = true;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = Lifetime;
+            Projectile.Calamity().DealsDefenseDamage = true;
+            CooldownSlot = ImmunityCooldownID.Bosses;
+        }
+
+        public override void AI()
+        {
+            Projectile.frameCounter++;
+            Projectile.frame = Projectile.frameCounter / 6 % Main.projFrames[Projectile.type];
+            Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+            Projectile.velocity *= 0.87f;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.EnterShaderRegion();
+            DrawAreaOfEffectTelegraph();
+            Main.spriteBatch.ExitShaderRegion();
+
+            Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/Projectiles/Boss/AresGaussNukeProjectileGlow").Value;
+            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
+            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], Color.White, 1, texture: glowmask);
+
+            return false;
+        }
+
+        public void DrawAreaOfEffectTelegraph()
+        {
+            float lifetimeRatio = 1f - Projectile.timeLeft / (float)Lifetime;
+            float opacity = Utilities.Saturate(lifetimeRatio * 8f) * 0.36f;
+            float maxFlashIntensity = Utilities.InverseLerp(0.25f, 0.75f, lifetimeRatio);
+            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
+            Color innerColor = Color.Lerp(Color.Goldenrod, Color.Gold, MathF.Pow(Utilities.Sin01(Main.GlobalTimeWrappedHourly), 3f) * 0.85f);
+            Color edgeColor = Color.Lerp(Color.Yellow, Color.Wheat, 0.6f);
+
+            innerColor = Color.Lerp(innerColor, Color.Crimson, MathF.Pow(flashColorInterpolant, 0.7f));
+            edgeColor = Color.Lerp(edgeColor, Color.Red, flashColorInterpolant);
+
+            var aoeShader = GameShaders.Misc["CalamityMod:CircularAoETelegraph"];
+            aoeShader.UseOpacity(opacity);
+            aoeShader.UseColor(innerColor);
+            aoeShader.UseSecondaryColor(edgeColor);
+            aoeShader.UseSaturation(lifetimeRatio);
+            aoeShader.Apply();
+
+            Texture2D pixel = MiscTexturesRegistry.InvisiblePixel.Value;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionRadius / pixel.Size(), 0, 0);
+        }
+
+        public override bool? CanDamage() => Projectile.velocity.Length() >= 5f;
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => CalamityUtils.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
+
+        public override void OnKill(int timeLeft)
+        {
+            SoundEngine.PlaySound(AresGaussNuke.NukeExplosionSound, Projectile.Center);
+
+            if (Main.netMode != NetmodeID.Server)
+            {
+                Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke1").Type, 1f);
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke3").Type, 1f);
+            }
+
+            ExoMechsSky.CreateLightningBolt(12);
+        }
+    }
+}

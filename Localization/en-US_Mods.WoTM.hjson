@@ -7,6 +7,7 @@ Projectiles: {
 	SmallTeslaArc.DisplayName: Small Tesla Arc
 	HomingTeslaBurst.DisplayName: Homing Tesla Burst
 	LargeTeslaSphereExplosion.DisplayName: Large Tesla Sphere Explosion
+	GaussNuke.DisplayName: Gauss Nuke
 }
 
 NPCs: {

@@ -20,6 +20,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
+using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -189,6 +190,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
 
             UpdateEngineSound();
+
+            Vector2 thrusterPosition = NPC.Center - NPC.rotation.ToRotationVector2() * NPC.scale * 34f + NPC.velocity;
+            ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(thrusterPosition, Main.rand.NextVector2Circular(8f, 8f), ThrusterBoost * 60f + 108f, 16f);
 
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.chaseable = true;

@@ -215,7 +215,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 float pulseRatio = Main.GlobalTimeWrappedHourly * 3f % 1f;
                 float pulseOpacity = MathHelper.Clamp(pulseRatio * 0.3f, 1f, 2f) * EnergyDrawer.chargeProgress;
-                Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, Color.Aqua * MathHelper.Lerp(1f, 0f, pulseRatio) * pulseOpacity, NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale + pulseRatio * EnergyDrawer.chargeProgress, NPC.spriteDirection.ToSpriteDirection(), 0f);
+                Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, EnergyDrawer.ParticleColor * MathHelper.Lerp(1f, 0f, pulseRatio) * pulseOpacity, NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale + pulseRatio * EnergyDrawer.chargeProgress, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
                 // Draw the bloom.
                 EnergyDrawer.DrawBloom(coreSpritePosition);

@@ -195,6 +195,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case AresAIState.DetachHands:
                     DoBehavior_DetachHands();
                     break;
+                case AresAIState.NukeAoEAndPlasmaBlasts:
+                    DoBehavior_NukeAoEAndPlasmaBlasts();
+                    break;
             }
         }
 

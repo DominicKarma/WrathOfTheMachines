@@ -31,6 +31,7 @@ namespace WoTM.Content.Particles.Metaballs
         {
             particle.Velocity.X *= 0.98f;
             particle.Size *= 0.93f;
+            particle.Size -= particle.ExtraInfo[0];
         }
 
         public override bool ShouldKillParticle(MetaballInstance particle) => particle.Size <= 2f;
