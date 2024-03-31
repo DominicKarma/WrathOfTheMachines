@@ -22,17 +22,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Ares' nuke waits before detonating during the NukeAoEAndPlasmaBlasts attack.
         /// </summary>
-        public static int NukeAoEAndPlasmaBlasts_NukeExplosionDelay => Utilities.SecondsToFrames(5.6f);
+        public static int NukeAoEAndPlasmaBlasts_NukeExplosionDelay => Utilities.SecondsToFrames(1.6f);
 
         /// <summary>
         /// How big the nuke explosion should be during the NukeAoEAndPlasmaBlasts attack.
         /// </summary>
-        public static float NukeAoEAndPlasmaBlasts_NukeExplosionRadius => 2900f;
+        public static float NukeAoEAndPlasmaBlasts_NukeExplosionDiameter => 3200f;
 
         /// <summary>
         /// How much Ares' nuke (not its resulting explosion!) does.
         /// </summary>
-        public static int NukeWeaponDamage => 500;
+        public static int NukeWeaponDamage => Main.expertMode ? 450 : 300;
+
+        /// <summary>
+        /// How much Ares' nuke explosion does.
+        /// </summary>
+        public static int NukeExplosionDamage => Main.expertMode ? 650 : 425;
 
         public void DoBehavior_NukeAoEAndPlasmaBlasts()
         {
@@ -68,7 +73,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void NukeAoEAndPlasmaBlastsHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
             NPC handNPC = hand.NPC;
-            handNPC.Center = NPC.Center + hoverOffset * NPC.scale;
+            handNPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.16f, 0.84f);
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.2f);
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();

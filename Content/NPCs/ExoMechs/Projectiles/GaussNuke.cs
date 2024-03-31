@@ -4,6 +4,7 @@ using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Skies;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -84,27 +85,32 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             aoeShader.UseSaturation(lifetimeRatio);
             aoeShader.Apply();
 
+            float explosionDiameter = AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter * MathF.Pow(Utilities.InverseLerp(0f, 0.25f, lifetimeRatio), 1.6f);
             Texture2D pixel = MiscTexturesRegistry.InvisiblePixel.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionRadius / pixel.Size(), 0, 0);
+            Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * explosionDiameter / pixel.Size(), 0, 0);
         }
 
         public override bool? CanDamage() => Projectile.velocity.Length() >= 5f;
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => CalamityUtils.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
 
         public override void OnKill(int timeLeft)
         {
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 15f, intensityTaperStartDistance: 3000f, intensityTaperEndDistance: 6000f);
             SoundEngine.PlaySound(AresGaussNuke.NukeExplosionSound, Projectile.Center);
 
             if (Main.netMode != NetmodeID.Server)
             {
                 Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke1").Type, 1f);
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke3").Type, 1f);
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke1").Type, Projectile.scale);
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke3").Type, Projectile.scale);
             }
 
             ExoMechsSky.CreateLightningBolt(12);
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyBehaviorOverride.NukeExplosionDamage, 0f);
         }
     }
 }
