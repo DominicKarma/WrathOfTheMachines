@@ -29,7 +29,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.projFrames[Type] = 12;
             ProjectileID.Sets.TrailingMode[Type] = 0;
             ProjectileID.Sets.TrailCacheLength[Type] = 4;
-            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2000;
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
         }
 
         public override void SetDefaults()
@@ -50,7 +50,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.frameCounter++;
             Projectile.frame = Projectile.frameCounter / 6 % Main.projFrames[Projectile.type];
             Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-            Projectile.velocity *= 0.87f;
+
+            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
+            if (!Projectile.WithinRange(target.Center, 100f))
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 7f, 0.13f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -93,7 +96,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         // This IS a heavy chunk of metal, and as such it should do damage as it's flying forward, but otherwise it should just sit in place.
         // It'd be rather silly for a nuke that's just sitting in place to do damage.
-        public override bool? CanDamage() => Projectile.velocity.Length() >= 5f;
+        public override bool? CanDamage() => Projectile.velocity.Length() >= 8f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
 

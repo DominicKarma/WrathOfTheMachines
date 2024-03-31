@@ -1,5 +1,5 @@
 ﻿using System;
-using CalamityMod;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
 
@@ -22,6 +22,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// Says this dialogue instance in the chat.
         /// </summary>
-        public void SayInChat() => CalamityUtils.DisplayLocalizedText(LocalizationKey(), TextColor);
+        public void SayInChat() => Utilities.BroadcastLocalizedText(LocalizationKey(), TextColor);
     }
 }

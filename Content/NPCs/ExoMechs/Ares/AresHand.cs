@@ -158,15 +158,25 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.scale = aresBody.scale;
         }
 
-        public void RotateToLookAt(Vector2 lookDestination)
+        /// <summary>
+        /// Makes this hand look towards a given direction.
+        /// </summary>
+        /// <param name="idealRotation">The rotation to look in the direction in.</param>
+        public void RotateToLookAt(float idealRotation)
         {
-            float idealRotation = NPC.AngleTo(lookDestination);
             NPC.spriteDirection = MathF.Cos(idealRotation).NonZeroSign();
             if (NPC.spriteDirection == -1)
                 idealRotation += MathHelper.Pi;
 
             NPC.rotation = idealRotation;
         }
+
+        /// <summary>
+        /// Makes this hand look towards a given destination point.
+        /// </summary>
+        /// <param name="lookDestination">The position to look at.</param>
+        public void RotateToLookAt(Vector2 lookDestination) =>
+            RotateToLookAt(NPC.AngleTo(lookDestination));
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
 

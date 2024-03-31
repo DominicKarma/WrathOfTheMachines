@@ -9,6 +9,7 @@ Projectiles: {
 	LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
 	GaussNuke.DisplayName: Gauss Nuke
 	GaussNukeBoom.DisplayName: Thermonuclear Explosion
+	LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
 }
 
 NPCs: {

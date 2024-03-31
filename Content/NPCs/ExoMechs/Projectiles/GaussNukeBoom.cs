@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(2.1f);
+        public static int Lifetime => Utilities.SecondsToFrames(1.2f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -71,6 +71,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public override bool? CanDamage() => Projectile.Opacity >= 0.6f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.47f, targetHitbox);
+            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.49f, targetHitbox);
     }
 }
