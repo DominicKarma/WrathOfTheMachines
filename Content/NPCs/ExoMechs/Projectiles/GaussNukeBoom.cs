@@ -30,8 +30,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter;
-            Projectile.height = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter;
+            Projectile.width = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter + 360;
+            Projectile.height = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter + 360;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -43,7 +43,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public override void AI()
         {
             Time++;
-            Projectile.Opacity = Utilities.InverseLerp(1f, 0.78f, Time / Lifetime);
+            Projectile.Opacity = Utilities.InverseLerp(1f, 0.82f, Time / Lifetime);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -71,6 +71,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public override bool? CanDamage() => Projectile.Opacity >= 0.6f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.49f, targetHitbox);
+            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.52f, targetHitbox);
     }
 }
