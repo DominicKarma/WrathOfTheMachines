@@ -68,7 +68,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             return false;
         }
 
+        public override bool? CanDamage() => Projectile.Opacity >= 0.6f;
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.47f, targetHitbox) && Projectile.Opacity >= 0.6f;
+            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.47f, targetHitbox);
     }
 }

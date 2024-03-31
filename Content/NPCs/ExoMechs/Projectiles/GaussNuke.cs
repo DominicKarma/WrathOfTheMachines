@@ -91,6 +91,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * explosionDiameter / pixel.Size(), 0, 0);
         }
 
+        // This IS a heavy chunk of metal, and as such it should do damage as it's flying forward, but otherwise it should just sit in place.
+        // It'd be rather silly for a nuke that's just sitting in place to do damage.
         public override bool? CanDamage() => Projectile.velocity.Length() >= 5f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
@@ -103,8 +105,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.netMode != NetmodeID.Server)
             {
                 Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke1").Type, Projectile.scale);
-                Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke3").Type, Projectile.scale);
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke1").Type, Projectile.scale);
+                Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center, Projectile.velocity, calamity.Find<ModGore>("AresGaussNuke3").Type, Projectile.scale);
             }
 
             ExoMechsSky.CreateLightningBolt(12);
