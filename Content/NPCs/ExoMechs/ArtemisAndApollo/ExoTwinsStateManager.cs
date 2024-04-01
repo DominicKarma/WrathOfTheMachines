@@ -162,7 +162,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ExoTwinsIndividualAIState apolloState = previousApolloState;
             ExoTwinsIndividualAIState artemisState = previousArtemisState;
 
-            for (int tries = 0; tries < 100; tries++)
+            for (int tries = 0; tries < 50; tries++)
             {
                 if (apolloWillPerformActiveState)
                 {
