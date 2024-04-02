@@ -26,6 +26,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int NukeAoEAndPlasmaBlasts_NukeExplosionDelay => Utilities.SecondsToFrames(5f);
 
         /// <summary>
+        /// How long Ares waits before transitioning to the next state following the explosion during the NukeAoEAndPlasmaBlasts attack.
+        /// </summary>
+        public static int NukeAoEAndPlasmaBlasts_AttackTransitionDelay => Utilities.SecondsToFrames(2.3f);
+
+        /// <summary>
         /// How big the nuke explosion should be during the NukeAoEAndPlasmaBlasts attack.
         /// </summary>
         public static float NukeAoEAndPlasmaBlasts_NukeExplosionDiameter => 5400f;
@@ -62,6 +67,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands[1] = new(h => NukeAoEAndPlasmaBlastsHandUpdate(h, new Vector2(-280f, 224f), 1));
             InstructionsForHands[2] = new(h => NukeAoEAndPlasmaBlastsHandUpdate(h, new Vector2(280f, 224f), 2));
             InstructionsForHands[3] = new(h => NukeAoEAndPlasmaBlastsHandUpdate(h, new Vector2(400f, 40f), 3));
+
+            if (AITimer >= NukeAoEAndPlasmaBlasts_NukeChargeUpTime + NukeAoEAndPlasmaBlasts_NukeExplosionDelay + NukeAoEAndPlasmaBlasts_AttackTransitionDelay)
+            {
+                CurrentState = AresAIState.DetachHands;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
         }
 
         public void DoBehavior_NukeAoEAndPlasmaBlasts_ReleaseBurst(Projectile teslaSphere)
@@ -155,6 +167,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer % 8 == 7 && AITimer < NukeAoEAndPlasmaBlasts_NukeChargeUpTime)
                 SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaShootSound, handNPC.Center);
 
+            // Release fireballs.
             if (AITimer % shootRate == shootPeriod && AITimer < NukeAoEAndPlasmaBlasts_NukeChargeUpTime)
             {
                 Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
@@ -179,6 +192,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), plasmaSpawnPosition, plasmaVelocity, ModContent.ProjectileType<LingeringPlasmaFireball>(), LingeringPlasmaDamage, 0f);
 
                     handNPC.velocity -= handDirection * 6f;
+                    handNPC.netSpam = 0;
                     handNPC.netUpdate = true;
                 }
             }

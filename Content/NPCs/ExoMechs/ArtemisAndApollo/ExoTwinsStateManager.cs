@@ -2,7 +2,6 @@
 using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
@@ -134,11 +133,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static ExoTwinsAIState MakeAIStateChoice()
         {
-            Player target = ExoMechTargetSelector.Target;
-            NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
-            NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
-            Vector2 twinsCenterOfMass = (artemis.Center + apollo.Center) * 0.5f;
-
             if (SharedState.TotalFinishedAttacks % 2 == 1)
                 return ExoTwinsAIState.PerformIndividualAttacks;
 

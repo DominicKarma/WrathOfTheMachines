@@ -89,6 +89,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
         }
 
+        /// <summary>
+        /// An optional action that should be done for drawing this hand.
+        /// </summary>
+        public Action? OptionalDrawAction;
+
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
         public override void SetStaticDefaults()
@@ -146,6 +151,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.noTileCollide = true;
 
+            OptionalDrawAction = null;
+
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
             NPC.Calamity().ShouldCloseHPBar = true;
@@ -162,13 +169,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Makes this hand look towards a given direction.
         /// </summary>
         /// <param name="idealRotation">The rotation to look in the direction in.</param>
-        public void RotateToLookAt(float idealRotation)
+        /// <param name="rotateSpeedInterpolant">The speed at which rotation occurs.</param>
+        public void RotateToLookAt(float idealRotation, float rotateSpeedInterpolant = 1f)
         {
             NPC.spriteDirection = MathF.Cos(idealRotation).NonZeroSign();
             if (NPC.spriteDirection == -1)
                 idealRotation += MathHelper.Pi;
 
-            NPC.rotation = idealRotation;
+            NPC.rotation = NPC.rotation.AngleLerp(idealRotation, rotateSpeedInterpolant);
         }
 
         /// <summary>
@@ -210,6 +218,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(glowmaskColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, NPC.spriteDirection.ToSpriteDirection(), 0f);
 
             DrawEnergyTelegraph(texture, drawPosition);
+            OptionalDrawAction?.Invoke();
 
             return false;
         }
@@ -239,9 +248,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end, float opacity = 1f)
         {
-            start += Main.screenPosition - Main.screenLastPosition;
-            end += Main.screenPosition - Main.screenLastPosition;
-
             Vector2[] controlPoints = new Vector2[8];
             for (int i = 0; i < controlPoints.Length; i++)
                 controlPoints[i] = Vector2.Lerp(start, end, i / 7f);
@@ -377,9 +383,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(forearmTexture, forearmDrawPosition, forearmFrame, segmentColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
             spriteBatch.Draw(forearmTextureGlowmask, forearmDrawPosition, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
-            Vector2 magnetismStart = forearmDrawPosition + Main.screenPosition - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 20f;
-            Vector2 magnetismEnd = ArmEndpoint - new Vector2(ArmSide * -60f, 28f).RotatedBy(forearmRotation) * aresBody.scale;
-            DrawMagneticLine(aresBody, magnetismStart, magnetismEnd, NPC.Opacity.Cubed());
+            Vector2 magnetismEnd = forearmDrawPosition + Main.screenPosition - new Vector2(-ArmSide, 0.3f).RotatedBy(forearmRotation) * aresBody.scale * 86f;
+            DrawMagneticLine(aresBody, segmentDrawPosition + Main.screenPosition, magnetismEnd, NPC.Opacity.Cubed());
+
+            DrawMagneticLine(aresBody, magnetismEnd - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 16f, ArmEndpoint, NPC.Opacity.Cubed());
         }
 
         /// <summary>

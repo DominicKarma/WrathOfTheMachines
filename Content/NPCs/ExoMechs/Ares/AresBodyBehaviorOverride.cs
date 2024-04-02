@@ -21,7 +21,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             LargeTeslaOrbBlast,
             DetachHands,
-            NukeAoEAndPlasmaBlasts
+            NukeAoEAndPlasmaBlasts,
+            AimedLaserBursts,
         }
 
         /// <summary>
@@ -197,6 +198,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case AresAIState.NukeAoEAndPlasmaBlasts:
                     DoBehavior_NukeAoEAndPlasmaBlasts();
+                    break;
+                case AresAIState.AimedLaserBursts:
+                    DoBehavior_AimedLaserBursts();
                     break;
             }
         }

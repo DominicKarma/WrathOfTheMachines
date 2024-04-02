@@ -18,7 +18,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (AITimer >= 40)
             {
-                CurrentState = AresAIState.NukeAoEAndPlasmaBlasts;
+                CurrentState = Main.rand.NextBool() ? AresAIState.AimedLaserBursts : AresAIState.NukeAoEAndPlasmaBlasts;
                 AITimer = 0;
                 NPC.netUpdate = true;
             }
