@@ -172,11 +172,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="rotateSpeedInterpolant">The speed at which rotation occurs.</param>
         public void RotateToLookAt(float idealRotation, float rotateSpeedInterpolant = 1f)
         {
+            int oldSpriteDirection = NPC.spriteDirection;
             NPC.spriteDirection = MathF.Cos(idealRotation).NonZeroSign();
             if (NPC.spriteDirection == -1)
                 idealRotation += MathHelper.Pi;
 
             NPC.rotation = NPC.rotation.AngleLerp(idealRotation, rotateSpeedInterpolant);
+            if (NPC.spriteDirection != oldSpriteDirection)
+                NPC.rotation += MathHelper.Pi;
         }
 
         /// <summary>
