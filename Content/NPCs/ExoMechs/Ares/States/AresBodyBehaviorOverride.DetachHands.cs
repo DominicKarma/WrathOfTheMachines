@@ -33,7 +33,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
-            hand.HandType = AresHandType.TeslaCannon;
             hand.Frame = AITimer / 3 % 12;
 
             hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity * 0.3f);

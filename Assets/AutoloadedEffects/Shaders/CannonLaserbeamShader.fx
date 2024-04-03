@@ -51,7 +51,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float4 glow = outerGlow + innerGlow;
     
     float opacity = smoothstep(0.55, 0.34, distanceFromCenter);
-    color += glow;
+    color += glow * color.a;
     
     return color * opacity;
 }

@@ -131,7 +131,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public Color LaserColorFunction(float completionRatio)
         {
             float lengthOpacity = Utilities.InverseLerp(0f, 0.45f, LaserbeamLength / MaxLaserbeamLength);
-            float endOpacity = Utilities.InverseLerp(1f, 0.85f, completionRatio);
+            float endOpacity = Utilities.InverseLerp(0.95f, 0.81f, completionRatio);
             float opacity = lengthOpacity * endOpacity;
             Color startingColor = Projectile.GetAlpha(new(255, 56, 35));
             return startingColor * opacity;
