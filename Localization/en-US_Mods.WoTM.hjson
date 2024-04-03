@@ -10,6 +10,7 @@ Projectiles: {
 	GaussNuke.DisplayName: Gauss Nuke
 	GaussNukeBoom.DisplayName: Thermonuclear Explosion
 	LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
+	CannonLaserbeam.DisplayName: Energized Thermal Deathray
 }
 
 NPCs: {

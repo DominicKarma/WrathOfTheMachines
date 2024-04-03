@@ -44,7 +44,7 @@ namespace WoTM.Content.Particles
         public override void Update()
         {
             if (Time >= Lifetime - 5)
-                Opacity *= 0.9f;
+                Opacity *= 0.84f;
 
             Velocity *= 0.89f;
             Rotation += Velocity.X * 0.091f;
