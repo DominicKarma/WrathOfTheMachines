@@ -21,7 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long it takes for cannons to charge up energy during the AimedLaserBursts attack.
         /// </summary>
-        public static int AimedLaserBursts_CannonChargeUpTime => Utilities.SecondsToFrames(3.333f);
+        public static int AimedLaserBursts_CannonChargeUpTime => Utilities.SecondsToFrames(2.95f);
 
         /// <summary>
         /// How much damage laserbeams from Ares' laser cannons do.
