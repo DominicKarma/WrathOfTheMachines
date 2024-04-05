@@ -1,4 +1,6 @@
 ﻿using CalamityMod.Items.Weapons.DraedonsArsenal;
+using CalamityMod.NPCs;
+using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
@@ -35,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
-        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(8f);
+        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(10f);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the MachineGunLasers attack are shot.
@@ -56,13 +58,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             if (npc.type == ExoMechNPCIDs.ArtemisID)
                 DoBehavior_MachineGunLasers_ArtemisLasers(npc, twinAttributes);
+            else
+                DoBehavior_MachineGunLasers_ApolloPlasmaDashes(npc, twinAttributes);
         }
 
         /// <summary>
         /// AI update loop method for the MachineGunLasers attack for Artemis specifically.
         /// </summary>
         /// <param name="npc">Artemis' NPC instance.</param>
-        /// <param name="twinAttributes">Artemis' designated generic attributes.</param>
+        /// <param name="artemisAttributes">Artemis' designated generic attributes.</param>
         public static void DoBehavior_MachineGunLasers_ArtemisLasers(NPC npc, IExoTwin artemisAttributes)
         {
             if (AITimer <= MachineGunLasers_AttackDelay && !npc.WithinRange(Target.Center, 150f))
@@ -73,7 +77,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // Look at the target.
             float idealAngle = npc.AngleTo(Target.Center);
-            npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.035f).AngleLerp(idealAngle, 0.005f);
+            npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.023f).AngleLerp(idealAngle, 0.001f);
 
             DoBehavior_MachineGunLasers_ManageSounds(npc);
 
@@ -90,11 +94,81 @@ namespace WoTM.Content.NPCs.ExoMechs
                 DoBehavior_MachineGunLasers_ShootLaser(npc, npc.Center + laserShootOffset, laserShootVelocity, offsetIndex == LaserCannonOffsets.Length - 1);
             }
 
-            artemisAttributes.Animation = AITimer >= 60 ? ExoTwinAnimation.Attacking : ExoTwinAnimation.ChargingUp;
+            artemisAttributes.Animation = AITimer >= MachineGunLasers_AttackDelay ? ExoTwinAnimation.Attacking : ExoTwinAnimation.ChargingUp;
             artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(AITimer / 30f % 1f, artemisAttributes.InPhase2);
 
             if (AITimer >= MachineGunLasers_AttackDelay + MachineGunLasers_AttackDuration)
                 ExoTwinsStateManager.TransitionToNextState();
+        }
+
+        /// <summary>
+        /// AI update loop method for the MachineGunLasers attack for Apollo specifically.
+        /// </summary>
+        /// <param name="npc">Apollo's NPC instance.</param>
+        /// <param name="apolloAttributes">Apollo's designated generic attributes.</param>
+        public static void DoBehavior_MachineGunLasers_ApolloPlasmaDashes(NPC npc, IExoTwin apolloAttributes)
+        {
+            int hoverRedirectTime = 25;
+            int telegraphTime = 45;
+            int dashTime = 13;
+            int dashSlowdownTime = 16;
+            int wrappedTimer = AITimer % (hoverRedirectTime + telegraphTime + dashTime + dashSlowdownTime);
+            float dashSpeed = 124f;
+
+            if (wrappedTimer <= hoverRedirectTime)
+            {
+                float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.8f, 0.9f, 1f, wrappedTimer / (float)hoverRedirectTime) * 0.11f;
+                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 950f;
+                npc.SmoothFlyNear(hoverDestination, hoverFlySpeedInterpolant, 0.81f);
+                npc.rotation = npc.AngleTo(Target.Center + Target.velocity * 25f);
+
+                apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
+            }
+
+            else if (wrappedTimer <= hoverRedirectTime + telegraphTime)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient && wrappedTimer == hoverRedirectTime + 1)
+                {
+                    npc.velocity = npc.rotation.ToRotationVector2() * -0.5f;
+                    Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center + npc.velocity * 30f, npc.rotation.ToRotationVector2() * 0.01f, ModContent.ProjectileType<ApolloLineTelegraph>(), 0, 0f, -1, telegraphTime);
+                    npc.netUpdate = true;
+                }
+
+                npc.velocity *= 1.031f;
+                apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
+            }
+            else
+            {
+                if (wrappedTimer == hoverRedirectTime + telegraphTime + 1)
+                {
+                    ScreenShakeSystem.StartShakeAtPoint(npc.Center, 6.7f);
+
+                    SoundEngine.PlaySound(Artemis.ChargeSound);
+                    npc.velocity = npc.rotation.ToRotationVector2() * dashSpeed;
+                    npc.netUpdate = true;
+                }
+
+                if (wrappedTimer >= hoverRedirectTime + telegraphTime + dashTime)
+                {
+                    npc.velocity *= 0.7f;
+                    npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.16f);
+                }
+                else if (wrappedTimer % 4 == 3)
+                {
+                    SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaShootSound, npc.Center);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 plasmaFireballVelocity = npc.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.Pi / 3.5f) * 35f;
+                        Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, plasmaFireballVelocity, ModContent.ProjectileType<LingeringPlasmaFireball>(), BasicShotDamage, 0f);
+                    }
+                }
+
+                npc.damage = npc.defDamage;
+
+                apolloAttributes.Animation = ExoTwinAnimation.Attacking;
+            }
+
+            apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / 30f % 1f, apolloAttributes.InPhase2);
         }
 
         /// <summary>
@@ -116,7 +190,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             GeneralParticleHandler.SpawnParticle(energy);
 
             // Shake the screen just a tiny bit.
-            ScreenShakeSystem.StartShakeAtPoint(laserSpawnPosition, 1.67f);
+            ScreenShakeSystem.StartShakeAtPoint(laserSpawnPosition, 1.2f);
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;

@@ -12,6 +12,7 @@ Projectiles: {
 	LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
 	SmallTeslaArc.DisplayName: Small Tesla Arc
 	TeslaArc.DisplayName: Tesla Arc
+	ApolloLineTelegraph.DisplayName: Apollo Line Telegraph
 }
 
 NPCs: {

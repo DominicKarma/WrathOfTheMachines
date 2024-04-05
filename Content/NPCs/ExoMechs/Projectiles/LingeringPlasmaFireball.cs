@@ -13,7 +13,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
     public class LingeringPlasmaFireball : ModProjectile, IProjOwnedByBoss<Artemis>, IExoMechProjectile
     {
         /// <summary>
-        /// How long this laser has existed, in frames.
+        /// How long this fireball has existed, in frames.
         /// </summary>
         public ref float Time => ref Projectile.ai[0];
 
