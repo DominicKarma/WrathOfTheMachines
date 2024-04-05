@@ -20,7 +20,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of Artemis' laser cannon offsets, for usage during the MachineGunLasers attack.
         /// </summary>
-        public static Vector2[] LaserCannonOffsets => [new(-72f, 38f), new(72f, 38f), new(-92f, 44f), new(92f, 44f), new(0f, 84f)];
+        public static Vector2[] LaserCannonOffsets => [new(-72f, 34f), new(72f, 34f), new(-88f, 44f), new(88f, 44f), new(0f, 84f)];
 
         /// <summary>
         /// The rate at which Artemis shoots lasers during the MachineGunLasers attack.
@@ -30,7 +30,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
-        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(7f);
+        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(9f);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the MachineGunLasers attack are shot.
@@ -40,7 +40,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The maximum random spread of lasers fired by Artemis during the MachineGunLasers attack.
         /// </summary>
-        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(12f);
+        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(7f);
 
         /// <summary>
         /// AI update loop method for the MachineGunLasers attack.
@@ -50,15 +50,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="localAITimer">Artemis' local AI timer.</param>
         public static void DoBehavior_MachineGunLasers(NPC npc, IExoTwin artemisAttributes, ref int localAITimer)
         {
+            if (localAITimer <= 60 && !npc.WithinRange(Target.Center, 150f))
+                npc.velocity += npc.SafeDirectionTo(Target.Center) * localAITimer / 24f;
+
             // Slowly attempt to fly towards the target.
-            npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.03f, 0.95f, 300f);
+            npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.03f, 0.95f, 350f);
 
             // Look at the target.
-            npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.05f);
+            float idealAngle = npc.AngleTo(Target.Center);
+            npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.035f).AngleLerp(idealAngle, 0.005f);
 
             DoBehavior_MachineGunLasers_ManageSounds(npc, ref localAITimer);
 
-            if (AITimer % MachineGunLasers_LaserShootRate == MachineGunLasers_LaserShootRate - 1 && localAITimer < MachineGunLasers_AttackDuration - 45)
+            if (localAITimer % MachineGunLasers_LaserShootRate == MachineGunLasers_LaserShootRate - 1 && localAITimer < MachineGunLasers_AttackDuration - 45 && localAITimer >= 60)
             {
                 int offsetIndex = Main.rand.Next(LaserCannonOffsets.Length - 1);
                 if (Main.rand.NextBool(4))
@@ -67,12 +71,12 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 unrotatedOffset = LaserCannonOffsets[offsetIndex];
                 Vector2 laserShootOffset = unrotatedOffset.RotatedBy(npc.rotation - MathHelper.PiOver2) * npc.scale;
                 Vector2 laserShootDirection = (npc.rotation + Main.rand.NextFloatDirection() * MachineGunLasers_LaserShootSpread).ToRotationVector2();
-                Vector2 laserShootVelocity = laserShootDirection * Utilities.InverseLerp(0f, 60f, localAITimer) * MachineGunLasers_LaserShootSpeed;
+                Vector2 laserShootVelocity = laserShootDirection * Utilities.InverseLerp(60f, 120f, localAITimer) * MachineGunLasers_LaserShootSpeed * Main.rand.NextFloat(1f, 1.15f);
                 DoBehavior_MachineGunLasers_ShootLaser(npc, npc.Center + laserShootOffset, laserShootVelocity, offsetIndex == LaserCannonOffsets.Length - 1);
             }
 
-            artemisAttributes.Animation = ExoTwinAnimation.Attacking;
-            artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(AITimer / 30f % 1f, artemisAttributes.InPhase2);
+            artemisAttributes.Animation = localAITimer >= 60 ? ExoTwinAnimation.Attacking : ExoTwinAnimation.ChargingUp;
+            artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(localAITimer / 30f % 1f, artemisAttributes.InPhase2);
 
             if (localAITimer >= MachineGunLasers_AttackDuration)
                 ExoTwinsStateManager.TransitionToNextState();
@@ -87,7 +91,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="big">Whether the shot laser should be big.</param>
         public static void DoBehavior_MachineGunLasers_ShootLaser(NPC npc, Vector2 laserSpawnPosition, Vector2 laserShootVelocity, bool big = false)
         {
-            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, laserSpawnPosition);
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { Volume = 0.4f, MaxInstances = 0 }, laserSpawnPosition);
 
             Color lightBloomColor = Color.Lerp(Color.Orange, Color.Wheat, Main.rand.NextFloat(0.75f));
             StrongBloom lightBloom = new(laserSpawnPosition, npc.velocity, lightBloomColor, 0.25f, 8);
@@ -113,12 +117,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="localAITimer"></param>
         public static void DoBehavior_MachineGunLasers_ManageSounds(NPC npc, ref int localAITimer)
         {
-            if (localAITimer == 1)
-                SoundEngine.PlaySound(GatlingLaser.FireSound, npc.Center);
+            if (localAITimer == 40)
+                SoundEngine.PlaySound(GatlingLaser.FireSound with { Volume = 2f });
 
-            if (localAITimer == 32)
+            if (localAITimer == 93)
                 GatlingLaserSoundLoop = LoopedSoundManager.CreateNew(GatlingLaser.FireLoopSound, () => !npc.active);
-            if (localAITimer >= MachineGunLasers_AttackDuration - 45)
+            if (localAITimer >= MachineGunLasers_AttackDuration - 45 || localAITimer <= 60)
                 GatlingLaserSoundLoop?.Stop();
 
             GatlingLaserSoundLoop?.Update(npc.Center);

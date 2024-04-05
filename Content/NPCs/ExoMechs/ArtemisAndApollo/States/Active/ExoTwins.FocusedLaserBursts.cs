@@ -52,7 +52,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static void DoBehavior_FocusedLaserBursts(NPC npc, IExoTwin artemisAttributes, ref int localAITimer)
         {
             int wrappedAITimer = localAITimer % (FocusedLaserBursts_ChargeUpTime + FocusedLaserBursts_ChargeRecoilTime + FocusedLaserBursts_RapidShotsTime);
-            if (wrappedAITimer <= FocusedLaserBursts_ChargeUpTime)
+            bool doneAttacking = localAITimer >= (FocusedLaserBursts_ChargeUpTime + FocusedLaserBursts_ChargeRecoilTime + FocusedLaserBursts_RapidShotsTime) * FocusedLaserBursts_CycleCount - 45;
+
+            if (doneAttacking)
+            {
+                npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.04f);
+                npc.velocity *= 0.9f;
+            }
+            else if (wrappedAITimer <= FocusedLaserBursts_ChargeUpTime)
                 DoBehavior_FocusedLaserBursts_FireLaserSpread(npc, artemisAttributes, wrappedAITimer);
 
             else if (wrappedAITimer <= FocusedLaserBursts_ChargeUpTime + FocusedLaserBursts_ChargeRecoilTime)
