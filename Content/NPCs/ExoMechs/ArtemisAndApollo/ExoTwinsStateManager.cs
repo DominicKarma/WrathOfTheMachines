@@ -27,12 +27,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all active individual AI states the Exo Twins can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] ActiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts, ExoTwinsIndividualAIState.Artemis_MachineGunLasers, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
+        public static ExoTwinsIndividualAIState[] ActiveIndividualStates => [ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts, ExoTwinsIndividualAIState.Apollo_LoopDashBombardment];
 
         /// <summary>
         /// The set of all active individual AI states that Artemis can perform.
         /// </summary>
-        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts, ExoTwinsIndividualAIState.Artemis_MachineGunLasers];
+        public static ExoTwinsIndividualAIState[] IndividualArtemisStates => [ExoTwinsIndividualAIState.Artemis_SimpleLaserShots, ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts];
 
         /// <summary>
         /// The set of all active individual AI states that Apollo can perform.
@@ -87,6 +87,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.CloseShots:
                     ExoTwinsStates.DoBehavior_CloseShots(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.MachineGunLasers:
+                    ExoTwinsStates.DoBehavior_MachineGunLasers(twin, twinAttributes);
+                    break;
                 case ExoTwinsAIState.PerformIndividualAttacks:
                     PerformIndividualizedAttacks(twin, twinAttributes);
                     break;
@@ -123,9 +126,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case ExoTwinsIndividualAIState.Artemis_FocusedLaserBursts:
                     ExoTwinsStates.DoBehavior_FocusedLaserBursts(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
-                    break;
-                case ExoTwinsIndividualAIState.Artemis_MachineGunLasers:
-                    ExoTwinsStates.DoBehavior_MachineGunLasers(twin, twinAttributes, ref twinAttributes.IndividualState.AITimer);
                     break;
             }
             twinAttributes.IndividualState.AITimer++;

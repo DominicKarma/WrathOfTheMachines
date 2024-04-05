@@ -4,7 +4,6 @@
     {
         // Active attacks.
         Artemis_FocusedLaserBursts,
-        Artemis_MachineGunLasers,
         Apollo_LoopDashBombardment,
 
         // Passive attacks.

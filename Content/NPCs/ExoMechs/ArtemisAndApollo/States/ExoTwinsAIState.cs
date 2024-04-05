@@ -5,6 +5,8 @@
         SpawnAnimation,
         DashesAndLasers,
         CloseShots,
+        MachineGunLasers,
+
         EnterSecondPhase,
 
         PerformIndividualAttacks
