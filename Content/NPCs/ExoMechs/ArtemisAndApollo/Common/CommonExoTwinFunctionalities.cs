@@ -198,7 +198,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             float[] blurWeights = new float[12];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.398942f);
+                blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
 
             ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
             shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);

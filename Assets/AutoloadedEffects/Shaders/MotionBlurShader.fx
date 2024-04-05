@@ -8,7 +8,7 @@ float blurWeights[12];
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
     float4 blurredColor = 0;
-    float blurOffset = blurInterpolant * 0.002;
+    float blurOffset = blurInterpolant * 0.0015;
     for (int i = 0; i < 12; i++)
     {
         float blurWeight = blurWeights[i] * 0.5;
@@ -16,7 +16,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
         blurredColor += tex2D(baseTexture, coords + float2(0, i * blurOffset)) * blurWeight;
     }
     
-    return lerp(tex2D(baseTexture, coords), blurredColor, sqrt(blurInterpolant)) * sampleColor;
+    return lerp(tex2D(baseTexture, coords), blurredColor * 0.7, sqrt(blurInterpolant)) * sampleColor;
 }
 technique Technique1
 {
