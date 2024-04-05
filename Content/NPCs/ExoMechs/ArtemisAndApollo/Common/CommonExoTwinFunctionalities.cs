@@ -194,9 +194,22 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 drawPosition = twin.Center - screenPos;
             Rectangle frameRectangle = texture.Frame(10, 9, frame / 9, frame % 9);
 
+            Main.spriteBatch.PrepareForShaders();
+
+            float[] blurWeights = new float[12];
+            for (int i = 0; i < blurWeights.Length; i++)
+                blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.398942f);
+
+            ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
+            shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);
+            shader.TrySetParameter("blurWeights", blurWeights);
+            shader.Apply();
+
             Vector2 scale = Vector2.One * twin.scale;
             Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+
+            Main.spriteBatch.ResetToDefault();
 
             DrawWingtipVortices(twin, twinInterface);
             DrawThrusters(twin, twinInterface);

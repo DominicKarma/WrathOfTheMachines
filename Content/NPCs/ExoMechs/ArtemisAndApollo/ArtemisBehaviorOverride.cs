@@ -73,6 +73,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The interpolant of motion blur for Artemis.
+        /// </summary>
+        public float MotionBlurInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The intensity boost of thrusters for Artemis.
         /// </summary>
         public float ThrusterBoost
@@ -198,6 +207,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
+            MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
             NPC.damage = 0;

@@ -29,7 +29,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How far this telegraph extends.
         /// </summary>
-        public static float TelegraphLength => 3300f;
+        public static float TelegraphLength => 3700f;
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 

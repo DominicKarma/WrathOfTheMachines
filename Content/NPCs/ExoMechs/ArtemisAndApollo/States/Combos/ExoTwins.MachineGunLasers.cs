@@ -128,6 +128,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.rotation = npc.AngleTo(Target.Center + Target.velocity * 25f);
 
                 apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
+                apolloAttributes.ThrusterBoost *= 0.75f;
             }
 
             else if (wrappedTimer <= hoverRedirectTime + telegraphTime)
@@ -171,6 +172,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.damage = npc.defDamage;
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;
+                apolloAttributes.ThrusterBoost = 2.3f;
+                apolloAttributes.MotionBlurInterpolant = Utilities.InverseLerp(27.5f, 50f, npc.velocity.Length());
             }
 
             apolloAttributes.Frame = apolloAttributes.Animation.CalculateFrame(AITimer / 30f % 1f, apolloAttributes.InPhase2);

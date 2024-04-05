@@ -83,6 +83,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The interpolant of motion blur for Apollo.
+        /// </summary>
+        public float MotionBlurInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Apollo's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
@@ -197,6 +206,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
+            MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
             SpecificDrawAction = null;
             NPC.Opacity = 1f;
             NPC.damage = 0;

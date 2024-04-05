@@ -47,6 +47,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The interpolant of motion blur for this Exo Twin.
+        /// </summary>
+        public float MotionBlurInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The current animation of this Exo Twin.
         /// </summary>
         public ExoTwinAnimation Animation
