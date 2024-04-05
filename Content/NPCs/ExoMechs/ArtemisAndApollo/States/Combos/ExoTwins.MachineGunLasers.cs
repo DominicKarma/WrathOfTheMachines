@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
-        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(10f);
+        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(11f);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the MachineGunLasers attack are shot.
@@ -77,7 +77,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // Look at the target.
             float idealAngle = npc.AngleTo(Target.Center);
-            npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.023f).AngleLerp(idealAngle, 0.001f);
+            npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.0256f).AngleLerp(idealAngle, 0.001f);
 
             DoBehavior_MachineGunLasers_ManageSounds(npc);
 
@@ -110,16 +110,21 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int hoverRedirectTime = 25;
             int telegraphTime = 45;
-            int dashTime = 13;
+            int dashTime = 22;
             int dashSlowdownTime = 16;
             int wrappedTimer = AITimer % (hoverRedirectTime + telegraphTime + dashTime + dashSlowdownTime);
-            float dashSpeed = 124f;
+            float dashSpeed = 150f;
 
             if (wrappedTimer <= hoverRedirectTime)
             {
-                float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.8f, 0.9f, 1f, wrappedTimer / (float)hoverRedirectTime) * 0.11f;
-                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 950f;
-                npc.SmoothFlyNear(hoverDestination, hoverFlySpeedInterpolant, 0.81f);
+                float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.6f, 0.8f, 1f, wrappedTimer / (float)hoverRedirectTime) * 0.09f;
+                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 1250f;
+
+                if (hoverFlySpeedInterpolant < 0.025f)
+                    npc.velocity *= 0.9f;
+                else
+                    npc.SmoothFlyNear(hoverDestination, hoverFlySpeedInterpolant, 0.81f);
+                npc.Center = Vector2.Lerp(npc.Center, hoverDestination, 0.03f);
                 npc.rotation = npc.AngleTo(Target.Center + Target.velocity * 25f);
 
                 apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
@@ -141,7 +146,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 if (wrappedTimer == hoverRedirectTime + telegraphTime + 1)
                 {
-                    ScreenShakeSystem.StartShakeAtPoint(npc.Center, 6.7f);
+                    ScreenShakeSystem.StartShake(8.5f);
 
                     SoundEngine.PlaySound(Artemis.ChargeSound);
                     npc.velocity = npc.rotation.ToRotationVector2() * dashSpeed;
@@ -153,7 +158,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     npc.velocity *= 0.7f;
                     npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.16f);
                 }
-                else if (wrappedTimer % 4 == 3)
+                else if (wrappedTimer % 5 == 4)
                 {
                     SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaShootSound, npc.Center);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -209,7 +214,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SoundEngine.PlaySound(GatlingLaser.FireSound with { Volume = 2f });
 
             if (AITimer == MachineGunLasers_AttackDelay + 33)
-                GatlingLaserSoundLoop = LoopedSoundManager.CreateNew(GatlingLaser.FireLoopSound, () => !npc.active);
+                GatlingLaserSoundLoop = LoopedSoundManager.CreateNew(GatlingLaser.FireLoopSound, () => !npc.active || SharedState.AIState != ExoTwinsAIState.MachineGunLasers);
             if (AITimer >= MachineGunLasers_AttackDuration - 45 || AITimer <= MachineGunLasers_AttackDelay)
                 GatlingLaserSoundLoop?.Stop();
 
