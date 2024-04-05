@@ -1,16 +1,17 @@
 Projectiles: {
-	HadesLaserBurst.DisplayName: Laser Burst
-	ArtemisLaserImproved.DisplayName: Thermal Laser
 	ApolloMissile.DisplayName: Plasma Missile
-	LargeTeslaSphere.DisplayName: Large Tesla Sphere
-	TeslaArc.DisplayName: Tesla Arc
-	SmallTeslaArc.DisplayName: Small Tesla Arc
-	HomingTeslaBurst.DisplayName: Tesla Burst
-	LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
+	ArtemisLaserSmall.DisplayName: Small Thermal Laser
+	ArtemisLaserImproved.DisplayName: Thermal Laser
+	CannonLaserbeam.DisplayName: Energized Thermal Deathray
 	GaussNuke.DisplayName: Gauss Nuke
 	GaussNukeBoom.DisplayName: Thermonuclear Explosion
+	HadesLaserBurst.DisplayName: Laser Burst
+	HomingTeslaBurst.DisplayName: Tesla Burst
+	LargeTeslaSphere.DisplayName: Large Tesla Sphere
+	LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
 	LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
-	CannonLaserbeam.DisplayName: Energized Thermal Deathray
+	SmallTeslaArc.DisplayName: Small Tesla Arc
+	TeslaArc.DisplayName: Tesla Arc
 }
 
 NPCs: {
