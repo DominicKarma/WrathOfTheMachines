@@ -53,7 +53,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public void CreateElectricPixel()
         {
-            float pixelOffsetAngle = (Main.rand.NextFloatDirection() * 0.25f + MathHelper.PiOver2) * Main.rand.NextFromList(-1f, 1f);
+            float pixelOffsetAngle = (Main.rand.NextGaussian(0.17f) + MathHelper.PiOver2) * Main.rand.NextFromList(-1f, 1f);
             Vector2 pixelSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * Time / Lifetime * 0.85f;
             Vector2 pixelVelocity = Projectile.SafeDirectionTo(pixelSpawnPosition).RotatedBy(pixelOffsetAngle) * Main.rand.NextFloat(9f, 40f);
 

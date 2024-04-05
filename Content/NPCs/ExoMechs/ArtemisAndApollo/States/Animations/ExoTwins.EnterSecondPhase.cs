@@ -256,7 +256,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="apollo">Apollo's NPC instance.</param>
         public static void CreateForcefieldHologramDust(NPC apollo)
         {
-            Vector2 hologramDustPosition = apollo.Center + (apollo.rotation + Main.rand.NextFloatDirection() * 0.7f).ToRotationVector2() * Main.rand.NextFloat(60f, 185f);
+            Vector2 hologramDustPosition = apollo.Center + (apollo.rotation + Main.rand.NextGaussian(0.42f)).ToRotationVector2() * Main.rand.NextFloat(60f, 185f);
             Dust hologramDust = Dust.NewDustPerfect(hologramDustPosition, 261);
             hologramDust.velocity = apollo.SafeDirectionTo(hologramDustPosition).RotatedBy(Main.rand.NextFromList(-1f, 1f) * MathHelper.PiOver2) * Main.rand.NextFloatDirection() * 5f;
             hologramDust.color = Color.Lerp(Color.Lime, Color.Teal, Main.rand.NextFloat());

@@ -91,8 +91,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 for (int i = 0; i < ArcPoints.Length; i += 2)
                 {
                     float trailCompletionRatio = i / (float)(ArcPoints.Length - 1f);
-                    float arcProtrudeAngleOffset = Main.rand.NextFloatDirection() * 0.99f + MathHelper.PiOver2;
-                    float arcProtrudeDistance = Main.rand.NextFloatDirection() * 9f;
+                    float arcProtrudeAngleOffset = Main.rand.NextGaussian(0.63f) + MathHelper.PiOver2;
+                    float arcProtrudeDistance = Main.rand.NextGaussian(4.6f);
                     if (Main.rand.NextBool(100))
                         arcProtrudeDistance *= 7f;
                     Vector2 arcOffset = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(arcProtrudeAngleOffset) * arcProtrudeDistance;

@@ -8,7 +8,6 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,11 +16,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
     public class ArtemisLaserSmall : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>, IExoMechProjectile
     {
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterProjectiles;
-
-        /// <summary>
-        /// Whether this laser should play a graze sound or not.
-        /// </summary>
-        public bool UsesGrazeSound => Projectile.ai[1] == 1f;
 
         /// <summary>
         /// How long this laser has existed, in frames.
@@ -65,14 +59,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             if (Projectile.FinalExtraUpdate())
                 Time++;
-
-            // TODO -- This is kinda jank. Improve the math behind this. Probably use some arc length equations?
-            if (UsesGrazeSound && Vector2.Dot(Projectile.velocity.SafeNormalize(Vector2.Zero), Projectile.SafeDirectionTo(Main.LocalPlayer.Center)) < 0.5f && Projectile.localAI[0] == 0f)
-            {
-                if (Main.LocalPlayer.WithinRange(Projectile.Center + Projectile.velocity * Projectile.MaxUpdates * 3f, 450f) && !Projectile.WithinRange(Main.LocalPlayer.Center, 60f))
-                    SoundEngine.PlaySound(ArtemisLaserImproved.GrazeSound with { MaxInstances = 0 });
-                Projectile.localAI[0] = 1f;
-            }
 
             if (Main.rand.NextBool(30))
             {

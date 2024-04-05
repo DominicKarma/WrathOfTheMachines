@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of Artemis' laser cannon offsets, for usage during the MachineGunLasers attack.
         /// </summary>
-        public static Vector2[] LaserCannonOffsets => [new(-72f, 34f), new(72f, 34f), new(-88f, 44f), new(88f, 44f), new(0f, 84f)];
+        public static Vector2[] LaserCannonOffsets => [new(-72f, 34f), new(72f, 34f), new(-88f, 44f), new(88f, 44f), new(0f, 80f)];
 
         /// <summary>
         /// The rate at which Artemis shoots lasers during the MachineGunLasers attack.
@@ -70,9 +70,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static float MachineGunLasers_LaserShootSpeed => 18.75f;
 
         /// <summary>
-        /// The maximum random spread of lasers fired by Artemis during the MachineGunLasers attack.
+        /// The standard random spread of lasers fired by Artemis during the MachineGunLasers attack.
         /// </summary>
-        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(7f);
+        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(4.1f);
 
         /// <summary>
         /// AI update loop method for the MachineGunLasers attack.
@@ -118,7 +118,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 Vector2 unrotatedOffset = LaserCannonOffsets[offsetIndex];
                 Vector2 laserShootOffset = unrotatedOffset.RotatedBy(npc.rotation - MathHelper.PiOver2) * npc.scale;
-                Vector2 laserShootDirection = (npc.rotation + Main.rand.NextFloatDirection() * MachineGunLasers_LaserShootSpread).ToRotationVector2();
+                Vector2 laserShootDirection = (npc.rotation + Main.rand.NextGaussian(MachineGunLasers_LaserShootSpread)).ToRotationVector2();
                 Vector2 laserShootVelocity = laserShootDirection * Utilities.InverseLerp(60f, 120f, AITimer) * MachineGunLasers_LaserShootSpeed * Main.rand.NextFloat(1f, 1.15f);
                 DoBehavior_MachineGunLasers_ShootLaser(npc, npc.Center + laserShootOffset, laserShootVelocity, offsetIndex == LaserCannonOffsets.Length - 1);
             }
