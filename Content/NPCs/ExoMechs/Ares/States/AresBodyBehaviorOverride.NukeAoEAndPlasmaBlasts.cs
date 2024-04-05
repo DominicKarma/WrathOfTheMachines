@@ -173,6 +173,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
                 Vector2 plasmaSpawnPosition = handNPC.Center + new Vector2(handNPC.spriteDirection * 50f, 10f).RotatedBy(handNPC.rotation);
 
+                if (handDirection.AngleBetween(handNPC.SafeDirectionTo(Target.Center)) <= 0.2f)
+                    return;
+
                 for (int i = 0; i < 14; i++)
                 {
                     Color gasColor = Color.Lerp(Color.Lime, Color.Yellow, Main.rand.NextFloat());
