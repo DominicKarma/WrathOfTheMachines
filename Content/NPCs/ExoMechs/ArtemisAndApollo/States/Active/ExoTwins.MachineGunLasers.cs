@@ -28,9 +28,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int MachineGunLasers_LaserShootRate => Utilities.SecondsToFrames(0.04f);
 
         /// <summary>
+        /// How long Artemis waits before firing during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_AttackDelay => Utilities.SecondsToFrames(1f);
+
+        /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
-        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(9f);
+        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(8f);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the MachineGunLasers attack are shot.
@@ -50,8 +55,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="localAITimer">Artemis' local AI timer.</param>
         public static void DoBehavior_MachineGunLasers(NPC npc, IExoTwin artemisAttributes, ref int localAITimer)
         {
-            if (localAITimer <= 60 && !npc.WithinRange(Target.Center, 150f))
-                npc.velocity += npc.SafeDirectionTo(Target.Center) * localAITimer / 24f;
+            if (localAITimer <= MachineGunLasers_AttackDelay && !npc.WithinRange(Target.Center, 150f))
+                npc.velocity += npc.SafeDirectionTo(Target.Center) * localAITimer / MachineGunLasers_AttackDelay * 2.5f;
 
             // Slowly attempt to fly towards the target.
             npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.03f, 0.95f, 350f);
@@ -62,7 +67,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             DoBehavior_MachineGunLasers_ManageSounds(npc, ref localAITimer);
 
-            if (localAITimer % MachineGunLasers_LaserShootRate == MachineGunLasers_LaserShootRate - 1 && localAITimer < MachineGunLasers_AttackDuration - 45 && localAITimer >= 60)
+            if (localAITimer % MachineGunLasers_LaserShootRate == MachineGunLasers_LaserShootRate - 1 && localAITimer < MachineGunLasers_AttackDuration - 45 && localAITimer >= MachineGunLasers_AttackDelay)
             {
                 int offsetIndex = Main.rand.Next(LaserCannonOffsets.Length - 1);
                 if (Main.rand.NextBool(4))
@@ -78,7 +83,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             artemisAttributes.Animation = localAITimer >= 60 ? ExoTwinAnimation.Attacking : ExoTwinAnimation.ChargingUp;
             artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(localAITimer / 30f % 1f, artemisAttributes.InPhase2);
 
-            if (localAITimer >= MachineGunLasers_AttackDuration)
+            if (localAITimer >= MachineGunLasers_AttackDelay + MachineGunLasers_AttackDuration)
                 ExoTwinsStateManager.TransitionToNextState();
         }
 
@@ -117,12 +122,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="localAITimer"></param>
         public static void DoBehavior_MachineGunLasers_ManageSounds(NPC npc, ref int localAITimer)
         {
-            if (localAITimer == 40)
+            if (localAITimer == MachineGunLasers_AttackDelay - 20)
                 SoundEngine.PlaySound(GatlingLaser.FireSound with { Volume = 2f });
 
-            if (localAITimer == 93)
+            if (localAITimer == MachineGunLasers_AttackDelay + 33)
                 GatlingLaserSoundLoop = LoopedSoundManager.CreateNew(GatlingLaser.FireLoopSound, () => !npc.active);
-            if (localAITimer >= MachineGunLasers_AttackDuration - 45 || localAITimer <= 60)
+            if (localAITimer >= MachineGunLasers_AttackDuration - 45 || localAITimer <= MachineGunLasers_AttackDelay)
                 GatlingLaserSoundLoop?.Stop();
 
             GatlingLaserSoundLoop?.Update(npc.Center);
