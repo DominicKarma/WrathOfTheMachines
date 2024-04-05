@@ -35,6 +35,31 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int MachineGunLasers_AttackDelay => Utilities.SecondsToFrames(1f);
 
         /// <summary>
+        /// How long Apollo spends redirecting during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_ApolloRedirectTime => Utilities.SecondsToFrames(0.4167f);
+
+        /// <summary>
+        /// How long Apollo spends telegraphing in anticipation of his dash during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_ApolloTelegraphTime => Utilities.SecondsToFrames(0.75f);
+
+        /// <summary>
+        /// How long Apollo spends dashing during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_ApolloDashTime => Utilities.SecondsToFrames(0.3667f);
+
+        /// <summary>
+        /// How long Apollo spends slow down after a dash during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_ApolloDashSlowdownTime => Utilities.SecondsToFrames(0.2667f);
+
+        /// <summary>
+        /// The rate at which Apollo releases lingering plasma during the MachineGunLasers attack.
+        /// </summary>
+        public static int MachineGunLasers_ApolloPlasmaReleaseRate => Utilities.SecondsToFrames(0.0833f);
+
+        /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
         public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(11f);
@@ -75,8 +100,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Slowly attempt to fly towards the target.
             npc.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.03f, 0.95f, 350f);
 
-            // Look at the target.
+            // Look at the target after the attack begins.
+            // Before it begins, Artemis looks to the side instead, to give the player the opportunity to react properly to the lasers.
             float idealAngle = npc.AngleTo(Target.Center);
+            if (AITimer < MachineGunLasers_AttackDelay)
+                idealAngle += MathHelper.PiOver2;
+
             npc.rotation = npc.rotation.AngleTowards(idealAngle, 0.0256f).AngleLerp(idealAngle, 0.001f);
 
             DoBehavior_MachineGunLasers_ManageSounds(npc);
@@ -108,17 +137,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="apolloAttributes">Apollo's designated generic attributes.</param>
         public static void DoBehavior_MachineGunLasers_ApolloPlasmaDashes(NPC npc, IExoTwin apolloAttributes)
         {
-            int hoverRedirectTime = 25;
-            int telegraphTime = 45;
-            int dashTime = 22;
-            int dashSlowdownTime = 16;
-            int wrappedTimer = AITimer % (hoverRedirectTime + telegraphTime + dashTime + dashSlowdownTime);
+            int wrappedTimer = AITimer % (MachineGunLasers_ApolloRedirectTime + MachineGunLasers_ApolloTelegraphTime + MachineGunLasers_ApolloDashTime + MachineGunLasers_ApolloDashSlowdownTime);
             float dashSpeed = 150f;
 
-            if (wrappedTimer <= hoverRedirectTime)
+            if (wrappedTimer <= MachineGunLasers_ApolloRedirectTime)
             {
-                float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.6f, 0.8f, 1f, wrappedTimer / (float)hoverRedirectTime) * 0.09f;
-                Vector2 hoverDestination = Target.Center + Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 1250f;
+                float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.6f, 0.8f, 1f, wrappedTimer / (float)MachineGunLasers_ApolloRedirectTime) * 0.09f;
+                Vector2 artemisPerpendicularOffset = Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 1250f;
+                Vector2 left = Target.Center - artemisPerpendicularOffset;
+                Vector2 right = Target.Center + artemisPerpendicularOffset;
+                Vector2 hoverDestination = npc.Distance(left) < npc.Distance(right) ? left : right;
 
                 if (hoverFlySpeedInterpolant < 0.025f)
                     npc.velocity *= 0.9f;
@@ -131,12 +159,12 @@ namespace WoTM.Content.NPCs.ExoMechs
                 apolloAttributes.ThrusterBoost *= 0.75f;
             }
 
-            else if (wrappedTimer <= hoverRedirectTime + telegraphTime)
+            else if (wrappedTimer <= MachineGunLasers_ApolloRedirectTime + MachineGunLasers_ApolloTelegraphTime)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient && wrappedTimer == hoverRedirectTime + 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient && wrappedTimer == MachineGunLasers_ApolloRedirectTime + 1)
                 {
                     npc.velocity = npc.rotation.ToRotationVector2() * -0.5f;
-                    Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center + npc.velocity * 30f, npc.rotation.ToRotationVector2() * 0.01f, ModContent.ProjectileType<ApolloLineTelegraph>(), 0, 0f, -1, telegraphTime);
+                    Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center + npc.velocity * 30f, npc.rotation.ToRotationVector2() * 0.01f, ModContent.ProjectileType<ApolloLineTelegraph>(), 0, 0f, -1, MachineGunLasers_ApolloTelegraphTime);
                     npc.netUpdate = true;
                 }
 
@@ -145,7 +173,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
             else
             {
-                if (wrappedTimer == hoverRedirectTime + telegraphTime + 1)
+                if (wrappedTimer == MachineGunLasers_ApolloRedirectTime + MachineGunLasers_ApolloTelegraphTime + 1)
                 {
                     ScreenShakeSystem.StartShake(8.5f);
 
@@ -154,12 +182,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                     npc.netUpdate = true;
                 }
 
-                if (wrappedTimer >= hoverRedirectTime + telegraphTime + dashTime)
+                if (wrappedTimer >= MachineGunLasers_ApolloRedirectTime + MachineGunLasers_ApolloTelegraphTime + MachineGunLasers_ApolloDashTime)
                 {
                     npc.velocity *= 0.7f;
                     npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.16f);
                 }
-                else if (wrappedTimer % 5 == 4)
+
+                else if (wrappedTimer % MachineGunLasers_ApolloPlasmaReleaseRate == MachineGunLasers_ApolloPlasmaReleaseRate - 1)
                 {
                     SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaShootSound, npc.Center);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -169,6 +198,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     }
                 }
 
+                // Do damage during the dash.
                 npc.damage = npc.defDamage;
 
                 apolloAttributes.Animation = ExoTwinAnimation.Attacking;

@@ -31,7 +31,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (Collision.SolidCollision(npc.TopLeft, npc.width, npc.height))
                 npc.velocity.Y -= 0.7f;
 
-            npc.rotation = npc.AngleTo(Target.Center);
+            npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.23f);
 
             artemisAttributes.Animation = ExoTwinAnimation.Attacking;
             artemisAttributes.Frame = artemisAttributes.Animation.CalculateFrame(localAITimer / (float)SimpleLaserShots_ArtemisShootRate * 0.5f % 1f, artemisAttributes.InPhase2);
