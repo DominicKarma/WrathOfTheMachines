@@ -1,0 +1,156 @@
+﻿using System;
+using CalamityMod;
+using CalamityMod.Particles;
+using CalamityMod.Sounds;
+using Luminance.Assets;
+using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.Audio;
+using Terraria.Graphics.Shaders;
+using Terraria.ID;
+using Terraria.ModLoader;
+using WoTM.Content.Particles;
+
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+{
+    public class HadesMine : ModProjectile, IExoMechProjectile
+    {
+        public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
+
+        /// <summary>
+        /// The general purpose frame timer of this mine.
+        /// </summary>
+        public ref float Time => ref Projectile.ai[0];
+
+        /// <summary>
+        /// How long this mine should exist before exploding, in frames.
+        /// </summary>
+        public static int Lifetime => Utilities.SecondsToFrames(4.5f);
+
+        /// <summary>
+        /// The diameter of explosions created by this mine.
+        /// </summary>
+        public static float ExplosionDiameter => 250f;
+
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 4;
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 624;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.hostile = true;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = Lifetime;
+            Projectile.Calamity().DealsDefenseDamage = true;
+            CooldownSlot = ImmunityCooldownID.Bosses;
+        }
+
+        public override void AI()
+        {
+            Projectile.frameCounter++;
+            Projectile.frame = Projectile.frameCounter / 6 % Main.projFrames[Projectile.type];
+
+            Projectile.velocity *= 0.91f;
+
+            DelegateMethods.v3_1 = new Vector3(1f, 0.8f, 0.35f);
+            Utils.PlotTileLine(Projectile.Top, Projectile.Bottom, Projectile.width, DelegateMethods.CastLight);
+
+            Time++;
+            if (Time >= Lifetime)
+                Projectile.Kill();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.EnterShaderRegion();
+            DrawAreaOfEffectTelegraph();
+            Main.spriteBatch.ExitShaderRegion();
+
+            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
+
+            return false;
+        }
+
+        public void DrawAreaOfEffectTelegraph()
+        {
+            float lifetimeRatio = Time / Lifetime;
+            float opacity = Utilities.Saturate(lifetimeRatio * 5f) * Utilities.InverseLerp(15f, 7f, Projectile.velocity.Length()) * 0.275f;
+            float maxFlashIntensity = Utilities.InverseLerp(0.25f, 0.75f, lifetimeRatio);
+            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
+            Color innerColor = Color.Coral;
+            Color edgeColor = Color.Lerp(Color.Yellow, Color.Wheat, 0.9f);
+
+            innerColor = Color.Lerp(innerColor, Color.Crimson, MathF.Pow(flashColorInterpolant, 0.7f));
+            edgeColor = Color.Lerp(edgeColor, Color.Red, flashColorInterpolant);
+
+            var aoeShader = GameShaders.Misc["CalamityMod:CircularAoETelegraph"];
+            aoeShader.UseOpacity(opacity);
+            aoeShader.UseColor(innerColor);
+            aoeShader.UseSecondaryColor(edgeColor);
+            aoeShader.UseSaturation(lifetimeRatio);
+            aoeShader.Apply();
+
+            Texture2D pixel = MiscTexturesRegistry.InvisiblePixel.Value;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * ExplosionDiameter / pixel.Size(), 0, 0);
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 9f;
+
+        public override void OnKill(int timeLeft)
+        {
+            Projectile.Resize((int)(ExplosionDiameter * 0.8f), (int)(ExplosionDiameter * 0.8f));
+            Projectile.Damage();
+
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 2.5f);
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaExplosionSound with { Volume = 0.6f, MaxInstances = 0, PitchVariance = 0.2f }, Projectile.Center);
+
+            // Create the generic burst explosion.
+            MagicBurstParticle burst = new(Projectile.Center, Vector2.Zero, Color.Orange, 13, 1.15f);
+            burst.Spawn();
+
+            // Create sparks.
+            for (int i = 0; i < 40; i++)
+            {
+                Vector2 sparkVelocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(8f, 25.5f);
+                int sparkLifetime = (int)Utils.Remap(sparkVelocity.Length(), 25f, 8f, 7, 24);
+                LineParticle spark = new(Projectile.Center, sparkVelocity, sparkVelocity.Length() <= 14.72f, sparkLifetime, 0.67f, Color.Yellow);
+                GeneralParticleHandler.SpawnParticle(spark);
+            }
+
+            // Create smoke.
+            for (int i = 0; i < 32; i++)
+            {
+                Vector2 smokeVelocity = Main.rand.NextVector2Circular(15f, 7f) - Vector2.UnitY * Main.rand.NextFloat(6f, 9f);
+                if (Main.rand.NextBool())
+                    smokeVelocity.Y *= -0.4f;
+
+                SmokeParticle smoke = new(Projectile.Center, smokeVelocity, Color.Lerp(Color.LightGray, Color.Red, Main.rand.NextFloat(0.75f)), Main.rand.Next(45, 60), 0.85f, 0.0875f);
+                smoke.Spawn();
+            }
+
+            // Create inner lingering fire.
+            for (int i = 0; i < 30; i++)
+            {
+                int fireLifetime = Main.rand.Next(25, 50);
+                float fireRotationalVelocity = Main.rand.NextFloatDirection() * 0.08f;
+                Vector2 fireVelocity = Main.rand.NextVector2Circular(5f, 3f) - Vector2.UnitY * Main.rand.NextFloat(2.6f, 3.3f);
+                if (Main.rand.NextBool())
+                    fireVelocity.Y *= -0.6f;
+                fireVelocity *= 3f;
+
+                HeavySmokeParticle fire = new(Projectile.Center, fireVelocity, Color.Lerp(Color.Orange, Color.Wheat, Main.rand.NextFloat(0.75f)), fireLifetime, 0.7f, 1f, fireRotationalVelocity, true);
+                GeneralParticleHandler.SpawnParticle(fire);
+            }
+        }
+    }
+}

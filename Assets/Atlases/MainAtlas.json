@@ -1,23 +1,23 @@
 {
   "frames": {
-    "ElectricSparkParticle.png": {
+    "MagicBurstParticle.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 125,
-        "h": 500
+        "w": 353,
+        "h": 1559
       },
       "rotated": false,
-      "trimmed": false,
+      "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
-        "y": 0,
-        "w": 125,
-        "h": 500
+        "y": 50,
+        "w": 353,
+        "h": 1559
       },
       "sourceSize": {
-        "w": 125,
-        "h": 500
+        "w": 353,
+        "h": 1620
       },
       "pivot": {
         "x": 0.5,
@@ -27,7 +27,7 @@
     "SmokeParticle.png": {
       "frame": {
         "x": 0,
-        "y": 500,
+        "y": 1559,
         "w": 80,
         "h": 218
       },
@@ -51,7 +51,7 @@
     "HollowCircle.png": {
       "frame": {
         "x": 0,
-        "y": 718,
+        "y": 1777,
         "w": 156,
         "h": 156
       },
@@ -74,8 +74,8 @@
     },
     "BasicMetaballCircle.png": {
       "frame": {
-        "x": 80,
-        "y": 500,
+        "x": 0,
+        "y": 1933,
         "w": 100,
         "h": 100
       },
@@ -98,8 +98,8 @@
     },
     "Pixel.png": {
       "frame": {
-        "x": 80,
-        "y": 600,
+        "x": 0,
+        "y": 2033,
         "w": 2,
         "h": 2
       },
@@ -119,6 +119,30 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "ElectricSparkParticle.png": {
+      "frame": {
+        "x": 353,
+        "y": 0,
+        "w": 125,
+        "h": 500
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 500
+      },
+      "sourceSize": {
+        "w": 125,
+        "h": 500
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -127,8 +151,8 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 180,
-      "h": 874
+      "w": 478,
+      "h": 2035
     },
     "scale": 1
   }

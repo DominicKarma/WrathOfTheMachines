@@ -13,6 +13,7 @@ Projectiles: {
 	SmallTeslaArc.DisplayName: Small Tesla Arc
 	TeslaArc.DisplayName: Tesla Arc
 	ApolloLineTelegraph.DisplayName: Apollo Line Telegraph
+	HadesMine.DisplayName: Hades Mine
 }
 
 NPCs: {

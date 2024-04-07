@@ -134,8 +134,15 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
+            int? realLife = null;
             for (int i = 0; i < ArmCount; i++)
-                NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<AresHand>(), NPC.whoAmI, i);
+            {
+                int nextHandIndex = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<AresHand>(), NPC.whoAmI, i);
+                if (realLife is not null)
+                    Main.npc[nextHandIndex].realLife = realLife.Value;
+
+                realLife = nextHandIndex;
+            }
 
             HasCreatedArms = true;
             NPC.netUpdate = true;
@@ -179,6 +186,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
+            NPC.immortal = true;
 
             CalamityGlobalNPC.draedonExoMechPrime = NPC.whoAmI;
         }

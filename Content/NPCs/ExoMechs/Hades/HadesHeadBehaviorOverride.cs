@@ -2,8 +2,6 @@
 using System.IO;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using WoTM.Content.Particles;
-using WoTM.Content.Particles.Metaballs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +11,8 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using WoTM.Content.Particles;
+using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -22,6 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
+            MineBarrages,
         }
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
-            CurrentState = HadesAIState.PerpendicularBodyLaserBlasts;
+            CurrentState = HadesAIState.MineBarrages;
 
             switch (CurrentState)
             {
@@ -228,6 +229,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case HadesAIState.ContinuousLaserBarrage:
                     DoBehavior_ContinuousLaserBarrage();
+                    break;
+                case HadesAIState.MineBarrages:
+                    DoBehavior_MineBarrages();
                     break;
             }
         }
