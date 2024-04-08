@@ -42,6 +42,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands[1] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-280f, 224f), 1));
             InstructionsForHands[2] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(280f, 224f), 2));
             InstructionsForHands[3] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(430f, 50f), 3));
+
+            if (AITimer >= AimedLaserBursts_CannonChargeUpTime + CannonLaserbeam.Lifetime + 45)
+            {
+                CurrentState = AresAIState.DetachHands;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
         }
 
         public void DoBehavior_AimedLaserBursts_ReleaseBurst(Projectile teslaSphere)
