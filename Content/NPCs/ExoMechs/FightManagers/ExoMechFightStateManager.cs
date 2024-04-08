@@ -143,7 +143,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void EvaluatePhase()
         {
-            Main.NewText(CurrentPhase.PhaseOrdering);
             PhaseDefinition? nextPhase = ExoMechPhases.Find(f => f.PhaseOrdering == CurrentPhase.PhaseOrdering + 1);
             if (nextPhase is null)
                 return;
