@@ -247,7 +247,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
             SpecificDrawAction = null;
-            NPC.Opacity = 1f;
+
+            if (!Inactive)
+                NPC.Opacity = 1f;
             NPC.damage = 0;
             AITimer++;
         }
@@ -263,7 +265,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (s.Sound is null)
                     return;
 
-                s.Volume = Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
+                s.Volume = (Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
                 s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
             });
         }

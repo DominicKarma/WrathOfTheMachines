@@ -147,6 +147,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void EvaluatePhase()
         {
+            Main.NewText(CurrentPhase.PhaseOrdering);
+
+            // This is a bit weird but it's necessary to ensure that the static readonly fields are initialized and the ExoMechPhases list is populated properly.
+            _ = ExoMechFightDefinitions.StartingTwoAtOncePhaseDefinition;
+
             PhaseDefinition? nextPhase = ExoMechPhases.Find(f => f.PhaseOrdering == CurrentPhase.PhaseOrdering + 1);
             if (nextPhase is null)
                 return;
@@ -284,7 +289,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Evaluates whether an NPC is a primary Exo Mech or not, based on whether it's a managing Exo Mech and has the appropriate AI flag.
         /// </summary>
         /// <param name="npc">The NPC to evaluate.</param>
-        public static bool IsPrimaryMech(NPC npc) => npc.ModNPC is not null and IExoMech exoMech && exoMech.IsPrimaryMech;
+        public static bool IsPrimaryMech(NPC npc) => npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech && exoMech.IsPrimaryMech;
 
         /// <summary>
         /// Marks an NPC as the primary mech.
@@ -299,7 +304,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!ExoMechNPCIDs.IsManagingExoMech(npc))
                 return;
 
-            if (npc.ModNPC is null || npc.ModNPC is not IExoMech exoMech)
+            if (!npc.TryGetBehavior(out NPCBehaviorOverride b) || b is not IExoMech exoMech)
                 return;
 
             exoMech.IsPrimaryMech = true;

@@ -7,6 +7,8 @@
         CloseShots,
         MachineGunLasers,
 
+        Inactive,
+
         EnterSecondPhase,
 
         PerformIndividualAttacks

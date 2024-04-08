@@ -69,8 +69,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void PerformUpdateLoop(NPC twin, IExoTwin twinAttributes)
         {
-            if (twin.life < twin.lifeMax * 0.5f && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
+            if (twin.life < twin.lifeMax * ExoMechFightDefinitions.FightAloneLifeRatio && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
                 TransitionToNextState(ExoTwinsAIState.EnterSecondPhase);
+
+            if (twinAttributes is IExoMech exoMech && exoMech.Inactive && SharedState.AIState != ExoTwinsAIState.Inactive)
+                TransitionToNextState(ExoTwinsAIState.Inactive);
 
             twin.damage = 0;
             twin.defense = twin.defDefense;
@@ -92,6 +95,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case ExoTwinsAIState.PerformIndividualAttacks:
                     PerformIndividualizedAttacks(twin, twinAttributes);
+                    break;
+
+                case ExoTwinsAIState.Inactive:
+                    ExoTwinsStates.DoBehavior_Inactive(twin, twinAttributes);
                     break;
 
                 case ExoTwinsAIState.EnterSecondPhase:
@@ -139,9 +146,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (SharedState.TotalFinishedAttacks % 2 == 1)
                 return ExoTwinsAIState.PerformIndividualAttacks;
 
-            return ExoTwinsAIState.MachineGunLasers;
-
-            return Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots);
+            return Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots, ExoTwinsAIState.MachineGunLasers);
         }
 
         /// <summary>

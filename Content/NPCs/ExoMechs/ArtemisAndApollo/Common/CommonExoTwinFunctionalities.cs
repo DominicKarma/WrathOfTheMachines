@@ -45,7 +45,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 float blackInterpolant = Utilities.InverseLerp(0.17f, 0.34f, completionRatio);
                 Color paletteColor = Utilities.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
-                return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant);
+                return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant) * twin.Opacity;
             }
 
             ManagedShader nerveEndingShader = ShaderManager.GetShader("WoTM.ExoTwinNerveEndingShader");

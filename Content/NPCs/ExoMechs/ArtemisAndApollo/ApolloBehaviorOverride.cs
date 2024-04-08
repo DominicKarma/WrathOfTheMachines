@@ -240,7 +240,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
             SpecificDrawAction = null;
-            NPC.Opacity = 1f;
+
+            if (!Inactive)
+                NPC.Opacity = 1f;
             NPC.damage = 0;
             AITimer++;
         }

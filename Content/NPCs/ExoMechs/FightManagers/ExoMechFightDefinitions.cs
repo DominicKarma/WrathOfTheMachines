@@ -27,7 +27,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             ApplyToAllExoMechs(npc =>
             {
-                if (npc.life / (float)npc.lifeMax <= SummonOtherMechsLifeRatio && npc.ModNPC is IExoMech exoMech)
+                if (npc.life / (float)npc.lifeMax <= SummonOtherMechsLifeRatio && npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech)
                 {
                     exoMech.Inactive = true;
                     npc.netUpdate = true;
