@@ -36,6 +36,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Whether Ares was previously inactive and needs to return to the foreground.
+        /// </summary>
+        public bool ReturningFromInactivity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Whether Ares is a primary mech or not, a.k.a the one that the player chose when starting the battle.
         /// </summary>
         public bool IsPrimaryMech
@@ -118,6 +127,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             bitWriter.WriteBit(HasCreatedArms);
             bitWriter.WriteBit(Inactive);
             bitWriter.WriteBit(IsPrimaryMech);
+            bitWriter.WriteBit(ReturningFromInactivity);
 
             binaryWriter.Write(ZPosition);
             binaryWriter.Write(AITimer);
@@ -129,6 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             HasCreatedArms = bitReader.ReadBit();
             Inactive = bitReader.ReadBit();
             IsPrimaryMech = bitReader.ReadBit();
+            ReturningFromInactivity = bitReader.ReadBit();
 
             ZPosition = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
@@ -222,6 +233,67 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
+            if (Inactive)
+            {
+                ZPosition = MathHelper.Clamp(ZPosition + 0.1f, -0.99f, 5f);
+                NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * (ZPosition * 120f + 100f), ZPosition * 0.03f, 0.87f);
+                NPC.dontTakeDamage = true;
+                NPC.damage = 0;
+
+                for (int i = 0; i < InstructionsForHands.Length; i++)
+                {
+                    int copyForDelegate = i;
+                    Vector2 hoverOffset = Vector2.Zero;
+
+                    switch (i)
+                    {
+                        case 0:
+                            hoverOffset = new(-420f, 50f);
+                            break;
+                        case 1:
+                            hoverOffset = new(-280f, 198f);
+                            break;
+                        case 2:
+                            hoverOffset = new(280f, 198f);
+                            break;
+                        case 3:
+                            hoverOffset = new(420f, 50f);
+                            break;
+                    }
+
+                    InstructionsForHands[i] = new(hand =>
+                    {
+                        NPC handNPC = hand.NPC;
+                        handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.025f);
+                        handNPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.7f, 0.5f);
+
+                        hand.UsesBackArm = copyForDelegate == 0 || copyForDelegate == ArmCount - 1;
+                        hand.ArmSide = (copyForDelegate >= ArmCount / 2).ToDirectionInt();
+                        hand.Frame = AITimer / 3 % 12;
+
+                        hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity * 0.3f);
+
+                        if (handNPC.Opacity <= 0f)
+                            hand.GlowmaskDisabilityInterpolant = 0f;
+                    });
+                }
+
+                ReturningFromInactivity = true;
+                return;
+            }
+
+            if (ReturningFromInactivity)
+            {
+                ZPosition = MathHelper.Clamp(ZPosition - 0.1f, 0f, 10f);
+                if (ZPosition <= 0f)
+                {
+                    ReturningFromInactivity = false;
+                    NPC.netUpdate = true;
+                }
+
+                return;
+            }
+
             switch (CurrentState)
             {
                 case AresAIState.LargeTeslaOrbBlast:

@@ -160,7 +160,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             EnergyDrawer.Update();
 
-            NPC.dontTakeDamage = NPC.Opacity < 0.95f;
+            NPC.dontTakeDamage = NPC.Opacity < 0.95f || body.NPC.dontTakeDamage;
             NPC.realLife = CalamityGlobalNPC.draedonExoMechPrime;
             NPC.scale = aresBody.scale;
         }
