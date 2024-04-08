@@ -147,8 +147,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void EvaluatePhase()
         {
-            Main.NewText(CurrentPhase.PhaseOrdering);
-
             // This is a bit weird but it's necessary to ensure that the static readonly fields are initialized and the ExoMechPhases list is populated properly.
             _ = ExoMechFightDefinitions.StartingTwoAtOncePhaseDefinition;
 

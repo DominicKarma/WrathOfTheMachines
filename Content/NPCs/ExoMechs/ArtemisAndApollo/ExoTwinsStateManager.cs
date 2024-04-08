@@ -72,8 +72,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (twin.life < twin.lifeMax * ExoMechFightDefinitions.FightAloneLifeRatio && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
                 TransitionToNextState(ExoTwinsAIState.EnterSecondPhase);
 
-            if (twinAttributes is IExoMech exoMech && exoMech.Inactive && SharedState.AIState != ExoTwinsAIState.Inactive)
-                TransitionToNextState(ExoTwinsAIState.Inactive);
+            if (twinAttributes is IExoMech exoMech)
+            {
+                if (exoMech.Inactive && SharedState.AIState != ExoTwinsAIState.Inactive)
+                    TransitionToNextState(ExoTwinsAIState.Inactive);
+                if (!exoMech.Inactive && SharedState.AIState == ExoTwinsAIState.Inactive)
+                    TransitionToNextState();
+            }
 
             twin.damage = 0;
             twin.defense = twin.defDefense;

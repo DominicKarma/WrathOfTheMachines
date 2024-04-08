@@ -1,4 +1,6 @@
-﻿using static WoTM.Content.NPCs.ExoMechs.ExoMechFightStateManager;
+﻿using System;
+using Terraria;
+using static WoTM.Content.NPCs.ExoMechs.ExoMechFightStateManager;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
@@ -25,15 +27,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             return state.InitialMechState.LifeRatio <= SummonOtherMechsLifeRatio;
         }, state =>
         {
-            ApplyToAllExoMechs(npc =>
-            {
-                if (npc.life / (float)npc.lifeMax <= SummonOtherMechsLifeRatio && npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech)
-                {
-                    exoMech.Inactive = true;
-                    npc.netUpdate = true;
-                }
-            });
             SummonNotPresentExoMechs();
+            MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life <= npc.lifeMax * SummonOtherMechsLifeRatio);
         });
 
         /// <summary>
@@ -53,7 +48,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             return false;
-        });
+        }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
         /// The fourth phase definition.
@@ -72,7 +67,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             return state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
-        });
+        }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
         /// <summary>
         /// The fifth phase definition.
@@ -84,7 +79,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static readonly PhaseDefinition SecondTwoAtOncePhaseDefinition = CreateNewPhase(5, state =>
         {
             return state.TotalKilledMechs >= 1;
-        });
+        }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
         /// The sixth phase definition.
@@ -103,7 +98,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             return !state.InitialMechState.Killed && state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
-        });
+        }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
         /// <summary>
         /// The seventh and final phase definition.
@@ -115,11 +110,23 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(7, state =>
         {
             return state.TotalKilledMechs >= 2;
-        });
+        }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         // NOTE -- Update XML comments if these are changed.
         public static float SummonOtherMechsLifeRatio => 0.7f;
 
         public static float FightAloneLifeRatio => 0.4f;
+
+        public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
+        {
+            ApplyToAllExoMechs(npc =>
+            {
+                if (npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech && condition(npc, exoMech))
+                {
+                    exoMech.Inactive = leave;
+                    npc.netUpdate = true;
+                }
+            });
+        }
     }
 }

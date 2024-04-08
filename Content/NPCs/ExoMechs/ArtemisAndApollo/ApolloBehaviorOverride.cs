@@ -243,6 +243,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (!Inactive)
                 NPC.Opacity = 1f;
+            NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.damage = 0;
             AITimer++;
         }

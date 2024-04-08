@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Luminance.Common.Utilities;
@@ -188,6 +189,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ExecuteCurrentState();
 
             NPC.Opacity = 1f;
+            NPC.Calamity().ShouldCloseHPBar = Inactive;
 
             AITimer++;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
@@ -250,6 +251,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (!Inactive)
                 NPC.Opacity = 1f;
+            NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.damage = 0;
             AITimer++;
         }
