@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         public static readonly PhaseDefinition StartingTwoAtOncePhaseDefinition = CreateNewPhase(2, state =>
         {
-            return state.InitialMechState.LifeRatio <= 0.7f;
+            return state.InitialMechState.LifeRatio <= SummonOtherMechsLifeRatio;
         });
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < state.OtherMechsStates.Length; i++)
             {
                 var otherMechState = state.OtherMechsStates[i];
-                if (otherMechState.HasBeenSummoned && otherMechState.LifeRatio <= 0.7f)
+                if (otherMechState.HasBeenSummoned && otherMechState.LifeRatio <= SummonOtherMechsLifeRatio)
                     return true;
             }
 
@@ -56,11 +56,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < state.OtherMechsStates.Length; i++)
             {
                 var otherMechState = state.OtherMechsStates[i];
-                if (otherMechState.HasBeenSummoned && otherMechState.LifeRatio <= 0.4f)
+                if (otherMechState.HasBeenSummoned && otherMechState.LifeRatio <= FightAloneLifeRatio)
                     return true;
             }
 
-            return state.InitialMechState.LifeRatio <= 0.4f;
+            return state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
         });
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < state.OtherMechsStates.Length; i++)
             {
                 var otherMechState = state.OtherMechsStates[i];
-                if (otherMechState.HasBeenSummoned && !otherMechState.Killed && otherMechState.LifeRatio <= 0.4f)
+                if (otherMechState.HasBeenSummoned && !otherMechState.Killed && otherMechState.LifeRatio <= FightAloneLifeRatio)
                     return true;
             }
 
-            return !state.InitialMechState.Killed && state.InitialMechState.LifeRatio <= 0.4f;
+            return !state.InitialMechState.Killed && state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
         });
 
         /// <summary>
@@ -105,5 +105,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             return state.TotalKilledMechs >= 2;
         });
+
+        // NOTE -- Update XML comments if these are changed.
+        public static float SummonOtherMechsLifeRatio => 0.7f;
+
+        public static float FightAloneLifeRatio => 0.4f;
     }
 }
