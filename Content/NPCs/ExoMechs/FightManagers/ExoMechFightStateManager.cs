@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public sealed class ExoMechBehaviorManager : ModSystem
+    public sealed class ExoMechFightStateManager : ModSystem
     {
         /// <summary>
         /// The set of all previously summoned Exo Mechs throughout the fight. Used to keep track of which Exo Mechs existed in the past, after they are killed.

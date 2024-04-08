@@ -104,7 +104,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Emit music. If the battle is ongoing, Draedon emits the battle theme.
             // Otherwise, he emits his trademark ambience.
             // This takes priority over anything except Moon Lord's music fadeout.
-            if (!ExoMechBehaviorManager.AnyExoMechsPresent)
+            if (!ExoMechFightStateManager.AnyExoMechsPresent)
                 CalamityGlobalNPC.draedonAmbience = NPC.whoAmI;
 
             // Pick someone else to pay attention to if the old target is gone.

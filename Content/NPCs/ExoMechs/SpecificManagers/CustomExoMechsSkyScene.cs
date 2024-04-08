@@ -9,7 +9,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsSkyScene : ModSceneEffect
     {
-        public override bool IsSceneEffectActive(Player player) => (NPC.AnyNPCs(ModContent.NPCType<Draedon>()) || ExoMechBehaviorManager.AnyExoMechsPresent) && !InfernumModeCompatibility.InfernumModeIsActive;
+        public override bool IsSceneEffectActive(Player player) => (NPC.AnyNPCs(ModContent.NPCType<Draedon>()) || ExoMechFightStateManager.AnyExoMechsPresent) && !InfernumModeCompatibility.InfernumModeIsActive;
 
         public override void Load()
         {
