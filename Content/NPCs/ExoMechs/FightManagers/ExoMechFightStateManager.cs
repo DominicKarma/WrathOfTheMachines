@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.Utilities;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -60,7 +62,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="PhaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
         /// <param name="StartCondition">The phase transition condition. This decides whether this phase should be transitioned to from the previous one.</param>
         /// <param name="FightIsHappening">Whether the fight is actually happening or not.</param>
-        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition);
+        /// <param name="OnStart">An optional action to perform when the phase is started.</param>
+        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition, Action<ExoMechFightState>? OnStart);
 
         /// <summary>
         /// Represents a condition by which a phase transition should occur.
@@ -78,10 +81,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="phaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
         /// <param name="condition">The phase transition condition.</param>
+        /// <param name="onStart">An optional action to perform when the phase is started.</param>
         /// <returns>The newly created phase.</returns>
-        internal static PhaseDefinition CreateNewPhase(int phaseOrdering, PhaseTransitionCondition condition)
+        internal static PhaseDefinition CreateNewPhase(int phaseOrdering, PhaseTransitionCondition condition, Action<ExoMechFightState>? onStart = null)
         {
-            PhaseDefinition phase = new(phaseOrdering, true, condition);
+            PhaseDefinition phase = new(phaseOrdering, true, condition, onStart);
             ExoMechPhases.Add(phase);
             return phase;
         }
@@ -148,7 +152,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
 
             if (nextPhase.StartCondition(FightState))
+            {
                 CurrentPhase = nextPhase;
+                nextPhase.OnStart?.Invoke(FightState);
+            }
         }
 
         // The wasSummoned parameter is necessary because it's sometimes not possible to check PreviouslySummonedMechIDs in this method, due to the NPC itself being null.
@@ -201,7 +208,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 PreviouslySummonedMechIDs.Clear();
 
             AnyExoMechsPresent = false;
-            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition);
+            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();
 
@@ -243,10 +250,41 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Summons all Exo Mechs not currently present.
+        /// </summary>
+        internal static void SummonNotPresentExoMechs()
+        {
+            Player toSummonNear = Main.player[Player.FindClosest(new(Main.maxTilesX * 8f, (float)Main.worldSurface * 16f), 1, 1)];
+            foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
+            {
+                if (NPC.AnyNPCs(exoMechID))
+                    continue;
+
+                // TODO -- Make the summon animation custom.
+                NPC.NewNPC(new EntitySource_WorldEvent(), (int)toSummonNear.Center.X, (int)toSummonNear.Center.Y - 1000, exoMechID, 1);
+            }
+        }
+
+        /// <summary>
+        /// Applies a given action to all present Exo Mechs.
+        /// </summary>
+        /// <param name="action">The action to apply.</param>
+        public static void ApplyToAllExoMechs(Action<NPC> action)
+        {
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (!ExoMechNPCIDs.ExoMechIDs.Contains(npc.type))
+                    continue;
+
+                action(npc);
+            }
+        }
+
+        /// <summary>
         /// Evaluates whether an NPC is a primary Exo Mech or not, based on whether it's a managing Exo Mech and has the appropriate AI flag.
         /// </summary>
         /// <param name="npc">The NPC to evaluate.</param>
-        public static bool IsPrimaryMech(NPC npc) => ExoMechNPCIDs.IsManagingExoMech(npc) && npc.ai[3] == 1f;
+        public static bool IsPrimaryMech(NPC npc) => npc.ModNPC is not null and IExoMech exoMech && exoMech.IsPrimaryMech;
 
         /// <summary>
         /// Marks an NPC as the primary mech.
@@ -261,7 +299,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!ExoMechNPCIDs.IsManagingExoMech(npc))
                 return;
 
-            npc.ai[3] = 1f;
+            if (npc.ModNPC is null || npc.ModNPC is not IExoMech exoMech)
+                return;
+
+            exoMech.IsPrimaryMech = true;
             npc.netUpdate = true;
         }
     }

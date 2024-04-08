@@ -16,13 +16,31 @@ using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride, IHadesSegment
+    public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride, IExoMech, IHadesSegment
     {
         public enum HadesAIState
         {
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
             MineBarrages,
+        }
+
+        /// <summary>
+        /// Whether Hades should be inactive, leaving the battle to let other mechs attack on their own.
+        /// </summary>
+        public bool Inactive
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether Hades is a primary mech or not, a.k.a the one that the player chose when starting the battle.
+        /// </summary>
+        public bool IsPrimaryMech
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -137,6 +155,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
             bitWriter.WriteBit(HasCreatedSegments);
+            bitWriter.WriteBit(Inactive);
+            bitWriter.WriteBit(IsPrimaryMech);
 
             binaryWriter.Write(SegmentOpenInterpolant);
             binaryWriter.Write(AITimer);
@@ -146,6 +166,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
             HasCreatedSegments = bitReader.ReadBit();
+            Inactive = bitReader.ReadBit();
+            IsPrimaryMech = bitReader.ReadBit();
 
             SegmentOpenInterpolant = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();

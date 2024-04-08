@@ -23,6 +23,17 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static readonly PhaseDefinition StartingTwoAtOncePhaseDefinition = CreateNewPhase(2, state =>
         {
             return state.InitialMechState.LifeRatio <= SummonOtherMechsLifeRatio;
+        }, state =>
+        {
+            ApplyToAllExoMechs(npc =>
+            {
+                if (npc.life / (float)npc.lifeMax <= SummonOtherMechsLifeRatio && npc.ModNPC is IExoMech exoMech)
+                {
+                    exoMech.Inactive = true;
+                    npc.netUpdate = true;
+                }
+            });
+            SummonNotPresentExoMechs();
         });
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using CalamityMod;
 using CalamityMod.NPCs;
@@ -19,14 +20,33 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public sealed partial class ApolloBehaviorOverride : NPCBehaviorOverride, IExoTwin
+    public sealed partial class ApolloBehaviorOverride : NPCBehaviorOverride, IExoMech, IExoTwin
     {
         private static ILHook? hitEffectHook;
+
+        /// <summary>
+        /// Whether Apollo should be inactive, leaving the battle to let other mechs attack on their own.
+        /// </summary>
+        public bool Inactive
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether Apollo is a primary mech or not, a.k.a the one that the player chose when starting the battle.
+        /// </summary>
+        public bool IsPrimaryMech
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Apollo's current frame.
@@ -176,6 +196,18 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             hitEffectHook?.Undo();
             hitEffectHook?.Dispose();
+        }
+
+        public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
+        {
+            bitWriter.WriteBit(Inactive);
+            bitWriter.WriteBit(IsPrimaryMech);
+        }
+
+        public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
+        {
+            Inactive = bitReader.ReadBit();
+            IsPrimaryMech = bitReader.ReadBit();
         }
 
         public override void AI()

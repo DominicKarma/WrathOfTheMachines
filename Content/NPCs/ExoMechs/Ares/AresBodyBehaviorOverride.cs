@@ -15,7 +15,7 @@ using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public sealed partial class AresBodyBehaviorOverride : NPCBehaviorOverride
+    public sealed partial class AresBodyBehaviorOverride : NPCBehaviorOverride, IExoMech
     {
         public enum AresAIState
         {
@@ -23,6 +23,24 @@ namespace WoTM.Content.NPCs.ExoMechs
             DetachHands,
             NukeAoEAndPlasmaBlasts,
             AimedLaserBursts,
+        }
+
+        /// <summary>
+        /// Whether Ares should be inactive, leaving the battle to let other mechs attack on their own.
+        /// </summary>
+        public bool Inactive
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether Ares is a primary mech or not, a.k.a the one that the player chose when starting the battle.
+        /// </summary>
+        public bool IsPrimaryMech
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -97,6 +115,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
             bitWriter.WriteBit(HasCreatedArms);
+            bitWriter.WriteBit(Inactive);
+            bitWriter.WriteBit(IsPrimaryMech);
+
             binaryWriter.Write(ZPosition);
             binaryWriter.Write(AITimer);
             binaryWriter.Write((int)CurrentState);
@@ -105,6 +126,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
             HasCreatedArms = bitReader.ReadBit();
+            Inactive = bitReader.ReadBit();
+            IsPrimaryMech = bitReader.ReadBit();
+
             ZPosition = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
             CurrentState = (AresAIState)binaryReader.ReadInt32();
