@@ -101,7 +101,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <remarks>
         /// During this phase the player fights the final Exo Mech until it dies.
         /// </remarks>
-        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(6, state =>
+        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(7, state =>
         {
             return state.TotalKilledMechs >= 2;
         });

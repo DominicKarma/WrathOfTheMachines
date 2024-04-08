@@ -58,9 +58,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The definition of an Exo Mech phase, defined by its ordering in the fight and overall condition.
         /// </summary>
         /// <param name="PhaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
-        /// <param name="Condition">The phase transition condition. This decides whether this phase should be transitioned to from the previous one.</param>
+        /// <param name="StartCondition">The phase transition condition. This decides whether this phase should be transitioned to from the previous one.</param>
         /// <param name="FightIsHappening">Whether the fight is actually happening or not.</param>
-        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition Condition);
+        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition);
 
         /// <summary>
         /// Represents a condition by which a phase transition should occur.
@@ -96,12 +96,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         private static void CalculateFightState()
         {
             List<int> evaluatedMechs = [];
-            foreach (int exoMechID in ExoMechNPCIDs.ExoMechIDs)
+            foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
                 evaluatedMechs.Add(exoMechID);
 
+            // Search for the primary mech. If one doesn't exist (such as a result of summoning an Exo Mech with a cheat mod) simply make the first one found into the primary mech.
             if (TryFindPrimaryMech(out NPC? primaryMech))
                 evaluatedMechs.Remove(primaryMech!.type);
+            else
+            {
+                MakeFirstExoMechIntoPrimaryMech();
+                return;
+            }
 
+            // Determine the overall fight state.
             ExoMechState[] stateOfOtherExoMechs = new ExoMechState[evaluatedMechs.Count];
             for (int i = 0; i < evaluatedMechs.Count; i++)
             {
@@ -111,10 +118,38 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 stateOfOtherExoMechs[i] = ExoMechStateFromNPC(otherExoMech, exoMechWasSummonedAtOnePoint);
             }
-
             FightState = new(ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
 
             AnyExoMechsPresent = true;
+        }
+
+        /// <summary>
+        /// Turns the first Exo Mech this manager can find into the primary Exo Mech.
+        /// </summary>
+        private static void MakeFirstExoMechIntoPrimaryMech()
+        {
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type))
+                {
+                    TryToMakePrimaryMech(npc);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Evaluates the current phase of the fight, determining whether it needs to update due to changes in the fight state.
+        /// </summary>
+        private static void EvaluatePhase()
+        {
+            Main.NewText(CurrentPhase.PhaseOrdering);
+            PhaseDefinition? nextPhase = ExoMechPhases.Find(f => f.PhaseOrdering == CurrentPhase.PhaseOrdering + 1);
+            if (nextPhase is null)
+                return;
+
+            if (nextPhase.StartCondition(FightState))
+                CurrentPhase = nextPhase;
         }
 
         // The wasSummoned parameter is necessary because it's sometimes not possible to check PreviouslySummonedMechIDs in this method, due to the NPC itself being null.
@@ -155,6 +190,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             RecordPreviouslySummonedMechs();
             CalculateFightState();
+            EvaluatePhase();
         }
 
         /// <summary>
