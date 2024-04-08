@@ -58,9 +58,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The definition of an Exo Mech phase, defined by its ordering in the fight and overall condition.
         /// </summary>
         /// <param name="PhaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
-        /// <param name="FightState">The state of the overall Exo Mechs fight.</param>
+        /// <param name="Condition">The phase transition condition. This decides whether this phase should be transitioned to from the previous one.</param>
         /// <param name="FightIsHappening">Whether the fight is actually happening or not.</param>
-        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition FightState);
+        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition Condition);
 
         /// <summary>
         /// Represents a condition by which a phase transition should occur.
@@ -71,6 +71,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void PreUpdateEntities()
         {
             DetermineBattleState();
+        }
+
+        /// <summary>
+        /// Creates and registers a new phase for the Exo Mechs fight.
+        /// </summary>
+        /// <param name="phaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
+        /// <param name="condition">The phase transition condition.</param>
+        /// <returns>The newly created phase.</returns>
+        internal static PhaseDefinition CreateNewPhase(int phaseOrdering, PhaseTransitionCondition condition)
+        {
+            PhaseDefinition phase = new(phaseOrdering, true, condition);
+            ExoMechPhases.Add(phase);
+            return phase;
         }
 
         /// <summary>
