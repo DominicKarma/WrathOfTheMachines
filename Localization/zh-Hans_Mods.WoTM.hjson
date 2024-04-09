@@ -1,23 +1,23 @@
 Projectiles: {
-        ApolloMissile.DisplayName: Plasma Missile
-        ArtemisLaserSmall.DisplayName: Small Thermal Laser
-        ArtemisLaserImproved.DisplayName: Thermal Laser
-        CannonLaserbeam.DisplayName: Energized Thermal Deathray
-        GaussNuke.DisplayName: Gauss Nuke
-        GaussNukeBoom.DisplayName: Thermonuclear Explosion
-        HadesLaserBurst.DisplayName: Laser Burst
-        HomingTeslaBurst.DisplayName: Tesla Burst
-        LargeTeslaSphere.DisplayName: Large Tesla Sphere
-        LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
-        LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
-        SmallTeslaArc.DisplayName: Small Tesla Arc
-        TeslaArc.DisplayName: Tesla Arc
-        ApolloLineTelegraph.DisplayName: Apollo Line Telegraph
-        HadesMine.DisplayName: Hades Mine
+        ApolloMissile.DisplayName: 等离子导弹
+        ArtemisLaserSmall.DisplayName: 小热能激光
+        ArtemisLaserImproved.DisplayName: 热能激光
+        CannonLaserbeam.DisplayName: 充能热能死光
+        GaussNuke.DisplayName: 高斯核弹
+        GaussNukeBoom.DisplayName: 热核爆炸
+        HadesLaserBurst.DisplayName: 激光脉冲
+        HomingTeslaBurst.DisplayName: 特斯拉爆破
+        LargeTeslaSphere.DisplayName: 巨型特斯拉电球
+        LargeTeslaSphereExplosion.DisplayName: 特斯拉爆破
+        LingeringPlasmaFireball.DisplayName: 滞留等离子火球
+        SmallTeslaArc.DisplayName: Small 特斯拉电弧
+        TeslaArc.DisplayName: 特斯拉电弧
+        ApolloLineTelegraph.DisplayName: 阿波罗路线预警
+        HadesMine.DisplayName: 哈迪斯之雷
 }
 
 NPCs: {
-        AresHand.DisplayName: Ares Hand
+        AresHand.DisplayName: 阿瑞斯手
 
         Draedon: {
                 IntroductionMonologue1: I have waited long for this moment.
@@ -50,5 +50,5 @@ NPCs: {
                 Interjection4: We shall now reset the variables to their controls for the next phase of testing.
         }
 
-        ThanatosRename: XM-04 Hades
+        ThanatosRename: XM-04“哈迪斯”
 }
