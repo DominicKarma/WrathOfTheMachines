@@ -20,15 +20,15 @@ NPCs: {
         AresHand.DisplayName: 阿瑞斯手
 
         Draedon: {
-                IntroductionMonologue1: I have waited long for this moment.
-                IntroductionMonologue2: Your nature fascinates me, for I do not understand it.
-                IntroductionMonologue3: You will face my creations, which have surpassed gods.
-                IntroductionMonologue4: And you will show me your disposition through battle.
-                IntroductionMonologue5: Now, choose.
-                IntroductionMonologueBrief: Make your choice.
-                ExoMechChoiceResponse1: Excellent.
-                ExoMechChoiceResponse2: They will arrive shortly.
-                Interjection1: Hmm...
+                IntroductionMonologue1: 你知道吗？这一刻已经等了太久了。
+                IntroductionMonologue2: 我对一切未知感到着迷，但最让我着迷的莫过于你的本质。
+                IntroductionMonologue3: 我将会向你展示，我那些超越神明的造物。
+                IntroductionMonologue4: 而你，则将在战斗中向我展示你的本质。
+                IntroductionMonologue5: 现在，选择吧。
+                IntroductionMonologueBrief: 做出你的选择。
+                ExoMechChoiceResponse1: 很好。
+                ExoMechChoiceResponse2: 它们很快就会到来。
+                Interjection1: 嗯……
                 Interjection2_Thermal_Minor: It appears that you have thus far sustained minor thermal burns.
                 Interjection2_Thermal_Major: It appears that you have thus far sustained major thermal burns.
                 Interjection2_Thermal_NearLethal: It appears that you have thus far sustained near-lethal thermal burns.
