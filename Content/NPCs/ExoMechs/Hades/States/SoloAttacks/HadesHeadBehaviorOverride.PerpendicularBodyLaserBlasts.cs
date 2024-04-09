@@ -37,6 +37,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// How many blasts Hades has performed so far during his PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public ref float PerpendicularBodyLaserBlasts_BlastCounter => ref NPC.ai[2];
+
+        /// <summary>
         /// How long Hades spends snaking around into position in anticipation of attacking during his PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public static int PerpendicularBodyLaserBlasts_RedirectTime => Utilities.SecondsToFrames(3f);
@@ -50,6 +55,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The 'n' in 'every Nth segment should fire' for Hades' PerpendicularBodyLaserBlasts attack.
         /// </summary>
         public static int PerpendicularBodyLaserBlasts_SegmentUsageCycle => Main.expertMode ? 3 : 2;
+
+        /// <summary>
+        /// How many blasts Hades should perform before transitioning to the next attack during the PerpendicularBodyLaserBlasts attack.
+        /// </summary>
+        public static int PerpendicularBodyLaserBlasts_BlastCount => 2;
 
         /// <summary>
         /// How far Hades tries to go ahead of the player before firing during his PerpendicularBodyLaserBlasts attack.
@@ -100,8 +110,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
             else
             {
+                PerpendicularBodyLaserBlasts_StartingDirection = Vector2.Zero;
                 PerpendicularBodyLaserBlasts_HasReachedDestination = false;
+                PerpendicularBodyLaserBlasts_BlastCounter++;
                 AITimer = 0;
+
+                if (PerpendicularBodyLaserBlasts_BlastCounter >= PerpendicularBodyLaserBlasts_BlastCount)
+                    SelectNextAttack();
             }
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;

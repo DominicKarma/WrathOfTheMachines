@@ -277,6 +277,25 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Selects a new attack state for Hades.
+        /// </summary>
+        public void SelectNextAttack()
+        {
+            HadesAIState oldState = CurrentState;
+            do
+            {
+                CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts);
+            }
+            while (CurrentState == oldState);
+
+            for (int i = 0; i < NPC.maxAI; i++)
+                NPC.ai[i] = 0f;
+
+            AITimer = 0;
+            NPC.netUpdate = true;
+        }
+
+        /// <summary>
         /// Generates a <see cref="BodySegmentCondition"/> that corresponds to every Nth segment. Meant to be used in conjunction with <see cref="BodyBehaviorAction"/>.
         /// </summary>
         /// <param name="n">The cycle repeat value.</param>
