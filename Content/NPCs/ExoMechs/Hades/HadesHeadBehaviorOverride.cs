@@ -24,6 +24,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
             MineBarrages,
+            Inactive
         }
 
         /// <summary>
@@ -179,6 +180,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             PerformPreUpdateResets();
 
+            if (Inactive && CurrentState != HadesAIState.Inactive)
+            {
+                CurrentState = HadesAIState.Inactive;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
+            if (!Inactive && CurrentState == HadesAIState.Inactive)
+            {
+                CurrentState = HadesAIState.MineBarrages;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
+
             if (!HasCreatedSegments)
             {
                 CreateSegments();
@@ -209,6 +223,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.ShowNameOnHover = true;
             BodyBehaviorAction = null;
             BodyRenderAction = null;
+            NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;
 
             CalamityGlobalNPC.draedonExoMechWorm = NPC.whoAmI;
         }
@@ -227,7 +242,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < BodySegmentCount; i++)
             {
                 bool tailSegment = i == BodySegmentCount - 1;
-                int nextSegmentIndex = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, segmentID, NPC.whoAmI + 1, NPC.whoAmI, previousSegmentIndex, tailSegment.ToInt(), i);
+                int nextSegmentIndex = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, segmentID, NPC.whoAmI + 1, NPC.whoAmI, tailSegment.ToInt(), previousSegmentIndex, i);
 
                 NPC nextSegment = Main.npc[nextSegmentIndex];
                 nextSegment.realLife = NPC.whoAmI;
@@ -244,8 +259,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
-            CurrentState = HadesAIState.MineBarrages;
-
             switch (CurrentState)
             {
                 case HadesAIState.PerpendicularBodyLaserBlasts:
@@ -256,6 +269,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case HadesAIState.MineBarrages:
                     DoBehavior_MineBarrages();
+                    break;
+                case HadesAIState.Inactive:
+                    DoBehavior_Inactive();
                     break;
             }
         }
