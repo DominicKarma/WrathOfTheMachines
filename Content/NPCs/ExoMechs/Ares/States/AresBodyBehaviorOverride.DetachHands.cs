@@ -6,6 +6,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class AresBodyBehaviorOverride : NPCBehaviorOverride
     {
+        /// <summary>
+        /// AI update loop method for the DetachHands state.
+        /// </summary>
         public void DoBehavior_DetachHands()
         {
             NPC.velocity *= new Vector2(0.5f, 0.93f);

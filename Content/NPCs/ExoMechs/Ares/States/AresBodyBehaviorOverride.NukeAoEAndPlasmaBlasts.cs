@@ -50,6 +50,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int LingeringPlasmaDamage => Main.expertMode ? 350 : 225;
 
+        /// <summary>
+        /// AI update loop method for the NukeAoEAndPlasmaBlasts attack.
+        /// </summary>
         public void DoBehavior_NukeAoEAndPlasmaBlasts()
         {
             if (AITimer == 1)

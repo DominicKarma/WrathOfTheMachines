@@ -7,6 +7,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class AresBodyBehaviorOverride : NPCBehaviorOverride
     {
+        /// <summary>
+        /// AI update loop method for the inactive state.
+        /// </summary>
         public void DoBehavior_Inactive()
         {
             ZPosition = MathHelper.Clamp(ZPosition + 0.1f, -0.99f, 4f);

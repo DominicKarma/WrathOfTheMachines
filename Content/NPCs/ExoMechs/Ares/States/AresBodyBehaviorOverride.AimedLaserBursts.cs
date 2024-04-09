@@ -42,6 +42,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int CannonLaserbeamDamage => Main.expertMode ? 550 : 400;
 
+        /// <summary>
+        /// AI update loop method for the AimedLaserBursts attack.
+        /// </summary>
         public void DoBehavior_AimedLaserBursts()
         {
             if (AITimer == 1)
