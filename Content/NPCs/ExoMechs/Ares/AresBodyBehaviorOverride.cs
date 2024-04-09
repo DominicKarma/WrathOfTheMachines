@@ -144,6 +144,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (Main.netMode != NetmodeID.MultiplayerClient && !HasCreatedArms)
                 CreateArms();
 
+            if (Inactive && CurrentState != AresAIState.Inactive)
+            {
+                CurrentState = AresAIState.Inactive;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
+
             PerformPreUpdateResets();
             ExecuteCurrentState();
 

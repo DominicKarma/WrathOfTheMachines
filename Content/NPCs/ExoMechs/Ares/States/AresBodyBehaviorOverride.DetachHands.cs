@@ -36,6 +36,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.Frame = AITimer / 3 % 12;
 
             hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity * 0.3f);
+            hand.EnergyDrawer.chargeProgress *= 0.7f;
 
             if (handNPC.Opacity <= 0f)
                 hand.GlowmaskDisabilityInterpolant = 0f;

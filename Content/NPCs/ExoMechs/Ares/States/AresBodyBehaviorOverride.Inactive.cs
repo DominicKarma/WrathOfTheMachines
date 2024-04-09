@@ -9,8 +9,8 @@ namespace WoTM.Content.NPCs.ExoMechs
     {
         public void DoBehavior_Inactive()
         {
-            ZPosition = MathHelper.Clamp(ZPosition + 0.1f, -0.99f, 5f);
-            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * (ZPosition * 120f + 100f), ZPosition * 0.03f, 0.87f);
+            ZPosition = MathHelper.Clamp(ZPosition + 0.1f, -0.99f, 4f);
+            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * (ZPosition * 160f + 100f), ZPosition * 0.03f, 0.87f);
             NPC.dontTakeDamage = true;
             NPC.damage = 0;
 
@@ -41,6 +41,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.Frame = AITimer / 3 % 12;
 
             hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity * 0.3f);
+            hand.EnergyDrawer.chargeProgress *= 0.7f;
 
             if (handNPC.Opacity <= 0f)
                 hand.GlowmaskDisabilityInterpolant = 0f;
