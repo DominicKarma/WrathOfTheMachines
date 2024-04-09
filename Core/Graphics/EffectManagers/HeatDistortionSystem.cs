@@ -12,16 +12,19 @@ namespace WoTM.Core.Graphics.EffectManagers
     {
         public override void PostUpdateEverything()
         {
-            ManagedScreenFilter distortion = ShaderManager.GetFilter("WoTM.HeatDistortionFilter");
+            ManagedScreenFilter distortionShader = ShaderManager.GetFilter("WoTM.HeatDistortionFilter");
 
             bool shouldBeActive = ModContent.GetInstance<HeatDistortionMetaball>().ActiveParticleCount >= 1;
-            if (!distortion.IsActive && shouldBeActive)
-            {
-                distortion.TrySetParameter("screenZoom", Main.GameViewMatrix.Zoom);
-                distortion.SetTexture(ModContent.GetInstance<HeatDistortionMetaball>().LayerTargets[0], 2, SamplerState.LinearClamp);
-                distortion.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 3, SamplerState.LinearWrap);
-                distortion.Activate();
-            }
+            if (!distortionShader.IsActive && shouldBeActive)
+                ApplyDistortionParameters(distortionShader);
+        }
+
+        private static void ApplyDistortionParameters(ManagedScreenFilter distortionShader)
+        {
+            distortionShader.TrySetParameter("screenZoom", Main.GameViewMatrix.Zoom);
+            distortionShader.SetTexture(ModContent.GetInstance<HeatDistortionMetaball>().LayerTargets[0], 2, SamplerState.LinearClamp);
+            distortionShader.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 3, SamplerState.LinearWrap);
+            distortionShader.Activate();
         }
     }
 }
