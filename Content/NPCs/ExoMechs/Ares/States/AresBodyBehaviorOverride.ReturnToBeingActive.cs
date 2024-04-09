@@ -17,7 +17,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands[2] = new(h => InactiveHandUpdate(h, new Vector2(280f, 224f), 2));
             InstructionsForHands[3] = new(h => InactiveHandUpdate(h, new Vector2(430f, 50f), 3));
 
-            if (!Inactive)
+            if (!Inactive && ZPosition <= 0f)
             {
                 CurrentState = AresAIState.DetachHands;
                 AITimer = 0;

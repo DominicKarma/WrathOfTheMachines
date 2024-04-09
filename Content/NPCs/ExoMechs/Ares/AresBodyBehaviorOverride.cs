@@ -154,7 +154,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformPreUpdateResets();
             ExecuteCurrentState();
 
-            NPC.As<AresBody>().SecondaryAIState = (int)AresBody.SecondaryPhase.Nothing;
             NPC.rotation = NPC.rotation.AngleLerp(NPC.velocity.X * 0.015f, 0.2f);
             NPC.scale = 1f / (ZPosition + 1f);
             NPC.Opacity = Utils.Remap(ZPosition, 0.6f, 2f, 1f, 0.67f);
@@ -224,6 +223,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
             NPC.immortal = true;
+            NPC.As<AresBody>().SecondaryAIState = (int)AresBody.SecondaryPhase.Nothing;
 
             CalamityGlobalNPC.draedonExoMechPrime = NPC.whoAmI;
         }
