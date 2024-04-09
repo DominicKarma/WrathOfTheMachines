@@ -235,6 +235,20 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 thrusterPosition = NPC.Center - NPC.rotation.ToRotationVector2() * NPC.scale * 34f + NPC.velocity;
             ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(thrusterPosition, Main.rand.NextVector2Circular(8f, 8f), ThrusterBoost * 60f + 108f, 16f);
 
+            PerformPreUpdateResets();
+
+            AITimer++;
+        }
+
+        /// <summary>
+        /// Resets various things pertaining to the fight state prior to behavior updates.
+        /// </summary>
+        /// <remarks>
+        /// This serves as a means of ensuring that changes to the fight state are gracefully reset if something suddenly changes, while affording the ability to make changes during updates.<br></br>
+        /// As a result, this alleviates behaviors AI states from the burden of having to assume that they may terminate at any time and must account for that to ensure that the state is reset.
+        /// </remarks>
+        public void PerformPreUpdateResets()
+        {
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
@@ -244,8 +258,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!Inactive)
                 NPC.Opacity = 1f;
             NPC.Calamity().ShouldCloseHPBar = Inactive;
+            NPC.As<Apollo>().SecondaryAIState = (int)Apollo.SecondaryPhase.Nothing;
             NPC.damage = 0;
-            AITimer++;
         }
 
         public void UpdateEngineSound()

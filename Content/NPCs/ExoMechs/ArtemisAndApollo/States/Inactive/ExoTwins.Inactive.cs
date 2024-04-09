@@ -1,4 +1,6 @@
-﻿using Luminance.Common.Utilities;
+﻿using CalamityMod.NPCs.ExoMechs.Apollo;
+using CalamityMod.NPCs.ExoMechs.Artemis;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 
@@ -23,6 +25,12 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             twinAttributes.Animation = ExoTwinAnimation.Idle;
             twinAttributes.Frame = twinAttributes.Animation.CalculateFrame(AITimer / 40f % 1f, twinAttributes.InPhase2);
+
+            // This is necessary to ensure that the map icon goes away.
+            if (isApollo)
+                npc.As<Apollo>().SecondaryAIState = (int)Apollo.SecondaryPhase.PassiveAndImmune;
+            else
+                npc.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.PassiveAndImmune;
         }
     }
 }
