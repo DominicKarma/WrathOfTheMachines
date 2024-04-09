@@ -39,14 +39,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// The index to the ahead segment in the NPC array.
-        /// </summary>
-        public int AheadSegmentIndex => (int)NPC.ai[1];
-
-        /// <summary>
         /// Whether this segment should draw as a tail.
         /// </summary>
-        public bool IsTailSegment => NPC.ai[2] == 1f;
+        public bool IsTailSegment => NPC.ai[1] == 1f;
+
+        // Due to hardcoded logic in base Calamity's Thanatos code, the ahead segment index must be ai slot 2. Otherwise, you'll run into issues where the map icons get messed up.
+
+        /// <summary>
+        /// The index to the ahead segment in the NPC array.
+        /// </summary>
+        public int AheadSegmentIndex => (int)NPC.ai[2];
 
         /// <summary>
         /// Whether this segment should be drawn as the second body variant.
