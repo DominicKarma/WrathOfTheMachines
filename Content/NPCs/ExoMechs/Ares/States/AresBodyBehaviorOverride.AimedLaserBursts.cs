@@ -21,7 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long it takes for cannons to charge up energy during the AimedLaserBursts attack.
         /// </summary>
-        public static int AimedLaserBursts_CannonChargeUpTime => Utilities.SecondsToFrames(2.95f);
+        public static int AimedLaserBursts_CannonChargeUpTime => Utilities.SecondsToFrames(2.35f);
 
         /// <summary>
         /// How much damage laserbeams from Ares' laser cannons do.
@@ -36,7 +36,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer == 1)
                 SoundEngine.PlaySound(AresLaserCannon.TelSound);
 
-            StandardFlyTowards(Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -300f, -350f));
+            Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -300f, -350f);
+            if (MathHelper.Distance(Target.Center.X, NPC.Center.X) <= 120f)
+                hoverDestination.X = Target.Center.X;
+
+            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.005f);
+            StandardFlyTowards(hoverDestination);
 
             InstructionsForHands[0] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-430f, 50f), 0));
             InstructionsForHands[1] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-280f, 224f), 1));
@@ -49,17 +54,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 AITimer = 0;
                 NPC.netUpdate = true;
             }
-        }
-
-        public void DoBehavior_AimedLaserBursts_ReleaseBurst(Projectile teslaSphere)
-        {
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                return;
-
-            float burstOffsetAngle = MathF.Cos(MathHelper.TwoPi * AITimer / 120f) * MathHelper.PiOver2;
-            Vector2 burstShootDirection = teslaSphere.SafeDirectionTo(Target.Center).RotatedBy(burstOffsetAngle);
-            Vector2 burstSpawnPosition = teslaSphere.Center + burstShootDirection * teslaSphere.width * Main.rand.NextFloat(0.1f);
-            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), burstSpawnPosition, burstShootDirection * 42f, ModContent.ProjectileType<HomingTeslaBurst>(), TeslaBurstDamage, 0f);
         }
 
         public void AimedLaserBurstsHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
@@ -162,6 +156,17 @@ namespace WoTM.Content.NPCs.ExoMechs
                 energy.Spawn();
 
                 handNPC.velocity -= handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection * 2f + Main.rand.NextVector2Circular(0.5f, 0.5f);
+
+                // Attempt to aim at the target.
+                // This doesn't use hand.RotateToLookAt because that changes the spriteDirection of the cannon.
+                // For most cases this looks natural, but when a laser is being fired from the cannon it's super important that it never "jump" in terms of position.
+                // By locking the spriteDirection in place and just rotating normally, this issue is avoided.
+                float cannonTurnSpeed = Utilities.InverseLerp(0f, 45f, relativeTimer - AimedLaserBursts_CannonChargeUpTime) * 0.085f;
+                float idealCannonRotation = handNPC.AngleTo(Target.Center);
+                if (handNPC.spriteDirection == -1)
+                    idealCannonRotation += MathHelper.Pi;
+
+                handNPC.rotation = handNPC.rotation.AngleLerp(idealCannonRotation, cannonTurnSpeed);
             }
         }
 

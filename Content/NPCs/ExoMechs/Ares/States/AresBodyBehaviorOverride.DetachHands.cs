@@ -16,7 +16,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 InstructionsForHands[i] = new(h => DetachHandsUpdate(h, copyForDelegate));
             }
 
-            if (AITimer >= 40)
+            if (AITimer >= 45)
             {
                 CurrentState = Main.rand.NextBool() ? AresAIState.AimedLaserBursts : AresAIState.NukeAoEAndPlasmaBlasts;
                 AITimer = 0;
@@ -30,6 +30,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity - 0.025f);
             handNPC.velocity.X *= 0.92f;
             handNPC.velocity.Y += 0.36f;
+            if (handNPC.velocity.Y < 0f)
+                handNPC.velocity.Y *= 0.9f;
 
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();

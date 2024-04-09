@@ -41,7 +41,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(1.85f);
+        public static int Lifetime => Utilities.SecondsToFrames(2.2f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -74,6 +74,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Vector2 ownerCannonEnd = Owner.Center + new Vector2(Owner.spriteDirection * 74f, 16f).RotatedBy(Owner.rotation);
             Projectile.Center = ownerCannonEnd;
+            Projectile.velocity = Owner.rotation.ToRotationVector2() * Owner.spriteDirection;
 
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 6000;
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 167f, 0f, MaxLaserbeamLength);
@@ -122,7 +123,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float widthPulsation = MathF.Cos(completionRatio * 100f - Main.GlobalTimeWrappedHourly * 50f) * 1.85f;
             float initialBulge = Utilities.Convert01To010(Utilities.InverseLerp(0.15f, 0.85f, LaserbeamLength / MaxLaserbeamLength)) * Utilities.InverseLerp(0f, 0.05f, completionRatio) * 32f;
             float idealWidth = widthPulsation + initialBulge + 14f - Utilities.InverseLerp(0.05f, 0f, completionRatio) * 4f;
-            float closureInterpolant = Utilities.InverseLerp(0f, 10f, Lifetime - Time);
+            float closureInterpolant = Utilities.InverseLerp(0f, 8f, Lifetime - Time);
             return Utils.Remap(LaserbeamLength, 0f, MaxLaserbeamLength, 4f, idealWidth) * closureInterpolant;
         }
 
