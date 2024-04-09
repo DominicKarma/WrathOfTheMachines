@@ -125,6 +125,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             binaryWriter.Write(ZPosition);
             binaryWriter.Write(AITimer);
             binaryWriter.Write((int)CurrentState);
+
+            binaryWriter.WriteVector2(AimedLaserBursts_AimOffset);
         }
 
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
@@ -136,6 +138,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             ZPosition = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
             CurrentState = (AresAIState)binaryReader.ReadInt32();
+
+            AimedLaserBursts_AimOffset = binaryReader.ReadVector2();
         }
 
         public override void AI()
