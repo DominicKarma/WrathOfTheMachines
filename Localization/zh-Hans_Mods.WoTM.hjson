@@ -47,7 +47,7 @@ NPCs: {
                 Interjection2_Undamaged: 你看起来没有受到任何伤害。
                 Interjection2_Error: 该文本不应显示。
                 Interjection3: 不错的成果。
-                Interjection4: We shall now reset the variables to their controls for the next phase of testing.
+                Interjection4: 现在，为下一阶段的测试，我们将重置其控制系统的变量。
         }
 
         ThanatosRename: XM-04“哈迪斯”
