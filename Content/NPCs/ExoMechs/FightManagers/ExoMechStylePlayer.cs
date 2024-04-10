@@ -82,9 +82,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 float hitsWeight = Utilities.Saturate(1f - (HitCount - 2f) / 13f);
                 float buffsWeight = Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
                 float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
-                float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.14f);
+                float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
 
-                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.27f) * 0.3f;
+                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.2f) * 0.3f;
 
                 return Utilities.Saturate(unclampedStyle);
             }
@@ -102,6 +102,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // This is necessary to ensure that plugging 1 into the equation returns exactly 1.
             float correctionCoefficient = MathF.Atanh(1f / maxValue);
+
             return maxValue * MathF.Tanh(correctionCoefficient * x);
         }
 
