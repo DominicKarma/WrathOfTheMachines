@@ -17,6 +17,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int MineDamage => Main.expertMode ? 350 : 250;
 
         /// <summary>
+        /// How many mine barrages Hades should do during his MineBarrages attack.
+        /// </summary>
+        public static int MineBarrages_BarrageCount => 2;
+
+        /// <summary>
         /// How long Hades spends redirecting before releasing mines during the MineBarrages attack.
         /// </summary>
         public static int MineBarrages_RedirectTime => Utilities.SecondsToFrames(2.5f);
@@ -36,8 +41,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void DoBehavior_MineBarrages()
         {
-            BodyBehaviorAction = new(EveryNthSegment(4), OpenSegment());
-
             int wrappedTimer = AITimer % MineBarrages_AttackCycleTime;
             if (wrappedTimer < MineBarrages_RedirectTime)
             {
@@ -47,6 +50,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Vector2 newDirection = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), 0.03f).SafeNormalize(Vector2.UnitY);
                     NPC.velocity = newDirection * newSpeed;
                 }
+
+                BodyBehaviorAction = new(EveryNthSegment(4), OpenSegment());
             }
             else
             {
@@ -57,6 +62,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 BodyBehaviorAction = new(EveryNthSegment(2), DoBehavior_MineBarrages_FireMine);
             }
+
+            if (AITimer >= MineBarrages_BarrageCount * MineBarrages_AttackCycleTime)
+                SelectNextAttack();
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }

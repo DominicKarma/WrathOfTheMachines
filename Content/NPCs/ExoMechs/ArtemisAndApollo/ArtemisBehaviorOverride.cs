@@ -231,6 +231,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 NPC.realLife = CalamityGlobalNPC.draedonExoMechTwinGreen;
                 NPC.life = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].life;
+                if (Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
+                    Inactive = apollo.Inactive;
             }
             else
                 NPC.active = false;
@@ -243,6 +245,20 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 thrusterPosition = NPC.Center - NPC.rotation.ToRotationVector2() * NPC.scale * 34f + NPC.velocity;
             ModContent.GetInstance<HeatDistortionMetaball>().CreateParticle(thrusterPosition, Main.rand.NextVector2Circular(8f, 8f), ThrusterBoost * 60f + 108f, 16f);
 
+            PerformPreUpdateResets();
+
+            AITimer++;
+        }
+
+        /// <summary>
+        /// Resets various things pertaining to the fight state prior to behavior updates.
+        /// </summary>
+        /// <remarks>
+        /// This serves as a means of ensuring that changes to the fight state are gracefully reset if something suddenly changes, while affording the ability to make changes during updates.<br></br>
+        /// As a result, this alleviates behaviors AI states from the burden of having to assume that they may terminate at any time and must account for that to ensure that the state is reset.
+        /// </remarks>
+        public void PerformPreUpdateResets()
+        {
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
@@ -252,8 +268,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!Inactive)
                 NPC.Opacity = 1f;
             NPC.Calamity().ShouldCloseHPBar = Inactive;
+            NPC.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.Nothing;
             NPC.damage = 0;
-            AITimer++;
         }
 
         public void UpdateEngineSound()
@@ -269,10 +285,12 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 s.Volume = (Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
                 s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+                if (Inactive)
+                    s.Volume *= 0.01f;
             });
         }
 
-        public static void HitEffect(ModNPC artemis)
+        public static void HitEffectOverride(ModNPC artemis)
         {
             NPC npc = artemis.NPC;
 
@@ -315,7 +333,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ILCursor cursor = new(context);
 
             cursor.Emit(OpCodes.Ldarg_0);
-            cursor.EmitDelegate(HitEffect);
+            cursor.EmitDelegate(HitEffectOverride);
             cursor.Emit(OpCodes.Ret);
         }
 

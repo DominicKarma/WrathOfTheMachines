@@ -57,6 +57,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static Vector2 LargeTeslaOrbBlast_BaseOrbOffset => Vector2.UnitY * 360f;
 
+        /// <summary>
+        /// AI update loop method for the LargeTeslaOrbBlast attack.
+        /// </summary>
         public void DoBehavior_LargeTeslaOrbBlast()
         {
             // Create the tesla sphere at first.

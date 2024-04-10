@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CalamityMod;
 using CalamityMod.NPCs;
+using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -24,6 +25,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             DetachHands,
             NukeAoEAndPlasmaBlasts,
             AimedLaserBursts,
+            Inactive,
+            ReturnToBeingActive
         }
 
         /// <summary>
@@ -122,6 +125,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             binaryWriter.Write(ZPosition);
             binaryWriter.Write(AITimer);
             binaryWriter.Write((int)CurrentState);
+
+            binaryWriter.WriteVector2(AimedLaserBursts_AimOffset);
         }
 
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
@@ -133,6 +138,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             ZPosition = binaryReader.ReadSingle();
             AITimer = binaryReader.ReadInt32();
             CurrentState = (AresAIState)binaryReader.ReadInt32();
+
+            AimedLaserBursts_AimOffset = binaryReader.ReadVector2();
         }
 
         public override void AI()
@@ -140,6 +147,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands ??= new HandInstructions[ArmCount];
             if (Main.netMode != NetmodeID.MultiplayerClient && !HasCreatedArms)
                 CreateArms();
+
+            if (Inactive && CurrentState != AresAIState.Inactive)
+            {
+                CurrentState = AresAIState.Inactive;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
 
             PerformPreUpdateResets();
             ExecuteCurrentState();
@@ -213,6 +227,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
             NPC.immortal = true;
+            NPC.As<AresBody>().SecondaryAIState = (int)AresBody.SecondaryPhase.Nothing;
 
             CalamityGlobalNPC.draedonExoMechPrime = NPC.whoAmI;
         }
@@ -222,6 +237,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
+            NPC.life = 1;
+
             switch (CurrentState)
             {
                 case AresAIState.LargeTeslaOrbBlast:
@@ -235,6 +252,12 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case AresAIState.AimedLaserBursts:
                     DoBehavior_AimedLaserBursts();
+                    break;
+                case AresAIState.Inactive:
+                    DoBehavior_Inactive();
+                    break;
+                case AresAIState.ReturnToBeingActive:
+                    DoBehavior_ReturnToBeingActive();
                     break;
             }
         }
@@ -272,6 +295,35 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.ResetToDefault();
 
             return false;
+        }
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (NPC.life <= 0 && Main.netMode != NetmodeID.Server)
+            {
+                Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
+
+                // Left body shell.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, -Vector2.UnitX.RotatedByRandom(0.7f) * 5f, calamity.Find<ModGore>("AresBody1").Type, NPC.scale);
+
+                // Helmet.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, -Vector2.UnitY.RotatedByRandom(0.12f) * 6f, calamity.Find<ModGore>("AresBody2").Type, NPC.scale);
+
+                // Skull.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, -Vector2.UnitY.RotatedByRandom(0.12f) * 6f, calamity.Find<ModGore>("AresBody3").Type, NPC.scale);
+
+                // Dismantled, upper ribcage.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Vector2.UnitY.RotatedByRandom(0.12f) * 4f, calamity.Find<ModGore>("AresBody4").Type, NPC.scale);
+
+                // Core.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2CircularEdge(4f, 4f), calamity.Find<ModGore>("AresBody5").Type, NPC.scale);
+
+                // Lower body shell.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Vector2.UnitY.RotatedByRandom(0.12f) * 4f, calamity.Find<ModGore>("AresBody6").Type, NPC.scale);
+
+                // Dismantled, lower ribcage.
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Vector2.UnitY.RotatedByRandom(0.12f) * 4f, calamity.Find<ModGore>("AresBody7").Type, NPC.scale);
+            }
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -8,12 +7,26 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed partial class HadesHeadBehaviorOverride : NPCBehaviorOverride
     {
+        /// <summary>
+        /// How far along Hades is with his firing animation during his ContinuousLaserBarrage attack.
+        /// </summary>
         public float ContinuousLaserBarrage_FireCompletion => Utilities.InverseLerp(0f, ContinuousLaserBarrage_ShootTime, AITimer - ContinuousLaserBarrage_TelegraphTime);
+
+        /// <summary>
+        /// How many barrages Hades has done so far for his ContinuousLaserBarrage attack.
+        /// </summary>
+        public ref float ContinuousLaserBarrage_BarrageCounter => ref NPC.ai[0];
+
+        /// <summary>
+        /// How many barrages Hades should perform during his ContinuousLaserBarrage attack.
+        /// </summary>
+        public static int ContinuousLaserBarrage_BarrageCount => 2;
 
         /// <summary>
         /// How long Hades spends telegraphing and moving around during his ContinuousLaserBarrage attack.
@@ -38,7 +51,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How close one of Hades' segments has to be to a target in order to fire.
         /// </summary>
-        public static float ContinuousLaserBarrage_ShootProximityRequirement => 1085f;
+        public static float ContinuousLaserBarrage_ShootProximityRequirement => 3985f;
 
         /// <summary>
         /// AI update loop method for the ContinuousLaserBarrage attack.
@@ -89,7 +102,13 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void DoBehavior_ContinuousLaserBarrage_FireProjectiles()
         {
             if (ContinuousLaserBarrage_FireCompletion >= 1f)
+            {
                 AITimer = 0;
+                ContinuousLaserBarrage_BarrageCounter++;
+                if (ContinuousLaserBarrage_BarrageCounter >= ContinuousLaserBarrage_BarrageCount)
+                    SelectNextAttack();
+                NPC.netUpdate = true;
+            }
 
             BodyBehaviorAction = new(AllSegments(), new(behaviorOverride =>
             {

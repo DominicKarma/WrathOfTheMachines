@@ -24,12 +24,24 @@ namespace WoTM.Content.NPCs.ExoMechs
             set;
         }
 
+        /// <summary>
+        /// How long it takes for the siren blare to appear.
+        /// </summary>
         public static int SirenDelay => Utilities.SecondsToFrames(1.5f);
 
+        /// <summary>
+        /// How long the siren blare spends fading in.
+        /// </summary>
         public static int SirenFadeInTime => Utilities.SecondsToFrames(0.9f);
 
+        /// <summary>
+        /// How long Draedon waits before summoning the first Exo Mech.
+        /// </summary>
         public static int ExoMechSummonDelay => Utilities.SecondsToFrames(5f);
 
+        /// <summary>
+        /// How long the cargo plane spends flying overhead.
+        /// </summary>
         public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.2f);
 
         public static readonly SoundStyle SirenSound = new("WoTM/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");

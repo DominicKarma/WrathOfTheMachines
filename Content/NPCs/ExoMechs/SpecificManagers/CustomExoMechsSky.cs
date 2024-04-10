@@ -5,14 +5,28 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent;
+using Terraria.Audio;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Assets;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsSky : CustomSky
     {
+        public class LightningData
+        {
+            public float Brightness;
+
+            public Vector2 LightningPosition;
+
+            public void Update()
+            {
+                Brightness = Utilities.Saturate(Brightness * 0.99f - 0.003f);
+            }
+        }
+
         private bool skyActive;
 
         /// <summary>
@@ -34,6 +48,20 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The offset of clouds.
+        /// </summary>
+        public static Vector2 CloudOffset
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The lightning instances.
+        /// </summary>
+        public static readonly LightningData[] Lightning = new LightningData[10];
+
+        /// <summary>
         /// The identifier key for this sky.
         /// </summary>
         public const string SkyKey = "WoTM:ExoMechsSky";
@@ -52,13 +80,26 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // Increase or decrease the opacity of this sky based on whether it's active or not, stopping at 0-1 bounds.
-            Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.02f, 0f, maxSkyOpacity);
+            Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.005f, 0f, maxSkyOpacity);
 
             // Prevent drawing beyond the back layer.
-            if (maxDepth >= float.MaxValue)
+            if (maxDepth >= float.MaxValue || minDepth < float.MaxValue)
+            {
+                Matrix backgroundMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
+                Vector3 translationDirection = new(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? -1f : 1f, 1f);
+                backgroundMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation * translationDirection;
+
+                // Draw clouds.
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
                 DrawGreySky();
 
-            if (minDepth <= float.MinValue)
+                // Return to standard drawing.
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
+            }
+
+            if (maxDepth < float.MaxValue || minDepth >= float.MaxValue)
             {
                 PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
                 {
@@ -69,13 +110,69 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public static void DrawGreySky()
         {
-            Vector2 scale = new(Main.screenWidth * 1.1f / TextureAssets.MagicPixel.Value.Width, Main.screenHeight * 1.1f / TextureAssets.MagicPixel.Value.Height);
-            Vector2 screenArea = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f;
-            Color drawColor = new Color(0.05f, 0.05f, 0.05f) * Opacity;
-            Vector2 origin = TextureAssets.MagicPixel.Value.Size() * 0.5f;
+            for (int i = 0; i < Lightning.Length; i++)
+            {
+                Lightning[i] ??= new();
 
-            // Draw a grey background as base.
-            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, screenArea, null, drawColor, 0f, origin, scale, SpriteEffects.None, 0f);
+                if (!Main.gamePaused)
+                    Lightning[i].Update();
+            }
+
+            if (Main.rand.NextBool(600))
+                CreateLightning();
+
+            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+
+            if (!Main.gamePaused)
+                CloudOffset -= Vector2.UnitX * (float)Main.dayRate * 0.001f;
+
+            float[] lightningIntensities = new float[Lightning.Length];
+            Vector2[] lightningPositions = new Vector2[Lightning.Length];
+            for (int i = 0; i < lightningIntensities.Length; i++)
+            {
+                lightningIntensities[i] = Lightning[i].Brightness;
+                lightningPositions[i] = Lightning[i].LightningPosition;
+            }
+
+            ManagedShader cloudShader = ShaderManager.GetShader("WoTM.ExoMechCloudShader");
+            cloudShader.TrySetParameter("screenSize", screenSize);
+            cloudShader.TrySetParameter("invertedGravity", Main.LocalPlayer.gravDir == -1f);
+            cloudShader.TrySetParameter("sunPosition", new Vector3(screenSize.X * 0.5f, screenSize.Y * 0.7f, -600f));
+            cloudShader.TrySetParameter("worldPosition", Main.screenPosition);
+            cloudShader.TrySetParameter("parallax", new Vector2(0.3f, 0.175f) * Main.caveParallax);
+            cloudShader.TrySetParameter("cloudDensity", Opacity * 0.6f);
+            cloudShader.TrySetParameter("horizontalOffset", CloudOffset.X);
+            cloudShader.TrySetParameter("cloudExposure", 0.7f);
+            cloudShader.TrySetParameter("pixelationFactor", 4f);
+            cloudShader.TrySetParameter("lightningIntensities", lightningIntensities);
+            cloudShader.TrySetParameter("lightningPositions", lightningPositions);
+            cloudShader.Apply();
+
+            Texture2D cloud = NoiseTexturesRegistry.CloudDensityMap.Value;
+            Vector2 drawPosition = screenSize * 0.5f;
+            Vector2 skyScale = screenSize / cloud.Size();
+            Main.spriteBatch.Draw(cloud, drawPosition, null, new Color(48, 57, 70), 0f, cloud.Size() * 0.5f, skyScale, 0, 0f);
+        }
+
+        public static void CreateLightning()
+        {
+            if (Main.netMode == NetmodeID.Server || Main.gamePaused)
+                return;
+
+            SoundEngine.PlaySound(SoundID.Thunder);
+
+            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+            Vector2 lightningPosition = new Vector2(Main.rand.NextFloat(0.2f, 0.8f), Main.rand.NextFloat(-0.07f, -0.02f)) * screenSize;
+
+            for (int i = 0; i < Lightning.Length; i++)
+            {
+                if (Lightning[i].Brightness < 0.02f)
+                {
+                    Lightning[i].Brightness = 1f;
+                    Lightning[i].LightningPosition = lightningPosition;
+                    break;
+                }
+            }
         }
 
         public override void Update(GameTime gameTime)

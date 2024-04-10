@@ -19,6 +19,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             AppearAsHologram,
             StartingMonologue,
             ExoMechSpawnAnimation,
+            MoveAroundDuringBattle,
+
             FirstInterjection
         }
 
@@ -135,11 +137,16 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case DraedonAIState.ExoMechSpawnAnimation:
                     DoBehavior_ExoMechSpawnAnimation();
                     break;
+                case DraedonAIState.MoveAroundDuringBattle:
+                    DoBehavior_MoveAroundDuringBattle();
+                    break;
                 case DraedonAIState.FirstInterjection:
                     DoBehavior_FirstInterjection();
                     break;
             }
 
+            if (AIState != DraedonAIState.FirstInterjection)
+                Main.LocalPlayer.statLife = 8;
             Lighting.AddLight(NPC.Center, Vector3.One * 0.76f);
 
             // Stay within the world.

@@ -80,12 +80,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Creates and registers a new phase for the Exo Mechs fight.
         /// </summary>
         /// <param name="phaseOrdering">The ordering of the phase definition. This governs when this phase should be entered, relative to all other phases.</param>
-        /// <param name="condition">The phase transition condition.</param>
+        /// <param name="phaseStartingCondition">The phase transition condition.</param>
         /// <param name="onStart">An optional action to perform when the phase is started.</param>
         /// <returns>The newly created phase.</returns>
-        internal static PhaseDefinition CreateNewPhase(int phaseOrdering, PhaseTransitionCondition condition, Action<ExoMechFightState>? onStart = null)
+        internal static PhaseDefinition CreateNewPhase(int phaseOrdering, PhaseTransitionCondition phaseStartingCondition, Action<ExoMechFightState>? onStart = null)
         {
-            PhaseDefinition phase = new(phaseOrdering, true, condition, onStart);
+            PhaseDefinition phase = new(phaseOrdering, true, phaseStartingCondition, onStart);
             ExoMechPhases.Add(phase);
             return phase;
         }
@@ -112,6 +112,11 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
+            DraedonBehaviorOverride.DraedonAIState? draedonState = null;
+            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<Draedon>());
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehaviorOverride behavior))
+                draedonState = behavior.AIState;
+
             // Determine the overall fight state.
             ExoMechState[] stateOfOtherExoMechs = new ExoMechState[evaluatedMechs.Count];
             for (int i = 0; i < evaluatedMechs.Count; i++)
@@ -122,7 +127,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 stateOfOtherExoMechs[i] = ExoMechStateFromNPC(otherExoMech, exoMechWasSummonedAtOnePoint);
             }
-            FightState = new(ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
+            FightState = new(draedonState, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
 
             AnyExoMechsPresent = true;
         }
