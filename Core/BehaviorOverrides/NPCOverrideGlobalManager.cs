@@ -59,6 +59,23 @@ namespace WoTM
             BehaviorOverride?.ModifyTypeName(ref typeName);
         }
 
+        public override bool PreKill(NPC npc)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return true;
+
+            BehaviorOverride?.OnKill();
+            return true;
+        }
+
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.ModifyNPCLoot(npcLoot);
+        }
+
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter) => BehaviorOverride?.SendExtraAI(bitWriter, binaryWriter);
 
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader) => BehaviorOverride?.ReceiveExtraAI(bitReader, binaryReader);

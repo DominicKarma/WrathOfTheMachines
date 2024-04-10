@@ -2,6 +2,9 @@
 using System.IO;
 using System.Reflection;
 using CalamityMod;
+using CalamityMod.Items.TreasureBags;
+using CalamityMod.Items.Weapons.Ranged;
+using CalamityMod.Items.Weapons.Rogue;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
@@ -335,6 +338,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.EmitDelegate(HitEffectOverride);
             cursor.Emit(OpCodes.Ret);
+        }
+
+        public override void OnKill()
+        {
+            DropHelper.BlockDrops(ModContent.ItemType<TheAtomSplitter>(), ModContent.ItemType<SurgeDriver>(), ModContent.ItemType<DraedonBag>());
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)

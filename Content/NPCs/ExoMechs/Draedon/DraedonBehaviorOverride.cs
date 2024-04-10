@@ -23,6 +23,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             FirstInterjection,
             SecondInterjection,
+            PostBattleInterjection
         }
 
         public Player PlayerToFollow => Main.player[NPC.target];
@@ -69,7 +70,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Draedon typically waits between spoken dialogue.
         /// </summary>
-        public static readonly int StandardSpeakTime = Utilities.SecondsToFrames(2f);
+        public static readonly int StandardSpeakTime = Utilities.SecondsToFrames(2.75f);
 
         /// <summary>
         /// Draedon's starting monologue. This is spoken the first time the player interacts with him.

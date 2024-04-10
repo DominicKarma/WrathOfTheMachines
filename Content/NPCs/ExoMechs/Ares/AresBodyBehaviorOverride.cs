@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CalamityMod;
+using CalamityMod.Items.TreasureBags;
+using CalamityMod.Items.Weapons.Melee;
+using CalamityMod.Items.Weapons.Ranged;
+using CalamityMod.Items.Weapons.Summon;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Common.Utilities;
@@ -297,6 +301,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.ResetToDefault();
 
             return false;
+        }
+
+        public override void OnKill()
+        {
+            DropHelper.BlockDrops(ModContent.ItemType<AresExoskeleton>(), ModContent.ItemType<PhotonRipper>(), ModContent.ItemType<TheJailor>(), ModContent.ItemType<DraedonBag>());
         }
 
         public override void HitEffect(NPC.HitInfo hit)

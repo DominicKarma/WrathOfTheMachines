@@ -69,6 +69,18 @@ namespace WoTM
         public virtual void AI() { }
 
         /// <summary>
+        /// Allows you to add and modify NPC loot tables to drop on death and to appear in the Bestiary.<br/>
+        /// <br/> This hook only runs once during mod loading, any dynamic behavior must be contained in the rules themselves.
+        /// </summary>
+        /// <param name="npcLoot">A reference to the item drop database for this npc type</param>
+        public virtual void ModifyNPCLoot(NPCLoot npcLoot) { }
+
+        /// <summary>
+        /// Allows you to make things happen when this NPC dies (for example, dropping items and setting ModSystem fields). This hook runs on the server/single player. For client-side effects, such as dust, gore, and sounds, see HitEffect.
+        /// </summary>
+        public virtual void OnKill() { }
+
+        /// <summary>
         /// Allows you to determine the color and transparency in which an NPC is drawn. Return null to use the default color (normally light and buff color). Returns null by default.
         /// </summary>
         /// <param name="drawColor">The base color of the NPC.</param>

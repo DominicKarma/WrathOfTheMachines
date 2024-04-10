@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
 using CalamityMod;
+using CalamityMod.Items.TreasureBags;
+using CalamityMod.Items.Weapons.Melee;
+using CalamityMod.Items.Weapons.Rogue;
+using CalamityMod.Items.Weapons.Summon;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Luminance.Common.Utilities;
@@ -375,6 +379,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="segmentCloseRate">The amount by which the segment open interpolant changes every frame.</param>
         public static BodySegmentAction CloseSegment(float segmentCloseRate = StandardSegmentCloseRate) => OpenSegment(-segmentCloseRate);
+
+        public override void OnKill()
+        {
+            DropHelper.BlockDrops(ModContent.ItemType<SpineOfThanatos>(), ModContent.ItemType<RefractionRotor>(), ModContent.ItemType<AtlasMunitionsBeacon>(), ModContent.ItemType<DraedonBag>());
+        }
 
         public override void ModifyTypeName(ref string typeName)
         {

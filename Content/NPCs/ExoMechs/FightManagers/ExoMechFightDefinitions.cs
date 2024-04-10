@@ -114,7 +114,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             return !state.InitialMechState.Killed && state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
         }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
-
         /// <summary>
         /// The second Draedon interjection, performed after the player kills the second Exo Mech.
         /// </summary>
@@ -138,6 +137,18 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             return state.DraedonState is null || state.DraedonState != DraedonBehaviorOverride.DraedonAIState.SecondInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
+
+        /// <summary>
+        /// The third and final Draedon interjection, performed after the player completes the Exo Mech fight.
+        /// </summary>
+        public static readonly PhaseDefinition DraedonThirdInterjectionPhaseDefinition = CreateNewPhase(10, state =>
+        {
+            return state.TotalKilledMechs >= 3;
+        }, state =>
+        {
+            ClearExoMechProjectiles();
+            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.PostBattleInterjection);
+        });
 
         // NOTE -- Update XML comments if these are changed.
         public static float SummonOtherMechsLifeRatio => 0.7f;
