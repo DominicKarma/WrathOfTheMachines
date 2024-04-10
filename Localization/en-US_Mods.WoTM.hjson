@@ -44,7 +44,7 @@ NPCs: {
 		Interjection2_BluntForceTrauma_Minor: It appears that you have thus far sustained minor blunt force trauma.
 		Interjection2_BluntForceTrauma_Major: It appears that you have thus far sustained major blunt force trauma.
 		Interjection2_BluntForceTrauma_NearLethal: It appears that you have thus far sustained near-lethal blunt force trauma.
-		Interjection2_Undamaged: It appears that you have not sustained any damage.
+		Interjection2_Undamaged: It appears that you have not sustained any damage. Fascinating.
 		Interjection2_Error: This text should not be displayed.
 		Interjection3: These results are excellent.
 		Interjection4: We shall now reset the variables to their controls for the next phase of testing.
