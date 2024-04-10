@@ -9,6 +9,10 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public class CustomExoMechsSkyScene : ModSceneEffect
     {
+        public override SceneEffectPriority Priority => SceneEffectPriority.BossHigh;
+
+        public override float GetWeight(Player player) => 0.85f;
+
         public override bool IsSceneEffectActive(Player player) => (NPC.AnyNPCs(ModContent.NPCType<Draedon>()) || ExoMechFightStateManager.AnyExoMechsPresent) && !InfernumModeCompatibility.InfernumModeIsActive;
 
         public override void Load()
