@@ -82,7 +82,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             PlaneFlyForwardInterpolant = Utilities.InverseLerp(0f, ExoMechPlaneFlyTime, AITimer - ExoMechSummonDelay);
             CustomExoMechsSky.RedSirensIntensity = MathF.Pow(Utilities.Sin01(MathHelper.TwoPi * (AITimer - SirenDelay) / 240f), 0.7f) * (1f - PlaneFlyForwardInterpolant) * 0.7f;
 
-            if (AITimer == ExoMechPlaneFlyTime + ExoMechSummonDelay - 2f)
+            if (AITimer == ExoMechPlaneFlyTime + ExoMechSummonDelay - 2f - (CalamityWorld.DraedonMechToSummon == ExoMech.Prime ? 12f : 0f))
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -93,7 +93,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                             CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<ThanatosHead>());
                             break;
                         case ExoMech.Prime:
-                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<AresBody>());
+                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition + Vector2.UnitY * 1600f, ModContent.NPCType<AresBody>());
                             break;
                         case ExoMech.Twins:
                             CalamityUtils.SpawnBossBetter(exoMechSpawnPosition - Vector2.UnitX * 350f, ModContent.NPCType<Artemis>());
