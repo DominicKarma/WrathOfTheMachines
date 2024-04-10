@@ -50,6 +50,11 @@ NPCs: {
 		Interjection4: We shall now reset the variables to their controls for the next phase of testing.
 		Interjection5: Now, prepare yourself.
 		Interjection6: My remaining machines shall return shortly.
+		Interjection7: Marvelous.
+		Interjection8: The data you have provided me thus far has been invaluable.
+		Interjection9: Now, it is time for the final phase of testing.
+		Interjection10: I have instructed my last machine to operate at maximum firepower.
+		Interjection11: Good luck.
 	}
 
 	ThanatosRename: XM-04 Hades

@@ -45,14 +45,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // Reset the variables to their controls by healing the player.
             if (speakTimer == monologue[4].SpeakDelay - 60)
-            {
-                if (Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
-                    Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
-                Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax2;
-
-                ScreenShakeSystem.StartShake(3f);
-                SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
-            }
+                HealPlayer();
 
             if (speakTimer == monologue.OverallDuration - 60)
             {
@@ -68,6 +61,19 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             PerformStandardFraming();
+        }
+
+        /// <summary>
+        /// Heals the player.
+        /// </summary>
+        public static void HealPlayer()
+        {
+            if (Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
+                Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
+            Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax2;
+
+            ScreenShakeSystem.StartShake(3f);
+            SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
         }
 
         /// <summary>

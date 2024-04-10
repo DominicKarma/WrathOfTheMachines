@@ -21,7 +21,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             ExoMechSpawnAnimation,
             MoveAroundDuringBattle,
 
-            FirstInterjection
+            FirstInterjection,
+            SecondInterjection,
         }
 
         public Player PlayerToFollow => Main.player[NPC.target];
@@ -142,6 +143,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case DraedonAIState.FirstInterjection:
                     DoBehavior_FirstInterjection();
+                    break;
+                case DraedonAIState.SecondInterjection:
+                    DoBehavior_SecondInterjection();
                     break;
             }
 
