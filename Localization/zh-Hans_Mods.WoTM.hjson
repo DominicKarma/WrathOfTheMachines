@@ -14,6 +14,7 @@ Projectiles: {
 	TeslaArc.DisplayName: 特斯拉电弧
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
+	// DraedonLootCrate.DisplayName: Draedon Loot Crate
 }
 
 NPCs: {

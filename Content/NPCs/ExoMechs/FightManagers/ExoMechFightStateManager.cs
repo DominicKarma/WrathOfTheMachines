@@ -104,14 +104,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         private static void CalculateFightState()
         {
+            bool checkForPrimaryMech = false;
             List<int> evaluatedMechs = [];
             foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
+            {
                 evaluatedMechs.Add(exoMechID);
+                if (NPC.AnyNPCs(exoMechID))
+                    checkForPrimaryMech = true;
+            }
 
             // Search for the primary mech. If one doesn't exist (such as a result of summoning an Exo Mech with a cheat mod) simply make the first one found into the primary mech.
             if (TryFindPrimaryMech(out NPC? primaryMech))
                 evaluatedMechs.Remove(primaryMech!.type);
-            else
+            else if (checkForPrimaryMech)
             {
                 MakeFirstExoMechIntoPrimaryMech();
                 return;
@@ -200,7 +205,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             bool hadesIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.HadesHeadID);
             bool aresIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.AresBodyID);
             bool artemisAndApolloArePresent = NPC.AnyNPCs(ExoMechNPCIDs.ArtemisID) || NPC.AnyNPCs(ExoMechNPCIDs.ApolloID);
-            bool fightIsOngoing = hadesIsPresent || aresIsPresent || artemisAndApolloArePresent;
+            bool draedonIsPresent = NPC.AnyNPCs(ModContent.NPCType<Draedon>());
+            bool fightIsOngoing = hadesIsPresent || aresIsPresent || artemisAndApolloArePresent || draedonIsPresent;
             if (!fightIsOngoing)
             {
                 ResetBattleState();
