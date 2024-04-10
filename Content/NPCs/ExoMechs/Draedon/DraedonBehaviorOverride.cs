@@ -145,8 +145,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
             }
 
-            if (AIState != DraedonAIState.FirstInterjection)
-                Main.LocalPlayer.statLife = 8;
             Lighting.AddLight(NPC.Center, Vector3.One * 0.76f);
 
             // Stay within the world.

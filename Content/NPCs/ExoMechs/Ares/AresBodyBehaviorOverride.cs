@@ -237,8 +237,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void ExecuteCurrentState()
         {
-            NPC.life = 1;
-
             switch (CurrentState)
             {
                 case AresAIState.LargeTeslaOrbBlast:
