@@ -79,12 +79,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             get
             {
                 int fightDuration = PhaseDurations.Sum(kv => kv.Value);
-                float hitsWeight = SmoothClamp(1f - (HitCount - 2f) / 13f, 1.1f);
-                float buffsWeight = SmoothClamp(1f - (BuffCount - 11f) / 9f, 1.1f);
-                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration);
-                float fightTimeWeight = MathF.Pow(fightTimeInterpolant, 1.67f);
+                float hitsWeight = Utilities.Saturate(1f - (HitCount - 2f) / 13f);
+                float buffsWeight = Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
+                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
+                float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.14f);
 
-                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.3f) * 0.3f;
+                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.27f) * 0.3f;
 
                 return Utilities.Saturate(unclampedStyle);
             }
