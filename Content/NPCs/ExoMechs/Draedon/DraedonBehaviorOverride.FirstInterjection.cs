@@ -23,7 +23,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How much damage needs to be incurred by a given <see cref="ExoMechDamageSource"/> in order for the damage to be considered major.
         /// </summary>
-        public const int MajorDamageThreshold = 500;
+        public const int MajorDamageThreshold = 1000;
 
         /// <summary>
         /// The AI method that makes Draedon speak to the player after an Exo Mech has been defeated.
