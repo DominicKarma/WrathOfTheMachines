@@ -75,7 +75,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static string SelectInterjectionText()
         {
-            Player closest = Main.player[Player.FindClosest(Main.LocalPlayer.Center, 1, 1)];
+            Player closest = Main.player[Player.FindClosest(new Vector2(Main.maxTilesX * 0.5f, (float)Main.worldSurface) * 16f, 1, 1)];
 
             if (!closest.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
                 return "Interjection2_Error";
