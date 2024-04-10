@@ -35,9 +35,9 @@ NPCs: {
 		Interjection2_Plasma_Minor: It appears that you have thus far sustained minor plasma burns.
 		Interjection2_Plasma_Major: It appears that you have thus far sustained major plasma burns.
 		Interjection2_Plasma_NearLethal: It appears that you have thus far sustained near-lethal plasma burns.
-		Interjection2_Electricity_Minor: It appears that you have thus far sustained minor nerve damage from electric forces.
-		Interjection2_Electricity_Major: It appears that you have thus far sustained major nerve damage from electric forces.
-		Interjection2_Electricity_NearLethal: It appears that you have thus far sustained near-lethal nerve damage from electric forces.
+		Interjection2_Electricity_Minor: It appears that you have thus far sustained minor nerve damage from electric shocks.
+		Interjection2_Electricity_Major: It appears that you have thus far sustained major nerve damage from electric shocks.
+		Interjection2_Electricity_NearLethal: It appears that you have thus far sustained near-lethal nerve damage from electric shocks.
 		Interjection2_Internal_Minor: It appears that you have thus far sustained minor internal organ damage.
 		Interjection2_Internal_Major: It appears that you have thus far sustained major internal organ damage.
 		Interjection2_Internal_NearLethal: It appears that you have thus far sustained near-lethal internal organ damage.
