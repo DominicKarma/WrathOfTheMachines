@@ -77,7 +77,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static readonly PhaseDefinition DraedonFirstInterjectionPhaseDefinition = CreateNewPhase(5, state =>
         {
             return state.TotalKilledMechs >= 1;
-        }, state => SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection));
+        }, state =>
+        {
+            ClearExoMechProjectiles();
+            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection);
+        });
 
         /// <summary>
         /// The fifth phase definition.
@@ -129,6 +133,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
         {
+            if (leave)
+                ClearExoMechProjectiles();
+
             ApplyToAllExoMechs(npc =>
             {
                 if (npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech && condition(npc, exoMech))

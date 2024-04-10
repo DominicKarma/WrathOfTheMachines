@@ -1,5 +1,5 @@
 ﻿using CalamityMod;
-using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class LingeringPlasmaFireball : ModProjectile, IProjOwnedByBoss<Artemis>, IExoMechProjectile
+    public class LingeringPlasmaFireball : ModProjectile, IProjOwnedByBoss<Apollo>, IExoMechProjectile
     {
         /// <summary>
         /// How long this fireball has existed, in frames.

@@ -3,6 +3,7 @@ using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Skies;
 using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -15,8 +16,10 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class GaussNuke : ModProjectile, IExoMechProjectile
+    public class GaussNuke : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<AresBody>
     {
+        public bool SetActiveFalseInsteadOfKill => true;
+
         public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
 
         /// <summary>

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CalamityMod.NPCs.ExoMechs;
+using CalamityMod.NPCs.ExoMechs.Apollo;
+using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.NPCs.ExoMechs.Thanatos;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.DataStructures;
@@ -311,6 +316,18 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             exoMech.IsPrimaryMech = true;
             npc.netUpdate = true;
+        }
+
+        /// <summary>
+        /// Clears all Exo Mech projectiles.
+        /// </summary>
+        public static void ClearExoMechProjectiles()
+        {
+            IProjOwnedByBoss<AresBody>.KillAll();
+            IProjOwnedByBoss<ThanatosHead>.KillAll();
+            IProjOwnedByBoss<Artemis>.KillAll();
+            IProjOwnedByBoss<Apollo>.KillAll();
+            IProjOwnedByBoss<Draedon>.KillAll();
         }
     }
 }
