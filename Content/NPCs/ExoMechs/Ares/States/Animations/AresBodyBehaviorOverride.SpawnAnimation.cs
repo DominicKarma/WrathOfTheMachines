@@ -11,15 +11,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void DoBehavior_SpawnAnimation()
         {
-            ZPosition = Utilities.InverseLerp(60f, 0f, AITimer).Cubed() * 6f;
-            NPC.Center = Target.Center - Vector2.UnitY * (ZPosition * 60f + 200f);
+            ZPosition = Utilities.InverseLerp(35f, 0f, AITimer).Cubed() * 6f;
+            NPC.Center = Target.Center - Vector2.UnitY * (ZPosition * 20f + 200f);
             NPC.velocity *= 0.6f;
             NPC.dontTakeDamage = true;
             NPC.damage = 0;
 
             BasicHandUpdateWrapper();
 
-            if (AITimer >= 60f)
+            if (AITimer >= 35f)
             {
                 CurrentState = AresAIState.DetachHands;
                 ZPosition = 0f;
