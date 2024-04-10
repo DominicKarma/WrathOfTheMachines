@@ -268,7 +268,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (NPC.AnyNPCs(exoMechID))
                     continue;
 
-                // TODO -- Make the summon animation custom.
                 NPC.NewNPC(new EntitySource_WorldEvent(), (int)toSummonNear.Center.X, (int)toSummonNear.Center.Y - 1000, exoMechID, 1);
             }
         }

@@ -31,7 +31,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             NPC handNPC = hand.NPC;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity - 0.025f);
-            handNPC.velocity.X *= 0.92f;
+            handNPC.velocity.X *= 0.84f;
             handNPC.velocity.Y += 0.36f;
             if (handNPC.velocity.Y < 0f)
                 handNPC.velocity.Y *= 0.9f;
@@ -40,7 +40,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
             hand.Frame = AITimer / 3 % 12;
 
-            hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity * 0.3f);
+            hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity);
             hand.EnergyDrawer.chargeProgress *= 0.7f;
 
             if (handNPC.Opacity <= 0f)

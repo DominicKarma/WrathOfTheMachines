@@ -7,6 +7,7 @@ using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.World;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -81,22 +82,28 @@ namespace WoTM.Content.NPCs.ExoMechs
             PlaneFlyForwardInterpolant = Utilities.InverseLerp(0f, ExoMechPlaneFlyTime, AITimer - ExoMechSummonDelay);
             CustomExoMechsSky.RedSirensIntensity = MathF.Pow(Utilities.Sin01(MathHelper.TwoPi * (AITimer - SirenDelay) / 240f), 0.7f) * (1f - PlaneFlyForwardInterpolant) * 0.7f;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ExoMechPlaneFlyTime + ExoMechSummonDelay - 2f)
+            if (AITimer == ExoMechPlaneFlyTime + ExoMechSummonDelay - 2f)
             {
-                Vector2 exoMechSpawnPosition = PlayerToFollow.Center - Vector2.UnitY * 1900f;
-                switch (CalamityWorld.DraedonMechToSummon)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    case ExoMech.Destroyer:
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<ThanatosHead>());
-                        break;
-                    case ExoMech.Prime:
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<AresBody>());
-                        break;
-                    case ExoMech.Twins:
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition - Vector2.UnitX * 350f, ModContent.NPCType<Artemis>());
-                        CalamityUtils.SpawnBossBetter(exoMechSpawnPosition + Vector2.UnitX * 350f, ModContent.NPCType<Apollo>());
-                        break;
+                    Vector2 exoMechSpawnPosition = PlayerToFollow.Center - Vector2.UnitY * 1900f;
+                    switch (CalamityWorld.DraedonMechToSummon)
+                    {
+                        case ExoMech.Destroyer:
+                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<ThanatosHead>());
+                            break;
+                        case ExoMech.Prime:
+                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition, ModContent.NPCType<AresBody>());
+                            break;
+                        case ExoMech.Twins:
+                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition - Vector2.UnitX * 350f, ModContent.NPCType<Artemis>());
+                            CalamityUtils.SpawnBossBetter(exoMechSpawnPosition + Vector2.UnitX * 350f, ModContent.NPCType<Apollo>());
+                            break;
+                    }
                 }
+
+                SoundEngine.PlaySound(Artemis.ChargeSound);
+                ScreenShakeSystem.StartShake(20f);
             }
         }
     }

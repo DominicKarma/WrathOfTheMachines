@@ -21,6 +21,7 @@ namespace WoTM.Content.NPCs.ExoMechs
     {
         public enum AresAIState
         {
+            SpawnAnimation,
             LargeTeslaOrbBlast,
             DetachHands,
             NukeAoEAndPlasmaBlasts,
@@ -239,6 +240,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             switch (CurrentState)
             {
+                case AresAIState.SpawnAnimation:
+                    DoBehavior_SpawnAnimation();
+                    break;
                 case AresAIState.LargeTeslaOrbBlast:
                     DoBehavior_LargeTeslaOrbBlast();
                     break;
