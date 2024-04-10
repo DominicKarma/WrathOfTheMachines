@@ -231,6 +231,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 NPC.realLife = CalamityGlobalNPC.draedonExoMechTwinGreen;
                 NPC.life = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].life;
+                if (Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
+                    Inactive = apollo.Inactive;
             }
             else
                 NPC.active = false;
@@ -283,6 +285,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 s.Volume = (Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
                 s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+                if (Inactive)
+                    s.Volume *= 0.01f;
             });
         }
 

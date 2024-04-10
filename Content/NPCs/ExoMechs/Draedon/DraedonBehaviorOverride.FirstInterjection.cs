@@ -1,4 +1,5 @@
-﻿using Luminance.Common.Utilities;
+﻿using CalamityMod.NPCs.ExoMechs;
+using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -15,7 +16,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             Add("Interjection1").
             Add(SelectInterjectionText).
             Add("Interjection3").
-            Add("Interjection4");
+            Add("Interjection4").
+            Add("Interjection5").
+            Add("Interjection6", Draedon.TextColorEdgy);
 
         /// <summary>
         /// How much damage needs to be incurred by a given <see cref="ExoMechDamageSource"/> in order for the damage to be considered major.
@@ -40,7 +43,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             bool monologueIsFinished = speakTimer >= monologue.OverallDuration;
 
-            if (speakTimer == monologue.OverallDuration)
+            // Reset the variables to their controls by healing the player.
+            if (speakTimer == monologue[4].SpeakDelay - 60)
             {
                 if (Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
                     Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
@@ -48,6 +52,19 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 ScreenShakeSystem.StartShake(3f);
                 SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
+            }
+
+            if (speakTimer == monologue.OverallDuration - 60)
+            {
+                ScreenShakeSystem.StartShake(6f);
+                SoundEngine.PlaySound(Draedon.LaughSound);
+            }
+
+            if (monologueIsFinished)
+            {
+                AIState = DraedonAIState.MoveAroundDuringBattle;
+                AITimer = 0f;
+                NPC.netUpdate = true;
             }
 
             PerformStandardFraming();

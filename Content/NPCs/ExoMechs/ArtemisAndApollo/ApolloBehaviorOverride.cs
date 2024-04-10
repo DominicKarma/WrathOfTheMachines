@@ -275,6 +275,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 s.Volume = Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
                 s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+                if (Inactive)
+                    s.Volume *= 0.01f;
             });
         }
 

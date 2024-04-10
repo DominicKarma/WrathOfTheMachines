@@ -1,5 +1,7 @@
 ﻿using System;
+using CalamityMod.NPCs.ExoMechs;
 using Terraria;
+using Terraria.ModLoader;
 using static WoTM.Content.NPCs.ExoMechs.ExoMechFightStateManager;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -70,15 +72,23 @@ namespace WoTM.Content.NPCs.ExoMechs
         }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
         /// <summary>
+        /// The first Draedon interjection, performed after the player kills the first Exo Mechs.
+        /// </summary>
+        public static readonly PhaseDefinition DraedonFirstInterjectionPhaseDefinition = CreateNewPhase(5, state =>
+        {
+            return state.TotalKilledMechs >= 1;
+        }, state => SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection));
+
+        /// <summary>
         /// The fifth phase definition.
         /// </summary>
         /// 
         /// <remarks>
         /// During this phase the player fights the two remaining Exo Mechs until one of them reaches 40%.
         /// </remarks>
-        public static readonly PhaseDefinition SecondTwoAtOncePhaseDefinition = CreateNewPhase(5, state =>
+        public static readonly PhaseDefinition SecondTwoAtOncePhaseDefinition = CreateNewPhase(6, state =>
         {
-            return state.TotalKilledMechs >= 1;
+            return state.DraedonState is null || state.DraedonState != DraedonBehaviorOverride.DraedonAIState.FirstInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <remarks>
         /// During this phase the player fights the Exo Mech they brought down to 40% until it dies.
         /// </remarks>
-        public static readonly PhaseDefinition SecondToLastSoloPhaseDefinition = CreateNewPhase(6, state =>
+        public static readonly PhaseDefinition SecondToLastSoloPhaseDefinition = CreateNewPhase(7, state =>
         {
             for (int i = 0; i < state.OtherMechsStates.Length; i++)
             {
@@ -107,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <remarks>
         /// During this phase the player fights the final Exo Mech until it dies.
         /// </remarks>
-        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(7, state =>
+        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(8, state =>
         {
             return state.TotalKilledMechs >= 2;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
@@ -127,6 +137,17 @@ namespace WoTM.Content.NPCs.ExoMechs
                     npc.netUpdate = true;
                 }
             });
+        }
+
+        public static void SetDraedonState(DraedonBehaviorOverride.DraedonAIState state)
+        {
+            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<Draedon>());
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehaviorOverride behavior))
+            {
+                behavior.AIState = state;
+                behavior.AITimer = 0f;
+                Main.npc[draedonIndex].netUpdate = true;
+            }
         }
     }
 }
