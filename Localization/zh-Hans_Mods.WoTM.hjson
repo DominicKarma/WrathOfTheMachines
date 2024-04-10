@@ -2,7 +2,7 @@ Projectiles: {
         ApolloMissile.DisplayName: 等离子导弹
         ArtemisLaserSmall.DisplayName: 小热能激光
         ArtemisLaserImproved.DisplayName: 热能激光
-        CannonLaserbeam.DisplayName: 充能热能死光
+        CannonLaserbeam.DisplayName: 激活热能死光
         GaussNuke.DisplayName: 高斯核弹
         GaussNukeBoom.DisplayName: 热核爆炸
         HadesLaserBurst.DisplayName: 激光脉冲
@@ -35,19 +35,26 @@ NPCs: {
                 Interjection2_Plasma_Minor: 直至目前，你看起来只是受到了轻微的等离子灼伤。
                 Interjection2_Plasma_Major: 直至目前，你看起来已经受到了严重的等离子灼伤。
                 Interjection2_Plasma_NearLethal: 直至目前，你看起来已经受到了近乎致命的等离子灼伤。
-                Interjection2_Electricity_Minor: 直至目前，你看起来只是因电磁受到了轻微的组织损伤。
-                Interjection2_Electricity_Major: 直至目前，你看起来已经因电磁受到了严重的组织损伤。
-                Interjection2_Electricity_NearLethal: 直至目前，你看起来已经因电磁受到了近乎致命的组织损伤。
+                Interjection2_Electricity_Minor: 直至目前，你看起来只是因电击受到了轻微的神经损伤。
+                Interjection2_Electricity_Major: 直至目前，你看起来已经因电击受到了严重的神经损伤。
+                Interjection2_Electricity_NearLethal: 直至目前，你看起来已经因电击受到了近乎致命的神经损伤。
                 Interjection2_Internal_Minor: 直至目前，你看起来只是受到了轻微的内脏损伤。
                 Interjection2_Internal_Major: 直至目前，你看起来已经受到了严重的内脏损伤。
                 Interjection2_Internal_NearLethal: 直至目前，你看起来已经受到了近乎致命的内脏损伤。
                 Interjection2_BluntForceTrauma_Minor: 直至目前，你看起来只是受到了轻微的钝器创伤。
                 Interjection2_BluntForceTrauma_Major: 直至目前，你看起来已经受到了严重的钝器创伤。
                 Interjection2_BluntForceTrauma_NearLethal: 直至目前，你看起来已经受到了近乎致命的钝器创伤。
-                Interjection2_Undamaged: 你看起来没有受到任何伤害。
+                Interjection2_Undamaged: 着实令人着迷，你看起来没有受到任何伤害。
                 Interjection2_Error: 该文本不应显示。
                 Interjection3: 不错的成果。
                 Interjection4: 现在，为下一阶段的测试，我们将重置其控制系统的变量。
+                Interjection5: 现在，做好准备。
+                Interjection6: 我剩余的几台机械很快就会到来。
+                Interjection7: 难以置信。
+                Interjection8: 迄今为止，你给我提供的所有数据均为无价之宝。
+                Interjection9: 现在，是时候进入测试的最终阶段了。
+                Interjection10: 我已经命令我的最后一台机械以最大火力运行。
+                Interjection11: 祝你好运。
         }
 
         ThanatosRename: XM-04“哈迪斯”
