@@ -57,10 +57,11 @@ NPCs: {
 		Interjection10: 我已经命令我的最后一台机械以最大火力运行。
 		Interjection11: 祝你好运。
 		// EndOfBattle_FirstDefeat1: Extraordinary!
-		// EndOfBattle_FirstDefeat2: This outcome has fallen outside the margins of my hypotheses.
-		// EndOfBattle_FirstDefeat3: I must soon depart. There is much to be studied from this encounter. Before that, however...
+		// EndOfBattle_FirstDefeat2: This outcome has fallen far outside the expectations of my hypotheses.
+		// EndOfBattle_FirstDefeat3: I shall soon depart. There is much to be examined from this encounter. Before that, however...
 		// EndOfBattle_FirstDefeat4: Take this, as an extension of gratitude for your time.
 		// EndOfBattle_FirstDefeat5: If you wish to do combat with my machines again, you know how to operate the Codebreaker.
+		// EndOfBattle_FirstDefeat6: Farewell.
 		// EndOfBattle_FirstDefeatReconBodyKill1: Intriguing...
 		// EndOfBattle_FirstDefeatReconBodyKill2: A tempermental disposition is not a data point I had not considered.
 		// EndOfBattle_FirstDefeatReconBodyKill3: Regardless, as I was saying...
