@@ -81,6 +81,13 @@ namespace WoTM
         public virtual void FindFrame(int frameHeight) { }
 
         /// <summary>
+        /// Allows you to make things happen whenever this NPC is hit, such as creating dust or gores. <br/> 
+        /// Called on local, server and remote clients. <br/> 
+        /// Usually when something happens when an NPC dies such as item spawning, you use NPCLoot, but you can use HitEffect paired with a check for <c>if (NPC.life &lt;= 0)</c> to do client-side death effects, such as spawning dust, gore, or death sounds.
+        /// </summary>
+        public virtual void HitEffect(NPC.HitInfo hit) { }
+
+        /// <summary>
         /// Allows you to modify the damage, knockback, etc., that an NPC takes from a projectile.
         /// </summary>
         /// <param name="projectile">The harming projectile.</param>

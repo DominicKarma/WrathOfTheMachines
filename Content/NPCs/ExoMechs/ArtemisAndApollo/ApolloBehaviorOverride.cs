@@ -280,7 +280,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             });
         }
 
-        public static void HitEffect(ModNPC apollo)
+        public static void HitEffectOverride(ModNPC apollo)
         {
             NPC npc = apollo.NPC;
 
@@ -323,7 +323,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ILCursor cursor = new(context);
 
             cursor.Emit(OpCodes.Ldarg_0);
-            cursor.EmitDelegate(HitEffect);
+            cursor.EmitDelegate(HitEffectOverride);
             cursor.Emit(OpCodes.Ret);
         }
 

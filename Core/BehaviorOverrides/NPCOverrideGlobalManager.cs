@@ -79,6 +79,14 @@ namespace WoTM
             return null;
         }
 
+        public override void HitEffect(NPC npc, NPC.HitInfo hit)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.HitEffect(hit);
+        }
+
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (InfernumModeCompatibility.InfernumModeIsActive)

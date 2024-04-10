@@ -13,27 +13,32 @@ namespace WoTM.Content.NPCs.ExoMechs
     /// <param name="TotalHorizontalFrames">The amount of horizontal frames on the texture's sheet.</param>
     /// <param name="TotalVerticalFrames">The amount of vertical frames on the texture's sheet.</param>
     /// <param name="EnergyTelegraphColor">The color of energy particles generated prior to attacking via the <see cref="AresCannonChargeParticleSet"/>.</param>
-    public record AresHandType(string NameLocalizationKey, string TexturePath, string GlowmaskPath, int TotalHorizontalFrames, int TotalVerticalFrames, Color EnergyTelegraphColor)
+    /// <param name="CustomGoreNames">The path for custom gore types.</param>
+    public record AresHandType(string NameLocalizationKey, string TexturePath, string GlowmaskPath, int TotalHorizontalFrames, int TotalVerticalFrames, Color EnergyTelegraphColor, params string[] CustomGoreNames)
     {
         /// <summary>
         /// The representation of Ares' plasma cannon.
         /// </summary>
-        public static readonly AresHandType PlasmaCannon = new("Mods.CalamityMod.NPCs.AresPlasmaFlamethrower.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresPlasmaFlamethrower", "CalamityMod/NPCs/ExoMechs/Ares/AresPlasmaFlamethrowerGlow", 6, 8, Color.GreenYellow);
+        public static readonly AresHandType PlasmaCannon = new("Mods.CalamityMod.NPCs.AresPlasmaFlamethrower.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresPlasmaFlamethrower", "CalamityMod/NPCs/ExoMechs/Ares/AresPlasmaFlamethrowerGlow", 6, 8, Color.GreenYellow,
+            "CalamityMod/AresPlasmaFlamethrower1", "CalamityMod/AresPlasmaFlamethrower2");
 
         /// <summary>
         /// The representation of Ares' tesla cannon.
         /// </summary>
-        public static readonly AresHandType TeslaCannon = new("Mods.CalamityMod.NPCs.AresTeslaCannon.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresTeslaCannon", "CalamityMod/NPCs/ExoMechs/Ares/AresTeslaCannonGlow", 6, 8, Color.Aqua);
+        public static readonly AresHandType TeslaCannon = new("Mods.CalamityMod.NPCs.AresTeslaCannon.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresTeslaCannon", "CalamityMod/NPCs/ExoMechs/Ares/AresTeslaCannonGlow", 6, 8, Color.Aqua,
+            "CalamityMod/AresTeslaCannon1", "CalamityMod/AresTeslaCannon2");
 
         /// <summary>
         /// The representation of Ares' laser cannon.
         /// </summary>
-        public static readonly AresHandType LaserCannon = new("Mods.CalamityMod.NPCs.AresLaserCannon.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresLaserCannon", "CalamityMod/NPCs/ExoMechs/Ares/AresLaserCannonGlow", 6, 8, Color.OrangeRed);
+        public static readonly AresHandType LaserCannon = new("Mods.CalamityMod.NPCs.AresLaserCannon.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresLaserCannon", "CalamityMod/NPCs/ExoMechs/Ares/AresLaserCannonGlow", 6, 8, Color.OrangeRed,
+            "CalamityMod/AresLaserCannon1", "CalamityMod/AresLaserCannon2");
 
         /// <summary>
         /// The representation of Ares' gauss nuke.
         /// </summary>
-        public static readonly AresHandType GaussNuke = new("Mods.CalamityMod.NPCs.AresGaussNuke.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNuke", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNukeGlow", 9, 12, Color.Yellow);
+        public static readonly AresHandType GaussNuke = new("Mods.CalamityMod.NPCs.AresGaussNuke.DisplayName", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNuke", "CalamityMod/NPCs/ExoMechs/Ares/AresGaussNukeGlow", 9, 12, Color.Yellow,
+            "CalamityMod/AresGaussNuke1", "CalamityMod/AresGaussNuke2", "CalamityMod/AresGaussNuke3");
 
         /// <summary>
         /// Writes the state of this arm type to a given <see cref="BinaryWriter"/>, for the purposes of being sent across the network.

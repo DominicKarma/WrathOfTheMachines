@@ -490,13 +490,21 @@ namespace WoTM.Content.NPCs.ExoMechs
                 typeName = Language.GetTextValue(HandType.NameLocalizationKey);
         }
 
-        // TODO -- Add on-death gores.
         public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.soundDelay == 0)
             {
                 NPC.soundDelay = 3;
                 SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound, NPC.Center);
+            }
+
+            if (NPC.life <= 0 && Main.netMode != NetmodeID.Server)
+            {
+                Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
+                for (int i = 1; i <= 3; i++)
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, calamity.Find<ModGore>($"AresArm_Gore{i}").Type, NPC.scale);
+                for (int i = 0; i < HandType.CustomGoreNames.Length; i++)
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>(HandType.CustomGoreNames[i]).Type, NPC.scale);
             }
         }
 
