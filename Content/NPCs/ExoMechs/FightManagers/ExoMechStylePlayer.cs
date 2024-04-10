@@ -79,13 +79,30 @@ namespace WoTM.Content.NPCs.ExoMechs
             get
             {
                 int fightDuration = PhaseDurations.Sum(kv => kv.Value);
-                float hitsWeight = Utilities.Saturate(1f - (HitCount - 2f) / 13f);
-                float buffsWeight = Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
+                float hitsWeight = SmoothClamp(1f - (HitCount - 2f) / 13f, 1.1f);
+                float buffsWeight = SmoothClamp(1f - (BuffCount - 11f) / 9f, 1.1f);
                 float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration);
                 float fightTimeWeight = MathF.Pow(fightTimeInterpolant, 1.67f);
 
-                return hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + Utilities.Saturate(AggressivenessBonus) * 0.3f;
+                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.3f) * 0.3f;
+
+                return Utilities.Saturate(unclampedStyle);
             }
+        }
+
+        /// <summary>
+        /// Applies a smooth clamp that permits values to exceed 1 with diminishing returns, up to an asymptotic <paramref name="maxValue"/>.
+        /// </summary>
+        /// <param name="x">The input value.</param>
+        /// <param name="maxValue">The maximum output value for the clamp.</param>
+        public static float SmoothClamp(float x, float maxValue)
+        {
+            if (x < 0f)
+                return 0f;
+
+            // This is necessary to ensure that plugging 1 into the equation returns exactly 1.
+            float correctionCoefficient = MathF.Atanh(1f / maxValue);
+            return maxValue * MathF.Tanh(correctionCoefficient * x);
         }
 
         public void Reset()
@@ -151,7 +168,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     distanceToClosestNPC = distanceFromNPC;
             }
 
-            AggressivenessBonus += Utilities.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 24f;
+            AggressivenessBonus += Utilities.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 20f;
 
             Rectangle extendedPlayerHitbox = Player.Hitbox;
             extendedPlayerHitbox.Inflate(30, 30);
@@ -161,7 +178,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     continue;
 
                 if (projectile.Colliding(projectile.Hitbox, extendedPlayerHitbox) && !projectile.Colliding(projectile.Hitbox, Player.Hitbox))
-                    AggressivenessBonus += 37f / MaxStyleBoostFightTime;
+                    AggressivenessBonus += 33f / MaxStyleBoostFightTime;
             }
         }
 
