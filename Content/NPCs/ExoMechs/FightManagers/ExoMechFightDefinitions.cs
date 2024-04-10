@@ -72,12 +72,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
         /// <summary>
-        /// The first Draedon interjection, performed after the player kills the first Exo Mechs.
+        /// The first Draedon interjection, performed after the player kills the first Exo Mech.
         /// </summary>
         public static readonly PhaseDefinition DraedonFirstInterjectionPhaseDefinition = CreateNewPhase(5, state =>
         {
             return state.TotalKilledMechs >= 1;
-        }, state => SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection));
+        }, state =>
+        {
+            ClearExoMechProjectiles();
+            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection);
+        });
 
         /// <summary>
         /// The fifth phase definition.
@@ -110,6 +114,19 @@ namespace WoTM.Content.NPCs.ExoMechs
             return !state.InitialMechState.Killed && state.InitialMechState.LifeRatio <= FightAloneLifeRatio;
         }, state => MakeExoMechLeaveOrReappear(true, (npc, exoMech) => npc.life > npc.lifeMax * FightAloneLifeRatio));
 
+
+        /// <summary>
+        /// The second Draedon interjection, performed after the player kills the second Exo Mech.
+        /// </summary>
+        public static readonly PhaseDefinition DraedonSecondInterjectionPhaseDefinition = CreateNewPhase(8, state =>
+        {
+            return state.TotalKilledMechs >= 2;
+        }, state =>
+        {
+            ClearExoMechProjectiles();
+            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.SecondInterjection);
+        });
+
         /// <summary>
         /// The seventh and final phase definition.
         /// </summary>
@@ -117,9 +134,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <remarks>
         /// During this phase the player fights the final Exo Mech until it dies.
         /// </remarks>
-        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(8, state =>
+        public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(9, state =>
         {
-            return state.TotalKilledMechs >= 2;
+            return state.DraedonState is null || state.DraedonState != DraedonBehaviorOverride.DraedonAIState.SecondInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         // NOTE -- Update XML comments if these are changed.
@@ -129,6 +146,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
         {
+            if (leave)
+                ClearExoMechProjectiles();
+
             ApplyToAllExoMechs(npc =>
             {
                 if (npc.TryGetBehavior(out NPCBehaviorOverride b) && b is IExoMech exoMech && condition(npc, exoMech))

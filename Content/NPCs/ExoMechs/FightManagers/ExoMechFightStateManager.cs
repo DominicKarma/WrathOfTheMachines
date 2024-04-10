@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CalamityMod.NPCs.ExoMechs;
+using CalamityMod.NPCs.ExoMechs.Apollo;
+using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.NPCs.ExoMechs.Thanatos;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.DataStructures;
@@ -268,7 +273,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (NPC.AnyNPCs(exoMechID))
                     continue;
 
-                // TODO -- Make the summon animation custom.
                 NPC.NewNPC(new EntitySource_WorldEvent(), (int)toSummonNear.Center.X, (int)toSummonNear.Center.Y - 1000, exoMechID, 1);
             }
         }
@@ -312,6 +316,18 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             exoMech.IsPrimaryMech = true;
             npc.netUpdate = true;
+        }
+
+        /// <summary>
+        /// Clears all Exo Mech projectiles.
+        /// </summary>
+        public static void ClearExoMechProjectiles()
+        {
+            IProjOwnedByBoss<AresBody>.KillAll();
+            IProjOwnedByBoss<ThanatosHead>.KillAll();
+            IProjOwnedByBoss<Artemis>.KillAll();
+            IProjOwnedByBoss<Apollo>.KillAll();
+            IProjOwnedByBoss<Draedon>.KillAll();
         }
     }
 }

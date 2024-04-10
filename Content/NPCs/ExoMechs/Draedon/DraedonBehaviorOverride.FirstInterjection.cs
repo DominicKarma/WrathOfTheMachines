@@ -14,7 +14,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static readonly DraedonDialogueChain FirstInterjection = new DraedonDialogueChain("Mods.WoTM.NPCs.Draedon.").
             Add("Interjection1").
-            Add(SelectInterjectionText).
+            Add(SelectDamageInterjectionText).
             Add("Interjection3").
             Add("Interjection4").
             Add("Interjection5").
@@ -45,14 +45,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // Reset the variables to their controls by healing the player.
             if (speakTimer == monologue[4].SpeakDelay - 60)
-            {
-                if (Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
-                    Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
-                Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax2;
-
-                ScreenShakeSystem.StartShake(3f);
-                SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
-            }
+                HealPlayer();
 
             if (speakTimer == monologue.OverallDuration - 60)
             {
@@ -71,9 +64,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Heals the player.
+        /// </summary>
+        public static void HealPlayer()
+        {
+            if (Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
+                Main.LocalPlayer.Heal(Main.LocalPlayer.statLifeMax2 - Main.LocalPlayer.statLife);
+            Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax2;
+
+            ScreenShakeSystem.StartShake(3f);
+            SoundEngine.PlaySound(new SoundStyle("CalamityMod/Sounds/Custom/OrbHeal", 5) with { Volume = 0.9f });
+        }
+
+        /// <summary>
         /// Selects interjection text based on whatever the player took the most damage from.
         /// </summary>
-        public static string SelectInterjectionText()
+        public static string SelectDamageInterjectionText()
         {
             Player closest = Main.player[Player.FindClosest(new Vector2(Main.maxTilesX * 0.5f, (float)Main.worldSurface) * 16f, 1, 1)];
 

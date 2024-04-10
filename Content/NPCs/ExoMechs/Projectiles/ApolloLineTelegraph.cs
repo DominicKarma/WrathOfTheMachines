@@ -1,5 +1,5 @@
 ﻿using System;
-using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.NPCs.ExoMechs.Apollo;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ApolloLineTelegraph : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>, IExoMechProjectile
+    public class ApolloLineTelegraph : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Apollo>, IExoMechProjectile
     {
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.BeforeNPCs;
 

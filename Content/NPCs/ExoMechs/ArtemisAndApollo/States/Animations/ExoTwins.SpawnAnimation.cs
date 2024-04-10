@@ -1,6 +1,5 @@
 ﻿using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.Utilities;
-using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -48,9 +47,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 npc.velocity = Vector2.UnitY.RotatedByRandom(0.11f) * SpawnAnimation_FallFromSkySpeed;
                 npc.netUpdate = true;
-
-                ScreenShakeSystem.StartShake(20f);
-                SoundEngine.PlaySound(Artemis.ChargeSound);
             }
 
             if (AITimer >= SpawnAnimation_FallFromSkyTime)

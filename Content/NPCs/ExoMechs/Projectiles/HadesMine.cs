@@ -1,8 +1,10 @@
 ﻿using System;
 using CalamityMod;
+using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -16,8 +18,10 @@ using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class HadesMine : ModProjectile, IExoMechProjectile
+    public class HadesMine : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<ThanatosHead>
     {
+        public bool SetActiveFalseInsteadOfKill => true;
+
         public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
 
         /// <summary>

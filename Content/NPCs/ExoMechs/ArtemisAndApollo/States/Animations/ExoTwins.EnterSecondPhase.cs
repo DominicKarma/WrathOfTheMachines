@@ -114,16 +114,20 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void DoBehavior_EnterSecondPhase(NPC npc, IExoTwin twinAttributes)
         {
-            // Slow down in place.
+            bool isArtemis = npc.type == ExoMechNPCIDs.ArtemisID;
+            bool isApollo = !isArtemis;
+
+            // Get near the target.
             if (AITimer < EnterSecondPhase_SlowDownTime)
             {
+                if (isApollo)
+                    npc.Center = Vector2.Lerp(npc.Center, Target.Center + Target.SafeDirectionTo(npc.Center) * 640f, AITimer / (float)EnterSecondPhase_SlowDownTime * 0.07f);
+
                 npc.velocity *= 0.84f;
                 npc.rotation = npc.AngleTo(Target.Center);
                 return;
             }
 
-            bool isArtemis = npc.type == ExoMechNPCIDs.ArtemisID;
-            bool isApollo = !isArtemis;
             bool shouldProtectArtemis = isApollo && twinAttributes.InPhase2;
 
             if (isApollo)

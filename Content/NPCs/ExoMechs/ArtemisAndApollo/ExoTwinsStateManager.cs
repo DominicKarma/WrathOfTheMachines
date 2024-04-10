@@ -69,7 +69,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="twinAttributes">The Exo Twin's designated generic attributes.</param>
         public static void PerformUpdateLoop(NPC twin, IExoTwin twinAttributes)
         {
-            if (twin.life < twin.lifeMax * ExoMechFightDefinitions.FightAloneLifeRatio && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
+            bool shouldEnterSecondPhase = twin.life < twin.lifeMax * ExoMechFightDefinitions.FightAloneLifeRatio || ExoMechFightStateManager.CurrentPhase == ExoMechFightDefinitions.BerserkSoloPhaseDefinition;
+            if (shouldEnterSecondPhase && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
                 TransitionToNextState(ExoTwinsAIState.EnterSecondPhase);
 
             if (twinAttributes is IExoMech exoMech)

@@ -12,10 +12,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.dontTakeDamage = true;
             NPC.damage = 0;
 
-            InstructionsForHands[0] = new(h => InactiveHandUpdate(h, new Vector2(-430f, 50f), 0));
-            InstructionsForHands[1] = new(h => InactiveHandUpdate(h, new Vector2(-280f, 224f), 1));
-            InstructionsForHands[2] = new(h => InactiveHandUpdate(h, new Vector2(280f, 224f), 2));
-            InstructionsForHands[3] = new(h => InactiveHandUpdate(h, new Vector2(430f, 50f), 3));
+            BasicHandUpdateWrapper();
 
             if (!Inactive && ZPosition <= 0f)
             {
