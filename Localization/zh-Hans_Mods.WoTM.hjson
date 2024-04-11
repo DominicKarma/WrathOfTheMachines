@@ -14,7 +14,7 @@ Projectiles: {
 	TeslaArc.DisplayName: 特斯拉电弧
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
-	// DraedonLootCrate.DisplayName: Draedon Loot Crate
+	DraedonLootCrate.DisplayName: 嘉登战利品箱
 }
 
 NPCs: {
@@ -55,15 +55,15 @@ NPCs: {
 		Interjection9: 现在，是时候进入测试的最终阶段了。
 		Interjection10: 我已经命令我的最后一台机械以最大火力运行。
 		Interjection11: 祝你好运。
-		// EndOfBattle_FirstDefeat1: Extraordinary!
-		// EndOfBattle_FirstDefeat2: This outcome has fallen far outside the expectations of my hypotheses.
-		// EndOfBattle_FirstDefeat3: I shall soon depart. There is much to be examined from this encounter. Before that, however...
-		// EndOfBattle_FirstDefeat4: Take this, as an extension of gratitude for your time.
-		// EndOfBattle_FirstDefeat5: If you wish to do combat with my machines again, you know how to operate the Codebreaker.
-		// EndOfBattle_FirstDefeat6: Farewell.
-		// EndOfBattle_SuccessiveDefeat1: Another completed experiment.
-		// EndOfBattle_SuccessiveDefeat2: Allow me a moment to analyze the results...
-		// EndOfBattle_SuccessiveDefeat3_Perfect: Extraordinary! Your combat engagement, patience, precision, and skill have not gone unnoticed.
+		EndOfBattle_FirstDefeat1: 出乎意料！
+		EndOfBattle_FirstDefeat2: 这一结果远远超越了我预想中的期望。
+		EndOfBattle_FirstDefeat3: 我很快就要离开了，你我的这次会面仍有许多需要探讨的部分。不过在此之前……
+		EndOfBattle_FirstDefeat4: 拿上这个吧，这是对你愿意付出时间的感谢。
+		EndOfBattle_FirstDefeat5: 如果你想再次和我的机械战斗，你应当知道如何使用密码破译器。
+		EndOfBattle_FirstDefeat6: 那么，再会。
+		EndOfBattle_SuccessiveDefeat1: 另一场已完成的实验。
+		EndOfBattle_SuccessiveDefeat2: 让我分析一下结果……
+		EndOfBattle_SuccessiveDefeat3_Perfect: 出乎意料！你对这场战斗的投入、耐心、谨慎与技巧均未被忽略。
 		// EndOfBattle_SuccessiveDefeat3_Excellent: Your aptitude is excellent. With a bit more precision, a perfect outcome may be within reach.
 		// EndOfBattle_SuccessiveDefeat3_Good: This outcome is useful.
 		// EndOfBattle_SuccessiveDefeat3_Acceptable: This outcome is unremarkable, yet serviceable.
