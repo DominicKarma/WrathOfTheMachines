@@ -92,6 +92,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformStandardFraming();
         }
 
+        /// <summary>
+        /// Selects interjection text based on the player's performance for the third post-battle dialogue line.
+        /// </summary>
         public static string EndOfBattle_SuccessiveDefeat3Selection()
         {
             Player closest = Main.player[Player.FindClosest(new Vector2(Main.maxTilesX * 0.5f, (float)Main.worldSurface) * 16f, 1, 1)];
@@ -114,6 +117,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             return "EndOfBattle_SuccessiveDefeat3_Bad";
         }
 
+        /// <summary>
+        /// Selects interjection text based on the player's performance for the fourth post-battle dialogue line.
+        /// </summary>
         public static string EndOfBattle_SuccessiveDefeat4Selection()
         {
             Player closest = Main.player[Player.FindClosest(new Vector2(Main.maxTilesX * 0.5f, (float)Main.worldSurface) * 16f, 1, 1)];
