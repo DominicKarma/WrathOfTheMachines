@@ -6,7 +6,6 @@ using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,15 +14,6 @@ namespace WoTM.Content.NPCs.ExoMechs
     public sealed class ExoMechStylePlayer : ModPlayer
     {
         private static bool resetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<Draedon>());
-
-        /// <summary>
-        /// How many times the rippers were activated during the Exo Mech fight.
-        /// </summary>
-        public int RipperActivationCount
-        {
-            get;
-            set;
-        }
 
         /// <summary>
         /// How many hits the player took during the Exo Mech fight.
@@ -135,7 +125,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public void Reset()
         {
-            RipperActivationCount = 0;
             HitCount = 0;
             BuffCount = 0;
             AggressivenessBonus = 0f;
@@ -209,12 +198,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (projectile.Colliding(projectile.Hitbox, extendedPlayerHitbox) && !projectile.Colliding(projectile.Hitbox, Player.Hitbox))
                     AggressivenessBonus += 33f / MaxStyleBoostFightTime;
             }
-        }
-
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if ((CalamityKeybinds.RageHotKey.JustPressed || CalamityKeybinds.AdrenalineHotKey.JustPressed) && !resetData)
-                RipperActivationCount++;
         }
 
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
