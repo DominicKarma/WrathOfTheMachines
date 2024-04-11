@@ -14,7 +14,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public sealed class ExoMechStylePlayer : ModPlayer
     {
-        private static bool resetData => !ExoMechFightStateManager.AnyExoMechsPresent && !NPC.AnyNPCs(ModContent.NPCType<Draedon>());
+        private static bool resetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<Draedon>());
 
         /// <summary>
         /// How many times the rippers were activated during the Exo Mech fight.
@@ -57,6 +57,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Whether the boss would be considered melted if it were to stop now.
+        /// </summary>
+        public bool PlayerIsMeltingBoss => PhaseDurations.Sum(kv => kv.Value) < Utilities.MinutesToFrames(1.75f);
+
+        /// <summary>
         /// How long each phase lasted, in frames, during the Exo Mech fight.
         /// </summary>
         public readonly Dictionary<int, int> PhaseDurations = [];
@@ -64,12 +69,41 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How short the Exo Mechs fight has to be in order to receive minimum style points for it.
         /// </summary>
-        public static float MinStyleBoostFightTime => Utilities.MinutesToFrames(0.5f);
+        public static float MinStyleBoostFightTime => Utilities.MinutesToFrames(1.5f);
 
         /// <summary>
         /// How long the Exo Mechs fight has to be in order to receive maximum style points for it.
         /// </summary>
-        public static float MaxStyleBoostFightTime => Utilities.MinutesToFrames(3f);
+        public static float MaxStyleBoostFightTime => Utilities.MinutesToFrames(3.75f);
+
+        /// <summary>
+        /// The influence of player buff count on overall style.
+        /// </summary>
+        public float BuffsWeight => Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
+
+        /// <summary>
+        /// The influence of hit count on overall style.
+        /// </summary>
+        public float HitsWeight => Utilities.Saturate(1f - (HitCount - 2f) / 13f);
+
+        /// <summary>
+        /// The influence of fight time on overall style.
+        /// </summary>
+        public float FightTimeWeight
+        {
+            get
+            {
+                int fightDuration = PhaseDurations.Sum(kv => kv.Value);
+                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
+                float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
+                return fightTimeWeight;
+            }
+        }
+
+        /// <summary>
+        /// The influence of player aggressiveness on overall style.
+        /// </summary>
+        public float AggressivenessWeight => SmoothClamp(AggressivenessBonus, 1.2f);
 
         /// <summary>
         /// How much style the player received during the Exo Mechs fight.
@@ -78,14 +112,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             get
             {
-                int fightDuration = PhaseDurations.Sum(kv => kv.Value);
-                float hitsWeight = Utilities.Saturate(1f - (HitCount - 2f) / 13f);
-                float buffsWeight = Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
-                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
-                float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
-
-                float unclampedStyle = hitsWeight * 0.26f + buffsWeight * 0.13f + fightTimeWeight * 0.31f + SmoothClamp(AggressivenessBonus, 1.2f) * 0.3f;
-
+                float unclampedStyle = HitsWeight * 0.26f + BuffsWeight * 0.13f + FightTimeWeight * 0.31f + AggressivenessWeight * 0.3f;
                 return Utilities.Saturate(unclampedStyle);
             }
         }
@@ -125,7 +152,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (!PhaseDurations.ContainsKey(ExoMechFightStateManager.CurrentPhase.PhaseOrdering))
                 PhaseDurations[ExoMechFightStateManager.CurrentPhase.PhaseOrdering] = 0;
-            if (ExoMechFightStateManager.AnyExoMechsPresent)
+
+            if (ExoMechFightStateManager.CurrentPhase.PhaseOrdering >= 1)
                 PhaseDurations[ExoMechFightStateManager.CurrentPhase.PhaseOrdering]++;
 
             UpdateBuffCount();

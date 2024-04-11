@@ -26,9 +26,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         internal static List<PhaseDefinition> ExoMechPhases = [];
 
         /// <summary>
-        /// Whether any Exo Mechs are currently present in the world.
+        /// Whether the fight is ongoing.
         /// </summary>
-        public static bool AnyExoMechsPresent
+        public static bool FightOngoing
         {
             get;
             private set;
@@ -139,7 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
             FightState = new(draedonState, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
 
-            AnyExoMechsPresent = true;
+            FightOngoing = true;
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (PreviouslySummonedMechIDs.Count >= 1)
                 PreviouslySummonedMechIDs.Clear();
 
-            AnyExoMechsPresent = false;
+            FightOngoing = false;
             CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();

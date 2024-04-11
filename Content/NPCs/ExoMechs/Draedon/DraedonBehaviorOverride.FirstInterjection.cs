@@ -84,7 +84,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Player closest = Main.player[Player.FindClosest(new Vector2(Main.maxTilesX * 0.5f, (float)Main.worldSurface) * 16f, 1, 1)];
 
             if (!closest.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer))
-                return "Interjection2_Error";
+                return "Error";
 
             ExoMechDamageSource source = recorderPlayer.MostDamagingSource;
             int damageIncurred = recorderPlayer.GetDamageBySource(source);

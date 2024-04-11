@@ -46,7 +46,6 @@ NPCs: {
 		Interjection2_BluntForceTrauma_Major: 直至目前，你看起来已经受到了严重的钝器创伤。
 		Interjection2_BluntForceTrauma_NearLethal: 直至目前，你看起来已经受到了近乎致命的钝器创伤。
 		Interjection2_Undamaged: 着实令人着迷，你看起来没有受到任何伤害。
-		Interjection2_Error: 该文本不应显示。
 		Interjection3: 不错的成果。
 		Interjection4: 现在，为下一阶段的测试，我们将重置其控制系统的变量。
 		Interjection5: 现在，做好准备。
@@ -62,9 +61,27 @@ NPCs: {
 		// EndOfBattle_FirstDefeat4: Take this, as an extension of gratitude for your time.
 		// EndOfBattle_FirstDefeat5: If you wish to do combat with my machines again, you know how to operate the Codebreaker.
 		// EndOfBattle_FirstDefeat6: Farewell.
+		// EndOfBattle_SuccessiveDefeat1: Another completed experiment.
+		// EndOfBattle_SuccessiveDefeat2: Allow me a moment to analyze the results...
+		// EndOfBattle_SuccessiveDefeat3_Perfect: Extraordinary! Your combat engagement, patience, precision, and skill have not gone unnoticed.
+		// EndOfBattle_SuccessiveDefeat3_Excellent: Your aptitude is excellent. With a bit more precision, a perfect outcome may be within reach.
+		// EndOfBattle_SuccessiveDefeat3_Good: This outcome is useful.
+		// EndOfBattle_SuccessiveDefeat3_Acceptable: This outcome is unremarkable, yet serviceable.
+		// EndOfBattle_SuccessiveDefeat3_Bad: This data is of little use to me.
+		// EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: This data is of no use to me.
+		// EndOfBattle_SuccessiveDefeat4_Perfect: This data is of sublime quality.
+		// EndOfBattle_SuccessiveDefeat4_Excellent: Perhaps soon a revolutionary insight shall be discovered?
+		// EndOfBattle_SuccessiveDefeat4_ImproveFightTime: Should you desire to engage my machines again, I would suggest a more drawn out battle.
+		// EndOfBattle_SuccessiveDefeat4_ImproveAggression: Should you desire to engage my machines again, I would suggest a more risky combat approach.
+		// EndOfBattle_SuccessiveDefeat4_ImproveBuffs: Should you desire to engage my machines again, I would suggest a reduction in consumable enhancements.
+		// EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: Should you desire to engage my machines again, I would suggest greater dodging precision.
+		// EndOfBattle_SuccessiveDefeat4_Bad: A more refined combat approach would be more conductive to insightful analysis.
+		// EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: That was far, far too short for me to draw any insightful conclusions.
+		// EndOfBattle_SuccessiveDefeat5: I await the next battle.
 		// EndOfBattle_FirstDefeatReconBodyKill1: Intriguing...
 		// EndOfBattle_FirstDefeatReconBodyKill2: A tempermental disposition is not a data point I had not considered.
 		// EndOfBattle_FirstDefeatReconBodyKill3: Regardless, as I was saying...
+		Error: 该文本不应显示。
 	}
 
 	ThanatosRename: XM-04“哈迪斯”
