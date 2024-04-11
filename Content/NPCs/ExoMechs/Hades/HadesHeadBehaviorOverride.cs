@@ -288,7 +288,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             HadesAIState oldState = CurrentState;
             do
             {
-                CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.HomingMissileBursts, HadesAIState.PerpendicularBodyLaserBlasts);
+                CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts);
             }
             while (CurrentState == oldState);
 
