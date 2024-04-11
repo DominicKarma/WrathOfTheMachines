@@ -28,6 +28,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
             MineBarrages,
+            HomingMissileBursts,
             Inactive
         }
 
@@ -288,7 +289,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             HadesAIState oldState = CurrentState;
             do
             {
-                CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts);
+                CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.HomingMissileBursts, HadesAIState.PerpendicularBodyLaserBlasts);
             }
             while (CurrentState == oldState);
 
