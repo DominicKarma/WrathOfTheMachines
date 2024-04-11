@@ -134,10 +134,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
-        public override void OnKill(int timeLeft)
-        {
-        }
-
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
