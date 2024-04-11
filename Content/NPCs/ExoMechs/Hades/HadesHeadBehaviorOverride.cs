@@ -28,7 +28,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
             MineBarrages,
-            HomingMissileBursts,
             Inactive
         }
 
