@@ -164,8 +164,9 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float2 aspectRatio = float2(screenSize.x / screenSize.y, 1);
     for (int i = 0; i < 10; i++)
     {
+        float lightningIntensity = lightningIntensities[i];
         float distanceGlow = 0.15 / distance((coords - 0.5) * aspectRatio + 0.5, (lightningPositions[i] / screenSize - 0.5) * aspectRatio + 0.5);
-        cloudLight *= clamp(1 + lightningIntensities[i] * pow(1 - coords.y, 2.7) * distanceGlow * glowUVOffset.r, 1, 10);
+        cloudLight *= clamp(1 + lightningIntensity * pow(1 - coords.y, 2.7 - lightningIntensity * 2.5) * distanceGlow * glowUVOffset.r, 1, 10);
     }
     
     // Combine the scattered light with the sample color, allowing for dynamic colorations and opacities to the final result.

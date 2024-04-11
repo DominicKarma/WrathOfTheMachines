@@ -23,7 +23,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             public void Update()
             {
-                Brightness = Utilities.Saturate(Brightness * 0.99f - 0.003f);
+                Brightness = Utilities.Saturate(Brightness * 0.984f - 0.003f);
             }
         }
 
@@ -154,7 +154,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.Draw(cloud, drawPosition, null, new Color(48, 57, 70), 0f, cloud.Size() * 0.5f, skyScale, 0, 0f);
         }
 
-        public static void CreateLightning()
+        public static void CreateLightning(Vector2? lightningPosition = null)
         {
             if (Main.netMode == NetmodeID.Server || Main.gamePaused)
                 return;
@@ -162,14 +162,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             SoundEngine.PlaySound(SoundID.Thunder);
 
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector2 lightningPosition = new Vector2(Main.rand.NextFloat(0.2f, 0.8f), Main.rand.NextFloat(-0.07f, -0.02f)) * screenSize;
+            lightningPosition ??= new Vector2(Main.rand.NextFloat(0.2f, 0.8f), Main.rand.NextFloat(-0.07f, -0.02f)) * screenSize;
 
             for (int i = 0; i < Lightning.Length; i++)
             {
-                if (Lightning[i].Brightness < 0.02f)
+                if (Lightning[i].Brightness < 0.03f)
                 {
-                    Lightning[i].Brightness = 1f;
-                    Lightning[i].LightningPosition = lightningPosition;
+                    Lightning[i].Brightness = Main.rand.NextFloat(0.6f, 1f);
+                    Lightning[i].LightningPosition = lightningPosition.Value;
                     break;
                 }
             }

@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int MineBarrages_AttackCycleTime => MineBarrages_RedirectTime + MineBarrages_MineReleaseTime;
 
         /// <summary>
-        /// AI update loop method for the PerpendicularBodyLaserBlasts attack.
+        /// AI update loop method for the MineBarrages attack.
         /// </summary>
         public void DoBehavior_MineBarrages()
         {

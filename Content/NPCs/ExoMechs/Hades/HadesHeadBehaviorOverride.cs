@@ -28,6 +28,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerpendicularBodyLaserBlasts,
             ContinuousLaserBarrage,
             MineBarrages,
+            ExoEnergyBlast,
             Inactive
         }
 
@@ -274,6 +275,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case HadesAIState.MineBarrages:
                     DoBehavior_MineBarrages();
                     break;
+                case HadesAIState.ExoEnergyBlast:
+                    DoBehavior_ExoEnergyBlast();
+                    break;
                 case HadesAIState.Inactive:
                     DoBehavior_Inactive();
                     break;
@@ -291,6 +295,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts);
             }
             while (CurrentState == oldState);
+
+            CurrentState = HadesAIState.ExoEnergyBlast;
 
             for (int i = 0; i < NPC.maxAI; i++)
                 NPC.ai[i] = 0f;

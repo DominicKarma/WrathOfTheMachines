@@ -15,6 +15,7 @@ Projectiles: {
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
 	// DraedonLootCrate.DisplayName: Draedon Loot Crate
+	// HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
 }
 
 NPCs: {

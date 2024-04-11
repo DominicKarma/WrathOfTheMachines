@@ -65,7 +65,7 @@ namespace WoTM.Content.Particles
             {
                 float currentDirection = Velocity.ToRotation();
                 float idealDirection = (HomeInDestination.Value - Position).ToRotation();
-                Velocity = currentDirection.AngleLerp(idealDirection, 0.021f).ToRotationVector2() * Velocity.Length();
+                Velocity = currentDirection.AngleLerp(idealDirection, 0.03f).ToRotationVector2() * Velocity.Length();
                 Velocity += (HomeInDestination.Value - Position) * 0.005f;
 
                 if (Position.WithinRange(HomeInDestination.Value, 10f))
