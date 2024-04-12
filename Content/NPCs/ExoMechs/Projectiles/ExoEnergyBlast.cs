@@ -234,7 +234,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2 right = laserPoint + perpendicular * laserWidth;
 
             float _ = 0f;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, laserWidth, ref _);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 16f, ref _);
         }
 
         public override bool ShouldUpdatePosition() => false;
