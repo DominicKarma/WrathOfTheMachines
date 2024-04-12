@@ -9,7 +9,6 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -400,12 +399,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int frame = Utils.Clamp((int)(SegmentOpenInterpolant * Main.npcFrameCount[NPC.type]), 0, Main.npcFrameCount[NPC.type] - 1);
             NPC.frame.Y = frame * frameHeight;
-        }
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
-        {
-            // TODO -- Implement segment opening.
-            return true;
         }
     }
 }
