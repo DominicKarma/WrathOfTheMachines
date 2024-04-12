@@ -105,7 +105,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 directionToNextSegment = aheadSegment.Center - NPC.Center;
             if (aheadSegment.rotation != NPC.rotation && ShouldReorientDirection)
             {
-                float angleOffset = MathHelper.WrapAngle(aheadSegment.rotation - NPC.rotation) * 0.1f;
+                float angleOffset = MathHelper.Clamp(MathHelper.WrapAngle(aheadSegment.rotation - NPC.rotation), -0.04f, 0.04f);
                 directionToNextSegment = directionToNextSegment.RotatedBy(angleOffset);
             }
 
