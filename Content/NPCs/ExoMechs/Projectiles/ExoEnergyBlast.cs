@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(3f);
+        public static int Lifetime => Utilities.SecondsToFrames(4f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -47,12 +47,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The starting <see cref="Projectile.timeLeft"/> where overheating begins for the beam.
         /// </summary>
-        public static int OverheatStartingTime => Utilities.SecondsToFrames(2.5f);
+        public static int OverheatStartingTime => Utilities.SecondsToFrames(3.5f);
 
         /// <summary>
         /// The starting <see cref="Projectile.timeLeft"/> where overheating ends for the beam.
         /// </summary>
-        public static int OverheatEndingTime => Utilities.SecondsToFrames(2f);
+        public static int OverheatEndingTime => Utilities.SecondsToFrames(3f);
 
         /// <summary>
         /// How long the beam waits before beginning to expand.

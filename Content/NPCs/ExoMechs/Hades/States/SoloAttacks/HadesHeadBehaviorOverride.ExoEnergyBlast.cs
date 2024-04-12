@@ -31,7 +31,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             bool beamIsOverheating = AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime - ExoEnergyBlast.OverheatStartingTime;
             float pointAtTargetSpeed = 4.4f;
-            Vector2 outerHoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -1250f, -300f);
+            Vector2 outerHoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -1050f, -400f);
 
             BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + (beamIsOverheating ? 2f : -1f) * StandardSegmentOpenRate);
@@ -44,7 +44,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 Vector2 idealVelocity = NPC.SafeDirectionTo(outerHoverDestination) * MathHelper.Lerp(NPC.velocity.Length(), idealHoverSpeed, 0.135f);
                 NPC.velocity = NPC.velocity.RotateTowards(idealVelocity.ToRotation(), 0.045f);
-                NPC.velocity = NPC.velocity.MoveTowards(idealVelocity, 3f);
+                NPC.velocity = NPC.velocity.MoveTowards(idealVelocity, AITimer / (float)ExoEnergyBlast_InitialRedirectTime * 8f);
 
                 // Stop hovering if close to the hover destination and prepare to move towards the target.
                 if (NPC.WithinRange(outerHoverDestination, 105f) && AITimer >= 30)
@@ -62,14 +62,14 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ExoEnergyBlast_InitialRedirectTime + 1)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<HadesExoEnergyOrb>(), 0, 0f, -1, ExoEnergyBlast_BlastDelay);
 
-                if (AITimer % 45 == 44)
+                if (AITimer % 45 == 44 && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay - 40)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         for (int i = 0; i < 7; i++)
                         {
-                            Vector2 burstShootDirection = NPC.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(MathHelper.Lerp(-0.93f, 0.93f, i / 6f));
-                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * 100f;
+                            Vector2 burstShootDirection = NPC.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(MathHelper.Lerp(-1.4f, 1.4f, i / 6f));
+                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * 250f;
                             Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), burstSpawnPosition, burstShootDirection * 0.4f, ModContent.ProjectileType<HomingTeslaBurst>(), BasicLaserDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
                         }
                     }
@@ -86,7 +86,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ExoEnergyBlast>(), ExoEnergyBlastDamage, 0f);
             }
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay)
-                NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), 0.0155f) * 0.98f;
+                NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), 0.0135f) * 0.986f;
 
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime)
                 SelectNextAttack();

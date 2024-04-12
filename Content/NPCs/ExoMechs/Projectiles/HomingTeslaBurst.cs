@@ -77,9 +77,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (!Projectile.WithinRange(target.Center, 270f))
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) / Projectile.MaxUpdates * 14f, homeInInterpolant * 0.1f);
 
-            if (Projectile.velocity.Length() < 38f)
+            if (Projectile.velocity.Length() < 30f)
             {
-                float acceleration = Utils.Remap(homeInInterpolant, 0f, 0.4f, 1.02f, 1f);
+                float acceleration = Utils.Remap(homeInInterpolant, 0f, 0.4f, 1.015f, 1f);
                 Projectile.velocity *= acceleration;
             }
         }
@@ -104,7 +104,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             float pulseInterpolant = MathF.Cos(Main.GlobalTimeWrappedHourly * 10f) * Utilities.InverseLerpBump(0f, 0.1f, 0.45f, 1f, completionRatio) * 0.2f;
             float sizeInterpolant = MathF.Pow(Utilities.InverseLerpBump(0.05f, 0.13f, 0.87f, 0.95f, completionRatio), 0.45f) + pulseInterpolant;
-            return MathHelper.Lerp(1f, Projectile.width * 0.72f, sizeInterpolant);
+            return MathHelper.Lerp(1f, Projectile.width * 0.85f, sizeInterpolant);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaBurstShader");
 
-            PrimitiveSettings settings = new(ElectricityWidthFunction, ElectricityColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity * 1.5f, Pixelate: true, Shader: shader);
+            PrimitiveSettings settings = new(ElectricityWidthFunction, ElectricityColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity * 2f, Pixelate: true, Shader: shader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 24);
         }
     }
