@@ -32,11 +32,6 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
     return output;
 }
 
-float QuadraticBump(float x)
-{
-    return x * (4 - x * 4);
-}
-
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float2 coords = input.TextureCoordinates;
@@ -45,13 +40,20 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Account for texture distortion artifacts in accordance with the primitive distortion fixes.
     coords.y = (coords.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
+    // Calculate the edge glow, creating a strong, bright center coloration.
     float distanceFromCenter = distance(coords.y, 0.5);
     float edgeGlow = edgeGlowIntensity / pow(distanceFromCenter, 0.9);
     color = saturate(color * edgeGlow);
+    
+    // Apply subtractive blending that gets stronger near the edges of the beam, to help with saturating the colors a bit.
     color.rgb -= distanceFromCenter * edgeColorSubtraction;
     
+    // Fade at the edges.
+    color *= smoothstep(0.5, 0.3, distanceFromCenter);
+    
+    // Apply some fast, scrolling noise to the overall result.
     float noise = tex2D(noiseScrollTexture, coords * float2(0.8, 1.75) + float2(globalTime * -3.3, 0));
-    return color * smoothstep(0.5, 0.3, distanceFromCenter) * (noise + 1 + step(0.5, noise + (0.5 - distanceFromCenter)));
+    return color * (noise + 1 + step(0.5, noise + (0.5 - distanceFromCenter)));
 }
 
 technique Technique1

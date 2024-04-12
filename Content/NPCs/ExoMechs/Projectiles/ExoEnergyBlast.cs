@@ -158,7 +158,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public float LaserWidthFunction(float completionRatio)
         {
             float frontExpansionInterpolant = Utilities.InverseLerp(0.015f, 0.21f, completionRatio);
-            return EasingCurves.MakePoly(2f).Evaluate(EasingType.Out, 2f, Projectile.width + completionRatio * Projectile.width * 1.2f, frontExpansionInterpolant);
+            float maxSize = Projectile.width + completionRatio * Projectile.width * 1.2f;
+            return EasingCurves.Quadratic.Evaluate(EasingType.Out, 2f, maxSize, frontExpansionInterpolant);
         }
 
         public Color LaserColorFunction(float completionRatio)
@@ -219,7 +220,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float _ = 0f;
-            float laserWidth = Projectile.width * 0.9f;
+            float laserWidth = Projectile.width * 1.15f;
             Vector2 start = Projectile.Center;
             Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.Zero) * LaserbeamLength;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, laserWidth, ref _);
