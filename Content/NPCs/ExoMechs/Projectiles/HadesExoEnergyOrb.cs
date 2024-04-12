@@ -65,8 +65,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
             Projectile.rotation = hades.velocity.ToRotation();
-            Projectile.Center = hades.Center + Projectile.rotation.ToRotationVector2() * Projectile.width;
             Projectile.scale = Utilities.InverseLerpBump(0f, 0.4f, 0.91f, 0.95f, LifetimeRatio);
+            Projectile.Center = hades.Center + Projectile.rotation.ToRotationVector2() * Projectile.width * 0.7f;
 
             CreateElectricParticles();
 

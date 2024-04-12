@@ -157,7 +157,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public float LaserWidthFunction(float completionRatio)
         {
-            float frontExpansionInterpolant = Utilities.InverseLerp(0.015f, 0.21f, completionRatio);
+            float frontExpansionInterpolant = Utilities.InverseLerp(0.015f, 0.14f, completionRatio);
             float maxSize = Projectile.width + completionRatio * Projectile.width * 1.2f;
             return EasingCurves.Quadratic.Evaluate(EasingType.Out, 2f, maxSize, frontExpansionInterpolant);
         }

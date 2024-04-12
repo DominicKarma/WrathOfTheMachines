@@ -9,6 +9,7 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -115,6 +116,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Unimplemented, since Hades' head doesn't have an ahead segment. Do not use.
         /// </summary>
         public int AheadSegmentIndex => throw new NotImplementedException();
+
+        /// <summary>
+        /// The rotation of Hades' jaws.
+        /// </summary>
+        public ref float JawRotation => ref NPC.localAI[0];
 
         /// <summary>
         /// The target that Hades will attempt to attack.
@@ -230,6 +236,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             BodyRenderAction = null;
             NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant - StandardSegmentOpenRate);
+            JawRotation = JawRotation.AngleLerp(0f, 0.01f).AngleTowards(0f, 0.02f);
 
             CalamityGlobalNPC.draedonExoMechWorm = NPC.whoAmI;
         }
@@ -296,6 +303,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts, HadesAIState.ExoEnergyBlast);
             }
             while (CurrentState == oldState);
+            CurrentState = HadesAIState.ExoEnergyBlast;
 
             for (int i = 0; i < NPC.maxAI; i++)
                 NPC.ai[i] = 0f;
@@ -399,6 +407,30 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int frame = Utils.Clamp((int)(SegmentOpenInterpolant * Main.npcFrameCount[NPC.type]), 0, Main.npcFrameCount[NPC.type] - 1);
             NPC.frame.Y = frame * frameHeight;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
+        {
+            int frame = NPC.frame.Y / NPC.frame.Height;
+            Texture2D texture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesHead").Value;
+            Texture2D glowmask = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesHeadGlow").Value;
+            Texture2D leftJawTexture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesJawLeft").Value;
+            Texture2D rightJawTexture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesJawRight").Value;
+
+            Vector2 drawPosition = NPC.Center - screenPos;
+            Rectangle leftJawFrame = leftJawTexture.Frame(1, Main.npcFrameCount[NPC.type], 0, frame);
+            Rectangle rightJawFrame = rightJawTexture.Frame(1, Main.npcFrameCount[NPC.type], 0, frame);
+            Vector2 leftJawOrigin = leftJawFrame.Size() * new Vector2(0.38f, 0.54f);
+            Vector2 rightJawOrigin = rightJawFrame.Size() * new Vector2(0.62f, 0.54f);
+            Vector2 leftJawPosition = drawPosition + new Vector2(-32f, 0f).RotatedBy(NPC.rotation) * NPC.spriteDirection;
+            Vector2 rightJawPosition = drawPosition + new Vector2(32f, 0f).RotatedBy(NPC.rotation) * NPC.spriteDirection;
+            Main.spriteBatch.Draw(leftJawTexture, leftJawPosition, leftJawFrame, NPC.GetAlpha(lightColor), NPC.rotation + JawRotation + MathHelper.Pi, leftJawOrigin, NPC.scale, SpriteEffects.FlipVertically, 0f);
+            Main.spriteBatch.Draw(rightJawTexture, rightJawPosition, rightJawFrame, NPC.GetAlpha(lightColor), NPC.rotation - JawRotation + MathHelper.Pi, rightJawOrigin, NPC.scale, SpriteEffects.FlipVertically, 0f);
+
+            Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, 0, 0f);
+            Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, 0, 0f);
+
+            return false;
         }
     }
 }

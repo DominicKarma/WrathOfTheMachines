@@ -15,6 +15,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int ExoEnergyBlastDamage => Main.expertMode ? 700 : 450;
 
         /// <summary>
+        /// The maximum time Hades spends opening his jaw the ExoEnergyBlast attack.
+        /// </summary>
+        public static int ExoEnergyBlast_JawOpenTime => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
         /// The maximum time Hades spends redirecting during the ExoEnergyBlast attack.
         /// </summary>
         public static int ExoEnergyBlast_InitialRedirectTime => Utilities.SecondsToFrames(6f);
@@ -35,6 +40,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + (beamIsOverheating ? 2f : -1f) * StandardSegmentOpenRate);
+
+            JawRotation = Utilities.InverseLerp(0f, ExoEnergyBlast_JawOpenTime, AITimer).Squared() * 0.74f;
 
             // Attempt to get into position for the light attack.
             if (AITimer < ExoEnergyBlast_InitialRedirectTime)
@@ -69,7 +76,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                         for (int i = 0; i < 7; i++)
                         {
                             Vector2 burstShootDirection = NPC.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(MathHelper.Lerp(-1.4f, 1.4f, i / 6f));
-                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * 250f;
+                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * 224f;
                             Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), burstSpawnPosition, burstShootDirection * 0.4f, ModContent.ProjectileType<HomingTeslaBurst>(), BasicLaserDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
                         }
                     }
