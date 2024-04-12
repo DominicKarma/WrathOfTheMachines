@@ -1,4 +1,5 @@
 sampler noiseScrollTexture : register(s1);
+sampler lightningScrollTexture : register(s2);
 
 float globalTime;
 float edgeGlowIntensity;
@@ -47,6 +48,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     
     // Apply subtractive blending that gets stronger near the edges of the beam, to help with saturating the colors a bit.
     color.rgb -= distanceFromCenter * edgeColorSubtraction;
+    
+    // Apply additive blending in accordance with a lightning scroll texture.
+    color += tex2D(lightningScrollTexture, coords * float2(0.9, 2) + float2(globalTime * -1.5, 0)).r * color.a * (color.g + 0.35);
     
     // Fade at the edges.
     color *= smoothstep(0.5, 0.3, distanceFromCenter);

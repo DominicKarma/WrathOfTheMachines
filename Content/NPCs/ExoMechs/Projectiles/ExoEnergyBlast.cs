@@ -78,6 +78,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
+            Projectile.friendly = true;
             Projectile.timeLeft = Lifetime;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -212,6 +213,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             shader.TrySetParameter("edgeColorSubtraction", Vector3.Lerp(new(0.7f, 0.4f, 0), new(0f, 0.5f, 1f), OverheatInterpolant));
             shader.TrySetParameter("edgeGlowIntensity", MathHelper.Lerp(0.2f, 1f, OverheatInterpolant));
             shader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
+            shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 2, SamplerState.LinearWrap);
 
             PrimitiveSettings laserSettings = new(LaserWidthFunction, LaserColorFunction, Pixelate: true, Shader: shader);
             PrimitiveRenderer.RenderTrail(laserPositions, laserSettings, 60);
@@ -236,6 +238,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float _ = 0f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 16f, ref _);
         }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage += 50f;
 
         public override bool ShouldUpdatePosition() => false;
     }
