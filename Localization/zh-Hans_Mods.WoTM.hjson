@@ -15,8 +15,8 @@ Projectiles: {
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
 	DraedonLootCrate.DisplayName: 嘉登战利品箱
- HadesExoEnergyOrb.DisplayName: 星流能量球
- ExoEnergyBlast.DisplayName: 星流过载爆破
+	HadesExoEnergyOrb.DisplayName: 星流电能球
+	ExoEnergyBlast.DisplayName: 星流过载爆破
 }
 
 NPCs: {
@@ -66,23 +66,23 @@ NPCs: {
 		EndOfBattle_SuccessiveDefeat1: 这是另一场已完成的实验。
 		EndOfBattle_SuccessiveDefeat2: 那么，让我分析一下结果……
 		EndOfBattle_SuccessiveDefeat3_Perfect: 出乎意料！你对这场战斗的投入、耐心、谨慎与技巧均未被忽略。
-		// EndOfBattle_SuccessiveDefeat3_Excellent: 你拥有优异的天赋，如果再谨慎些许，一个完美的结果将触手可及。
-		// EndOfBattle_SuccessiveDefeat3_Good: 有用的成果。
-		// EndOfBattle_SuccessiveDefeat3_Acceptable: 平庸的成果，但还算有用。
-		// EndOfBattle_SuccessiveDefeat3_Bad: 这些数据没啥用处。
-		// EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: 这些数据对我而言毫无用处。
-		// EndOfBattle_SuccessiveDefeat4_Perfect: 这些数据拥有着极高的品质。
-		// EndOfBattle_SuccessiveDefeat4_Excellent: 也许不久之后，你就会拥有突破性的见解？
-		// EndOfBattle_SuccessiveDefeat4_ImproveFightTime: 如果你想再次与我的机械战斗，我建议你进行一场更为持久的战斗。
-		// EndOfBattle_SuccessiveDefeat4_ImproveAggression: 如果你想再次与我的机械战斗，我建议你采用风险更高的战斗方式。
-		// EndOfBattle_SuccessiveDefeat4_ImproveBuffs: 如果你想再次与我的机械战斗，我建议你减少一些功能性消耗品的使用量。
-		// EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: 如果你想再次与我的机械战斗，我建议你提升一下你的躲避能力。
-		// EndOfBattle_SuccessiveDefeat4_Bad: 更为精细的战斗方式将更有助于深入分析战斗。
-		// EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: 时长太短了，短到我都无法得出任何有深刻意义的结论。
-		// EndOfBattle_SuccessiveDefeat5: 我期待着下一场战斗。
-		// EndOfBattle_FirstDefeatReconBodyKill1: 有趣……
-		// EndOfBattle_FirstDefeatReconBodyKill2: 我并非没有将你“易怒”的这一数据点考虑在内。
-		// EndOfBattle_FirstDefeatReconBodyKill3: 不管怎么样，正如我所说的……
+		EndOfBattle_SuccessiveDefeat3_Excellent: 你拥有优异的天赋，如果再谨慎些许，一个完美的结果将触手可及。
+		EndOfBattle_SuccessiveDefeat3_Good: 有用的成果。
+		EndOfBattle_SuccessiveDefeat3_Acceptable: 平庸的成果，但还算有用。
+		EndOfBattle_SuccessiveDefeat3_Bad: 这些数据没啥用处。
+		EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: 这些数据对我而言毫无用处。
+		EndOfBattle_SuccessiveDefeat4_Perfect: 这些数据拥有极高的品质。
+		EndOfBattle_SuccessiveDefeat4_Excellent: 也许不久之后，你就能够拥有突破性的见解？
+		EndOfBattle_SuccessiveDefeat4_ImproveFightTime: 如果你想再次与我的机械战斗，我建议你进行一场更为持久的战斗。
+		EndOfBattle_SuccessiveDefeat4_ImproveAggression: 如果你想再次与我的机械战斗，我建议你采用风险更高的战斗方式。
+		EndOfBattle_SuccessiveDefeat4_ImproveBuffs: 如果你想再次与我的机械战斗，我建议你减少一些功能性消耗品的使用量。
+		EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: 如果你想再次与我的机械战斗，我建议你提升一下你的躲避能力。
+		EndOfBattle_SuccessiveDefeat4_Bad: 更为精细的战斗方式将更有助于深入分析战斗。
+		EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: 你的战斗时长太短了，短到我都无法得出任何有深意的结论。
+		EndOfBattle_SuccessiveDefeat5: 我期待着下一场战斗。
+		EndOfBattle_FirstDefeatReconBodyKill1: 有趣……
+		EndOfBattle_FirstDefeatReconBodyKill2: 我并非没有将你“易怒”的这一数据点考虑在内。
+		EndOfBattle_FirstDefeatReconBodyKill3: 不管怎么样，正如我所说的……
 		Error: 该文本不应显示。
 	}
 
