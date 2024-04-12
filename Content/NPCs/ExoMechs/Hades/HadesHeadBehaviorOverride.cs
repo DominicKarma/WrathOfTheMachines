@@ -226,6 +226,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
+            NPC.HitSound = SegmentOpenInterpolant >= 0.75f ? ThanatosHead.ThanatosHitSoundOpen : ThanatosHead.ThanatosHitSoundClosed;
             BodyBehaviorAction = null;
             BodyRenderAction = null;
             NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;

@@ -119,6 +119,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.spriteDirection = directionToNextSegment.X.NonZeroSign();
             ShouldReorientDirection = true;
 
+            NPC.HitSound = SegmentOpenInterpolant >= 0.75f ? ThanatosHead.ThanatosHitSoundOpen : ThanatosHead.ThanatosHitSoundClosed;
+
             ListenToHeadInstructions();
             ModifyDRBasedOnOpenInterpolant();
 
