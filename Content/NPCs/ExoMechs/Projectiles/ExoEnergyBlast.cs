@@ -219,11 +219,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (targetHitbox.Distance(Projectile.Center) <= 100f)
+            if (targetHitbox.Distance(Projectile.Center) <= 150f)
                 return false;
 
             float _ = 0f;
-            float laserWidth = Projectile.width * 0.9f;
+            float laserWidth = Projectile.width * 0.8f;
             Vector2 start = Projectile.Center;
             Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.Zero) * LaserbeamLength;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, laserWidth, ref _);
