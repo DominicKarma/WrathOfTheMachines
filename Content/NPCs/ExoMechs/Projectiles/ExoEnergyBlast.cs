@@ -228,7 +228,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             // Now that the point on the laser is known from the distance, evaluate the exact width of the laser at said point for use with a AABB/line collision check.
             float laserWidth = LaserWidthFunction(signedDistanceAlongLaser / LaserbeamLength) * 0.45f;
-            Vector2 perpendicular = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
+            Vector2 perpendicular = new(-Projectile.velocity.Y, Projectile.velocity.X);
             Vector2 laserPoint = Projectile.Center + Projectile.velocity * signedDistanceAlongLaser;
             Vector2 left = laserPoint - perpendicular * laserWidth;
             Vector2 right = laserPoint + perpendicular * laserWidth;

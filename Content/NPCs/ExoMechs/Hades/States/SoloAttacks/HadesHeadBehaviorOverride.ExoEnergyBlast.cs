@@ -25,6 +25,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int ExoEnergyBlast_InitialRedirectTime => Utilities.SecondsToFrames(6f);
 
         /// <summary>
+        /// The maximum time Hades spends accelerating after the ExoEnergyBlast attack's laserbeam.
+        /// </summary>
+        public static int ExoEnergyBlast_PostBeamAccelerationTime => Utilities.SecondsToFrames(2.3f);
+
+        /// <summary>
         /// The delay of the blast during the ExoEnergyBlast attack.
         /// </summary>
         public static int ExoEnergyBlast_BlastDelay => Utilities.SecondsToFrames(3.5f);
@@ -45,7 +50,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void DoBehavior_ExoEnergyBlast()
         {
             bool beamIsOverheating = AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime - ExoEnergyBlast.OverheatStartingTime;
-            float pointAtTargetSpeed = 4.4f;
+            float pointAtTargetSpeed = 7.5f;
             Vector2 outerHoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -1050f, -400f);
 
             BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
@@ -105,10 +110,17 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // SPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN
-            if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay)
+            if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime)
                 NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), ExoEnergyBlast_LaserTurnSpeed) * 0.986f;
 
+            // Accelerate after the blast.
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime)
+            {
+                NPC.velocity = NPC.velocity.ClampLength(3.6f, 32f);
+                NPC.velocity *= 1.024f;
+            }
+
+            if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime + ExoEnergyBlast_PostBeamAccelerationTime)
                 SelectNextAttack();
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
