@@ -14,13 +14,13 @@ Projectiles: {
 	TeslaArc.DisplayName: 特斯拉电弧
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
-	// DraedonLootCrate.DisplayName: Draedon Loot Crate
-	// HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
-	// ExoEnergyBlast.DisplayName: Exoelectric Overload Blast
+	DraedonLootCrate.DisplayName: 嘉登战利品箱
+	HadesExoEnergyOrb.DisplayName: 星流电能球
+	ExoEnergyBlast.DisplayName: 星流过载爆破
 }
 
 NPCs: {
-	AresHand.DisplayName: 阿瑞斯手
+	AresHand.DisplayName: 阿瑞斯之手
 
 	Draedon: {
 		IntroductionMonologue1: 你知道吗？这一刻已经等了太久了。
@@ -57,32 +57,32 @@ NPCs: {
 		Interjection9: 现在，是时候进入测试的最终阶段了。
 		Interjection10: 我已经命令我的最后一台机械以最大火力运行。
 		Interjection11: 祝你好运。
-		// EndOfBattle_FirstDefeat1: Extraordinary!
-		// EndOfBattle_FirstDefeat2: This outcome has fallen far outside the expectations of my hypotheses.
-		// EndOfBattle_FirstDefeat3: I shall soon depart. There is much to be examined from this encounter. Before that, however...
-		// EndOfBattle_FirstDefeat4: Take this, as an extension of gratitude for your time.
-		// EndOfBattle_FirstDefeat5: If you wish to do combat with my machines again, you know how to operate the Codebreaker.
-		// EndOfBattle_FirstDefeat6: Farewell.
-		// EndOfBattle_SuccessiveDefeat1: Another completed experiment.
-		// EndOfBattle_SuccessiveDefeat2: Allow me a moment to analyze the results...
-		// EndOfBattle_SuccessiveDefeat3_Perfect: Extraordinary! Your combat engagement, patience, precision, and skill have not gone unnoticed.
-		// EndOfBattle_SuccessiveDefeat3_Excellent: Your aptitude is excellent. With a bit more precision, a perfect outcome may be within reach.
-		// EndOfBattle_SuccessiveDefeat3_Good: This outcome is useful.
-		// EndOfBattle_SuccessiveDefeat3_Acceptable: This outcome is unremarkable, yet serviceable.
-		// EndOfBattle_SuccessiveDefeat3_Bad: This data is of little use to me.
-		// EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: This data is of no use to me.
-		// EndOfBattle_SuccessiveDefeat4_Perfect: This data is of sublime quality.
-		// EndOfBattle_SuccessiveDefeat4_Excellent: Perhaps soon a revolutionary insight shall be discovered?
-		// EndOfBattle_SuccessiveDefeat4_ImproveFightTime: Should you desire to engage my machines again, I would suggest a more drawn out battle.
-		// EndOfBattle_SuccessiveDefeat4_ImproveAggression: Should you desire to engage my machines again, I would suggest a more risky combat approach.
-		// EndOfBattle_SuccessiveDefeat4_ImproveBuffs: Should you desire to engage my machines again, I would suggest a reduction in consumable enhancements.
-		// EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: Should you desire to engage my machines again, I would suggest greater dodging precision.
-		// EndOfBattle_SuccessiveDefeat4_Bad: A more refined combat approach would be more conductive to insightful analysis.
-		// EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: That was far, far too short for me to draw any insightful conclusions.
-		// EndOfBattle_SuccessiveDefeat5: I await the next battle.
-		// EndOfBattle_FirstDefeatReconBodyKill1: Intriguing...
-		// EndOfBattle_FirstDefeatReconBodyKill2: A tempermental disposition is not a data point I had not considered.
-		// EndOfBattle_FirstDefeatReconBodyKill3: Regardless, as I was saying...
+		EndOfBattle_FirstDefeat1: 出乎意料！
+		EndOfBattle_FirstDefeat2: 这一结果远远超越了我预想中的期望。
+		EndOfBattle_FirstDefeat3: 我很快就要离开了，你我的这次会面仍有许多需要探讨的部分。不过在此之前……
+		EndOfBattle_FirstDefeat4: 拿上这个吧，这是对你愿意付出时间的感谢。
+		EndOfBattle_FirstDefeat5: 如果你想再次和我的机械战斗，你应当知道如何使用密码破译器。
+		EndOfBattle_FirstDefeat6: 那么，再会。
+		EndOfBattle_SuccessiveDefeat1: 这是另一场已完成的实验。
+		EndOfBattle_SuccessiveDefeat2: 那么，让我分析一下结果……
+		EndOfBattle_SuccessiveDefeat3_Perfect: 出乎意料！你对这场战斗的投入、耐心、谨慎与技巧均未被忽略。
+		EndOfBattle_SuccessiveDefeat3_Excellent: 你拥有优异的天赋，如果再谨慎些许，一个完美的结果将触手可及。
+		EndOfBattle_SuccessiveDefeat3_Good: 有用的成果。
+		EndOfBattle_SuccessiveDefeat3_Acceptable: 平庸的成果，但还算有用。
+		EndOfBattle_SuccessiveDefeat3_Bad: 这些数据没啥用处。
+		EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: 这些数据对我而言毫无用处。
+		EndOfBattle_SuccessiveDefeat4_Perfect: 这些数据拥有极高的品质。
+		EndOfBattle_SuccessiveDefeat4_Excellent: 也许不久之后，你就能够拥有突破性的见解？
+		EndOfBattle_SuccessiveDefeat4_ImproveFightTime: 如果你想再次与我的机械战斗，我建议你进行一场更为持久的战斗。
+		EndOfBattle_SuccessiveDefeat4_ImproveAggression: 如果你想再次与我的机械战斗，我建议你采用风险更高的战斗方式。
+		EndOfBattle_SuccessiveDefeat4_ImproveBuffs: 如果你想再次与我的机械战斗，我建议你减少一些功能性消耗品的使用量。
+		EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: 如果你想再次与我的机械战斗，我建议你提升一下你的躲避能力。
+		EndOfBattle_SuccessiveDefeat4_Bad: 更为精细的战斗方式将更有助于深入分析战斗。
+		EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: 你的战斗时长太短了，短到我都无法得出任何有深意的结论。
+		EndOfBattle_SuccessiveDefeat5: 我期待着下一场战斗。
+		EndOfBattle_FirstDefeatReconBodyKill1: 有趣……
+		EndOfBattle_FirstDefeatReconBodyKill2: 我并非没有将你“易怒”的这一数据点考虑在内。
+		EndOfBattle_FirstDefeatReconBodyKill3: 不管怎么样，正如我所说的……
 		Error: 该文本不应显示。
 	}
 
