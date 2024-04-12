@@ -223,7 +223,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return false;
 
             float _ = 0f;
-            float laserWidth = Projectile.width * 1.15f;
+            float laserWidth = Projectile.width * 0.9f;
             Vector2 start = Projectile.Center;
             Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.Zero) * LaserbeamLength;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, laserWidth, ref _);
