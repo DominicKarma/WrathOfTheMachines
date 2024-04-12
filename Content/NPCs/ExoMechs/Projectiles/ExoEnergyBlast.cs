@@ -42,7 +42,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The maximum length of this laserbeam.
         /// </summary>
-        public static float MaxLaserbeamLength => 4600f;
+        public static float MaxLaserbeamLength => 6700f;
 
         /// <summary>
         /// The starting <see cref="Projectile.timeLeft"/> where overheating begins for the beam.
@@ -176,7 +176,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Color electricColor = new(0.67f, 0.7f, 1f, 0f);
             Color overheatColor = new(1f, 0.3f, 0f, 0f);
 
-            float opacity = Utilities.InverseLerp(0.01f, 0.065f, completionRatio) * 0.32f;
+            float opacity = Utilities.InverseLerp(0.01f, 0.065f, completionRatio) * Utilities.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
             return Projectile.GetAlpha(Color.Lerp(electricColor, overheatColor, OverheatInterpolant)) * opacity;
         }
 

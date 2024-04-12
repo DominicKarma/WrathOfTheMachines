@@ -51,8 +51,12 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Fade at the edges.
     color *= smoothstep(0.5, 0.3, distanceFromCenter);
     
-    // Apply some fast, scrolling noise to the overall result.
+    // Fade at the laser's end.
     float noise = tex2D(noiseScrollTexture, coords * float2(0.8, 1.75) + float2(globalTime * -3.3, 0));
+    float endOfLaserFade = smoothstep(0.98, 0.9 + noise * 0.06, coords.x);
+    color *= endOfLaserFade;
+    
+    // Apply some fast, scrolling noise to the overall result.
     return color * (noise + 1 + step(0.5, noise + (0.5 - distanceFromCenter)));
 }
 
