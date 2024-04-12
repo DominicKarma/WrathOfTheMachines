@@ -219,17 +219,22 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
+            // Measure how far along the laser's length the target is.
+            // If the signed distance is negative (a.k.a. they're behind the laser) or above the laser length (a.k.a. they're beyond the laser), terminate this
+            // method immediately.
             float signedDistanceAlongLaser = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
             if (signedDistanceAlongLaser < 0f || signedDistanceAlongLaser >= LaserbeamLength)
                 return false;
 
-            float _ = 0f;
+            // Now that the point on the laser is known from the distance, evaluate the exact width of the laser at said point for use with a AABB/line collision check.
             float laserWidth = LaserWidthFunction(signedDistanceAlongLaser / LaserbeamLength) * 0.45f;
             Vector2 perpendicular = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
             Vector2 laserPoint = Projectile.Center + Projectile.velocity * signedDistanceAlongLaser;
-            Vector2 start = laserPoint - perpendicular * laserWidth;
-            Vector2 end = laserPoint + perpendicular * laserWidth;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, laserWidth, ref _);
+            Vector2 left = laserPoint - perpendicular * laserWidth;
+            Vector2 right = laserPoint + perpendicular * laserWidth;
+
+            float _ = 0f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, laserWidth, ref _);
         }
 
         public override bool ShouldUpdatePosition() => false;
