@@ -15,10 +15,12 @@ Projectiles: {
 	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	HadesMine.DisplayName: 哈迪斯之雷
 	DraedonLootCrate.DisplayName: 嘉登战利品箱
+ HadesExoEnergyOrb.DisplayName: 星流能量球
+ ExoEnergyBlast.DisplayName: 星流过载爆破
 }
 
 NPCs: {
-	AresHand.DisplayName: 阿瑞斯手
+	AresHand.DisplayName: 阿瑞斯之手
 
 	Draedon: {
 		IntroductionMonologue1: 你知道吗？这一刻已经等了太久了。
