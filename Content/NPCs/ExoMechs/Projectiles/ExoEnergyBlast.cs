@@ -219,13 +219,16 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (targetHitbox.Distance(Projectile.Center) <= 150f)
+            float signedDistanceAlongLaser = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
+            if (signedDistanceAlongLaser < 0f || signedDistanceAlongLaser >= LaserbeamLength)
                 return false;
 
             float _ = 0f;
-            float laserWidth = Projectile.width * 0.8f;
-            Vector2 start = Projectile.Center;
-            Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.Zero) * LaserbeamLength;
+            float laserWidth = LaserWidthFunction(signedDistanceAlongLaser / LaserbeamLength) * 0.45f;
+            Vector2 perpendicular = Projectile.velocity.RotatedBy(MathHelper.PiOver2);
+            Vector2 laserPoint = Projectile.Center + Projectile.velocity * signedDistanceAlongLaser;
+            Vector2 start = laserPoint - perpendicular * laserWidth;
+            Vector2 end = laserPoint + perpendicular * laserWidth;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, laserWidth, ref _);
         }
 

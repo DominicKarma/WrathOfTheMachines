@@ -30,6 +30,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int ExoEnergyBlast_BlastDelay => Utilities.SecondsToFrames(3.5f);
 
         /// <summary>
+        /// The rate at which bursts of electricity are shot from the orb during the ExoEnergyBlast attack.
+        /// </summary>
+        public static int ExoEnergyBlast_ProjectileBurstReleaseRate => Utilities.SecondsToFrames(0.75f);
+
+        /// <summary>
+        /// The speed at which Hades turns the laser during the ExoEnergyBlast attack.
+        /// </summary>
+        public static float ExoEnergyBlast_LaserTurnSpeed => MathHelper.ToRadians(1.45f);
+
+        /// <summary>
         /// AI update loop method for the ExoEnergyBlast attack.
         /// </summary>
         public void DoBehavior_ExoEnergyBlast()
@@ -69,7 +79,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ExoEnergyBlast_InitialRedirectTime + 1)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<HadesExoEnergyOrb>(), 0, 0f, -1, ExoEnergyBlast_BlastDelay);
 
-                if (AITimer % 45 == 44 && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay - 40)
+                // Release tesla bursts.
+                if (AITimer % ExoEnergyBlast_ProjectileBurstReleaseRate == ExoEnergyBlast_ProjectileBurstReleaseRate - 1 && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay - 40)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -92,8 +103,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ExoEnergyBlast>(), ExoEnergyBlastDamage, 0f);
             }
+
+            // SPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay)
-                NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), 0.0135f) * 0.986f;
+                NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), ExoEnergyBlast_LaserTurnSpeed) * 0.986f;
 
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime)
                 SelectNextAttack();
