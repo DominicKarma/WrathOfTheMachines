@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs;
+using CalamityMod.Skies;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -115,6 +116,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
             }
+
+            // Get out of my head get out of my head get out of my head get out of my head get out of my head
+            ((ExoMechsSky)SkyManager.Instance["CalamityMod:ExoMechs"]).LightningBolts.Clear();
 
             if (maxDepth < float.MaxValue || minDepth >= float.MaxValue)
             {
