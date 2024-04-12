@@ -56,7 +56,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + (beamIsOverheating ? 2f : -1f) * StandardSegmentOpenRate);
 
-            JawRotation = Utilities.InverseLerp(0f, ExoEnergyBlast_JawOpenTime, AITimer).Squared() * 0.74f;
+            if (AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime)
+                JawRotation = Utilities.InverseLerp(0f, ExoEnergyBlast_JawOpenTime, AITimer).Squared() * 0.74f;
 
             // Attempt to get into position for the light attack.
             if (AITimer < ExoEnergyBlast_InitialRedirectTime)
@@ -92,8 +93,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                         for (int i = 0; i < 7; i++)
                         {
                             Vector2 burstShootDirection = NPC.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(MathHelper.Lerp(-1.4f, 1.4f, i / 6f));
-                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * 224f;
-                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), burstSpawnPosition, burstShootDirection * 0.4f, ModContent.ProjectileType<HomingTeslaBurst>(), BasicLaserDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                            Vector2 burstSpawnPosition = NPC.Center + NPC.velocity.SafeNormalize(Vector2.UnitY) * (pointAtTargetSpeed * 25f + 60f);
+                            Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), burstSpawnPosition, burstShootDirection * 0.85f, ModContent.ProjectileType<HomingTeslaBurst>(), BasicLaserDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
                         }
                     }
                 }
