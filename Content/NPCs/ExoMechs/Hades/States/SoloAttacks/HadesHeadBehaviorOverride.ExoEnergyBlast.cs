@@ -19,12 +19,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void DoBehavior_ExoEnergyBlast()
         {
-            BodyBehaviorAction = new(AllSegments(), CloseSegment());
-
             int initialRedirectTime = 360;
             int blastDelay = 240;
             float pointAtTargetSpeed = 1f;
+            bool beamIsOverheating = AITimer >= initialRedirectTime + blastDelay + ExoEnergyBlast.Lifetime - ExoEnergyBlast.OverheatStartingTime;
             Vector2 outerHoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -960f, -300f);
+
+            BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
+            SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + (beamIsOverheating ? 2f : -1f) * StandardSegmentOpenRate);
 
             // Attempt to get into position for the light attack.
             if (AITimer < initialRedirectTime)
@@ -56,8 +58,17 @@ namespace WoTM.Content.NPCs.ExoMechs
                 NPC.velocity = NPC.velocity.SafeNormalize(Vector2.UnitY) * MathHelper.Lerp(NPC.velocity.Length(), pointAtTargetSpeed, 0.061f);
             }
 
+            // Fire the Biden Blast.
+            if (AITimer == initialRedirectTime + blastDelay)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ExoEnergyBlast>(), ExoEnergyBlastDamage, 0f);
+            }
             if (AITimer >= initialRedirectTime + blastDelay)
-                AITimer = 1;
+                NPC.velocity = NPC.velocity.RotateTowards(NPC.AngleTo(Target.Center), 0.0175f);
+
+            if (AITimer >= initialRedirectTime + blastDelay + ExoEnergyBlast.Lifetime)
+                AITimer = initialRedirectTime - 120;
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }

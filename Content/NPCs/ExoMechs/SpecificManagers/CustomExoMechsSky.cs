@@ -30,6 +30,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         private bool skyActive;
 
         /// <summary>
+        /// The exposure value of the clouds. Gradually returns to a stable value over time.
+        /// </summary>
+        public static float CloudExposure
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The general opacity of this sky.
         /// </summary>
         public static new float Opacity
@@ -57,6 +66,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The default cloud exposure value.
+        /// </summary>
+        public static float DefaultCloudExposure => 0.7f;
+
+        /// <summary>
         /// The lightning instances.
         /// </summary>
         public static readonly LightningData[] Lightning = new LightningData[10];
@@ -79,8 +93,11 @@ namespace WoTM.Content.NPCs.ExoMechs
                 planeForwardInterpolant = 1f - behavior.PlaneFlyForwardInterpolant;
             }
 
-            // Increase or decrease the opacity of this sky based on whether it's active or not, stopping at 0-1 bounds.
-            Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.005f, 0f, maxSkyOpacity);
+            if (!Main.gamePaused)
+            {
+                CloudExposure = MathHelper.Lerp(CloudExposure, DefaultCloudExposure, 0.03f);
+                Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.005f, 0f, maxSkyOpacity);
+            }
 
             // Prevent drawing beyond the back layer.
             if (maxDepth >= float.MaxValue || minDepth < float.MaxValue)
@@ -142,7 +159,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             cloudShader.TrySetParameter("parallax", new Vector2(0.3f, 0.175f) * Main.caveParallax);
             cloudShader.TrySetParameter("cloudDensity", Opacity * 0.6f);
             cloudShader.TrySetParameter("horizontalOffset", CloudOffset.X);
-            cloudShader.TrySetParameter("cloudExposure", 0.7f);
+            cloudShader.TrySetParameter("cloudExposure", CloudExposure);
             cloudShader.TrySetParameter("pixelationFactor", 4f);
             cloudShader.TrySetParameter("lightningIntensities", lightningIntensities);
             cloudShader.TrySetParameter("lightningPositions", lightningPositions);

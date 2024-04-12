@@ -16,6 +16,7 @@ Projectiles: {
 	HadesMine.DisplayName: 哈迪斯之雷
 	// DraedonLootCrate.DisplayName: Draedon Loot Crate
 	// HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
+	// ExoEnergyBlast.DisplayName: Exoelectric Overload Blast
 }
 
 NPCs: {

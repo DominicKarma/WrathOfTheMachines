@@ -8,7 +8,6 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
@@ -143,43 +142,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.spriteBatch.Draw(bloom, drawPosition, null, Projectile.GetAlpha(new(0.34f, 0.5f, 1f, 0f)) * 0.4f, 0f, bloom.Size() * 0.5f, Projectile.Size * Projectile.scale / bloom.Size() * 3f, 0, 0f);
 
             Main.spriteBatch.PrepareForShaders();
-
-            DrawTelegraph(drawPosition);
             DrawOrb(drawPosition);
-
             Main.spriteBatch.ResetToDefault();
 
             return false;
-        }
-
-        public void DrawTelegraph(Vector2 drawPosition)
-        {
-            Texture2D invisible = MiscTexturesRegistry.InvisiblePixel.Value;
-            Effect laserScopeEffect = Filters.Scene["CalamityMod:PixelatedSightLine"].GetShader().Shader;
-
-            float laserLength = Utilities.InverseLerpBump(0f, 0.14f, 0.9f, 0.94f, LifetimeRatio) * 1050f;
-            float laserWidth = Projectile.scale * 0.0052f;
-            laserScopeEffect.Parameters["sampleTexture2"].SetValue(MiscTexturesRegistry.DendriticNoise.Value);
-            laserScopeEffect.Parameters["noiseOffset"].SetValue(Main.GameUpdateCount * -0.004f);
-            laserScopeEffect.Parameters["mainOpacity"].SetValue(0.6f);
-            laserScopeEffect.Parameters["Resolution"].SetValue(Vector2.One * 450f);
-            laserScopeEffect.Parameters["laserAngle"].SetValue(-Projectile.rotation);
-            laserScopeEffect.Parameters["laserWidth"].SetValue(laserWidth);
-            laserScopeEffect.Parameters["laserLightStrenght"].SetValue(1.8f);
-            laserScopeEffect.Parameters["color"].SetValue(Vector3.Lerp(new Vector3(0f, 0.67f, 1f), new Vector3(0.4f, 1f, 1f), Projectile.scale));
-            laserScopeEffect.Parameters["darkerColor"].SetValue(Color.Navy.ToVector3());
-            laserScopeEffect.Parameters["bloomSize"].SetValue(Projectile.scale * 0.45f);
-            laserScopeEffect.Parameters["bloomMaxOpacity"].SetValue(0.3f);
-            laserScopeEffect.Parameters["bloomFadeStrenght"].SetValue(5f);
-            laserScopeEffect.CurrentTechnique.Passes[0].Apply();
-
-            Main.spriteBatch.Draw(invisible, drawPosition, null, new(1f, 1f, 1f, 0f), 0f, invisible.Size() * 0.5f, laserLength, SpriteEffects.None, 0f);
-
-            laserScopeEffect.Parameters["laserWidth"].SetValue(laserWidth * 0.4f);
-            laserScopeEffect.Parameters["bloomMaxOpacity"].SetValue(0.04f);
-            laserScopeEffect.Parameters["color"].SetValue(Color.White.ToVector3());
-            laserScopeEffect.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(invisible, drawPosition, null, new Color(1f, 1f, 1f, 0f) * Projectile.scale, 0f, invisible.Size() * 0.5f, laserLength, SpriteEffects.None, 0f);
         }
 
         public void DrawOrb(Vector2 drawPosition)

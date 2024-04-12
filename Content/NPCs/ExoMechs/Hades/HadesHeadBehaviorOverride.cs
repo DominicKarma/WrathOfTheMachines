@@ -229,6 +229,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             BodyBehaviorAction = null;
             BodyRenderAction = null;
             NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;
+            SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant - StandardSegmentOpenRate);
 
             CalamityGlobalNPC.draedonExoMechWorm = NPC.whoAmI;
         }
@@ -394,6 +395,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void ModifyTypeName(ref string typeName)
         {
             typeName = Language.GetTextValue("Mods.WoTM.NPCs.ThanatosRename");
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            int frame = Utils.Clamp((int)(SegmentOpenInterpolant * Main.npcFrameCount[NPC.type]), 0, Main.npcFrameCount[NPC.type] - 1);
+            NPC.frame.Y = frame * frameHeight;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)

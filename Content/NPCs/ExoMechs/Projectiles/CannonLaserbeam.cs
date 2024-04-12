@@ -52,6 +52,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Electricity;
 
+        public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 6000;
+
         public override void SetDefaults()
         {
             Projectile.width = 2;
@@ -76,7 +78,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.Center = ownerCannonEnd;
             Projectile.velocity = Owner.rotation.ToRotationVector2() * Owner.spriteDirection;
 
-            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 6000;
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 167f, 0f, MaxLaserbeamLength);
 
             CreateSinusoidalParticles();
