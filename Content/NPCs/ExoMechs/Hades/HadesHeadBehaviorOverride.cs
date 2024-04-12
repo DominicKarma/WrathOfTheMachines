@@ -130,7 +130,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The amount of body segments Hades spawns with.
         /// </summary>
-        public const int BodySegmentCount = 67;
+        public const int BodySegmentCount = 50;
 
         /// <summary>
         /// The standard segment opening rate from <see cref="OpenSegment(float)"/>.
