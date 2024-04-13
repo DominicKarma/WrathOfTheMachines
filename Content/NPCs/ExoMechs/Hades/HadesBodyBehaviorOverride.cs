@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -195,6 +196,33 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return false;
 
             return true;
+        }
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            if (Main.netMode == NetmodeID.Server || NPC.life >= 1)
+                return;
+
+            if (IsSecondaryBodySegment)
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody2").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody2_2").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody2_3").Type, NPC.scale);
+            }
+            else if (IsTailSegment)
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosTail1").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosTail2").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosTail3").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosTail4").Type, NPC.scale);
+            }
+
+            else
+            {
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody1").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody1_2").Type, NPC.scale);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>("CalamityMod/ThanatosBody1_3").Type, NPC.scale);
+            }
         }
 
         public override void FindFrame(int frameHeight)
