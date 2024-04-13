@@ -110,7 +110,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 directionToNextSegment = directionToNextSegment.RotatedBy(angleOffset);
             }
 
-            // Hack to ensure that segments retain Thanatos' secondary AI state, and thusly use the correct map icon.
+            // Hack to ensure that segments retain Hades' secondary AI state, and thusly use the correct map icon.
             NPC.Calamity().newAI[1] = aheadSegment.Calamity().newAI[1];
 
             NPC.Opacity = aheadSegment.Opacity;
