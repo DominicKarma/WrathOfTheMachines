@@ -73,7 +73,7 @@ NPCs: {
 		EndOfBattle_SuccessiveDefeat3_WhyDidYouMeltTheBoss: This data is of no use to me.
 		EndOfBattle_SuccessiveDefeat4_Perfect: This data is of sublime quality.
 		EndOfBattle_SuccessiveDefeat4_Excellent: Perhaps soon a revolutionary insight shall be discovered?
-		EndOfBattle_SuccessiveDefeat4_ImproveFightTime: Should you desire to engage my machines again, I would suggest a more drawn out battle.
+		EndOfBattle_SuccessiveDefeat4_ImproveFightTime: Should you desire to engage my machines again, I would suggest a more drawn out fight.
 		EndOfBattle_SuccessiveDefeat4_ImproveAggression: Should you desire to engage my machines again, I would suggest a more risky combat approach.
 		EndOfBattle_SuccessiveDefeat4_ImproveBuffs: Should you desire to engage my machines again, I would suggest a reduction in consumable enhancements.
 		EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: Should you desire to engage my machines again, I would suggest greater dodging precision.
