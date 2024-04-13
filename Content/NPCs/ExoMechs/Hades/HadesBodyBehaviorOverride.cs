@@ -86,7 +86,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <remarks>
         /// This exists to give a short window of time in multiplayer to allow for body segments to all spawn, so that if latency occurs with any of the segments the worm doesn't become just a head due to not having a valid ahead segment yet.
         /// </remarks>
-        public static readonly int ActivationDelay = Utilities.SecondsToFrames(0.4f);
+        public static readonly int ActivationDelay = Utilities.SecondsToFrames(0.25f);
 
         public override int NPCOverrideID => ModContent.NPCType<ThanatosBody1>();
 
