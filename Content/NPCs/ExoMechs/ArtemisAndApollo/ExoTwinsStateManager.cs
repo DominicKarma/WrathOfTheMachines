@@ -110,6 +110,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.EnterSecondPhase:
                     ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);
                     break;
+
+                case ExoTwinsAIState.UltimateAttack:
+                    ExoTwinsStates.DoBehavior_UltimateAttack(twin, twinAttributes);
+                    break;
             }
         }
 

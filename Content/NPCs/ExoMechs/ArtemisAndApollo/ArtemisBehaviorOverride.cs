@@ -115,6 +115,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Artemis' Z position.
+        /// </summary>
+        public float ZPosition
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Artemis's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
@@ -212,12 +221,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             bitWriter.WriteBit(Inactive);
             bitWriter.WriteBit(IsPrimaryMech);
+
+            binaryWriter.Write(ZPosition);
         }
 
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
             Inactive = bitReader.ReadBit();
             IsPrimaryMech = bitReader.ReadBit();
+
+            ZPosition = binaryReader.ReadSingle();
         }
 
         public override void AI()
@@ -273,6 +286,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.Nothing;
             NPC.damage = 0;
+            NPC.scale = 1f / (ZPosition + 1f);
         }
 
         public void UpdateEngineSound()

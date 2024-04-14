@@ -51,7 +51,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             bool beamIsOverheating = AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime - ExoEnergyBlast.OverheatStartingTime;
             float pointAtTargetSpeed = 7.5f;
-            Vector2 outerHoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -1050f, -400f);
+            Vector2 outerHoverDestination = Target.Center + new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 1050f, -400f);
 
             BodyBehaviorAction = new(AllSegments(), beamIsOverheating ? OpenSegment() : CloseSegment());
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + (beamIsOverheating ? 2f : -1f) * StandardSegmentOpenRate);

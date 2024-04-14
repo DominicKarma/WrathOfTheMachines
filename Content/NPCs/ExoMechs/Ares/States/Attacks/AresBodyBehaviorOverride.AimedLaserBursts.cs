@@ -50,7 +50,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer == 1)
                 SoundEngine.PlaySound(AresLaserCannon.TelSound);
 
-            Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X - NPC.Center.X).NonZeroSign() * -300f, -350f);
+            Vector2 hoverDestination = Target.Center + new Vector2(NPC.OnRightSideOf(Target).ToDirectionInt() * 300f, -350f);
             if (MathHelper.Distance(Target.Center.X, NPC.Center.X) <= 120f)
                 hoverDestination.X = Target.Center.X;
 
