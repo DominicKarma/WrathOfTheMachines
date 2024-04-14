@@ -106,7 +106,7 @@ namespace WoTM
 
         public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            if (InfernumModeCompatibility.InfernumModeIsActive)
+            if (InfernumModeCompatibility.InfernumModeIsActive || npc.IsABestiaryIconDummy)
                 return true;
 
             return BehaviorOverride?.PreDraw(spriteBatch, screenPos, drawColor) ?? true;
