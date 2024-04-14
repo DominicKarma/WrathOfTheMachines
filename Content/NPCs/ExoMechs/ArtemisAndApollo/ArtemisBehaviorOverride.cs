@@ -286,7 +286,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.Nothing;
             NPC.damage = 0;
-            NPC.scale = 1f / (ZPosition + 1f);
         }
 
         public void UpdateEngineSound()
@@ -343,6 +342,14 @@ namespace WoTM.Content.NPCs.ExoMechs
                 for (int i = 1; i <= 5; i++)
                     Gore.NewGore(deathSource, npc.position, npc.velocity, calamity.Find<ModGore>($"Artemis{i}").Type, npc.scale);
             }
+        }
+
+        public override Color? GetAlpha(Color drawColor)
+        {
+            float backgroundVfxInterpolant = Utilities.InverseLerp(0.9f, 3.7f, ZPosition);
+            float backgroundOpacity = MathHelper.Lerp(1f, 0.65f, backgroundVfxInterpolant);
+            drawColor = Color.Lerp(drawColor, Color.DarkGray, backgroundVfxInterpolant * 0.56f) * backgroundOpacity;
+            return drawColor * NPC.Opacity;
         }
 
         public static void HitEffectILEdit(ILContext context, ManagedILEdit edit)

@@ -24,6 +24,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.velocity *= 0.9f;
                 return;
             }
+            else
+                DoBehavior_UltimateAttack_Artemis(npc, twinAttributes);
         }
 
         /// <summary>
@@ -40,7 +42,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             float enterBackgroundInterpolant = Utilities.InverseLerp(0f, UltimateAttack_EnterBackgroundTime, AITimer);
-            artemis.ZPosition = enterBackgroundInterpolant;
+            artemis.ZPosition = enterBackgroundInterpolant * 3f;
+
+            if (enterBackgroundInterpolant >= 1f)
+                AITimer = 0;
         }
     }
 }

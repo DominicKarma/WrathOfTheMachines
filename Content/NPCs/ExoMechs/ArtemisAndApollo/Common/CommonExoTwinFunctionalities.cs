@@ -27,11 +27,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public const float EndingOpticLength = 540f;
 
-        private static float NerveEndingWidthFunction(float completionRatio)
+        private static float NerveEndingWidthFunction(NPC twin, float completionRatio)
         {
             float baseWidth = Utilities.InverseLerp(1f, 0.54f, completionRatio) * 6f;
             float endTipWidth = Utilities.Convert01To010(Utilities.InverseLerp(0.96f, 0.83f, completionRatio)) * 6f;
-            return baseWidth + endTipWidth;
+            return (baseWidth + endTipWidth) * twin.scale;
         }
 
         /// <summary>
@@ -51,7 +51,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             ManagedShader nerveEndingShader = ShaderManager.GetShader("WoTM.ExoTwinNerveEndingShader");
             nerveEndingShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 1, SamplerState.LinearWrap);
 
-            // Draw nerve endings near the main thruster
+            // Draw nerve endings near the main thruster.
+            float nerveEndingLength = twin.scale * 540f;
             for (int direction = -1; direction <= 1; direction += 2)
             {
                 Vector2 backwards = -twin.rotation.ToRotationVector2();
@@ -66,13 +67,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                     float completionRatio = i / 7f;
                     float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
-                    Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * 540f;
-                    Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2);
+                    Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * nerveEndingLength;
+                    Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2) * twin.scale;
 
                     nerveDrawPositions.Add(twin.Center + backwardsOffset + perpendicularOffset);
                 }
 
-                PrimitiveSettings settings = new(NerveEndingWidthFunction, nerveEndingColorFunction, Shader: nerveEndingShader);
+                PrimitiveSettings settings = new(c => NerveEndingWidthFunction(twin, c), nerveEndingColorFunction, Shader: nerveEndingShader);
                 PrimitiveRenderer.RenderTrail(nerveDrawPositions, settings, 40);
             }
         }
@@ -87,7 +88,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (twinInterface.WingtipVorticesOpacity <= 0f || Vector2.Dot(twin.velocity, twin.rotation.ToRotationVector2()) < 0f)
                 return;
 
-            float windWidthFunction(float completionRatio) => 6f - completionRatio * 5f;
+            float windWidthFunction(float completionRatio) => (6f - completionRatio * 5f) * twin.scale;
             Color windColorFunction(float completionRatio)
             {
                 Color baseColor = twin.GetAlpha(Color.Gray);
@@ -127,7 +128,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
         public static void DrawThrusters(NPC twin, IExoTwin twinInterface)
         {
-            float thrusterWidth = twinInterface.ThrusterBoost * 20f + 15f;
+            float thrusterWidth = (twinInterface.ThrusterBoost * 20f + 15f) * twin.scale;
 
             float thrusterWidthFunction(float completionRatio)
             {
