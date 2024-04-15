@@ -30,6 +30,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             DetachHands,
             NukeAoEAndPlasmaBlasts,
             AimedLaserBursts,
+
+            BackgroundCoreLaserBeams,
+
             Inactive,
             ReturnToBeingActive
         }
@@ -258,6 +261,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case AresAIState.AimedLaserBursts:
                     DoBehavior_AimedLaserBursts();
+                    break;
+                case AresAIState.BackgroundCoreLaserBeams:
+                    DoBehavior_BackgroundCoreLaserBeams();
                     break;
                 case AresAIState.Inactive:
                     DoBehavior_Inactive();
