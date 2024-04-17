@@ -156,8 +156,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (SharedState.TotalFinishedAttacks % 2 == 1)
                 return ExoTwinsAIState.PerformIndividualAttacks;
 
-            return ExoTwinsAIState.UltimateAttack;
-
             return Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots, ExoTwinsAIState.MachineGunLasers);
         }
 
