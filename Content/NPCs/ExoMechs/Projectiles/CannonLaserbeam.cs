@@ -29,7 +29,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public NPC Owner => Main.npc[OwnerIndex];
 
         /// <summary>
-        /// How long this sphere has existed, in frames.
+        /// How long this laserbeam has existed, in frames.
         /// </summary>
         public ref float Time => ref Projectile.ai[1];
 
@@ -39,7 +39,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float LaserbeamLength => ref Projectile.ai[2];
 
         /// <summary>
-        /// How long the explosion lasts.
+        /// How long this laserbeam should exist for, in frames.
         /// </summary>
         public static int Lifetime => Utilities.SecondsToFrames(2.2f);
 

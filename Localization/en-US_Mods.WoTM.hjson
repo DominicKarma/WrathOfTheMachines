@@ -17,6 +17,7 @@ Projectiles: {
 	DraedonLootCrate.DisplayName: Draedon Loot Crate
 	HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
 	ExoEnergyBlast.DisplayName: Exoelectric Overload Blast
+	ExoOverloadDeathray.DisplayName: Exo Overload Deathray
 }
 
 NPCs: {
