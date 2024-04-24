@@ -121,7 +121,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.Center = ares.CorePosition;
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 98f, 0f, MaxLaserbeamLength);
 
-            Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 25f, Time), 0.63f);
+            Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 11f, Time), 0.63f);
 
             Time++;
         }
