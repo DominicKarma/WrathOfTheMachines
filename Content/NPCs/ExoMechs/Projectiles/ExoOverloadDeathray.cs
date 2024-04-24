@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
@@ -17,10 +16,8 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ExoOverloadDeathray : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
+    public class ExoOverloadDeathray : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
-        public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterNPCs;
-
         /// <summary>
         /// The rotation of this deathray.
         /// </summary>
@@ -50,9 +47,20 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// </summary>
         public static float MaxLaserbeamLength => 8000f;
 
+        /// <summary>
+        /// How many segments should be generated for the cylinder when subdiving its radial part.
+        /// </summary>
         public const int CylinderWidthSegments = 12;
 
+        /// <summary>
+        /// How many segments should be generated for the cylinder when subdiving its height part.
+        /// </summary>
         public const int CylinderHeightSegments = 2;
+
+        /// <summary>
+        /// The amount of cylinders used when subdividing the vertices for use by the bloom.
+        /// </summary>
+        public const int BloomSubdivisions = 40;
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -72,6 +80,23 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(Rotation.X);
+            writer.Write(Rotation.Y);
+            writer.Write(Rotation.Z);
+            writer.Write(Rotation.W);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            float rotationX = reader.ReadSingle();
+            float rotationY = reader.ReadSingle();
+            float rotationZ = reader.ReadSingle();
+            float rotationW = reader.ReadSingle();
+            Rotation = new(rotationX, rotationY, rotationZ, rotationW);
+        }
+
         public override void AI()
         {
             if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehaviorOverride ares))
@@ -82,40 +107,25 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             float rotationTime = Time / 142f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
-            var quaternionRotation = Matrix.CreateRotationZ(0.11f) * Matrix.CreateRotationY(sine * 1.29f + MathHelper.PiOver2);
+            var quaternionRotation = Matrix.CreateRotationZ(0.11f) * Matrix.CreateRotationY(sine * 1.33f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
 
             Projectile.Center = ares.CorePosition;
-            LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 167f, 0f, MaxLaserbeamLength);
+            LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 95f, 0f, MaxLaserbeamLength);
 
             Time++;
         }
 
-        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
-        {
-        }
-
-        public void Render(Vector3 start, Vector3 end, Color baseColor, float widthFactor)
-        {
-            GraphicsDevice gd = Main.instance.GraphicsDevice;
-            GetVerticesAndIndices(widthFactor, baseColor, start, end, MathHelper.Pi, out VertexPosition2DColorTexture[] rightVertices, out int[] indices);
-            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, rightVertices, 0, rightVertices.Length, indices, 0, indices.Length / 3);
-
-            GetVerticesAndIndices(widthFactor, baseColor, start, end, 0f, out VertexPosition2DColorTexture[] leftVertices, out _);
-            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, leftVertices, 0, leftVertices.Length, indices, 0, indices.Length / 3);
-        }
-
         public void GetBloomVerticesAndIndices(Color baseColor, Vector3 start, Vector3 end, out VertexPosition2DColorTexture[] leftVertices, out VertexPosition2DColorTexture[] rightVertices, out int[] indices)
         {
-            int bloomSubdivisions = 40;
             int numVertices = (CylinderWidthSegments + 1) * (CylinderHeightSegments + 1);
             int numIndices = CylinderWidthSegments * CylinderHeightSegments * 6;
 
-            leftVertices = new VertexPosition2DColorTexture[numVertices * bloomSubdivisions];
+            leftVertices = new VertexPosition2DColorTexture[numVertices * BloomSubdivisions];
             rightVertices = new VertexPosition2DColorTexture[leftVertices.Length];
-            indices = new int[numIndices * bloomSubdivisions * 6];
+            indices = new int[numIndices * BloomSubdivisions * 6];
 
-            for (int i = 0; i < bloomSubdivisions; i++)
+            for (int i = 0; i < BloomSubdivisions; i++)
             {
                 float subdivisionInterpolant = i / 39f;
                 float bloomWidthFactor = subdivisionInterpolant * 1.3f + 1f;
@@ -134,6 +144,16 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             }
         }
 
+        /// <summary>
+        /// Collects vertices and indices for rendering the laser cylinder.
+        /// </summary>
+        /// <param name="widthFactor">The width factor of the cylinder.</param>
+        /// <param name="baseColor">The color of the cylinder.</param>
+        /// <param name="start">The starting point of the deathray, in 3D space.</param>
+        /// <param name="end">The ending point of the deathray, in 3D space.</param>
+        /// <param name="cylinderOffsetAngle">The offset angle of the vertices on the cylinder.</param>
+        /// <param name="vertices">The resulting vertices.</param>
+        /// <param name="indices">The resulting indices.</param>
         public void GetVerticesAndIndices(float widthFactor, Color baseColor, Vector3 start, Vector3 end, float cylinderOffsetAngle, out VertexPosition2DColorTexture[] vertices, out int[] indices)
         {
             int numVertices = (CylinderWidthSegments + 1) * (CylinderHeightSegments + 1);
@@ -142,43 +162,66 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             vertices = new VertexPosition2DColorTexture[numVertices];
             indices = new int[numIndices];
 
-            float widthStep = 1.0f / CylinderWidthSegments;
-            float heightStep = 1.0f / CylinderHeightSegments;
+            float widthStep = 1f / CylinderWidthSegments;
+            float heightStep = 1f / CylinderHeightSegments;
 
-            // Create vertices
-            for (int j = 0; j <= CylinderHeightSegments; j++)
+            // Create vertices.
+            for (int i = 0; i <= CylinderHeightSegments; i++)
             {
-                for (int i = 0; i <= CylinderWidthSegments; i++)
+                for (int j = 0; j <= CylinderWidthSegments; j++)
                 {
-                    float width = Utils.Remap(j * heightStep, 0f, 0.5f, 3f, Projectile.width * Projectile.scale) * widthFactor;
-                    float angle = MathHelper.Pi * i * widthStep + cylinderOffsetAngle;
+                    float width = Utils.Remap(i * heightStep, 0f, 0.5f, 3f, Projectile.width * Projectile.scale) * widthFactor;
+                    float angle = MathHelper.Pi * j * widthStep + cylinderOffsetAngle;
                     Vector3 orthogonalOffset = Vector3.Transform(new Vector3(0f, MathF.Sin(angle), MathF.Cos(angle)), Rotation) * width;
-                    Vector3 cylinderPoint = Vector3.Lerp(start, end, j * heightStep) + orthogonalOffset;
-                    vertices[j * (CylinderWidthSegments + 1) + i] = new(new(cylinderPoint.X, cylinderPoint.Y), baseColor, new Vector2(j * heightStep, i * widthStep), 1f);
+                    Vector3 cylinderPoint = Vector3.Lerp(start, end, i * heightStep) + orthogonalOffset;
+                    vertices[i * (CylinderWidthSegments + 1) + j] = new(new(cylinderPoint.X, cylinderPoint.Y), baseColor, new Vector2(i * heightStep, j * widthStep), 1f);
                 }
             }
 
-            // Create indices
-            for (int j = 0; j < CylinderHeightSegments; j++)
+            // Create indices.
+            for (int i = 0; i < CylinderHeightSegments; i++)
             {
-                for (int i = 0; i < CylinderWidthSegments; i++)
+                for (int j = 0; j < CylinderWidthSegments; j++)
                 {
-                    int upperLeft = j * (CylinderWidthSegments + 1) + i;
+                    int upperLeft = i * (CylinderWidthSegments + 1) + j;
                     int upperRight = upperLeft + 1;
                     int lowerLeft = upperLeft + (CylinderWidthSegments + 1);
                     int lowerRight = lowerLeft + 1;
 
-                    indices[(j * CylinderWidthSegments + i) * 6] = upperLeft;
-                    indices[(j * CylinderWidthSegments + i) * 6 + 1] = lowerRight;
-                    indices[(j * CylinderWidthSegments + i) * 6 + 2] = lowerLeft;
+                    indices[(i * CylinderWidthSegments + j) * 6] = upperLeft;
+                    indices[(i * CylinderWidthSegments + j) * 6 + 1] = lowerRight;
+                    indices[(i * CylinderWidthSegments + j) * 6 + 2] = lowerLeft;
 
-                    indices[(j * CylinderWidthSegments + i) * 6 + 3] = upperLeft;
-                    indices[(j * CylinderWidthSegments + i) * 6 + 4] = upperRight;
-                    indices[(j * CylinderWidthSegments + i) * 6 + 5] = lowerRight;
+                    indices[(i * CylinderWidthSegments + j) * 6 + 3] = upperLeft;
+                    indices[(i * CylinderWidthSegments + j) * 6 + 4] = upperRight;
+                    indices[(i * CylinderWidthSegments + j) * 6 + 5] = lowerRight;
                 }
             }
         }
 
+        /// <summary>
+        /// Renders the deathray.
+        /// </summary>
+        /// <param name="start">The starting point of the deathray, in 3D space.</param>
+        /// <param name="end">The ending point of the deathray, in 3D space.</param>
+        /// <param name="baseColor">The color of the cylinder.</param>
+        /// <param name="widthFactor">The width factor of the cylinder.</param>
+        public void RenderLaser(Vector3 start, Vector3 end, Color baseColor, float widthFactor)
+        {
+            GraphicsDevice gd = Main.instance.GraphicsDevice;
+            GetVerticesAndIndices(widthFactor, baseColor, start, end, MathHelper.Pi, out VertexPosition2DColorTexture[] rightVertices, out int[] indices);
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, rightVertices, 0, rightVertices.Length, indices, 0, indices.Length / 3);
+
+            GetVerticesAndIndices(widthFactor, baseColor, start, end, 0f, out VertexPosition2DColorTexture[] leftVertices, out _);
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, leftVertices, 0, leftVertices.Length, indices, 0, indices.Length / 3);
+        }
+
+        /// <summary>
+        /// Renders bloom for the deathray.
+        /// </summary>
+        /// <param name="start">The starting point of the deathray, in 3D space.</param>
+        /// <param name="end">The ending point of the deathray, in 3D space.</param>
+        /// <param name="projection">The matrix responsible for manipulating primitive vertices.</param>
         public void RenderBloom(Vector3 start, Vector3 end, Matrix projection)
         {
             Color bloomColor = Color.White with { A = 0 };
@@ -219,7 +262,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             overloadShader.TrySetParameter("baseColor", Color.White);
             overloadShader.Apply();
 
-            Render(start, end, Color.White, 1f);
+            RenderLaser(start, end, Color.White, 1f);
             return false;
         }
 
@@ -247,7 +290,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector3 endPoint = start + rayDirection * tNear;
             Vector3 directionToTarget = Vector3.Normalize(targetCenter - start);
             float distanceToProjection = Vector3.Distance(endPoint, targetCenter);
-
             return distanceToProjection <= Projectile.width * Projectile.scale && Vector3.Dot(directionToTarget, rayDirection) >= 0.97f;
         }
 

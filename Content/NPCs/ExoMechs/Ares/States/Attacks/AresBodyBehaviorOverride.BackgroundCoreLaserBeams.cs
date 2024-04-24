@@ -34,10 +34,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (float i = 0; i < 1f; i += 1f)
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), CorePosition, Vector2.Zero, ModContent.ProjectileType<ExoOverloadDeathray>(), CoreLaserbeamDamage, 0f, -1, 0f, i * 4f);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), CorePosition, Vector2.Zero, ModContent.ProjectileType<ExoOverloadDeathray>(), CoreLaserbeamDamage, 0f, -1, 0f, i * 4f);
                 }
             }
+
+            NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(Target.Center.X, NPC.Center.X), 0.11f);
+            NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(NPC.Center.X, Target.Center.X), 0.024f);
 
             BasicHandUpdateWrapper();
         }
