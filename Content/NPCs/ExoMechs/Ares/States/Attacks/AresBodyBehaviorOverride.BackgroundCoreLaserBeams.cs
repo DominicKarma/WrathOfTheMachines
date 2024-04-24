@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -44,8 +45,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             ZPosition = enterBackgroundInterpolant * 3.7f;
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * enterBackgroundInterpolant * 360f, enterBackgroundInterpolant * (1f - slowDownInterpolant) * 0.08f);
             NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(Target.Center.X, NPC.Center.Y), slowDownInterpolant * 0.111f);
-            NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(NPC.Center.X, Target.Center.Y), slowDownInterpolant * 0.019f);
-            NPC.Center = NPC.Center.MoveTowards(new Vector2(NPC.Center.X, Target.Center.Y), slowDownInterpolant * 1.7f);
+            NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(NPC.Center.X, Target.Center.Y - 70f), slowDownInterpolant * 0.019f);
+            NPC.Center = NPC.Center.MoveTowards(new Vector2(NPC.Center.X, Target.Center.Y - 70f), slowDownInterpolant * 1.7f);
             NPC.velocity *= 0.93f;
 
             NPC.dontTakeDamage = true;
@@ -75,13 +76,24 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (AITimer >= 90)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % 8 == 7)
+                if (AITimer % 8 == 7)
                 {
-                    Vector2 missileSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1100f, -740f);
-                    if (Main.rand.NextBool(3))
-                        missileSpawnPosition.X = Target.Center.X + Main.rand.NextFloatDirection() * 50f;
+                    Vector2 sparkSpawnPosition = NPC.Center - Vector2.UnitY.RotatedByRandom(1.1f) * NPC.scale * 90f;
+                    SparkleParticle sparkle = new(sparkSpawnPosition, Vector2.Zero, Color.White, Color.Yellow, 0.23f, 10);
+                    GeneralParticleHandler.SpawnParticle(sparkle);
 
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), missileSpawnPosition, Vector2.UnitY * 3f, ModContent.ProjectileType<AresMissile>(), MissileDamage, 0f, -1, Target.Bottom.Y);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 missileSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1100f, -740f);
+                        if (Main.rand.NextBool(3))
+                            missileSpawnPosition.X = Target.Center.X + Main.rand.NextFloatDirection() * 50f + Target.velocity.X * Main.rand.NextFloat(8f, 32f);
+
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), missileSpawnPosition, Vector2.UnitY * 3f, ModContent.ProjectileType<AresMissile>(), MissileDamage, 0f, -1, Target.Bottom.Y);
+
+                        Vector2 backgroundMissileVelocity = NPC.SafeDirectionTo(sparkSpawnPosition).RotatedByRandom(0.2f) * Main.rand.NextFloat(16f, 27f);
+                        backgroundMissileVelocity.X *= 0.25f;
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), sparkSpawnPosition, backgroundMissileVelocity, ModContent.ProjectileType<AresMissileBackground>(), 0, 0f);
+                    }
                 }
             }
 

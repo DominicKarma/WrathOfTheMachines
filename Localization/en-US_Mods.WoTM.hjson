@@ -18,7 +18,8 @@ Projectiles: {
 	HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
 	ExoEnergyBlast.DisplayName: Exoelectric Overload Blast
 	ExoOverloadDeathray.DisplayName: Exo Overload Deathray
-	AresMissile.DisplayName: Ares Missile
+	AresMissile.DisplayName: Thermal Missile
+	AresMissileBackground.DisplayName: Thermal Missile
 }
 
 NPCs: {

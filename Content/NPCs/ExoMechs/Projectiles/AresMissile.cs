@@ -106,12 +106,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Time++;
         }
 
-        public void ChasePlayers()
-        {
-            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 20f, 0.072f);
-        }
-
         public void EmitBackSmoke()
         {
             for (int i = 0; i < 2; i++)
@@ -177,19 +171,19 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             return false;
         }
 
-        public static float FlameTrailWidthFunction(float completionRatio)
+        public static float FlameTrailWidthFunction(float completionRatio, float widthFactor)
         {
             float baseWidth = MathHelper.SmoothStep(8f, 2f, completionRatio);
-            return baseWidth;
+            return baseWidth * widthFactor;
         }
 
-        public static Color FlameTrailColorFunction(float completionRatio)
+        public static Color FlameTrailColorFunction(float completionRatio, float opacityFactor)
         {
             float trailOpacity = Utils.GetLerpValue(0.8f, 0.27f, completionRatio, true) * Utils.GetLerpValue(0f, 0.067f, completionRatio, true);
             Color startingColor = Color.Lerp(Color.SkyBlue, Color.White, 0.6f);
             Color middleColor = Color.Lerp(Color.Orange, Color.Yellow, 0.32f);
             Color endColor = Color.Lerp(Color.Orange, Color.Red, 0.29f);
-            return Utilities.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
+            return Utilities.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity * opacityFactor;
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
@@ -197,7 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
             trailShader.Apply();
 
-            PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
+            PrimitiveSettings settings = new(c => FlameTrailWidthFunction(c, 1f), c => FlameTrailColorFunction(c, 1f), _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 14);
         }
     }
