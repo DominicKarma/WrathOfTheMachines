@@ -33,7 +33,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer == 1 || !Utilities.AnyProjectiles(ModContent.ProjectileType<ExoOverloadDeathray>()))
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), CorePosition, Vector2.Zero, ModContent.ProjectileType<ExoOverloadDeathray>(), CoreLaserbeamDamage, 0f);
+                {
+                    for (float i = 0; i < 1f; i += 1f)
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), CorePosition, Vector2.Zero, ModContent.ProjectileType<ExoOverloadDeathray>(), CoreLaserbeamDamage, 0f, -1, 0f, i * 4f);
+                }
             }
 
             BasicHandUpdateWrapper();

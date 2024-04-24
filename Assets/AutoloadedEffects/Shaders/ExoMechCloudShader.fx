@@ -28,7 +28,7 @@ float2 GetRayBoxIntersectionOffsets(float3 rayOrigin, float3 rayDirection, float
     float tFar = min(min(t2.x, t2.y), t2.z);
     
     return float2(tNear, tFar);
-};
+}
 
 // Density corresponds to how compact one can expect the cloud to be at a given point.
 float CalculateCloudDensityAtPoint(float3 p)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
@@ -46,7 +48,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The maximum length of this laserbeam.
         /// </summary>
-        public static float MaxLaserbeamLength => 9000f;
+        public static float MaxLaserbeamLength => 8000f;
+
+        public const int CylinderWidthSegments = 12;
+
+        public const int CylinderHeightSegments = 2;
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -74,9 +80,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return;
             }
 
-            float sine = MathF.Sin(MathHelper.TwoPi * Time / 150f);
-            float cosine = MathF.Cos(MathHelper.TwoPi * Time / 150f);
-            var quaternionRotation = Matrix.CreateRotationZ(cosine * 0.2f) * Matrix.CreateRotationY(sine * 0.99f - MathHelper.PiOver2);
+            float rotationTime = Time / 142f;
+            float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
+            var quaternionRotation = Matrix.CreateRotationZ(0.11f) * Matrix.CreateRotationY(sine * 1.29f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
 
             Projectile.Center = ares.CorePosition;
@@ -89,32 +95,103 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
         }
 
-        public static void CalculatePrimitiveMatrices(out Matrix viewMatrix, out Matrix projectionMatrix)
+        public void Render(Vector3 start, Vector3 end, Color baseColor, float widthFactor)
         {
-            int width = Main.instance.GraphicsDevice.Viewport.Width;
-            int height = Main.instance.GraphicsDevice.Viewport.Height;
+            GraphicsDevice gd = Main.instance.GraphicsDevice;
+            GetVerticesAndIndices(widthFactor, baseColor, start, end, MathHelper.Pi, out VertexPosition2DColorTexture[] rightVertices, out int[] indices);
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, rightVertices, 0, rightVertices.Length, indices, 0, indices.Length / 3);
 
-            Vector2 zoom = Main.GameViewMatrix.Zoom;
-            Matrix zoomScaleMatrix = Matrix.CreateScale(zoom.X, zoom.Y, 1f);
+            GetVerticesAndIndices(widthFactor, baseColor, start, end, 0f, out VertexPosition2DColorTexture[] leftVertices, out _);
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, leftVertices, 0, leftVertices.Length, indices, 0, indices.Length / 3);
+        }
 
-            // Get a matrix that aims towards the Z axis (these calculations are relative to a 2D world).
-            viewMatrix = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up);
+        public void GetBloomVerticesAndIndices(Color baseColor, Vector3 start, Vector3 end, out VertexPosition2DColorTexture[] leftVertices, out VertexPosition2DColorTexture[] rightVertices, out int[] indices)
+        {
+            int bloomSubdivisions = 40;
+            int numVertices = (CylinderWidthSegments + 1) * (CylinderHeightSegments + 1);
+            int numIndices = CylinderWidthSegments * CylinderHeightSegments * 6;
 
-            // Offset the matrix to the appropriate position.
-            viewMatrix *= Matrix.CreateTranslation(0f, -height, 0f);
+            leftVertices = new VertexPosition2DColorTexture[numVertices * bloomSubdivisions];
+            rightVertices = new VertexPosition2DColorTexture[leftVertices.Length];
+            indices = new int[numIndices * bloomSubdivisions * 6];
 
-            // Flip the matrix around 180 degrees.
-            viewMatrix *= Matrix.CreateRotationZ(MathHelper.Pi);
+            for (int i = 0; i < bloomSubdivisions; i++)
+            {
+                float subdivisionInterpolant = i / 39f;
+                float bloomWidthFactor = subdivisionInterpolant * 1.3f + 1f;
+                Color bloomColor = baseColor * MathHelper.SmoothStep(0.05f, 0.005f, MathF.Sqrt(subdivisionInterpolant));
+                GetVerticesAndIndices(bloomWidthFactor, bloomColor, start, end, MathHelper.Pi, out VertexPosition2DColorTexture[] localRightVertices, out int[] localIndices);
+                GetVerticesAndIndices(bloomWidthFactor, bloomColor, start, end, 0f, out VertexPosition2DColorTexture[] localLeftVertices, out _);
 
-            // Account for the inverted gravity effect.
-            if (Main.LocalPlayer.gravDir == -1f)
-                viewMatrix *= Matrix.CreateScale(1f, -1f, 1f) * Matrix.CreateTranslation(0f, height, 0f);
+                int startingIndex = indices.Max();
+                for (int j = 0; j < localIndices.Length; j++)
+                    indices[j + i * numIndices] = localIndices[j] + startingIndex;
+                for (int j = 0; j < localLeftVertices.Length; j++)
+                {
+                    leftVertices[j + i * numVertices] = localLeftVertices[j];
+                    rightVertices[j + i * numVertices] = localRightVertices[j];
+                }
+            }
+        }
 
-            // And account for the current zoom.
-            viewMatrix *= zoomScaleMatrix;
+        public void GetVerticesAndIndices(float widthFactor, Color baseColor, Vector3 start, Vector3 end, float cylinderOffsetAngle, out VertexPosition2DColorTexture[] vertices, out int[] indices)
+        {
+            int numVertices = (CylinderWidthSegments + 1) * (CylinderHeightSegments + 1);
+            int numIndices = CylinderWidthSegments * CylinderHeightSegments * 6;
 
-            projectionMatrix = Matrix.CreateOrthographicOffCenter(0f, width * zoom.X, 0f, height * zoom.Y, -1f, 1f);
-            projectionMatrix *= zoomScaleMatrix;
+            vertices = new VertexPosition2DColorTexture[numVertices];
+            indices = new int[numIndices];
+
+            float widthStep = 1.0f / CylinderWidthSegments;
+            float heightStep = 1.0f / CylinderHeightSegments;
+
+            // Create vertices
+            for (int j = 0; j <= CylinderHeightSegments; j++)
+            {
+                for (int i = 0; i <= CylinderWidthSegments; i++)
+                {
+                    float width = Utils.Remap(j * heightStep, 0f, 0.5f, 3f, Projectile.width * Projectile.scale) * widthFactor;
+                    float angle = MathHelper.Pi * i * widthStep + cylinderOffsetAngle;
+                    Vector3 orthogonalOffset = Vector3.Transform(new Vector3(0f, MathF.Sin(angle), MathF.Cos(angle)), Rotation) * width;
+                    Vector3 cylinderPoint = Vector3.Lerp(start, end, j * heightStep) + orthogonalOffset;
+                    vertices[j * (CylinderWidthSegments + 1) + i] = new(new(cylinderPoint.X, cylinderPoint.Y), baseColor, new Vector2(j * heightStep, i * widthStep), 1f);
+                }
+            }
+
+            // Create indices
+            for (int j = 0; j < CylinderHeightSegments; j++)
+            {
+                for (int i = 0; i < CylinderWidthSegments; i++)
+                {
+                    int upperLeft = j * (CylinderWidthSegments + 1) + i;
+                    int upperRight = upperLeft + 1;
+                    int lowerLeft = upperLeft + (CylinderWidthSegments + 1);
+                    int lowerRight = lowerLeft + 1;
+
+                    indices[(j * CylinderWidthSegments + i) * 6] = upperLeft;
+                    indices[(j * CylinderWidthSegments + i) * 6 + 1] = lowerRight;
+                    indices[(j * CylinderWidthSegments + i) * 6 + 2] = lowerLeft;
+
+                    indices[(j * CylinderWidthSegments + i) * 6 + 3] = upperLeft;
+                    indices[(j * CylinderWidthSegments + i) * 6 + 4] = upperRight;
+                    indices[(j * CylinderWidthSegments + i) * 6 + 5] = lowerRight;
+                }
+            }
+        }
+
+        public void RenderBloom(Vector3 start, Vector3 end, Matrix projection)
+        {
+            Color bloomColor = Color.White with { A = 0 };
+
+            ManagedShader bloomShader = ShaderManager.GetShader("WoTM.CylinderPrimitiveBloomShader");
+            bloomShader.TrySetParameter("uWorldViewProjection", projection);
+            bloomShader.Apply();
+
+            GetBloomVerticesAndIndices(bloomColor, start, end, out VertexPosition2DColorTexture[] leftVertices, out VertexPosition2DColorTexture[] rightVertices, out int[] indices);
+
+            GraphicsDevice gd = Main.instance.GraphicsDevice;
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, rightVertices, 0, rightVertices.Length, indices, 0, indices.Length / 3);
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, leftVertices, 0, leftVertices.Length, indices, 0, indices.Length / 3);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -126,81 +203,52 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             GraphicsDevice gd = Main.instance.GraphicsDevice;
             gd.RasterizerState = RasterizerState.CullNone;
 
-            Vector3[] palette = new Vector3[CalamityUtils.ExoPalette.Length];
-            for (int i = 0; i < palette.Length; i++)
-                palette[i] = CalamityUtils.ExoPalette[i].ToVector3();
+            int width = Main.screenWidth;
+            int height = Main.screenHeight;
+            Utilities.CalculatePrimitiveMatrices(width, height, out Matrix view, out Matrix projection);
+            Matrix overallProjection = view * projection;
 
-            CalculatePrimitiveMatrices(out Matrix view, out Matrix projection);
+            RenderBloom(start, end, overallProjection);
+
             ManagedShader overloadShader = ShaderManager.GetShader("WoTM.ExoOverloadDeathrayShader");
             overloadShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             overloadShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
-            overloadShader.TrySetParameter("uWorldViewProjection", view * projection);
-            overloadShader.TrySetParameter("scrollColorA", new Vector3(1f, 0.4f, 0.25f));
-            overloadShader.TrySetParameter("scrollColorB", new Vector3(0.9f, 0f, 0.3f));
+            overloadShader.TrySetParameter("uWorldViewProjection", overallProjection);
+            overloadShader.TrySetParameter("scrollColorA", Color.White);
+            overloadShader.TrySetParameter("scrollColorB", Color.White);
+            overloadShader.TrySetParameter("baseColor", Color.White);
             overloadShader.Apply();
 
-            GetVerticesAndIndices(start, end, MathHelper.Pi, out VertexPositionColorTexture[] rightVertices, out int[] indices);
-            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, rightVertices, 0, rightVertices.Length, indices, 0, indices.Length / 3);
-
-            GetVerticesAndIndices(start, end, 0f, out VertexPositionColorTexture[] leftVertices, out _);
-            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, leftVertices, 0, leftVertices.Length, indices, 0, indices.Length / 3);
-
+            Render(start, end, Color.White, 1f);
             return false;
         }
 
-        public void GetVerticesAndIndices(Vector3 start, Vector3 end, float cylinderOffsetAngle, out VertexPositionColorTexture[] vertices, out int[] indices)
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
-            int widthSegments = 15;
-            int heightSegments = 2;
-            int numVertices = (widthSegments + 1) * (heightSegments + 1);
-            int numIndices = widthSegments * heightSegments * 6;
-
-            vertices = new VertexPositionColorTexture[numVertices];
-            indices = new int[numIndices];
-
-            float widthStep = 1.0f / widthSegments;
-            float heightStep = 1.0f / heightSegments;
-
-            // Create vertices
-            for (int j = 0; j <= heightSegments; j++)
-            {
-                for (int i = 0; i <= widthSegments; i++)
-                {
-                    float width = Utils.Remap(j * heightStep, 0f, 0.5f, 6f, Projectile.width * Projectile.scale);
-                    float angle = MathHelper.Pi * i * widthStep + cylinderOffsetAngle;
-                    Vector3 orthogonalOffset = Vector3.Transform(new Vector3(0f, MathF.Sin(angle), MathF.Cos(angle)), Rotation) * width;
-                    Vector3 cylinderPoint = Vector3.Lerp(start, end, j * heightStep) + orthogonalOffset;
-                    cylinderPoint.Z /= LaserbeamLength;
-
-                    vertices[j * (widthSegments + 1) + i] = new(cylinderPoint, Color.Black, new Vector2(j * heightStep, i * widthStep));
-                }
-            }
-
-            // Create indices
-            for (int j = 0; j < heightSegments; j++)
-            {
-                for (int i = 0; i < widthSegments; i++)
-                {
-                    int upperLeft = j * (widthSegments + 1) + i;
-                    int upperRight = upperLeft + 1;
-                    int lowerLeft = upperLeft + (widthSegments + 1);
-                    int lowerRight = lowerLeft + 1;
-
-                    indices[(j * widthSegments + i) * 6] = upperLeft;
-                    indices[(j * widthSegments + i) * 6 + 1] = lowerRight;
-                    indices[(j * widthSegments + i) * 6 + 2] = lowerLeft;
-
-                    indices[(j * widthSegments + i) * 6 + 3] = upperLeft;
-                    indices[(j * widthSegments + i) * 6 + 4] = upperRight;
-                    indices[(j * widthSegments + i) * 6 + 5] = lowerRight;
-                }
-            }
+            overPlayers.Add(index);
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            // TODO -- Implement this.
-            return false;
+            Vector3 start = new(Projectile.Center, 0f);
+            Vector3 end = start + Vector3.Transform(Vector3.UnitX, Rotation) * LaserbeamLength;
+            end.Z /= LaserbeamLength;
+
+            Vector3 rayDirection = Vector3.Normalize(end - start);
+            Vector3 boxMin = new(targetHitbox.TopLeft(), -1f);
+            Vector3 boxMax = new(targetHitbox.BottomRight(), 1f);
+
+            Vector3 tMin = (boxMin - start) / rayDirection;
+            Vector3 tMax = (boxMax - start) / rayDirection;
+            Vector3 t1 = Vector3.Min(tMin, tMax);
+
+            float tNear = MathF.Max(MathF.Max(t1.X, t1.Y), t1.Z);
+            Vector3 targetCenter = new(targetHitbox.Center(), 0f);
+            Vector3 endPoint = start + rayDirection * tNear;
+            Vector3 directionToTarget = Vector3.Normalize(targetCenter - start);
+            float distanceToProjection = Vector3.Distance(endPoint, targetCenter);
+
+            return distanceToProjection <= Projectile.width * Projectile.scale && Vector3.Dot(directionToTarget, rayDirection) >= 0.97f;
         }
 
         public override bool ShouldUpdatePosition() => false;
