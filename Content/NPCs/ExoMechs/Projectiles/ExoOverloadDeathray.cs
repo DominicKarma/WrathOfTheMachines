@@ -77,7 +77,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = Lifetime;
+
+            // This is done for more precision in the collision checks, due to the fact that the laser moves rather quickly.
+            // Wouldn't want it to skip over the player's hitbox in a single update and do nothing.
+            Projectile.MaxUpdates = 2;
+
             CooldownSlot = ImmunityCooldownID.Bosses;
+            LaserbeamLength = 800f;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -105,13 +111,17 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return;
             }
 
-            float rotationTime = Time / 142f;
+            float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
-            var quaternionRotation = Matrix.CreateRotationZ(0.11f) * Matrix.CreateRotationY(sine * 1.33f + MathHelper.PiOver2);
+            float upwardsInterpolant = Utilities.InverseLerp(120f, 60f, Time / Projectile.MaxUpdates);
+            float zRotation = MathHelper.SmoothStep(0.03f, -MathHelper.PiOver2, upwardsInterpolant);
+            var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
 
             Projectile.Center = ares.CorePosition;
-            LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 95f, 0f, MaxLaserbeamLength);
+            LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 98f, 0f, MaxLaserbeamLength);
+
+            Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 25f, Time), 0.63f);
 
             Time++;
         }
@@ -239,6 +249,15 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            float hueShift = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 9f) * -0.09f;
+            float bloomScaleFactor = MathHelper.Lerp(0.9f, 1.1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly * 22f)) * Projectile.Opacity;
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.White with { A = 0 }) * Projectile.Opacity * 0.5f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 0.24f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.Wheat with { A = 0 }) * Projectile.Opacity * 0.5f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 0.5f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.HotPink.HueShift(hueShift) with { A = 0 }) * Projectile.Opacity * 0.25f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 1.1f, 0, 0f);
+            Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.Orange.HueShift(hueShift) with { A = 0 }) * Projectile.Opacity * 0.2f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 1.97f, 0, 0f);
+
             Vector3 start = new(Projectile.Center - Main.screenPosition, 0f);
             Vector3 end = start + Vector3.Transform(Vector3.UnitX, Rotation) * LaserbeamLength;
             end.Z /= LaserbeamLength;
@@ -290,7 +309,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector3 endPoint = start + rayDirection * tNear;
             Vector3 directionToTarget = Vector3.Normalize(targetCenter - start);
             float distanceToProjection = Vector3.Distance(endPoint, targetCenter);
-            return distanceToProjection <= Projectile.width * Projectile.scale && Vector3.Dot(directionToTarget, rayDirection) >= 0.97f;
+            return distanceToProjection <= Projectile.width * Projectile.scale && Vector3.Dot(directionToTarget, rayDirection) >= 0.96f;
         }
 
         public override bool ShouldUpdatePosition() => false;

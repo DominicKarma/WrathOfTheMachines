@@ -18,6 +18,7 @@ Projectiles: {
 	HadesExoEnergyOrb.DisplayName: 星流电能球
 	ExoEnergyBlast.DisplayName: 星流过载爆破
 	// ExoOverloadDeathray.DisplayName: Exo Overload Deathray
+	// AresMissile.DisplayName: Ares Missile
 }
 
 NPCs: {
