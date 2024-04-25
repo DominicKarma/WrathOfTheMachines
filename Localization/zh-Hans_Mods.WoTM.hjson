@@ -92,6 +92,14 @@ NPCs: {
 	ThanatosRename: XM-04“哈迪斯”
 }
 
+Bestiary: {
+	// Draedon: A disposable recon body for the esteemed scientist, Draedon. His unyielding dedication to the pursuit of knowledge is as extraordinary as his marked amorality.
+	// Hades: One of Draedon's finest creations. This automaton expels built up heat and pressure through its vents, concentrating the resulting energy into potent wide-range attacks.
+	// Ares: One of Draedon's finest creations. This automaton is capable of dynamically detaching its mounted weapons as necessary, and boasts an astonishing affinity for melee combat.
+	// Artemis: One of Draedon's finest creations. This automaton channels thermal energy through its orange crystalline lattices. It operates in unfaltering unison with Apollo when engaged in combat.
+	// Apollo: One of Draedon's finest creations. This automaton excels at high-velocity aerial attacks involving its plasma reserves. It is seemingly programmed to be protective of Artemis.
+}
+
 UI: {
 	// AresIconMessage: Ares, a heavyweight, diabolical monstrosity with four detachable Exo superweapons.
 	// ArtemisAndApolloIconMessage: Artemis and Apollo, a pair of extraordinarily nimble automatons with unstable energy reserves.

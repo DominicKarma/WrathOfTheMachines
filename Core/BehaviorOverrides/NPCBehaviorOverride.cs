@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -36,6 +37,11 @@ namespace WoTM
         }
 
         protected override NPC CreateTemplateEntity() => new();
+
+        /// <summary>
+        /// Allows for the setting of bestiary information for the NPC.
+        /// </summary>
+        public virtual void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry) { }
 
         /// <summary>
         /// Gets called when the NPC spawns in the world.

@@ -21,6 +21,7 @@ using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -215,6 +216,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             hitEffectHook?.Undo();
             hitEffectHook?.Dispose();
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.RemoveAll(i => i is FlavorTextBestiaryInfoElement);
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                new FlavorTextBestiaryInfoElement("Mods.WoTM.Bestiary.Artemis")
+            });
         }
 
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)

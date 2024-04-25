@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -93,6 +94,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void OnSpawn(IEntitySource source)
         {
             NPC.TargetClosest(false);
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.RemoveAll(i => i is FlavorTextBestiaryInfoElement);
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                new FlavorTextBestiaryInfoElement("Mods.WoTM.Bestiary.Draedon")
+            });
         }
 
         public override void AI()

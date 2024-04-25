@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -30,6 +31,12 @@ namespace WoTM
                 BehaviorOverride = behaviorOverride!.Clone(npc);
                 BehaviorOverride.OnSpawn(source);
             }
+        }
+
+        public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            if (NPCOverrideRelationship.TryGetValue(npc.type, out NPCBehaviorOverride? behaviorOverride))
+                behaviorOverride?.SetBestiary(database, bestiaryEntry);
         }
 
         public override bool PreAI(NPC npc)

@@ -14,6 +14,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -123,6 +124,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         public delegate void AresHandAction(AresHand hand);
 
         public override int NPCOverrideID => ExoMechNPCIDs.AresBodyID;
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.RemoveAll(i => i is FlavorTextBestiaryInfoElement);
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                new FlavorTextBestiaryInfoElement("Mods.WoTM.Bestiary.Ares")
+            });
+        }
 
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {

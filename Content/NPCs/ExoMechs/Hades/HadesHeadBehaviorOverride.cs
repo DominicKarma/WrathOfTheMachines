@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -163,6 +164,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         public record BodySegmentInstructions(BodySegmentCondition Condition, BodySegmentAction Action);
 
         public override int NPCOverrideID => ExoMechNPCIDs.HadesHeadID;
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.RemoveAll(i => i is FlavorTextBestiaryInfoElement);
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+            {
+                new FlavorTextBestiaryInfoElement("Mods.WoTM.Bestiary.Hades")
+            });
+        }
 
         public override void SendExtraAI(BitWriter bitWriter, BinaryWriter binaryWriter)
         {
