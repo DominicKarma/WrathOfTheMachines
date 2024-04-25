@@ -138,7 +138,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             for (int i = 0; i < BloomSubdivisions; i++)
             {
-                float subdivisionInterpolant = i / 39f;
+                float subdivisionInterpolant = i / (float)(BloomSubdivisions - 1f);
                 float bloomWidthFactor = subdivisionInterpolant * 1.3f + 1f;
                 Color bloomColor = baseColor * MathHelper.SmoothStep(0.05f, 0.005f, MathF.Sqrt(subdivisionInterpolant));
                 GetVerticesAndIndices(bloomWidthFactor, bloomColor, start, end, MathHelper.Pi, out VertexPosition2DColorTexture[] localRightVertices, out int[] localIndices);
