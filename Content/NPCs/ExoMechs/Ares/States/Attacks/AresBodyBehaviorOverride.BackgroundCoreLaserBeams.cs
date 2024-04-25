@@ -3,6 +3,7 @@ using System.Linq;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Particles;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -36,6 +37,21 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static int CoreLaserbeamDamage => Main.expertMode ? 560 : 400;
 
         /// <summary>
+        /// How long Ares waits before starting the looped blender sound during the BackgroundCoreLaserBeams attack.
+        /// </summary>
+        public static int BackgroundCoreLaserBeams_LoopSoundDelay => Utilities.SecondsToFrames(3f);
+
+        /// <summary>
+        /// How long Ares waits before releasing missiles during the BackgroundCoreLaserBeams attack.
+        /// </summary>
+        public static int BackgroundCoreLaserBeams_MissileShootDelay => Utilities.SecondsToFrames(1.5f);
+
+        /// <summary>
+        /// The sound played when a distant missile is fired by Ares.
+        /// </summary>
+        public static readonly SoundStyle DistantMissileLaunchSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/AresDistantMissileLaunch") with { MaxInstances = 0, Volume = 0.6f, PitchVariance = 0.15f };
+
+        /// <summary>
         /// AI update loop method for the BackgroundCoreLaserBeams attack.
         /// </summary>
         public void DoBehavior_BackgroundCoreLaserBeams()
@@ -59,9 +75,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             if (AITimer == 2)
+            {
+                ScreenShakeSystem.StartShake(9.5f);
                 SoundEngine.PlaySound(AresBody.LaserStartSound);
+            }
 
-            if (AITimer == 180)
+            if (AITimer == BackgroundCoreLaserBeams_LoopSoundDelay)
                 ExoOverloadLoopedSound = LoopedSoundManager.CreateNew(AresBody.LaserLoopSound, () => CurrentState != AresAIState.BackgroundCoreLaserBeams || !NPC.active);
 
             var deathrays = Utilities.AllProjectilesByID(ModContent.ProjectileType<ExoOverloadDeathray>());
@@ -74,26 +93,26 @@ namespace WoTM.Content.NPCs.ExoMechs
                 });
             }
 
-            if (AITimer >= 90)
+            if (AITimer >= BackgroundCoreLaserBeams_MissileShootDelay && AITimer % 8 == 7)
             {
-                if (AITimer % 8 == 7)
+                Vector2 velocity = NPC.position - NPC.oldPosition;
+                Vector2 sparkSpawnPosition = NPC.Center - Vector2.UnitY.RotatedByRandom(1.1f) * NPC.scale * 70f;
+                StrongBloom sparkle = new(sparkSpawnPosition, velocity, Color.Wheat, 0.15f, 10);
+                GeneralParticleHandler.SpawnParticle(sparkle);
+
+                SoundEngine.PlaySound(DistantMissileLaunchSound);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 sparkSpawnPosition = NPC.Center - Vector2.UnitY.RotatedByRandom(1.1f) * NPC.scale * 90f;
-                    SparkleParticle sparkle = new(sparkSpawnPosition, Vector2.Zero, Color.White, Color.Yellow, 0.23f, 10);
-                    GeneralParticleHandler.SpawnParticle(sparkle);
+                    Vector2 missileSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1100f, -740f);
+                    if (Main.rand.NextBool(3))
+                        missileSpawnPosition.X = Target.Center.X + Main.rand.NextFloatDirection() * 50f + Target.velocity.X * Main.rand.NextFloat(8f, 32f);
 
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        Vector2 missileSpawnPosition = Target.Center + new Vector2(Main.rand.NextFloatDirection() * 1100f, -740f);
-                        if (Main.rand.NextBool(3))
-                            missileSpawnPosition.X = Target.Center.X + Main.rand.NextFloatDirection() * 50f + Target.velocity.X * Main.rand.NextFloat(8f, 32f);
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), missileSpawnPosition, Vector2.UnitY * 3f, ModContent.ProjectileType<AresMissile>(), MissileDamage, 0f, -1, Target.Bottom.Y);
 
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), missileSpawnPosition, Vector2.UnitY * 3f, ModContent.ProjectileType<AresMissile>(), MissileDamage, 0f, -1, Target.Bottom.Y);
-
-                        Vector2 backgroundMissileVelocity = NPC.SafeDirectionTo(sparkSpawnPosition).RotatedByRandom(0.2f) * Main.rand.NextFloat(16f, 27f);
-                        backgroundMissileVelocity.X *= 0.25f;
-                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), sparkSpawnPosition, backgroundMissileVelocity, ModContent.ProjectileType<AresMissileBackground>(), 0, 0f);
-                    }
+                    Vector2 backgroundMissileVelocity = NPC.SafeDirectionTo(sparkSpawnPosition).RotatedByRandom(0.2f) * Main.rand.NextFloat(16f, 27f);
+                    backgroundMissileVelocity.X *= 0.25f;
+                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), sparkSpawnPosition, backgroundMissileVelocity, ModContent.ProjectileType<AresMissileBackground>(), 0, 0f);
                 }
             }
 

@@ -40,8 +40,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            Projectile.scale *= 0.94f;
-            Projectile.Opacity *= 0.94f;
+            Projectile.scale *= 0.956f;
+            Projectile.Opacity *= 0.95f;
             Projectile.velocity *= 1.02f;
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
         }

@@ -113,8 +113,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
-            float upwardsInterpolant = Utilities.InverseLerp(120f, 60f, Time / Projectile.MaxUpdates);
-            float zRotation = MathHelper.SmoothStep(0.03f, -MathHelper.PiOver2, upwardsInterpolant);
+            float cosine = MathF.Cos(MathHelper.TwoPi * rotationTime);
+            float upwardsInterpolant = Utilities.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyBehaviorOverride.BackgroundCoreLaserBeams_MissileShootDelay);
+            float zRotation = MathHelper.SmoothStep(cosine * 0.1f, -MathHelper.PiOver2, upwardsInterpolant);
             var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
 

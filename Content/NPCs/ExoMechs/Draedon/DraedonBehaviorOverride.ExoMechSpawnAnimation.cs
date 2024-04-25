@@ -45,6 +45,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int ExoMechPlaneFlyTime => Utilities.SecondsToFrames(1.2f);
 
+        /// <summary>
+        /// The siren sound played as the Exo Mechs wait to be summoned.
+        /// </summary>
         public static readonly SoundStyle SirenSound = new("WoTM/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
 
         /// <summary>
