@@ -285,10 +285,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             primaryMech = null;
 
-            for (int i = 0; i < Main.maxNPCs; i++)
+            foreach (NPC npc in Main.ActiveNPCs)
             {
-                NPC npc = Main.npc[i];
-                if (!npc.active || !IsPrimaryMech(npc))
+                if (!IsPrimaryMech(npc))
                     continue;
 
                 primaryMech = npc;

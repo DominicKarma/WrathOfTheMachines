@@ -117,10 +117,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 teslaSphere.Kill();
 
                 int handID = ModContent.NPCType<AresHand>();
-                for (int i = 0; i < Main.maxNPCs; i++)
+                foreach (NPC n in Main.ActiveNPCs)
                 {
-                    NPC n = Main.npc[i];
-                    if (n.active && n.type == handID)
+                    if (n.type == handID)
                     {
                         n.velocity -= n.SafeDirectionTo(teslaSphere.Center) * 44f;
                         n.netUpdate = true;
