@@ -30,7 +30,23 @@ namespace WoTM.Content.NPCs.ExoMechs
             ContinuousLaserBarrage,
             MineBarrages,
             ExoEnergyBlast,
-            Inactive
+            Inactive,
+
+            PerformComboAttack = ExoMechComboAttackManager.ComboAttackValue
+        }
+
+        /// <summary>
+        /// Whether Hades is currently performing a combo attack.
+        /// </summary>
+        public bool PerformingComboAttack
+        {
+            get => CurrentState == HadesAIState.PerformComboAttack;
+            set
+            {
+                SelectNewState();
+                if (value)
+                    CurrentState = HadesAIState.PerformComboAttack;
+            }
         }
 
         /// <summary>

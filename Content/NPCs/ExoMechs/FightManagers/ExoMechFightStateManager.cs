@@ -104,13 +104,17 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         private static void CalculateFightState()
         {
+            int totalActiveMechs = 0;
             bool checkForPrimaryMech = false;
             List<int> evaluatedMechs = [];
             foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
             {
                 evaluatedMechs.Add(exoMechID);
                 if (NPC.AnyNPCs(exoMechID))
+                {
                     checkForPrimaryMech = true;
+                    totalActiveMechs++;
+                }
             }
 
             // Search for the primary mech. If one doesn't exist (such as a result of summoning an Exo Mech with a cheat mod) simply make the first one found into the primary mech.
@@ -137,7 +141,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 stateOfOtherExoMechs[i] = ExoMechStateFromNPC(otherExoMech, exoMechWasSummonedAtOnePoint);
             }
-            FightState = new(draedonState, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
+            FightState = new(draedonState, totalActiveMechs, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
 
             FightOngoing = true;
         }

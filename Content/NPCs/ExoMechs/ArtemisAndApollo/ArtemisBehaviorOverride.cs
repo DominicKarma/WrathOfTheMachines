@@ -35,6 +35,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         private static ILHook? hitEffectHook;
 
         /// <summary>
+        /// Whether Artemis and Apollo are currently performing a combo attack.
+        /// </summary>
+        public bool PerformingComboAttack
+        {
+            get => ExoTwinsStateManager.SharedState.AIState == ExoTwinsAIState.PerformComboAttack;
+            set => ExoTwinsStateManager.TransitionToNextState(value ? ExoTwinsAIState.PerformComboAttack : null);
+        }
+
+        /// <summary>
         /// Whether Artemis should be inactive, leaving the battle to let other mechs attack on their own.
         /// </summary>
         public bool Inactive

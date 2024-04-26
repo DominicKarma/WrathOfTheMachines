@@ -13,6 +13,8 @@
 
         UltimateAttack,
 
-        PerformIndividualAttacks
+        PerformIndividualAttacks,
+
+        PerformComboAttack = ExoMechComboAttackManager.ComboAttackValue
     }
 }

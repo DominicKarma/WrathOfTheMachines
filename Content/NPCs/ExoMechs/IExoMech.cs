@@ -12,6 +12,15 @@
         }
 
         /// <summary>
+        /// Whether this Exo Mech is performing a combo attack.
+        /// </summary>
+        public bool PerformingComboAttack
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Whether this Exo Mech is a primary mech or not, a.k.a the one that the player chose when starting the battle.
         /// </summary>
         public bool IsPrimaryMech

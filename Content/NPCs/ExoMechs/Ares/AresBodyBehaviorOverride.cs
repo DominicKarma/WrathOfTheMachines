@@ -36,7 +36,23 @@ namespace WoTM.Content.NPCs.ExoMechs
             BackgroundCoreLaserBeams,
 
             Inactive,
-            ReturnToBeingActive
+            ReturnToBeingActive,
+
+            PerformComboAttack = ExoMechComboAttackManager.ComboAttackValue
+        }
+
+        /// <summary>
+        /// Whether Ares is currently performing a combo attack.
+        /// </summary>
+        public bool PerformingComboAttack
+        {
+            get => CurrentState == AresAIState.PerformComboAttack;
+            set
+            {
+                SelectNewState();
+                if (value)
+                    CurrentState = AresAIState.PerformComboAttack;
+            }
         }
 
         /// <summary>
