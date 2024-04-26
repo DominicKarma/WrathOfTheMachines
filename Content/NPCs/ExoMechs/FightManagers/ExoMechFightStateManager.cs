@@ -63,7 +63,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// A representation of an undefined Exo Mech phase transition condition that always evaluates false regardless of context.
+        /// Represents an undefined Exo Mech phase transition condition that always evaluates false regardless of context.
         /// </summary>
         /// 
         /// <remarks>
@@ -81,7 +81,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition, Action<ExoMechFightState>? OnStart)
         {
             /// <summary>
-            /// A representation of an undefined Exo Mech phase.
+            /// Represents an undefined Exo Mech phase.
             /// </summary>
             public static readonly PhaseDefinition UndefinedPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
         }
@@ -92,10 +92,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="fightState">The state of the overall Exo Mechs fight.</param>
         public delegate bool PhaseTransitionCondition(ExoMechFightState fightState);
 
-        public override void PreUpdateEntities()
-        {
-            DetermineBattleState();
-        }
+        public override void PreUpdateEntities() => DetermineBattleState();
 
         /// <summary>
         /// Creates and registers a new phase for the Exo Mechs fight.
