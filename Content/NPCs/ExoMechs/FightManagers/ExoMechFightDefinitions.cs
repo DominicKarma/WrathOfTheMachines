@@ -13,7 +13,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// 
         /// <remarks>
-        /// During this phase, the player fights the first chosen Exo Mech until it reaches a given HP percentage.
+        /// During this phase, the player fights the first chosen Exo Mech until it reaches 70%.
         /// </remarks>
         public static readonly PhaseDefinition StartingSoloPhaseDefinition = CreateNewPhase(1, state =>
         {

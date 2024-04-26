@@ -78,7 +78,13 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="StartCondition">The phase transition condition. This decides whether this phase should be transitioned to from the previous one.</param>
         /// <param name="FightIsHappening">Whether the fight is actually happening or not.</param>
         /// <param name="OnStart">An optional action to perform when the phase is started.</param>
-        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition, Action<ExoMechFightState>? OnStart);
+        public record PhaseDefinition(int PhaseOrdering, bool FightIsHappening, PhaseTransitionCondition StartCondition, Action<ExoMechFightState>? OnStart)
+        {
+            /// <summary>
+            /// A representation of an undefined Exo Mech phase.
+            /// </summary>
+            public static readonly PhaseDefinition UndefinedPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
+        }
 
         /// <summary>
         /// Represents a condition by which a phase transition should occur.
@@ -257,7 +263,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 PreviouslySummonedMechIDs.Clear();
 
             FightOngoing = false;
-            CurrentPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
+            CurrentPhase = PhaseDefinition.UndefinedPhase;
             FightState = ExoMechFightState.UndefinedFightState;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();
 
