@@ -18,12 +18,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all previously summoned Exo Mechs throughout the fight. Used to keep track of which Exo Mechs existed in the past, after they are killed.
         /// </summary>
-        internal static List<int> PreviouslySummonedMechIDs = [];
+        internal static List<int> PreviouslySummonedMechIDs = new(4);
 
         /// <summary>
         /// The set of all defined Exo Mech phases.
         /// </summary>
-        internal static List<PhaseDefinition> ExoMechPhases = [];
+        internal static List<PhaseDefinition> ExoMechPhases = new(4);
+
+        /// <summary>
+        /// The set of all currently active Exo Mechs.
+        /// </summary>
+        public static readonly List<NPCBehaviorOverride> ActiveExoMechs = new(4);
+
+        /// <summary>
+        /// The set of all currently active managing Exo Mechs.
+        /// </summary>
+        public static readonly List<NPCBehaviorOverride> ActiveManagingExoMechs = new(4);
 
         /// <summary>
         /// Whether the fight is ongoing.
@@ -106,7 +116,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int totalActiveMechs = 0;
             bool checkForPrimaryMech = false;
-            List<int> evaluatedMechs = [];
+            List<int> evaluatedMechs = new(4);
             foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
             {
                 evaluatedMechs.Add(exoMechID);
@@ -206,11 +216,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void DetermineBattleState()
         {
-            bool hadesIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.HadesHeadID);
-            bool aresIsPresent = NPC.AnyNPCs(ExoMechNPCIDs.AresBodyID);
-            bool artemisAndApolloArePresent = NPC.AnyNPCs(ExoMechNPCIDs.ArtemisID) || NPC.AnyNPCs(ExoMechNPCIDs.ApolloID);
+            RecordActiveMechs();
+
             bool draedonIsPresent = NPC.AnyNPCs(ModContent.NPCType<Draedon>());
-            bool fightIsOngoing = hadesIsPresent || aresIsPresent || artemisAndApolloArePresent || draedonIsPresent;
+            bool fightIsOngoing = ActiveManagingExoMechs.Count >= 1 || draedonIsPresent;
             if (!fightIsOngoing)
             {
                 ResetBattleState();
@@ -220,6 +229,23 @@ namespace WoTM.Content.NPCs.ExoMechs
             RecordPreviouslySummonedMechs();
             CalculateFightState();
             EvaluatePhase();
+        }
+
+        /// <summary>
+        /// Records all active (managing) Exo Mechs in the world.
+        /// </summary>
+        private static void RecordActiveMechs()
+        {
+            ActiveExoMechs.Clear();
+            ActiveManagingExoMechs.Clear();
+
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (ExoMechNPCIDs.ExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out NPCBehaviorOverride behavior))
+                    ActiveExoMechs.Add(behavior);
+                if (ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out behavior))
+                    ActiveManagingExoMechs.Add(behavior);
+            }
         }
 
         /// <summary>

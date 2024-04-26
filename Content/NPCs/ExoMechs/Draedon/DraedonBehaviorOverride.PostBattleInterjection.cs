@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
 using Luminance.Common.Utilities;
@@ -136,9 +137,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return "EndOfBattle_SuccessiveDefeat4_Excellent";
             if (style >= StylePoints_Acceptable)
             {
-                List<float> weights = [stylePlayer.HitsWeight, stylePlayer.BuffsWeight, stylePlayer.FightTimeWeight, stylePlayer.AggressivenessWeight];
+                float[] weights = [stylePlayer.HitsWeight, stylePlayer.BuffsWeight, stylePlayer.FightTimeWeight, stylePlayer.AggressivenessWeight];
                 float weakestWeight = weights.Min();
-                int weakestWeightIndex = weights.IndexOf(weakestWeight);
+                int weakestWeightIndex = Array.IndexOf(weights, weakestWeight);
 
                 return weakestWeightIndex switch
                 {

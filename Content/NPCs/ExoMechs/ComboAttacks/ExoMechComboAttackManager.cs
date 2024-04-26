@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -17,7 +16,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all registered combo attacks that can be performed.
         /// </summary>
-        internal static readonly List<ExoMechComboAttack> RegisteredComboAttacks = [];
+        internal static readonly List<ExoMechComboAttack> RegisteredComboAttacks = new(16);
 
         /// <summary>
         /// The current combo attack state that all Exo Mechs should perform.
@@ -93,8 +92,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void EnsureAllExoMechsArePerformingCombo()
         {
-            var activeManagingExoMechs = FindActiveManagingExoMechs();
-            bool everyoneIsPerformingCombo = activeManagingExoMechs.All(m => ((IExoMech)m).PerformingComboAttack);
+            bool everyoneIsPerformingCombo = ExoMechFightStateManager.ActiveManagingExoMechs.All(m => ((IExoMech)m).PerformingComboAttack);
 
             if (!everyoneIsPerformingCombo)
             {
@@ -104,41 +102,22 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SetComboStateForAllActiveExoMechs(true);
             }
 
-            if (!VerifyComboStateIsValid(CurrentState, activeManagingExoMechs))
+            if (!VerifyComboStateIsValid(CurrentState))
                 SelectNewComboAttackState();
-        }
-
-        /// <summary>
-        /// Finds all active managing Exo Mechs and returns them in a list.
-        /// </summary>
-        private static List<NPCBehaviorOverride> FindActiveManagingExoMechs()
-        {
-            List<NPCBehaviorOverride> activeManagingExoMechs = [];
-            foreach (NPC npc in Main.ActiveNPCs)
-            {
-                if (!ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type) || !npc.TryGetBehavior(out NPCBehaviorOverride behavior))
-                    continue;
-
-                if (behavior is IExoMech exoMech && !exoMech.Inactive)
-                    activeManagingExoMechs.Add(behavior);
-            }
-
-            return activeManagingExoMechs;
         }
 
         /// <summary>
         /// Determines whether a combo attack state is valid given the current fight state.
         /// </summary>
         /// <param name="attack">The attack to evaluate.</param>
-        /// <param name="activeManagingExoMechs">The set of active managing Exo Mechs.</param>
-        private static bool VerifyComboStateIsValid(ExoMechComboAttack? attack, List<NPCBehaviorOverride> activeManagingExoMechs)
+        private static bool VerifyComboStateIsValid(ExoMechComboAttack? attack)
         {
             if (attack is null)
                 return false;
 
             bool isValid = true;
             HashSet<int> expectedSet = new(attack.ExpectedManagingExoMechIDs);
-            HashSet<int> activeSet = new(activeManagingExoMechs.Select(m => m.NPC.type));
+            HashSet<int> activeSet = new(ExoMechFightStateManager.ActiveManagingExoMechs.Select(m => m.NPC.type));
             if (!expectedSet.SetEquals(activeSet))
                 isValid = false;
 
@@ -175,8 +154,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             ComboAttackTimer = 0;
 
-            var activeManagingExoMechs = FindActiveManagingExoMechs();
-            var potentialCandidates = RegisteredComboAttacks.Where(c => VerifyComboStateIsValid(c, activeManagingExoMechs));
+            var potentialCandidates = RegisteredComboAttacks.Where(VerifyComboStateIsValid);
             CurrentState = potentialCandidates.FirstOrDefault() ?? NullComboState;
         }
 

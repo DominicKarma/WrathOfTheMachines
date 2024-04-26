@@ -12,7 +12,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override bool Perform(NPC npc)
         {
-            npc.Center = Vector2.Lerp(npc.Center, Target.Center, 0.09f);
+            npc.Center = Main.MouseWorld;
             npc.velocity = Vector2.Zero;
 
             return false;

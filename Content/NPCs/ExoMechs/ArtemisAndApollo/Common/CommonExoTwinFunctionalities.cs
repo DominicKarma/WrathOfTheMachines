@@ -53,24 +53,24 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             // Draw nerve endings near the main thruster.
             float nerveEndingLength = twin.scale * 540f;
+            Vector2[] nerveDrawPositions = new Vector2[8];
             for (int direction = -1; direction <= 1; direction += 2)
             {
                 Vector2 backwards = -twin.rotation.ToRotationVector2();
-                List<Vector2> nerveDrawPositions = new();
 
                 float totalAngularChange = 0f;
                 for (int i = 0; i < 8; i++)
                     totalAngularChange += MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]) / 8f;
 
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < nerveDrawPositions.Length; i++)
                 {
-                    float completionRatio = i / 7f;
+                    float completionRatio = i / (float)(nerveDrawPositions.Length - 1);
                     float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
                     Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * nerveEndingLength;
                     Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2) * twin.scale;
 
-                    nerveDrawPositions.Add(twin.Center + backwardsOffset + perpendicularOffset);
+                    nerveDrawPositions[i] = twin.Center + backwardsOffset + perpendicularOffset;
                 }
 
                 PrimitiveSettings settings = new(c => NerveEndingWidthFunction(twin, c), nerveEndingColorFunction, Shader: nerveEndingShader);

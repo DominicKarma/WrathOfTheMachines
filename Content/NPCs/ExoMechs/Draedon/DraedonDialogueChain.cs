@@ -13,7 +13,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The set of all dialogue this chain has.
         /// </summary>
-        internal readonly List<DraedonDialogue> Dialogue = [];
+        internal readonly List<DraedonDialogue> Dialogue = new(4);
 
         /// <summary>
         /// How long, in frames, this dialogue takes to be said.

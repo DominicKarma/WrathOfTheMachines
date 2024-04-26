@@ -322,11 +322,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             int handID = ModContent.NPCType<AresHand>();
-            List<AresHand> handsToDraw = [];
-            for (int i = 0; i < Main.maxNPCs; i++)
+            List<AresHand> handsToDraw = new(4);
+            foreach (NPC n in Main.ActiveNPCs)
             {
-                NPC n = Main.npc[i];
-                if (n.type != handID || !n.active)
+                if (n.type != handID)
                     continue;
 
                 handsToDraw.Add(n.As<AresHand>());
