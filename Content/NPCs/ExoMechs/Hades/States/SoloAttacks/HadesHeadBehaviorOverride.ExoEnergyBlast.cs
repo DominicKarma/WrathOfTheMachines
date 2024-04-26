@@ -1,6 +1,7 @@
 ﻿using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -27,12 +28,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The maximum time Hades spends accelerating after the ExoEnergyBlast attack's laserbeam.
         /// </summary>
-        public static int ExoEnergyBlast_PostBeamAccelerationTime => Utilities.SecondsToFrames(2.3f);
+        public static int ExoEnergyBlast_PostBeamAccelerationTime => Utilities.SecondsToFrames(1.2f);
 
         /// <summary>
         /// The delay of the blast during the ExoEnergyBlast attack.
         /// </summary>
-        public static int ExoEnergyBlast_BlastDelay => Utilities.SecondsToFrames(3.5f);
+        public static int ExoEnergyBlast_BlastDelay => Utilities.SecondsToFrames(3.15f);
 
         /// <summary>
         /// The rate at which bursts of electricity are shot from the orb during the ExoEnergyBlast attack.
@@ -43,6 +44,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The speed at which Hades turns the laser during the ExoEnergyBlast attack.
         /// </summary>
         public static float ExoEnergyBlast_LaserTurnSpeed => MathHelper.ToRadians(1.45f);
+
+        /// <summary>
+        /// The sound Hades plays when charging up energy for his deathray.
+        /// </summary>
+        public static readonly SoundStyle DeathrayChargeUpSound = new("WoTM/Assets/Sounds/Custom/Hades/DeathrayChargeUp");
+
+        /// <summary>
+        /// The sound Hades plays when firing his deathray.
+        /// </summary>
+        public static readonly SoundStyle DeathrayFireSound = new("WoTM/Assets/Sounds/Custom/Hades/DeathrayFire");
 
         /// <summary>
         /// AI update loop method for the ExoEnergyBlast attack.
@@ -82,8 +93,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Slow down, move towards the target (while maintaining the current direction) and create the telegraph.
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay)
             {
-                if (Main.netMode != NetmodeID.MultiplayerClient && AITimer == ExoEnergyBlast_InitialRedirectTime + 1)
-                    Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<HadesExoEnergyOrb>(), 0, 0f, -1, ExoEnergyBlast_BlastDelay);
+                if (AITimer == ExoEnergyBlast_InitialRedirectTime + 1)
+                {
+                    SoundEngine.PlaySound(DeathrayChargeUpSound);
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                        Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<HadesExoEnergyOrb>(), 0, 0f, -1, ExoEnergyBlast_BlastDelay);
+                }
 
                 // Release tesla bursts.
                 if (AITimer % ExoEnergyBlast_ProjectileBurstReleaseRate == ExoEnergyBlast_ProjectileBurstReleaseRate - 1 && AITimer < ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay - 40)
@@ -106,6 +122,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Fire the Biden Blast.
             if (AITimer == ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay)
             {
+                SoundEngine.PlaySound(DeathrayFireSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ExoEnergyBlast>(), ExoEnergyBlastDamage, 0f);
             }

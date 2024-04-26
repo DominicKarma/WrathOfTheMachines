@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(4f);
+        public static int Lifetime => Utilities.SecondsToFrames(4.8f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -127,7 +127,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.rand.NextBool((1f - OverheatInterpolant) * Projectile.width / 300f))
                 CreateElectricSpark(Projectile.Center + Projectile.velocity * 20f);
 
-            ScreenShakeSystem.SetUniversalRumble(Projectile.width / 120f);
+            ScreenShakeSystem.SetUniversalRumble(Projectile.width / 90f);
 
             if (Time % 14f == 13f)
                 CustomExoMechsSky.CreateLightning(Projectile.Center.ToScreenPosition());
