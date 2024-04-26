@@ -49,12 +49,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// Whether the boss would be considered melted if it were to stop now.
         /// </summary>
-        public bool PlayerIsMeltingBoss => PhaseDurations.Sum(kv => kv.Value) < Utilities.MinutesToFrames(1.75f);
+        public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < Utilities.MinutesToFrames(1.75f);
 
         /// <summary>
-        /// How long each phase lasted, in frames, during the Exo Mech fight.
+        /// How long each phase lasted, in frames, during the Exo Mech fight, indexed according to phase.
         /// </summary>
-        public readonly Dictionary<int, int> PhaseDurations = [];
+        public readonly int[] PhaseDurations = new int[16];
 
         /// <summary>
         /// How short the Exo Mechs fight has to be in order to receive minimum style points for it.
@@ -83,7 +83,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             get
             {
-                int fightDuration = PhaseDurations.Sum(kv => kv.Value);
+                int fightDuration = PhaseDurations.Sum();
                 float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
                 float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
                 return fightTimeWeight;
@@ -128,7 +128,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             HitCount = 0;
             BuffCount = 0;
             AggressivenessBonus = 0f;
-            PhaseDurations.Clear();
+            for (int i = 0; i < PhaseDurations.Length; i++)
+                PhaseDurations[i] = 0;
         }
 
         public override void PostUpdate()
@@ -139,11 +140,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
-            if (!PhaseDurations.ContainsKey(ExoMechFightStateManager.CurrentPhase.PhaseOrdering))
-                PhaseDurations[ExoMechFightStateManager.CurrentPhase.PhaseOrdering] = 0;
-
-            if (ExoMechFightStateManager.CurrentPhase.PhaseOrdering >= 1)
-                PhaseDurations[ExoMechFightStateManager.CurrentPhase.PhaseOrdering]++;
+            int currentPhase = ExoMechFightStateManager.CurrentPhase.PhaseOrdering;
+            if (currentPhase >= 1)
+                PhaseDurations[currentPhase]++;
 
             UpdateBuffCount();
             UpdateAggressivenessBonus();
