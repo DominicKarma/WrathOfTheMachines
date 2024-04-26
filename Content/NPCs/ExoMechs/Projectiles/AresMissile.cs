@@ -84,7 +84,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            LoopInstance = LoopedSoundManager.CreateNew(ApolloMissile.LoopSound, () => !Projectile.active);
+            LoopInstance = LoopedSoundManager.CreateNew(ApolloMissile.LoopSound with { Volume = 0.21f }, () => !Projectile.active);
         }
 
         public override void AI()

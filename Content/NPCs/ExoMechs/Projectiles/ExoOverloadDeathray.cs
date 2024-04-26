@@ -40,7 +40,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(9000f);
+        public static int Lifetime => Utilities.SecondsToFrames(9f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -76,12 +76,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.timeLeft = Lifetime;
 
             // This is done for more precision in the collision checks, due to the fact that the laser moves rather quickly.
             // Wouldn't want it to skip over the player's hitbox in a single update and do nothing.
             Projectile.MaxUpdates = 2;
 
+            Projectile.timeLeft = Lifetime * Projectile.MaxUpdates;
             CooldownSlot = ImmunityCooldownID.Bosses;
             LaserbeamLength = 800f;
         }
@@ -123,6 +123,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 98f, 0f, MaxLaserbeamLength);
 
             Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 11f, Time), 0.63f);
+
+            if (Projectile.timeLeft <= 60)
+                Projectile.scale *= 0.9f;
 
             Time++;
         }

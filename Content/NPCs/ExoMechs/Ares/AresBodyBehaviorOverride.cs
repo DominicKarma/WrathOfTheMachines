@@ -14,6 +14,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -116,6 +117,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="Action">The action that the hand should perform.</param>
         public record HandInstructions(AresHandAction Action);
+
+        /// <summary>
+        /// The sound played when Ares laughs.
+        /// </summary>
+        public static readonly SoundStyle LaughSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/Laugh") with { Volume = 1.4f };
 
         /// <summary>
         /// Represents an action that should be performed by hands attached to Ares.

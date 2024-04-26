@@ -49,7 +49,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The sound played when a distant missile is fired by Ares.
         /// </summary>
-        public static readonly SoundStyle DistantMissileLaunchSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/AresDistantMissileLaunch") with { MaxInstances = 0, Volume = 0.6f, PitchVariance = 0.15f };
+        public static readonly SoundStyle DistantMissileLaunchSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/DistantMissileLaunch") with { MaxInstances = 0, Volume = 0.6f, PitchVariance = 0.15f };
 
         /// <summary>
         /// AI update loop method for the BackgroundCoreLaserBeams attack.
@@ -58,7 +58,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             float enterBackgroundInterpolant = Utilities.InverseLerp(0f, 30f, AITimer);
             float slowDownInterpolant = Utilities.InverseLerp(54f, 60f, AITimer);
-            ZPosition = enterBackgroundInterpolant * 3.7f;
+            bool doneAttacking = AITimer >= ExoOverloadDeathray.Lifetime;
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * enterBackgroundInterpolant * 360f, enterBackgroundInterpolant * (1f - slowDownInterpolant) * 0.08f);
             NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(Target.Center.X, NPC.Center.Y), slowDownInterpolant * 0.111f);
             NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(NPC.Center.X, Target.Center.Y - 70f), slowDownInterpolant * 0.019f);
@@ -67,17 +67,13 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.dontTakeDamage = true;
 
-            if (AITimer == 1 || !Utilities.AnyProjectiles(ModContent.ProjectileType<ExoOverloadDeathray>()))
+            if (AITimer == 1)
             {
+                ScreenShakeSystem.StartShake(10f);
+                SoundEngine.PlaySound(AresBody.LaserStartSound);
+                SoundEngine.PlaySound(LaughSound with { Volume = 10f });
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Utilities.NewProjectileBetter(NPC.GetSource_FromAI(), CorePosition, Vector2.Zero, ModContent.ProjectileType<ExoOverloadDeathray>(), CoreLaserbeamDamage, 0f, -1);
-                AITimer = 2;
-            }
-
-            if (AITimer == 2)
-            {
-                ScreenShakeSystem.StartShake(9.5f);
-                SoundEngine.PlaySound(AresBody.LaserStartSound);
             }
 
             if (AITimer == BackgroundCoreLaserBeams_LoopSoundDelay)
@@ -93,7 +89,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 });
             }
 
-            if (AITimer >= BackgroundCoreLaserBeams_MissileShootDelay && AITimer % 8 == 7)
+            if (!doneAttacking && AITimer >= BackgroundCoreLaserBeams_MissileShootDelay && AITimer % 8 == 7)
             {
                 Vector2 velocity = NPC.position - NPC.oldPosition;
                 Vector2 sparkSpawnPosition = NPC.Center - Vector2.UnitY.RotatedByRandom(1.1f) * NPC.scale * 70f;
@@ -117,6 +113,18 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             BasicHandUpdateWrapper();
+
+            if (AITimer >= ExoOverloadDeathray.Lifetime)
+                ZPosition = MathHelper.Clamp(ZPosition - 0.5f, 0f, 10f);
+            else
+                ZPosition = enterBackgroundInterpolant * 3.7f;
+
+            if (AITimer >= ExoOverloadDeathray.Lifetime + 15)
+            {
+                CurrentState = AresAIState.DetachHands;
+                AITimer = 0;
+                NPC.netUpdate = true;
+            }
         }
     }
 }
