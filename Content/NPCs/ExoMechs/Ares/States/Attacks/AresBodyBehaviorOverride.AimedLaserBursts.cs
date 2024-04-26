@@ -73,9 +73,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 AimedLaserBursts_SweepCounter = 0f;
                 AimedLaserBursts_AimOffset = Vector2.Zero;
-                CurrentState = AresAIState.DetachHands;
-                AITimer = 0;
-                NPC.netUpdate = true;
+                SelectNewState();
             }
         }
 

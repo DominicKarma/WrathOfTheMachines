@@ -91,11 +91,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands[3] = new(h => LargeTeslaOrbBlastHandUpdate(h, teslaSphere, new Vector2(430f, 40f), 3));
 
             if (AITimer >= LargeTeslaOrbBlast_OrbChargeUpTime + LargeTeslaOrbBlast_HomingBurstReleaseDelay + LargeTeslaOrbBlast_HomingBurstReleaseTime + LargeTeslaOrbBlast_ExplodeAnticipationTime + LargeTeslaOrbBlast_AttackTransitionDelay)
-            {
-                CurrentState = AresAIState.DetachHands;
-                AITimer = 0;
-                NPC.netUpdate = true;
-            }
+                SelectNewState();
         }
 
         public void DoBehavior_LargeTeslaOrbBlast_ManageSphere(Projectile teslaSphere, float reelBackInterpolant)

@@ -19,5 +19,10 @@
             get;
             set;
         }
+
+        /// <summary>
+        /// Instructs this Exo Mech to use a new state.
+        /// </summary>
+        public void SelectNewState();
     }
 }

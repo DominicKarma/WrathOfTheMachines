@@ -277,6 +277,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Selects a new state for Artemis and Apollo.
+        /// </summary>
+        public void SelectNewState() => ExoTwinsStateManager.TransitionToNextState();
+
+        /// <summary>
         /// Resets various things pertaining to the fight state prior to behavior updates.
         /// </summary>
         /// <remarks>

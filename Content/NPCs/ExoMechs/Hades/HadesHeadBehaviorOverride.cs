@@ -303,9 +303,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Selects a new attack state for Hades.
+        /// Selects a new state for Hades.
         /// </summary>
-        public void SelectNextAttack()
+        public void SelectNewState()
         {
             HadesAIState oldState = CurrentState;
             do
@@ -313,7 +313,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 CurrentState = Main.rand.NextFromList(HadesAIState.ContinuousLaserBarrage, HadesAIState.MineBarrages, HadesAIState.PerpendicularBodyLaserBlasts, HadesAIState.ExoEnergyBlast);
             }
             while (CurrentState == oldState);
-            CurrentState = HadesAIState.ExoEnergyBlast;
 
             for (int i = 0; i < NPC.maxAI; i++)
                 NPC.ai[i] = 0f;

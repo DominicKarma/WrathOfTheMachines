@@ -15,11 +15,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             BasicHandUpdateWrapper();
 
             if (!Inactive && ZPosition <= 0f)
-            {
-                CurrentState = AresAIState.DetachHands;
-                AITimer = 0;
-                NPC.netUpdate = true;
-            }
+                SelectNewState();
         }
     }
 }

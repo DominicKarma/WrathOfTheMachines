@@ -72,11 +72,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             InstructionsForHands[3] = new(h => NukeAoEAndPlasmaBlastsHandUpdate(h, new Vector2(400f, 40f), 3));
 
             if (AITimer >= NukeAoEAndPlasmaBlasts_NukeChargeUpTime + NukeAoEAndPlasmaBlasts_NukeExplosionDelay + NukeAoEAndPlasmaBlasts_AttackTransitionDelay)
-            {
-                CurrentState = AresAIState.DetachHands;
-                AITimer = 0;
-                NPC.netUpdate = true;
-            }
+                SelectNewState();
         }
 
         public void DoBehavior_NukeAoEAndPlasmaBlasts_ReleaseBurst(Projectile teslaSphere)

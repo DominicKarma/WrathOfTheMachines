@@ -106,7 +106,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 AITimer = 0;
                 ContinuousLaserBarrage_BarrageCounter++;
                 if (ContinuousLaserBarrage_BarrageCounter >= ContinuousLaserBarrage_BarrageCount)
-                    SelectNextAttack();
+                    SelectNewState();
                 NPC.netUpdate = true;
             }
 

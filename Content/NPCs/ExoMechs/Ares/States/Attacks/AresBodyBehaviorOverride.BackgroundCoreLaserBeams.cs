@@ -120,11 +120,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 ZPosition = enterBackgroundInterpolant * 3.7f;
 
             if (AITimer >= ExoOverloadDeathray.Lifetime + 15)
-            {
-                CurrentState = AresAIState.DetachHands;
-                AITimer = 0;
-                NPC.netUpdate = true;
-            }
+                SelectNewState();
         }
     }
 }

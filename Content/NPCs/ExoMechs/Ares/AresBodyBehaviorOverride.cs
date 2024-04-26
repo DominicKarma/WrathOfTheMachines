@@ -191,6 +191,51 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Selects a new state for Ares.
+        /// </summary>
+        public void SelectNewState()
+        {
+            CurrentState = AresAIState.DetachHands;
+            ZPosition = 0f;
+            AITimer = 0;
+            NPC.netUpdate = true;
+        }
+
+        /// <summary>
+        /// Performs Ares' current state.
+        /// </summary>
+        public void ExecuteCurrentState()
+        {
+            switch (CurrentState)
+            {
+                case AresAIState.SpawnAnimation:
+                    DoBehavior_SpawnAnimation();
+                    break;
+                case AresAIState.LargeTeslaOrbBlast:
+                    DoBehavior_LargeTeslaOrbBlast();
+                    break;
+                case AresAIState.DetachHands:
+                    DoBehavior_DetachHands();
+                    break;
+                case AresAIState.NukeAoEAndPlasmaBlasts:
+                    DoBehavior_NukeAoEAndPlasmaBlasts();
+                    break;
+                case AresAIState.AimedLaserBursts:
+                    DoBehavior_AimedLaserBursts();
+                    break;
+                case AresAIState.BackgroundCoreLaserBeams:
+                    DoBehavior_BackgroundCoreLaserBeams();
+                    break;
+                case AresAIState.Inactive:
+                    DoBehavior_Inactive();
+                    break;
+                case AresAIState.ReturnToBeingActive:
+                    DoBehavior_ReturnToBeingActive();
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Creates Ares' arms.
         /// </summary>
         public void CreateArms()
@@ -254,40 +299,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.As<AresBody>().SecondaryAIState = (int)AresBody.SecondaryPhase.Nothing;
 
             CalamityGlobalNPC.draedonExoMechPrime = NPC.whoAmI;
-        }
-
-        /// <summary>
-        /// Performs Ares' current state.
-        /// </summary>
-        public void ExecuteCurrentState()
-        {
-            switch (CurrentState)
-            {
-                case AresAIState.SpawnAnimation:
-                    DoBehavior_SpawnAnimation();
-                    break;
-                case AresAIState.LargeTeslaOrbBlast:
-                    DoBehavior_LargeTeslaOrbBlast();
-                    break;
-                case AresAIState.DetachHands:
-                    DoBehavior_DetachHands();
-                    break;
-                case AresAIState.NukeAoEAndPlasmaBlasts:
-                    DoBehavior_NukeAoEAndPlasmaBlasts();
-                    break;
-                case AresAIState.AimedLaserBursts:
-                    DoBehavior_AimedLaserBursts();
-                    break;
-                case AresAIState.BackgroundCoreLaserBeams:
-                    DoBehavior_BackgroundCoreLaserBeams();
-                    break;
-                case AresAIState.Inactive:
-                    DoBehavior_Inactive();
-                    break;
-                case AresAIState.ReturnToBeingActive:
-                    DoBehavior_ReturnToBeingActive();
-                    break;
-            }
         }
 
         public override Color? GetAlpha(Color drawColor) => Color.Lerp(drawColor, Main.ColorOfTheSkies, MathF.Cbrt(1f - NPC.Opacity)) * NPC.Opacity;

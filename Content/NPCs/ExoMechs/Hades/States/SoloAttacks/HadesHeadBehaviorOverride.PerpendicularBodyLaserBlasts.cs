@@ -116,7 +116,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 AITimer = 0;
 
                 if (PerpendicularBodyLaserBlasts_BlastCounter >= PerpendicularBodyLaserBlasts_BlastCount)
-                    SelectNextAttack();
+                    SelectNewState();
             }
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;

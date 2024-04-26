@@ -139,7 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             if (AITimer >= ExoEnergyBlast_InitialRedirectTime + ExoEnergyBlast_BlastDelay + ExoEnergyBlast.Lifetime + ExoEnergyBlast_PostBeamAccelerationTime)
-                SelectNextAttack();
+                SelectNewState();
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }

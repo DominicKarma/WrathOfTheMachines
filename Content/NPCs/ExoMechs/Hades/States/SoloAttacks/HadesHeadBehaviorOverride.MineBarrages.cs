@@ -64,7 +64,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             if (AITimer >= MineBarrages_BarrageCount * MineBarrages_AttackCycleTime)
-                SelectNextAttack();
+                SelectNewState();
 
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }
