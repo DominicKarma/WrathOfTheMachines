@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             if (item.type == ModContent.ItemType<LoreExoMechs>())
             {
-                DrawExoMechLore(item, new(x, y));
+                DrawExoMechLore(new(x, y));
                 return true;
             }
 
@@ -90,7 +90,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="item">The lore item</param>
         /// <param name="baseDrawPosition">The base draw position of the tooltip</param>
-        private static void DrawExoMechLore(Item item, Vector2 baseDrawPosition)
+        private static void DrawExoMechLore(Vector2 baseDrawPosition)
         {
             Texture2D poem = ModContent.Request<Texture2D>("WoTM/Content/Items/DraedonPoem").Value;
             Main.spriteBatch.Draw(poem, baseDrawPosition + Vector2.UnitY * 20f, Color.White);
