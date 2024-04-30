@@ -45,6 +45,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The direction from this arm's shoulder to its hand.
+        /// </summary>
+        public float ShoulderToHandDirection
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The frame of this arm.
         /// </summary>
         public int Frame
@@ -346,6 +355,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             Vector2 armEnd = armStart + armRotation.ToRotationVector2() * aresBody.scale * ArmSide * 92f;
 
+            ShoulderToHandDirection = (ArmEndpoint - screenPosition - elbowDrawPosition).ToRotation();
+
             return armEnd;
         }
 
@@ -448,6 +459,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             Vector2 magnetLineOffset = new Vector2(ArmSide * 50f, -10f).RotatedBy(armRotation) * NPC.scale + Main.screenPosition;
             DrawMagneticLine(aresBody, armStart + magnetLineOffset, elbowDrawPosition + magnetLineOffset);
+
+            ShoulderToHandDirection = (ArmEndpoint - screenPosition - elbowDrawPosition).ToRotation();
 
             return elbowDrawPosition;
         }

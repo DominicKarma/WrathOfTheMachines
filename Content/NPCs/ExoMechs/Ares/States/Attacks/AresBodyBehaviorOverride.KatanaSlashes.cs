@@ -38,6 +38,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
             int attackDelay = 30;
+            int attackCycleTime = 120;
 
             NPC handNPC = hand.NPC;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
@@ -47,7 +48,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.EnergyDrawer.chargeProgress = 0f;
             hand.GlowmaskDisabilityInterpolant = 0f;
-            handNPC.rotation = handNPC.AngleFrom(NPC.Center);
             handNPC.spriteDirection = 1;
             handNPC.scale = MathHelper.Lerp(0.6f, 1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly));
 
@@ -55,14 +55,21 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= attackDelay)
             {
                 PiecewiseCurve curve = new PiecewiseCurve().
-                    Add(EasingCurves.Quadratic, EasingType.InOut, -1.3f, 0.45f).
-                    Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.61f : 1.2f, 0.59f).
+                    Add(EasingCurves.Quadratic, EasingType.InOut, -1.12f, 0.45f).
+                    Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.68f : 1.1f, 0.59f).
                     Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
                 float varianceInterpolant = Utilities.InverseLerp(0f, 30f, AITimer - attackDelay);
-                float animationCompletion = (AITimer + handNPC.whoAmI * varianceInterpolant * 17f - attackDelay) / 105f % 1f;
+
+                int animationTimer = (int)(AITimer + handNPC.whoAmI * varianceInterpolant * 18f - attackDelay) % attackCycleTime;
+                float animationCompletion = animationTimer / (float)attackCycleTime;
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
-                hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.5f - animationCompletion * 0.9f, 0.5f) * NPC.scale;
+                hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.4f - animationCompletion * 0.9f, 0.5f) * NPC.scale;
+
+                if (animationTimer == (int)(attackCycleTime * 0.46f))
+                    ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 2.6f);
+
+                handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, Utilities.InverseLerpBump(0.1f, 0.4f, 0.9f, 1f, animationCompletion).Squared());
             }
 
             handNPC.SmoothFlyNear(hoverDestination, 0.5f, 0.6f);
