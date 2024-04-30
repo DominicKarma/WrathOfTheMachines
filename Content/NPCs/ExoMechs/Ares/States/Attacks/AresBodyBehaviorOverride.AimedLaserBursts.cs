@@ -143,7 +143,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // Make the screen shake slightly before firing.
-            ScreenShakeSystem.SetUniversalRumble(hand.EnergyDrawer.chargeProgress.Cubed() * 3f);
+            ScreenShakeSystem.SetUniversalRumble(hand.EnergyDrawer.chargeProgress.Cubed() * 3f, MathHelper.TwoPi, null, 0.2f);
 
             // Fire.
             if (relativeTimer == AimedLaserBursts_CannonChargeUpTime)

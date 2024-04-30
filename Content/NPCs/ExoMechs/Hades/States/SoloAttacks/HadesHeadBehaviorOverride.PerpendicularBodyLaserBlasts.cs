@@ -181,7 +181,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             float shootCompletionRatio = PerpendicularBodyLaserBlasts_BurstShootCompletionRatio;
             float rumblePower = Utilities.InverseLerpBump(0f, shootCompletionRatio, shootCompletionRatio, shootCompletionRatio + 0.04f, telegraphCompletion);
-            ScreenShakeSystem.SetUniversalRumble(rumblePower * 1.3f);
+            ScreenShakeSystem.SetUniversalRumble(rumblePower * 1.3f, MathHelper.TwoPi, null, 0.2f);
         }
 
         /// <summary>

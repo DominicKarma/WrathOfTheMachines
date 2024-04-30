@@ -127,7 +127,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.rand.NextBool((1f - OverheatInterpolant) * Projectile.width / 300f))
                 CreateElectricSpark(Projectile.Center + Projectile.velocity * 20f);
 
-            ScreenShakeSystem.SetUniversalRumble(Projectile.width / 90f);
+            ScreenShakeSystem.SetUniversalRumble(Projectile.width / 90f, MathHelper.TwoPi, null, 0.2f);
 
             if (Time % 14f == 13f)
                 CustomExoMechsSky.CreateLightning(Projectile.Center.ToScreenPosition());
