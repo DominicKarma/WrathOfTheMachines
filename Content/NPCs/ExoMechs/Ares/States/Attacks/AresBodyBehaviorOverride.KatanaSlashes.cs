@@ -25,7 +25,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SoundEngine.PlaySound(LaughSound with { Volume = 10f });
             }
 
-            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 350f, 0.08f, 0.95f);
+            AnimationState = AresFrameAnimationState.Laugh;
+
+            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 350f, 0.07f, 0.95f);
 
             InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), 0));
             InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), 1));
@@ -57,8 +59,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.61f : 1.2f, 0.59f).
                     Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
-                float varianceInterpolant = Utilities.InverseLerp(0f, 60f, AITimer - attackDelay);
-                float animationCompletion = (AITimer + handNPC.whoAmI * varianceInterpolant * 11f - attackDelay) / 90f % 1f;
+                float varianceInterpolant = Utilities.InverseLerp(0f, 30f, AITimer - attackDelay);
+                float animationCompletion = (AITimer + handNPC.whoAmI * varianceInterpolant * 17f - attackDelay) / 105f % 1f;
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
                 hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.5f - animationCompletion * 0.9f, 0.5f) * NPC.scale;
             }

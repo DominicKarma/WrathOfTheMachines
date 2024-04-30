@@ -42,6 +42,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             PerformComboAttack = ExoMechComboAttackManager.ComboAttackValue
         }
 
+        public enum AresFrameAnimationState
+        {
+            Default,
+            Laugh
+        }
+
         /// <summary>
         /// Whether Ares is currently performing a combo attack.
         /// </summary>
@@ -78,6 +84,24 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// Ares' current, non-combo state.
         /// </summary>
         public AresAIState CurrentState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Ares' current frame animation state.
+        /// </summary>
+        public AresFrameAnimationState AnimationState
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Ares' current frame.
+        /// </summary>
+        public int CurrentFrame
         {
             get;
             set;
@@ -213,6 +237,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void SelectNewState()
         {
             CurrentState = AresAIState.DetachHands;
+            AnimationState = AresFrameAnimationState.Default;
             ZPosition = 0f;
             AITimer = 0;
             NPC.netUpdate = true;
@@ -322,6 +347,31 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         public override Color? GetAlpha(Color drawColor) => Color.Lerp(drawColor, Main.ColorOfTheSkies, MathF.Cbrt(1f - NPC.Opacity)) * NPC.Opacity;
+
+        public override void FindFrame(int frameHeight)
+        {
+            int startingFrame = 0;
+            int endingFrame = 12;
+
+            if (AnimationState == AresFrameAnimationState.Laugh)
+            {
+                startingFrame = 36;
+                endingFrame = 48;
+            }
+
+            if (NPC.frameCounter >= 5)
+            {
+                CurrentFrame++;
+                NPC.frameCounter = 0;
+            }
+            if (CurrentFrame >= endingFrame || CurrentFrame < startingFrame)
+                CurrentFrame = startingFrame;
+
+            NPC.frame.Width = 220;
+            NPC.frame.Height = 252;
+            NPC.frame.X = NPC.frame.Width * (CurrentFrame / 8);
+            NPC.frame.Y = NPC.frame.Height * (CurrentFrame % 8);
+        }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
