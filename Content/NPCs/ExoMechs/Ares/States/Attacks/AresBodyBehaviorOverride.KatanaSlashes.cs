@@ -1,8 +1,10 @@
 ﻿using System;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs
@@ -14,6 +16,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public void DoBehavior_KatanaSlashes()
         {
+            if (Main.mouseRight && Main.mouseRightRelease)
+                AITimer = 0;
+
+            if (AITimer == 1)
+            {
+                ScreenShakeSystem.StartShake(10f);
+                SoundEngine.PlaySound(LaughSound with { Volume = 10f });
+            }
+
             NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 350f, 0.08f, 0.95f);
 
             InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), 0));
@@ -24,6 +35,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
+            int attackDelay = 30;
+
             NPC handNPC = hand.NPC;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
@@ -37,14 +50,15 @@ namespace WoTM.Content.NPCs.ExoMechs
             handNPC.scale = MathHelper.Lerp(0.6f, 1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly));
 
             Vector2 hoverDestination = NPC.Center + hoverOffset * NPC.scale;
-            if (armIndex <= 5)
+            if (AITimer >= attackDelay)
             {
                 PiecewiseCurve curve = new PiecewiseCurve().
-                    Add(EasingCurves.Quadratic, EasingType.InOut, -1.3f, 0.5f).
-                    Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.61f : 1.2f, 0.64f).
-                    Add(EasingCurves.Cubic, EasingType.InOut, 0f, 1f);
+                    Add(EasingCurves.Quadratic, EasingType.InOut, -1.3f, 0.45f).
+                    Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.61f : 1.2f, 0.59f).
+                    Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
-                float animationCompletion = (AITimer + handNPC.whoAmI * 17) / 120f % 1f;
+                float varianceInterpolant = Utilities.InverseLerp(0f, 60f, AITimer - attackDelay);
+                float animationCompletion = (AITimer + handNPC.whoAmI * varianceInterpolant * 11f - attackDelay) / 90f % 1f;
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
                 hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.5f - animationCompletion * 0.9f, 0.5f) * NPC.scale;
             }
