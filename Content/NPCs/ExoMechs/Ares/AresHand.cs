@@ -54,6 +54,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The opacity of afterimages used by the energy katana variant of this hand.
+        /// </summary>
+        public float KatanaAfterimageOpacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The frame of this arm.
         /// </summary>
         public int Frame
@@ -162,6 +171,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             OptionalDrawAction = null;
 
+            KatanaAfterimageOpacity = 0f;
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
             NPC.Calamity().ShouldCloseHPBar = true;

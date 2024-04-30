@@ -38,7 +38,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
             int attackDelay = 30;
-            int attackCycleTime = 120;
+            int attackCycleTime = 90;
 
             NPC handNPC = hand.NPC;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
@@ -64,10 +64,16 @@ namespace WoTM.Content.NPCs.ExoMechs
                 int animationTimer = (int)(AITimer + handNPC.whoAmI * varianceInterpolant * 18f - attackDelay) % attackCycleTime;
                 float animationCompletion = animationTimer / (float)attackCycleTime;
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
-                hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.4f - animationCompletion * 0.9f, 0.5f) * NPC.scale;
+                hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.2f - animationCompletion * 0.75f, 0.5f) * NPC.scale;
 
-                if (animationTimer == (int)(attackCycleTime * 0.46f))
+                if (animationTimer == (int)(attackCycleTime * 0.45f))
+                {
+                    NPC.oldPos = new Vector2[NPC.oldPos.Length];
+                    NPC.oldRot = new float[NPC.oldRot.Length];
                     ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 2.6f);
+                }
+                if (animationCompletion >= 0.45f && animationCompletion <= 0.57f)
+                    hand.KatanaAfterimageOpacity = 0.6f;
 
                 handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, Utilities.InverseLerpBump(0.1f, 0.4f, 0.9f, 1f, animationCompletion).Squared());
             }
