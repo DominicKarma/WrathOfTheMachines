@@ -23,7 +23,10 @@ Projectiles: {
 }
 
 NPCs: {
-	AresHand.DisplayName: 阿瑞斯之手
+	AresHand: {
+		DisplayName: 阿瑞斯之手
+		// EnergyKatanaDisplayName: XF-09 Ares Energy Katana
+	}
 
 	Draedon: {
 		IntroductionMonologue1: 你知道吗？这一刻已经等了太久了。

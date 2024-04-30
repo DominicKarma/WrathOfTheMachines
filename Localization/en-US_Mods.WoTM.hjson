@@ -23,7 +23,10 @@ Projectiles: {
 }
 
 NPCs: {
-	AresHand.DisplayName: Ares Hand
+	AresHand: {
+		DisplayName: Ares Hand
+		EnergyKatanaDisplayName: XF-09 Ares Energy Katana
+	}
 
 	Draedon: {
 		IntroductionMonologue1: I have waited long for this moment.

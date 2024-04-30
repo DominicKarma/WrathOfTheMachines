@@ -32,6 +32,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             DetachHands,
             NukeAoEAndPlasmaBlasts,
             AimedLaserBursts,
+            KatanaSlashes,
 
             BackgroundCoreLaserBeams,
 
@@ -235,6 +236,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     break;
                 case AresAIState.NukeAoEAndPlasmaBlasts:
                     DoBehavior_NukeAoEAndPlasmaBlasts();
+                    break;
+                case AresAIState.KatanaSlashes:
+                    DoBehavior_KatanaSlashes();
                     break;
                 case AresAIState.AimedLaserBursts:
                     DoBehavior_AimedLaserBursts();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -204,6 +203,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
             shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);
             shader.TrySetParameter("blurWeights", blurWeights);
+            shader.TrySetParameter("blurDirection", Vector2.UnitY);
             shader.Apply();
 
             Vector2 scale = Vector2.One * twin.scale;

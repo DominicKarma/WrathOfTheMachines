@@ -222,6 +222,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             DrawEnergyTelegraph(texture, drawPosition);
             OptionalDrawAction?.Invoke();
+            HandType?.ExtraDrawAction?.Invoke(NPC, NPC.Center - screenPos);
 
             return false;
         }
@@ -320,9 +321,10 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             Vector2 armStart = shoulderDrawPosition + aresBody.scale * new Vector2(ArmSide * 22f, 2f);
 
+            bool elbowPointsUp = (ArmSide == 1) ^ (ArmEndpoint.Y > armStart.Y);
             Texture2D armTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresArmTopPart1").Value;
             Texture2D forearmTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart2").Value;
-            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, ArmSide == -1);
+            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
             Vector2 armOrigin = armTexture.Size() * new Vector2(0.81f, 0.66f);
             float armRotation = (elbowDrawPosition - armStart).ToRotation() + MathHelper.Pi;
 
@@ -426,7 +428,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             Texture2D armTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart1").Value;
             Texture2D armTextureGlowmask = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart1Glow").Value;
             Texture2D forearmTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart2").Value;
-            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, ArmSide == -1);
+
+            bool elbowPointsUp = (ArmSide == 1) ^ (ArmEndpoint.Y > armStart.Y);
+            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
             Rectangle armFrame = armTexture.Frame(1, 9, 0, (int)(Main.GlobalTimeWrappedHourly * 12f) % 9);
             Vector2 armOrigin = armFrame.Size() * new Vector2(0.81f, 0.66f);
             float armRotation = (elbowDrawPosition - armStart).ToRotation() + MathHelper.Pi;
