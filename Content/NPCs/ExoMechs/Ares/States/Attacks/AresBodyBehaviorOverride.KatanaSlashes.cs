@@ -38,7 +38,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             AnimationState = AresFrameAnimationState.Laugh;
 
-            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 350f, 0.07f, 0.95f);
+            NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 305f, 0.07f, 0.95f);
 
             if (AITimer >= 60000000)
                 SelectNewState();
@@ -93,7 +93,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= KatanaSlashes_AttackDelay)
             {
                 PiecewiseCurve curve = new PiecewiseCurve().
-                    Add(EasingCurves.Quadratic, EasingType.InOut, -1.12f, anticipationCurveEnd).
+                    Add(EasingCurves.Quadratic, EasingType.InOut, hand.UsesBackArm ? -0.8f : -1.12f, anticipationCurveEnd).
                     Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.68f : 1.1f, slashCurveEnd).
                     Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
