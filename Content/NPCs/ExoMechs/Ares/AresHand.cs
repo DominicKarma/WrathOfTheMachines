@@ -529,7 +529,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The color function for slash afterimage trails used by Ares' hands when they're energy katanas.
         /// </summary>
         /// <param name="completionRatio">The completion ratio along the primitives.</param>
-        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.85f, 0.35f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.3f);
+        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.75f, 0.65f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.3f);
 
         /// <summary>
         /// The width function for slash afterimage bloom trails used by Ares' hands when they're energy katanas.

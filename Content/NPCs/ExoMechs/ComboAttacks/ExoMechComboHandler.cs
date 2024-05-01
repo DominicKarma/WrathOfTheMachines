@@ -5,7 +5,12 @@ namespace WoTM.Content.NPCs.ExoMechs
 {
     public abstract class ExoMechComboHandler : ModType
     {
-        // This is placed here in this class for ease of use when writing behavior code.
+        // These are placed here in this class for ease of use when writing behavior code.
+        /// <summary>
+        /// The timer used during combo attacks. This is shared between all Exo Mechs that participate in the combo attack.
+        /// </summary>
+        protected static ref int AITimer => ref ExoMechComboAttackManager.ComboAttackTimer;
+
         /// <summary>
         /// The target that should be attacked during combo attacks.
         /// </summary>
@@ -23,7 +28,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             get;
         }
 
-        protected sealed override void Register() => ExoMechComboAttackManager.RegisteredComboAttacks.Add(new (Perform, ExpectedManagingExoMechs));
+        protected sealed override void Register() => ExoMechComboAttackManager.RegisteredComboAttacks.Add(new(Perform, ExpectedManagingExoMechs));
 
         public sealed override void SetupContent() => SetStaticDefaults();
 

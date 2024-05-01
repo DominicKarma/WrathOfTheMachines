@@ -52,7 +52,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     bool erasePixel = streak >= 1.2 - coords.x * 0.6 - coords.y;
     
     // Calculate the brightness interpolant.
-    float brightnessInterpolant = 1 - smoothstep(coords.x + streak * 0.09, 0, 0.15);
+    float brightnessInterpolant = 1 - smoothstep(coords.x + streak * 0.09, 0, 0.32);
     
     return (color + brightnessInterpolant * color.a * 1.86) * (1 - erasePixel);
 }
