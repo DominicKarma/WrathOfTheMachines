@@ -115,7 +115,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             handNPC.SmoothFlyNear(hoverDestination, 0.5f, 0.6f);
 
-            float rotateForwardInterpolant = Utilities.InverseLerpBump(0.1f, anticipationCurveEnd * 0.89f, 0.9f, 1f, animationCompletion).Squared();
+            float rotateForwardInterpolant = Utilities.InverseLerpBump(0.1f, anticipationCurveEnd * 1.1f, 0.9f, 1f, animationCompletion).Squared();
             handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, rotateForwardInterpolant);
         }
 
