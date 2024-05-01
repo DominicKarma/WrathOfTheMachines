@@ -22,11 +22,17 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.6f);
 
+        /// <summary>
+        /// The animation easing curve used when Ares' back arms are slashing.
+        /// </summary>
         public static readonly PiecewiseCurve SlashAnimationCurve_BackArm = new PiecewiseCurve().
             Add(EasingCurves.Quadratic, EasingType.InOut, -0.8f, AnticipationCurveEnd).
             Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.68f, SlashCurveEnd).
             Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
+        /// <summary>
+        /// The animation easing curve used when Ares' front arms are slashing.
+        /// </summary>
         public static readonly PiecewiseCurve SlashAnimationCurve_FrontArm = new PiecewiseCurve().
             Add(EasingCurves.Quadratic, EasingType.InOut, -1.12f, AnticipationCurveEnd).
             Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.1f, SlashCurveEnd).
