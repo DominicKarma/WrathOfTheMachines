@@ -59,8 +59,6 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void PostUpdateNPCs()
         {
-            return;
-
             if (!ExoMechFightStateManager.FightOngoing)
             {
                 Reset();
