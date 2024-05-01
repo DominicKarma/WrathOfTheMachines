@@ -20,7 +20,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long a single swipe cycle lasts during Ares' Katana Slashes attack.
         /// </summary>
-        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.5f);
+        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.7f);
 
         /// <summary>
         /// AI update loop method for the KatanaSlashes attack.
