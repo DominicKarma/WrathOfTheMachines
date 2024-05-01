@@ -22,6 +22,44 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.6f);
 
+        public static readonly PiecewiseCurve SlashAnimationCurve_BackArm = new PiecewiseCurve().
+            Add(EasingCurves.Quadratic, EasingType.InOut, -0.8f, AnticipationCurveEnd).
+            Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.68f, SlashCurveEnd).
+            Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
+
+        public static readonly PiecewiseCurve SlashAnimationCurve_FrontArm = new PiecewiseCurve().
+            Add(EasingCurves.Quadratic, EasingType.InOut, -1.12f, AnticipationCurveEnd).
+            Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.1f, SlashCurveEnd).
+            Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
+
+        /// <summary>
+        /// The 0-1 interpolant value at which the anticipation ends for Ares' slash animation.
+        /// </summary>
+        public const float AnticipationCurveEnd = 0.45f;
+
+        /// <summary>
+        /// The 0-1 interpolant value at which the slash ends for Ares' slash animation.
+        /// </summary>
+        public const float SlashCurveEnd = 0.59f;
+
+        /// <summary>
+        /// Calculates the hover destination for one of Ares' hands. Meant to be used for energy katanas.
+        /// </summary>
+        /// <param name="hand">The hand's ModNPC instance.</param>
+        /// <param name="slashAnimationCompletion">How far along the slash animation currently is, as a 0-1 interpolant.</param>
+        /// <param name="defaultHoverOffset">The default hover offset of the hand.</param>
+        public Vector2 CalculateSlashHandDestination(AresHand hand, float slashAnimationCompletion, Vector2 defaultHoverOffset)
+        {
+            PiecewiseCurve animationCurve = hand.UsesBackArm ? SlashAnimationCurve_BackArm : SlashAnimationCurve_FrontArm;
+
+            // This serves two main functions. It makes slashes more densely compacted as the attack goes on, as well as
+            // giving a jerky rebound effect when the cycle goes from the end to the start again, serving as an indirect animation state
+            // before Ares slashes again.
+            Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.45f, slashAnimationCompletion), 0.5f);
+            float handOffsetAngle = animationCurve.Evaluate(slashAnimationCompletion) * hand.ArmSide;
+            return NPC.Center + defaultHoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
+        }
+
         /// <summary>
         /// AI update loop method for the KatanaSlashes attack.
         /// </summary>
@@ -43,10 +81,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= 60000000)
                 SelectNewState();
 
-            InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), 0));
-            InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), 1));
-            InstructionsForHands[2] = new(h => KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), 2));
-            InstructionsForHands[3] = new(h => KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), 3));
+            InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 0));
+            InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 1));
+            InstructionsForHands[2] = new(h => KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 2));
+            InstructionsForHands[3] = new(h => KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 3));
         }
 
         /// <summary>
@@ -54,8 +92,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="hand">The hand's ModNPC instance.</param>
         /// <param name="hoverOffset">The hover offset of the hand.</param>
+        /// <param name="attackDelay">How long the hand should wait before attacking.</param>
+        /// <param name="attackCycleTime">The attack cycle time for the slash.</param>
         /// <param name="armIndex">The index of the hand.</param>
-        public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
+        public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int attackDelay, int attackCycleTime, int armIndex)
         {
             NPC handNPC = hand.NPC;
 
@@ -68,7 +108,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.GlowmaskDisabilityInterpolant = 0f;
             handNPC.spriteDirection = 1;
 
-            KatanaSlashesHandUpdate_HandleSlashMotion(hand, handNPC, hoverOffset);
+            int animationTimer = (int)(AITimer + handNPC.whoAmI * attackCycleTime / (float)ArmCount - attackDelay) % attackCycleTime;
+            KatanaSlashesHandUpdate_HandleSlashMotion(hand, handNPC, hoverOffset, animationTimer, KatanaSlashes_AttackCycleTime);
             KatanaSlashesHandUpdate_CreateParticles(hand, handNPC);
         }
 
@@ -78,44 +119,30 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="hand">The hand's ModNPC instance.</param>
         /// <param name="handNPC">The hand's NPC instance.</param>
         /// <param name="hoverOffset">The hover offset of the hand.</param>
-        public void KatanaSlashesHandUpdate_HandleSlashMotion(AresHand hand, NPC handNPC, Vector2 hoverOffset)
+        /// <param name="animationTimer">The timer for the overall slash animation.</param>
+        /// <param name="attackCycleTime">The attack cycle time for the slash.</param>
+        public void KatanaSlashesHandUpdate_HandleSlashMotion(AresHand hand, NPC handNPC, Vector2 hoverOffset, int animationTimer, int attackCycleTime)
         {
-            int animationTimer = (int)(AITimer + handNPC.whoAmI * KatanaSlashes_AttackCycleTime / (float)ArmCount - KatanaSlashes_AttackDelay) % KatanaSlashes_AttackCycleTime;
-            float animationCompletion = animationTimer / (float)KatanaSlashes_AttackCycleTime;
+            float animationCompletion = animationTimer / (float)attackCycleTime;
             Vector2 hoverDestination = NPC.Center + hoverOffset * NPC.scale;
-
-            float anticipationCurveEnd = 0.45f;
-            float slashCurveEnd = 0.59f;
 
             // Bear in mind that the motion resulting from the easing curve in this function is not followed exactly, it's only closely
             // followed via the SmoothFlyNear function below. This gives the motion a slightly jerky, mechanical feel to it, which is well in
             // line with Ares.
+            float rotateForwardInterpolant = Utilities.InverseLerpBump(0.1f, AnticipationCurveEnd * 1.1f, 0.9f, 1f, animationCompletion).Squared();
             if (AITimer >= KatanaSlashes_AttackDelay)
             {
-                PiecewiseCurve curve = new PiecewiseCurve().
-                    Add(EasingCurves.Quadratic, EasingType.InOut, hand.UsesBackArm ? -0.8f : -1.12f, anticipationCurveEnd).
-                    Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.68f : 1.1f, slashCurveEnd).
-                    Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
-
-                // This serves two main functions. It makes slashes more densely compacted as the attack goes on, as well as
-                // giving a jerky rebound effect when the cycle goes from the end to the start again, serving as an indirect animation state
-                // before Ares slashes again.
-                Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.45f, animationCompletion), 0.5f);
-                float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
-                hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
-
-                if (animationTimer == (int)(KatanaSlashes_AttackCycleTime * anticipationCurveEnd))
+                if (animationTimer == (int)(attackCycleTime * AnticipationCurveEnd))
                     KatanaSlashesHandUpdate_DoSlashEffects(handNPC);
 
-                if (animationCompletion >= anticipationCurveEnd && animationCompletion <= slashCurveEnd)
+                hoverDestination = CalculateSlashHandDestination(hand, animationCompletion, hoverOffset);
+                if (animationCompletion >= AnticipationCurveEnd && animationCompletion <= SlashCurveEnd)
                     hand.KatanaAfterimageOpacity = 1f;
             }
             else
-                handNPC.rotation = handNPC.AngleFrom(NPC.Center);
+                rotateForwardInterpolant = 0f;
 
             handNPC.SmoothFlyNear(hoverDestination, 0.5f, 0.6f);
-
-            float rotateForwardInterpolant = Utilities.InverseLerpBump(0.1f, anticipationCurveEnd * 1.1f, 0.9f, 1f, animationCompletion).Squared();
             handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, rotateForwardInterpolant);
         }
 
