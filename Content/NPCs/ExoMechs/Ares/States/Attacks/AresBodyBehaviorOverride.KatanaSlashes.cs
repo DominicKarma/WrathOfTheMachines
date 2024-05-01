@@ -20,7 +20,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long a single swipe cycle lasts during Ares' Katana Slashes attack.
         /// </summary>
-        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.7f);
+        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.6f);
 
         /// <summary>
         /// AI update loop method for the KatanaSlashes attack.
@@ -80,7 +80,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="hoverOffset">The hover offset of the hand.</param>
         public void KatanaSlashesHandUpdate_HandleSlashMotion(AresHand hand, NPC handNPC, Vector2 hoverOffset)
         {
-            int animationTimer = (int)(AITimer + handNPC.whoAmI * 16f - KatanaSlashes_AttackDelay) % KatanaSlashes_AttackCycleTime;
+            int animationTimer = (int)(AITimer + handNPC.whoAmI * KatanaSlashes_AttackCycleTime / (float)ArmCount - KatanaSlashes_AttackDelay) % KatanaSlashes_AttackCycleTime;
             float animationCompletion = animationTimer / (float)KatanaSlashes_AttackCycleTime;
             Vector2 hoverDestination = NPC.Center + hoverOffset * NPC.scale;
 
