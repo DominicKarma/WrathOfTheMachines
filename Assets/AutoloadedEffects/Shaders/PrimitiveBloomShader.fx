@@ -1,4 +1,5 @@
 float globalTime;
+float innerGlowIntensity;
 matrix uWorldViewProjection;
 
 struct VertexShaderInput
@@ -41,7 +42,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     coords.y = (coords.y - 0.5) / input.TextureCoordinates.z + 0.5;
     
     float distanceFromCenter = distance(coords.y, 0.5);
-    float glow = 0.45 / distanceFromCenter;
+    float glow = innerGlowIntensity / distanceFromCenter;
     
     return saturate(color * glow) * pow(QuadraticBump(coords.y), 1.6);
 }

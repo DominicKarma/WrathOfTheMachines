@@ -146,6 +146,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
             ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
+            shader.TrySetParameter("innerGlowIntensity", 0.45f);
+
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, _ => Projectile.Size * 0.5f, Shader: shader);
             PrimitiveRenderer.RenderTrail(laserPositions, bloomSettings, 60);
 

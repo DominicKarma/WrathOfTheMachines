@@ -241,6 +241,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Color bloomColor = Color.White with { A = 0 };
 
             ManagedShader bloomShader = ShaderManager.GetShader("WoTM.CylinderPrimitiveBloomShader");
+            bloomShader.TrySetParameter("innerGlowIntensity", 0.45f);
             bloomShader.TrySetParameter("uWorldViewProjection", projection);
             bloomShader.Apply();
 

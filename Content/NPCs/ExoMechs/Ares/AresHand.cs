@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using CalamityMod;
 using CalamityMod.NPCs;
@@ -144,6 +143,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.hide = true;
             NPC.Calamity().VulnerableToSickness = false;
             NPC.Calamity().VulnerableToElectricity = true;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 18;
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -172,7 +172,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             OptionalDrawAction = null;
 
-            KatanaAfterimageOpacity = 0f;
+            KatanaAfterimageOpacity = Utilities.Saturate(KatanaAfterimageOpacity * 0.84f - 0.07f);
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
             NPC.Calamity().ShouldCloseHPBar = true;
@@ -507,12 +507,32 @@ namespace WoTM.Content.NPCs.ExoMechs
             DrawMagneticLine(aresBody, armStart + Main.screenPosition, ArmEndpoint, NPC.Opacity.Cubed());
         }
 
+        /// <summary>
+        /// The width function for slash afterimage trails used by Ares' hands when they're energy katanas.
+        /// </summary>
+        /// <param name="completionRatio">The completion ratio along the primitives.</param>
         public float EnergyKatanaAfterimageWidthFunction(float completionRatio)
         {
             return NPC.scale * Utilities.InverseLerp(0f, 0.23f, completionRatio) * 28f;
         }
 
-        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.85f, 0.35f, completionRatio) * KatanaAfterimageOpacity;
+        /// <summary>
+        /// The color function for slash afterimage trails used by Ares' hands when they're energy katanas.
+        /// </summary>
+        /// <param name="completionRatio">The completion ratio along the primitives.</param>
+        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.85f, 0.35f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.3f);
+
+        /// <summary>
+        /// The width function for slash afterimage bloom trails used by Ares' hands when they're energy katanas.
+        /// </summary>
+        /// <param name="completionRatio">The completion ratio along the primitives.</param>
+        public float EnergyKatanaBloomWidthFunction(float completionRatio) => EnergyKatanaAfterimageWidthFunction(completionRatio) * KatanaAfterimageOpacity * 2.5f;
+
+        /// <summary>
+        /// The color function for slash afterimage bloom trails used by Ares' hands when they're energy katanas.
+        /// </summary>
+        /// <param name="completionRatio">The completion ratio along the primitives.</param>
+        public Color EnergyKatanaBloomColorFunction(float completionRatio) => NPC.GetAlpha(new(1f, 0.1f, 0f, 0f)) * Utilities.InverseLerp(0.86f, 0.6f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.4f) * 0.56f;
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
@@ -520,23 +540,23 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
 
             Vector2 forward = NPC.rotation.ToRotationVector2() * NPC.scale;
-            List<Vector2> controlPoints = new(16);
-            for (int i = 0; i < 12; i++)
+            Vector2[] controlPoints = new Vector2[12];
+            for (int i = 0; i < controlPoints.Length; i++)
             {
                 Vector2 a = NPC.oldPos[0] + forward * 256f;
                 Vector2 b = NPC.oldPos[NPC.oldPos.Length / 2];
                 Vector2 c = NPC.oldPos[^1];
 
-                Vector2 drawPosition = Utilities.QuadraticBezier(a, b, c, (i / 11f).Squared());
-                controlPoints.Add(drawPosition);
+                Vector2 drawPosition = Utilities.QuadraticBezier(a, b, c, (i / (float)(controlPoints.Length - 1f)).Squared());
+                controlPoints[i] = Vector2.Lerp(drawPosition, a, 1f - KatanaAfterimageOpacity);
             }
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.AresEnergyKatanaAfterimage");
-            shader.TrySetParameter("verticalFlip", ArmSide == -1);
-            shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+            ManagedShader afterimageShader = ShaderManager.GetShader("WoTM.AresEnergyKatanaAfterimage");
+            afterimageShader.TrySetParameter("verticalFlip", ArmSide == -1);
+            afterimageShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
 
-            PrimitiveSettings settings = new(EnergyKatanaAfterimageWidthFunction, EnergyKatanaAfterimageColorFunction, _ => NPC.Size * 0.5f, true, true, shader);
-            PrimitiveRenderer.RenderTrail(controlPoints, settings, 34);
+            PrimitiveSettings slashSettings = new(EnergyKatanaAfterimageWidthFunction, EnergyKatanaAfterimageColorFunction, _ => NPC.Size * 0.5f, true, true, afterimageShader);
+            PrimitiveRenderer.RenderTrail(controlPoints, slashSettings, 34);
         }
 
         public override void DrawBehind(int index)
