@@ -95,29 +95,21 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             float squishInterpolant = Utils.Remap(npc.position.Distance(npc.oldPosition), 6f, 32f, 0f, 0.41f);
 
-            for (int i = npc.oldPos.Length - 1; i >= 0; i--)
-            {
-                float afterimageOpacity = (1f - i / (float)npc.oldPos.Length) * npc.As<AresHand>().KatanaAfterimageOpacity;
-                Vector2 drawOffset = npc.oldPos[i] - npc.position;
-                if (i == 0)
-                    afterimageOpacity = 1f;
+            int bladeFrameNumber = (int)((Main.GlobalTimeWrappedHourly * 16f + npc.whoAmI * 7.13f) % 9f);
+            float bladeRotation = npc.rotation + npc.spriteDirection * MathHelper.PiOver2;
+            Texture2D bladeTexture = ModContent.Request<Texture2D>("CalamityMod/Projectiles/DraedonsArsenal/PhaseslayerBlade").Value;
+            Rectangle bladeFrame = bladeTexture.Frame(3, 7, bladeFrameNumber / 7, bladeFrameNumber % 7);
+            Vector2 bladeOrigin = bladeFrame.Size() * new Vector2(0.5f, 1f);
+            Vector2 bladeDrawPosition = drawPosition - npc.rotation.ToRotationVector2() * npc.scale * npc.spriteDirection * -24f;
+            Vector2 bladeScale = new Vector2(1f - squishInterpolant, 1f) * npc.scale;
+            SpriteEffects bladeDirection = npc.spriteDirection.ToSpriteDirection();
 
-                int bladeFrameNumber = (int)((Main.GlobalTimeWrappedHourly * 16f + npc.whoAmI * 7.13f) % 9f);
-                float bladeRotation = npc.oldRot[i] + npc.spriteDirection * MathHelper.PiOver2;
-                Texture2D bladeTexture = ModContent.Request<Texture2D>("CalamityMod/Projectiles/DraedonsArsenal/PhaseslayerBlade").Value;
-                Rectangle bladeFrame = bladeTexture.Frame(3, 7, bladeFrameNumber / 7, bladeFrameNumber % 7);
-                Vector2 bladeOrigin = bladeFrame.Size() * new Vector2(0.5f, 1f);
-                Vector2 bladeDrawPosition = drawPosition - npc.rotation.ToRotationVector2() * npc.scale * npc.spriteDirection * -24f + drawOffset;
-                Vector2 bladeScale = new Vector2(1f - squishInterpolant, 1f) * npc.scale;
-                SpriteEffects bladeDirection = npc.spriteDirection.ToSpriteDirection();
+            Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Crimson) with { A = 0 } * 0.6f, npc.rotation, bloom.Size() * new Vector2(0.2f, 0.5f), npc.scale * new Vector2(2.6f, 1.56f), bladeDirection, 0);
+            Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Crimson) with { A = 0 } * 0.7f, npc.rotation, bloom.Size() * new Vector2(0.2f, 0.5f), npc.scale * new Vector2(2.6f, 1.1f), bladeDirection, 0);
+            Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Red) with { A = 0 } * 0.7f, 0f, bloom.Size() * 0.5f, npc.scale, bladeDirection, 0);
 
-                Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-                Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Crimson) with { A = 0 } * afterimageOpacity.Cubed() * 0.6f, npc.rotation, bloom.Size() * new Vector2(0.2f, 0.5f), npc.scale * new Vector2(2.6f, 1.56f), bladeDirection, 0);
-                Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Crimson) with { A = 0 } * afterimageOpacity.Cubed() * 0.7f, npc.rotation, bloom.Size() * new Vector2(0.2f, 0.5f), npc.scale * new Vector2(2.6f, 1.1f), bladeDirection, 0);
-                Main.EntitySpriteDraw(bloom, bladeDrawPosition, null, npc.GetAlpha(Color.Red) with { A = 0 } * afterimageOpacity.Cubed() * 0.7f, 0f, bloom.Size() * 0.5f, npc.scale, bladeDirection, 0);
-
-                Main.EntitySpriteDraw(bladeTexture, bladeDrawPosition, bladeFrame, npc.GetAlpha(Color.White) * afterimageOpacity, bladeRotation, bladeOrigin, bladeScale, bladeDirection, 0);
-            }
+            Main.EntitySpriteDraw(bladeTexture, bladeDrawPosition, bladeFrame, npc.GetAlpha(Color.White), bladeRotation, bladeOrigin, bladeScale, bladeDirection, 0);
         }
     }
 }

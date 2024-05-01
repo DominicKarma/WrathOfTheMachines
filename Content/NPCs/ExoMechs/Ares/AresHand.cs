@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CalamityMod;
 using CalamityMod.NPCs;
@@ -18,7 +19,7 @@ using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.NPCs.ExoMechs
 {
-    public class AresHand : ModNPC
+    public class AresHand : ModNPC, IPixelatedPrimitiveRenderer
     {
         /// <summary>
         /// The energy drawer for this arm. Used for telegraphing.
@@ -504,6 +505,38 @@ namespace WoTM.Content.NPCs.ExoMechs
             spriteBatch.Draw(forearmTextureGlowmask, armStart, forearmFrame, glowmaskColor, forearmRotation, forearmOrigin, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
             DrawMagneticLine(aresBody, armStart + Main.screenPosition, ArmEndpoint, NPC.Opacity.Cubed());
+        }
+
+        public float EnergyKatanaAfterimageWidthFunction(float completionRatio)
+        {
+            return NPC.scale * Utilities.InverseLerp(0f, 0.23f, completionRatio) * 28f;
+        }
+
+        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.85f, 0.35f, completionRatio) * KatanaAfterimageOpacity;
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            if (KatanaAfterimageOpacity <= 0f || HandType != AresHandType.EnergyKatana)
+                return;
+
+            Vector2 forward = NPC.rotation.ToRotationVector2() * NPC.scale;
+            List<Vector2> controlPoints = new(16);
+            for (int i = 0; i < 12; i++)
+            {
+                Vector2 a = NPC.oldPos[0] + forward * 256f;
+                Vector2 b = NPC.oldPos[NPC.oldPos.Length / 2];
+                Vector2 c = NPC.oldPos[^1];
+
+                Vector2 drawPosition = Utilities.QuadraticBezier(a, b, c, (i / 11f).Squared());
+                controlPoints.Add(drawPosition);
+            }
+
+            ManagedShader shader = ShaderManager.GetShader("WoTM.AresEnergyKatanaAfterimage");
+            shader.TrySetParameter("verticalFlip", ArmSide == -1);
+            shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+
+            PrimitiveSettings settings = new(EnergyKatanaAfterimageWidthFunction, EnergyKatanaAfterimageColorFunction, _ => NPC.Size * 0.5f, true, true, shader);
+            PrimitiveRenderer.RenderTrail(controlPoints, settings, 34);
         }
 
         public override void DrawBehind(int index)

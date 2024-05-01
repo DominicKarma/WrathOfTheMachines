@@ -1,4 +1,5 @@
 ﻿using System;
+using CalamityMod.Items.Weapons.Melee;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -29,6 +30,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 350f, 0.07f, 0.95f);
 
+            if (AITimer >= 600)
+                SelectNewState();
+
             InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), 0));
             InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), 1));
             InstructionsForHands[2] = new(h => KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), 2));
@@ -37,16 +41,18 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
         {
-            int attackDelay = 30;
-            int attackCycleTime = 90;
-
             NPC handNPC = hand.NPC;
+            int attackDelay = 30;
+            int attackCycleTime = 75;
+            int animationTimer = (int)(AITimer + handNPC.whoAmI * 16f - attackDelay) % attackCycleTime;
+            float animationCompletion = animationTimer / (float)attackCycleTime;
+
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.EnergyKatana;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
-            hand.EnergyDrawer.chargeProgress = 0f;
+            hand.EnergyDrawer.chargeProgress = Utilities.InverseLerp(0f, 30f, AITimer);
             hand.GlowmaskDisabilityInterpolant = 0f;
             handNPC.spriteDirection = 1;
             handNPC.scale = MathHelper.Lerp(0.6f, 1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly));
@@ -59,10 +65,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Add(EasingCurves.MakePoly(20f), EasingType.Out, hand.UsesBackArm ? 1.68f : 1.1f, 0.59f).
                     Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
-                float varianceInterpolant = Utilities.InverseLerp(0f, 30f, AITimer - attackDelay);
-
-                int animationTimer = (int)(AITimer + handNPC.whoAmI * varianceInterpolant * 18f - attackDelay) % attackCycleTime;
-                float animationCompletion = animationTimer / (float)attackCycleTime;
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
                 hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * new Vector2(1.2f - animationCompletion * 0.75f, 0.5f) * NPC.scale;
 
@@ -71,12 +73,15 @@ namespace WoTM.Content.NPCs.ExoMechs
                     NPC.oldPos = new Vector2[NPC.oldPos.Length];
                     NPC.oldRot = new float[NPC.oldRot.Length];
                     ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 2.6f);
+                    SoundEngine.PlaySound(Exoblade.BigSwingSound with { Volume = 0.5f, MaxInstances = 0 }, handNPC.Center);
                 }
-                if (animationCompletion >= 0.45f && animationCompletion <= 0.57f)
-                    hand.KatanaAfterimageOpacity = 0.6f;
+                if (animationCompletion >= 0.48f && animationCompletion <= 0.54f)
+                    hand.KatanaAfterimageOpacity = 1f;
 
                 handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, Utilities.InverseLerpBump(0.1f, 0.4f, 0.9f, 1f, animationCompletion).Squared());
             }
+            else
+                handNPC.rotation = handNPC.AngleFrom(NPC.Center);
 
             handNPC.SmoothFlyNear(hoverDestination, 0.5f, 0.6f);
 
