@@ -170,6 +170,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 if (behavior is IExoMech exoMech && !exoMech.Inactive)
                 {
+                    // To clarify, this if statement's execution encompasses the behavior state update.
                     if (CurrentState?.AttackAction?.Invoke(npc) ?? true)
                         SelectNewComboAttackState();
                 }
