@@ -20,7 +20,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long a single swipe cycle lasts during Ares' Katana Slashes attack.
         /// </summary>
-        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.25f);
+        public static int KatanaSlashes_AttackCycleTime => Utilities.SecondsToFrames(1.5f);
 
         /// <summary>
         /// AI update loop method for the KatanaSlashes attack.
@@ -100,8 +100,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 // This serves two main functions. It makes slashes more densely compacted as the attack goes on, as well as
                 // giving a jerky rebound effect when the cycle goes from the end to the start again, serving as an indirect animation state
                 // before Ares slashes again.
-                Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(1.2f, 0.45f, animationCompletion), 0.5f);
-
+                Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.45f, animationCompletion), 0.5f);
                 float handOffsetAngle = curve.Evaluate(animationCompletion) * hand.ArmSide;
                 hoverDestination = NPC.Center + hoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
 
@@ -128,7 +127,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             NPC.oldPos = new Vector2[NPC.oldPos.Length];
             NPC.oldRot = new float[NPC.oldRot.Length];
-            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 2.6f);
+            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 3.5f);
             SoundEngine.PlaySound(Exoblade.BigSwingSound with { Volume = 0.5f, MaxInstances = 0 }, handNPC.Center);
         }
 
