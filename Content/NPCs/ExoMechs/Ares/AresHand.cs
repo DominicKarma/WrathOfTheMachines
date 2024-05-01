@@ -81,6 +81,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Whether Ares' energy katanas are in use. This only applies if using the <see cref="AresHandType.EnergyKatana"/> variant.
+        /// </summary>
+        public bool KatanaInUse
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// How disabled the glow masks are, as a 0-1 interpolant.
         /// </summary>
         public float GlowmaskDisabilityInterpolant
@@ -170,8 +179,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.noTileCollide = true;
 
+            KatanaInUse = false;
             OptionalDrawAction = null;
-
             KatanaAfterimageOpacity = Utilities.Saturate(KatanaAfterimageOpacity * 0.84f - 0.07f);
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;

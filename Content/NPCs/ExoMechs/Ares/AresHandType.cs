@@ -86,6 +86,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             return new(reader.ReadString(), reader.ReadString(), reader.ReadString(), reader.ReadInt32(), reader.ReadInt32(), new(energyR, energyG, energyB, energyA), null);
         }
 
+        // TODO -- This should probably be in AresHand.cs?
         /// <summary>
         /// Draws the katana on top of the actual energy katana.
         /// </summary>
@@ -93,6 +94,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="drawPosition">The draw position of the katana.</param>
         public static void DrawEnergyKatana(NPC npc, Vector2 drawPosition)
         {
+            if (!npc.As<AresHand>().KatanaInUse)
+                return;
+
             float squishInterpolant = Utils.Remap(npc.position.Distance(npc.oldPosition), 6f, 32f, 0f, 0.41f);
 
             int bladeFrameNumber = (int)((Main.GlobalTimeWrappedHourly * 16f + npc.whoAmI * 7.13f) % 9f);

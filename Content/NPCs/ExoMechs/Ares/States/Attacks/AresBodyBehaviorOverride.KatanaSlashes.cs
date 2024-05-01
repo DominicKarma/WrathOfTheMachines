@@ -61,9 +61,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             // This serves two main functions. It makes slashes more densely compacted as the attack goes on, as well as
             // giving a jerky rebound effect when the cycle goes from the end to the start again, serving as an indirect animation state
             // before Ares slashes again.
-            Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.45f, slashAnimationCompletion), 0.5f);
+            Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.55f, slashAnimationCompletion), 0.8f);
             float handOffsetAngle = animationCurve.Evaluate(slashAnimationCompletion) * hand.ArmSide;
-            return NPC.Center + defaultHoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
+            Vector2 hoverOffset = defaultHoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
+            return NPC.Center + hoverOffset;
         }
 
         /// <summary>
@@ -106,6 +107,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC handNPC = hand.NPC;
 
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
+            hand.KatanaInUse = true;
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.EnergyKatana;
@@ -115,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             handNPC.spriteDirection = 1;
 
             int animationTimer = (int)(AITimer + handNPC.whoAmI * attackCycleTime / (float)ArmCount - attackDelay) % attackCycleTime;
-            KatanaSlashesHandUpdate_HandleSlashMotion(hand, handNPC, hoverOffset, animationTimer, KatanaSlashes_AttackCycleTime);
+            KatanaSlashesHandUpdate_HandleSlashMotion(hand, handNPC, hoverOffset, animationTimer, attackCycleTime);
             KatanaSlashesHandUpdate_CreateParticles(hand, handNPC);
         }
 
