@@ -32,7 +32,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return false;
             }
 
-            int slashCycleTime = Utilities.SecondsToFrames(0.9f);
+            int slashCycleTime = Utilities.SecondsToFrames(1.31f);
             ares.InstructionsForHands[0] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), 0, slashCycleTime, 0));
             ares.InstructionsForHands[1] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), 0, slashCycleTime, 1));
             ares.InstructionsForHands[2] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), 0, slashCycleTime, 2));

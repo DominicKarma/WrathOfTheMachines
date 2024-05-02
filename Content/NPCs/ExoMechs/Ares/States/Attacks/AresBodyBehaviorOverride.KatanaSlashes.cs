@@ -26,7 +26,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The animation easing curve used when Ares' back arms are slashing.
         /// </summary>
         public static readonly PiecewiseCurve SlashAnimationCurve_BackArm = new PiecewiseCurve().
-            Add(EasingCurves.Quadratic, EasingType.InOut, -0.8f, AnticipationCurveEnd).
+            Add(EasingCurves.Quadratic, EasingType.InOut, -0.91f, AnticipationCurveEnd).
             Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.68f, SlashCurveEnd).
             Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
@@ -34,7 +34,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The animation easing curve used when Ares' front arms are slashing.
         /// </summary>
         public static readonly PiecewiseCurve SlashAnimationCurve_FrontArm = new PiecewiseCurve().
-            Add(EasingCurves.Quadratic, EasingType.InOut, -1.12f, AnticipationCurveEnd).
+            Add(EasingCurves.Quadratic, EasingType.InOut, -1.21f, AnticipationCurveEnd).
             Add(EasingCurves.MakePoly(20f), EasingType.Out, 1.1f, SlashCurveEnd).
             Add(EasingCurves.Quintic, EasingType.InOut, 0f, 1f);
 
@@ -61,7 +61,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             // This serves two main functions. It makes slashes more densely compacted as the attack goes on, as well as
             // giving a jerky rebound effect when the cycle goes from the end to the start again, serving as an indirect animation state
             // before Ares slashes again.
-            Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.2f : 1.44f, 0.55f, slashAnimationCompletion), 0.8f);
+            Vector2 hoverOffsetSquishFactor = new(MathHelper.Lerp(hand.UsesBackArm ? 1.4f : 1.6f, 0.46f, slashAnimationCompletion), 0.8f);
             float handOffsetAngle = animationCurve.Evaluate(slashAnimationCompletion) * hand.ArmSide;
             Vector2 hoverOffset = defaultHoverOffset.RotatedBy(handOffsetAngle) * hoverOffsetSquishFactor * NPC.scale;
             return NPC.Center + hoverOffset;
@@ -150,7 +150,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             else
                 rotateForwardInterpolant = 0f;
 
-            handNPC.SmoothFlyNear(hoverDestination, 0.5f, 0.6f);
+            handNPC.SmoothFlyNear(hoverDestination, 0.6f, 0.5f);
             handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, rotateForwardInterpolant);
         }
 
@@ -162,7 +162,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             NPC.oldPos = new Vector2[NPC.oldPos.Length];
             NPC.oldRot = new float[NPC.oldRot.Length];
-            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 3.5f);
+            ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 4.1f);
             SoundEngine.PlaySound(Exoblade.BigSwingSound with { Volume = 0.5f, MaxInstances = 0 }, handNPC.Center);
         }
 
