@@ -244,9 +244,9 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             foreach (NPC npc in Main.ActiveNPCs)
             {
-                if (ExoMechNPCIDs.ExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out NPCBehaviorOverride behavior))
+                if (ExoMechNPCIDs.ExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out NPCBehaviorOverride behavior) && behavior is IExoMech exoMech && !exoMech.Inactive)
                     ActiveExoMechs.Add(behavior);
-                if (ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out behavior))
+                if (ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type) && npc.TryGetBehavior(out behavior) && behavior is IExoMech exoMech2 && !exoMech2.Inactive)
                     ActiveManagingExoMechs.Add(behavior);
             }
         }
