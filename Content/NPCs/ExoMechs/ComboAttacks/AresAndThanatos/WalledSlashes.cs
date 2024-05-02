@@ -19,7 +19,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// Ares' slash cycle time, which dictates how fast each set of slashes are.
         /// </summary>
-        public static int AresSlashCycleTime => Utilities.SecondsToFrames(1.32f);
+        public static int AresSlashCycleTime => Utilities.SecondsToFrames(1.46f);
 
         /// <summary>
         /// How long Ares waits before slashing.
@@ -39,27 +39,27 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// Ares' fly acceleration while he attempts to slash the player.
         /// </summary>
-        public static Vector2 AresAcceleration => new(0.51f, 0.24f);
+        public static Vector2 AresAcceleration => new(0.35f, 0.17f);
 
         /// <summary>
         /// The rate at which Hades releases mines.
         /// </summary>
-        public static int HadesMineReleaseRate => Utilities.SecondsToFrames(0.42f);
+        public static int HadesMineReleaseRate => Utilities.SecondsToFrames(0.4f);
 
         /// <summary>
         /// The radius at which Hades spins around his focal point.
         /// </summary>
-        public static float HadesSpinRadius => 1000f;
+        public static float HadesSpinRadius => 1250f;
 
         /// <summary>
         /// The speed at which Hades spins around his focal point.
         /// </summary>
-        public static float HadesSpinSpeed => 72f;
+        public static float HadesSpinSpeed => 142f;
 
         /// <summary>
         /// How slowly Hades rotates around his focal point.
         /// </summary>
-        public static float HadesSpinPeriod => 90f;
+        public static float HadesSpinPeriod => 67f;
 
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<ThanatosHead>(), ModContent.NPCType<AresBody>()];
 
@@ -92,7 +92,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             npc.velocity = (npc.velocity + idealDirection * acceleration).ClampLength(0f, AresMaxFlySpeed);
             if (npc.velocity.AngleBetween(idealDirection) >= 1.37f)
-                npc.velocity *= 0.84f;
+                npc.velocity *= 0.92f;
 
             bool attackHasCompleted = AITimer >= AttackDuration;
             return attackHasCompleted;
@@ -120,7 +120,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             npc.rotation = npc.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (Main.netMode != NetmodeID.MultiplayerClient && AITimer % HadesMineReleaseRate == HadesMineReleaseRate - 1)
-                Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, npc.SafeDirectionTo(Target.Center) * Main.rand.NextFloat(25f, 80f), ModContent.ProjectileType<HadesMine>(), HadesHeadBehaviorOverride.MineDamage, 0f);
+                Utilities.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, npc.SafeDirectionTo(Target.Center) * Main.rand.NextFloat(50f, 140f), ModContent.ProjectileType<HadesMine>(), HadesHeadBehaviorOverride.MineDamage, 0f);
 
             hades.BodyBehaviorAction = new(HadesHeadBehaviorOverride.EveryNthSegment(3), HadesHeadBehaviorOverride.OpenSegment());
         }

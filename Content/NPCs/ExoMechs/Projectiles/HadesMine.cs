@@ -63,7 +63,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.frameCounter++;
             Projectile.frame = Projectile.frameCounter / 6 % Main.projFrames[Projectile.type];
 
-            Projectile.velocity *= 0.91f;
+            Projectile.velocity *= 0.92f;
 
             DelegateMethods.v3_1 = new Vector3(1f, 0.8f, 0.35f);
             Utils.PlotTileLine(Projectile.Top, Projectile.Bottom, Projectile.width, DelegateMethods.CastLight);
@@ -80,6 +80,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.spriteBatch.ExitShaderRegion();
 
             Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
+            DrawGlowTelegraph();
 
             return false;
         }
@@ -108,7 +109,22 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * ExplosionDiameter / pixel.Size(), 0, 0);
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 9f;
+        public void DrawGlowTelegraph()
+        {
+            float lifetimeRatio = Time / Lifetime;
+            float maxFlashIntensity = Utilities.InverseLerp(0.75f, 0.9f, lifetimeRatio);
+            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 32f).Squared() * maxFlashIntensity;
+            float glowScale = Utils.Remap(lifetimeRatio, 0.8f, 1f, 1f, 1.8f);
+
+            Texture2D glow = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Color flashColor = Color.Lerp(Color.Red, Color.Yellow, flashColorInterpolant * 0.7f) with { A = 0 } * Projectile.Opacity * maxFlashIntensity;
+            Color glowColor = Color.Wheat with { A = 0 } * Projectile.Opacity * flashColorInterpolant * maxFlashIntensity;
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Main.spriteBatch.Draw(glow, drawPosition, null, flashColor, 0f, glow.Size() * 0.5f, glowScale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(glow, drawPosition, null, glowColor, 0f, glow.Size() * 0.5f, 0.14f, 0, 0f);
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 5f;
 
         public override void OnKill(int timeLeft)
         {

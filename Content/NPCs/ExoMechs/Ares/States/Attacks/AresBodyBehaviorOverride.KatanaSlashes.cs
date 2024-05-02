@@ -106,7 +106,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             NPC handNPC = hand.NPC;
 
-            handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
             hand.KatanaInUse = true;
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
@@ -114,7 +113,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.EnergyDrawer.chargeProgress = Utilities.InverseLerp(0f, 30f, AITimer);
             hand.GlowmaskDisabilityInterpolant = 0f;
+            hand.Frame = 0;
+            handNPC.damage = 450; // TODO -- Store this somewhere.
             handNPC.spriteDirection = 1;
+            handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
 
             int animationTimer = (int)(AITimer + handNPC.whoAmI * attackCycleTime / (float)ArmCount - attackDelay) % attackCycleTime;
             KatanaSlashesHandUpdate_HandleSlashMotion(hand, handNPC, hoverOffset, animationTimer, attackCycleTime);
@@ -146,9 +148,15 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hoverDestination = CalculateSlashHandDestination(hand, animationCompletion, hoverOffset);
                 if (animationCompletion >= AnticipationCurveEnd && animationCompletion <= SlashCurveEnd)
                     hand.KatanaAfterimageOpacity = 1f;
+
+                if (animationCompletion <= AnticipationCurveEnd + 0.045f || animationCompletion >= SlashCurveEnd + 0.1f)
+                    NPC.damage = 0;
             }
             else
+            {
                 rotateForwardInterpolant = 0f;
+                handNPC.damage = 0;
+            }
 
             handNPC.SmoothFlyNear(hoverDestination, 0.6f, 0.5f);
             handNPC.rotation = handNPC.AngleFrom(NPC.Center).AngleLerp(hand.ShoulderToHandDirection, rotateForwardInterpolant);
