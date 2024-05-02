@@ -163,6 +163,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void PuppeteerActiveExoMechs()
         {
+            bool hadesIsPresent = false;
             foreach (NPC npc in Main.ActiveNPCs)
             {
                 if (!ExoMechNPCIDs.ExoMechIDs.Contains(npc.type) || !npc.TryGetBehavior(out NPCBehaviorOverride behavior))
@@ -173,6 +174,23 @@ namespace WoTM.Content.NPCs.ExoMechs
                     // To clarify, this if statement's execution encompasses the behavior state update.
                     if (CurrentState?.AttackAction?.Invoke(npc) ?? true)
                         SelectNewComboAttackState();
+
+                    if (behavior is HadesHeadBehaviorOverride)
+                        hadesIsPresent = true;
+                }
+            }
+
+            // Special case: Since puppeteering happens after all NPCs are active it's necessary that Hades' segments be told what to do manually, since the
+            // instructions will otherwise be reset on the next frame, before the segments are updated.
+            if (hadesIsPresent)
+            {
+                foreach (NPC npc in Main.ActiveNPCs)
+                {
+                    if (npc.TryGetBehavior(out HadesBodyBehaviorOverride body))
+                    {
+                        body.ListenToHeadInstructions();
+                        body.ModifyDRBasedOnOpenInterpolant();
+                    }
                 }
             }
         }

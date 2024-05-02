@@ -85,7 +85,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             NPC.SmoothFlyNear(Target.Center - Vector2.UnitY * 305f, 0.07f, 0.95f);
 
-            if (AITimer >= 60000000)
+            if (AITimer >= 600)
                 SelectNewState();
 
             InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 0));

@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= 45)
             {
                 CurrentState = Main.rand.NextFromList(AresAIState.AimedLaserBursts, AresAIState.NukeAoEAndPlasmaBlasts, AresAIState.BackgroundCoreLaserBeams, AresAIState.KatanaSlashes);
-                CurrentState = AresAIState.KatanaSlashes;
+                //CurrentState = AresAIState.KatanaSlashes;
                 AITimer = 0;
                 NPC.netUpdate = true;
             }
