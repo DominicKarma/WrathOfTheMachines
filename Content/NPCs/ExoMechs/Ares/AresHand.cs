@@ -184,6 +184,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             KatanaAfterimageOpacity = Utilities.Saturate(KatanaAfterimageOpacity * 0.84f - 0.07f);
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
+            NPC.damage = NPC.defDamage;
             NPC.Calamity().ShouldCloseHPBar = true;
             body.InstructionsForHands[LocalIndex]?.Action?.Invoke(this);
 
@@ -217,8 +218,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="lookDestination">The position to look at.</param>
         public void RotateToLookAt(Vector2 lookDestination) =>
             RotateToLookAt(NPC.AngleTo(lookDestination));
-
-        public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
 
         public override void FindFrame(int frameHeight)
         {
@@ -596,6 +595,33 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Gore.NewGore(NPC.GetSource_Death(), NPC.Center, NPC.velocity, ModContent.Find<ModGore>(HandType.CustomGoreNames[i]).Type, NPC.scale);
             }
         }
+
+        /// <summary>
+        /// Checks whether a melee hit counts against a given entity hitbox.
+        /// </summary>
+        /// <param name="potentialVictimHitbox">The hitbox to check collision against.</param>
+        public bool MeleeHitCounts(Rectangle potentialVictimHitbox)
+        {
+            if (HandType != AresHandType.EnergyKatana)
+                return false;
+
+            float _ = 0f;
+            Vector2 forward = NPC.rotation.ToRotationVector2() * NPC.scale;
+            Vector2 start = NPC.Center + forward * 24f;
+            Vector2 end = start + forward * 254f;
+            return Collision.CheckAABBvLineCollision(potentialVictimHitbox.TopLeft(), potentialVictimHitbox.Size(), start, end, NPC.scale * 96f, ref _);
+        }
+
+        public override bool ModifyCollisionData(Rectangle victimHitbox, ref int immunityCooldownSlot, ref MultipliableFloat damageMultiplier, ref Rectangle npcHitbox)
+        {
+            npcHitbox.Inflate(500, 500);
+            immunityCooldownSlot = ImmunityCooldownID.Bosses;
+            return true;
+        }
+
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot) => MeleeHitCounts(target.Hitbox);
+
+        public override bool CanHitNPC(NPC target) => MeleeHitCounts(target.Hitbox);
 
         public override bool CheckActive() => false;
 
