@@ -216,6 +216,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                     npc.netUpdate = true;
                 }
             }
+
+            // TODO -- Update animations.
         }
 
         /// <summary>
