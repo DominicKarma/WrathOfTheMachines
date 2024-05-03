@@ -7,6 +7,7 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -17,7 +18,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long this sphere has existed, in frames.
         /// </summary>
-        public ref float Time => ref Projectile.ai[0];
+        public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
         /// How long the explosion lasts.
@@ -30,14 +31,20 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter + 360;
-            Projectile.height = (int)AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter + 360;
+            Projectile.width = 360;
+            Projectile.height = 360;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = Lifetime;
             CooldownSlot = ImmunityCooldownID.Bosses;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.width = (int)Projectile.ai[0] + 360;
+            Projectile.height = (int)Projectile.ai[0] + 360;
         }
 
         public override void AI()

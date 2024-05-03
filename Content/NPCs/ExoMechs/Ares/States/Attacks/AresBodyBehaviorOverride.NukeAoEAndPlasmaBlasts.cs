@@ -107,7 +107,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             if (hand.HandType == AresHandType.GaussNuke)
-                HandleGaussNukeShots(hand, handNPC, AITimer, NukeAoEAndPlasmaBlasts_NukeChargeUpTime);
+                HandleGaussNukeShots(hand, handNPC, AITimer, NukeAoEAndPlasmaBlasts_NukeChargeUpTime, NukeAoEAndPlasmaBlasts_NukeExplosionDiameter);
             else
                 NukeAoEAndPlasmaBlastsHandUpdate_PlasmaCannon(hand, handNPC);
         }
@@ -158,7 +158,15 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
         }
 
-        public static void HandleGaussNukeShots(AresHand hand, NPC handNPC, int time, int chargeUpTime)
+        /// <summary>
+        /// Handles the shooting of one of Ares' gauss nukes.
+        /// </summary>
+        /// <param name="hand">The hand's NPC instance.</param>
+        /// <param name="handNPC">The hand's ModNPC instance.</param>
+        /// <param name="time">The timer used for the purposes of shooting.</param>
+        /// <param name="chargeUpDuration">How long the nuke spends charging up before firing.</param>
+        /// <param name="explosionDiameter">The big the diameter of the resulting explosion from the nuke should be.</param>
+        public static void HandleGaussNukeShots(AresHand hand, NPC handNPC, int time, int chargeUpDuration, float explosionDiameter)
         {
             hand.RotateToLookAt(Target.Center);
 
@@ -182,7 +190,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     hand.Frame %= 23;
             }
 
-            if (time == chargeUpTime - 12)
+            if (time == chargeUpDuration - 12)
             {
                 SoundEngine.PlaySound(CommonCalamitySounds.LargeWeaponFireSound, handNPC.Center);
                 ScreenShakeSystem.StartShakeAtPoint(handNPC.Center, 6f);
@@ -192,7 +200,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
                     Vector2 nukeSpawnPosition = handNPC.Center + handDirection * 40f;
                     Vector2 nukeVelocity = handDirection * 80f;
-                    Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), nukeSpawnPosition, nukeVelocity, ModContent.ProjectileType<GaussNuke>(), NukeWeaponDamage, 0f);
+                    Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), nukeSpawnPosition, nukeVelocity, ModContent.ProjectileType<GaussNuke>(), NukeWeaponDamage, 0f, -1, explosionDiameter);
 
                     handNPC.velocity -= handDirection * 35f;
                     handNPC.netUpdate = true;

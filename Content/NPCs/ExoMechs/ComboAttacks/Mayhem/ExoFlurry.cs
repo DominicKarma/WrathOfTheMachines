@@ -25,6 +25,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static int NukeShotDelay => Utilities.SecondsToFrames(9f);
 
+        /// <summary>
+        /// The diameter of the explosion from Ares' nukes.
+        /// </summary>
+        public static float NukeExplosionDiameter => 3700f;
+
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<ThanatosHead>(), ModContent.NPCType<AresBody>(), ModContent.NPCType<Apollo>()];
 
         public override bool Perform(NPC npc)
@@ -92,7 +97,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hand.EnergyDrawer.AddPulse(pulseCounter);
             }
 
-            AresBodyBehaviorOverride.HandleGaussNukeShots(hand, handNPC, wrappedTimer, NukeChargeUpTime);
+            AresBodyBehaviorOverride.HandleGaussNukeShots(hand, handNPC, wrappedTimer, NukeChargeUpTime, NukeExplosionDiameter);
         }
 
         /// <summary>

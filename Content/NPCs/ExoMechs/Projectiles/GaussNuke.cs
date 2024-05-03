@@ -18,6 +18,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class GaussNuke : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<AresBody>
     {
+        /// <summary>
+        /// The diameter of the explosion that will result from this nuke.
+        /// </summary>
+        public ref float ExplosionDiameter => ref Projectile.ai[0];
+
         public bool SetActiveFalseInsteadOfKill => true;
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
@@ -91,7 +96,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             aoeShader.UseSaturation(lifetimeRatio);
             aoeShader.Apply();
 
-            float explosionDiameter = AresBodyBehaviorOverride.NukeAoEAndPlasmaBlasts_NukeExplosionDiameter * MathF.Pow(Utilities.InverseLerp(0f, 0.25f, lifetimeRatio), 1.6f);
+            float explosionDiameter = ExplosionDiameter * MathF.Pow(Utilities.InverseLerp(0f, 0.25f, lifetimeRatio), 1.6f);
             Texture2D pixel = MiscTexturesRegistry.InvisiblePixel.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * explosionDiameter / pixel.Size(), 0, 0);
@@ -118,7 +123,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             ExoMechsSky.CreateLightningBolt(12);
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyBehaviorOverride.NukeExplosionDamage, 0f);
+                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyBehaviorOverride.NukeExplosionDamage, 0f, -1, ExplosionDiameter);
         }
     }
 }
