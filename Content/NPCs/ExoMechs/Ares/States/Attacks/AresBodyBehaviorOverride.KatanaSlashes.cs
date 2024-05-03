@@ -88,10 +88,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= 600)
                 SelectNewState();
 
-            InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 0));
-            InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 1));
-            InstructionsForHands[2] = new(h => KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 2));
-            InstructionsForHands[3] = new(h => KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 3));
+            InstructionsForHands[0] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 0, true));
+            InstructionsForHands[1] = new(h => KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 1, true));
+            InstructionsForHands[2] = new(h => KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 2, true));
+            InstructionsForHands[3] = new(h => KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), KatanaSlashes_AttackDelay, KatanaSlashes_AttackCycleTime, 3, true));
         }
 
         /// <summary>
@@ -102,7 +102,8 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="attackDelay">How long the hand should wait before attacking.</param>
         /// <param name="attackCycleTime">The attack cycle time for the slash.</param>
         /// <param name="armIndex">The index of the hand.</param>
-        public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int attackDelay, int attackCycleTime, int armIndex)
+        /// <param name="katanasDoDamage">Whether the katanas do damage or not.</param>
+        public void KatanaSlashesHandUpdate(AresHand hand, Vector2 hoverOffset, int attackDelay, int attackCycleTime, int armIndex, bool katanasDoDamage)
         {
             NPC handNPC = hand.NPC;
 
@@ -114,7 +115,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             hand.EnergyDrawer.chargeProgress = Utilities.InverseLerp(0f, 30f, AITimer);
             hand.GlowmaskDisabilityInterpolant = 0f;
             hand.Frame = 0;
-            handNPC.damage = 450; // TODO -- Store this somewhere.
+            handNPC.damage = katanasDoDamage ? 450 : 0; // TODO -- Store this somewhere.
             handNPC.spriteDirection = 1;
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.3f);
 

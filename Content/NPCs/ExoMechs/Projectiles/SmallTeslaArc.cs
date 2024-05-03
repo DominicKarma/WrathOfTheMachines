@@ -33,6 +33,15 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public Vector2[] ArcPoints;
 
         /// <summary>
+        /// Whether the tesla arc should be colored red or not.
+        /// </summary>
+        public bool Red
+        {
+            get => Projectile.ai[1] == 1f;
+            set => Projectile.ai[1] = value.ToInt();
+        }
+
+        /// <summary>
         /// How long this sphere should exist, in frames.
         /// </summary>
         public ref float Lifetime => ref Projectile.ai[0];
@@ -129,7 +138,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             PrimitiveSettings settings = new(ArcWidthFunction, ArcColorFunction, Smoothen: false, Pixelate: true, Shader: shader);
 
-            ArcColor = Color.Lerp(new Color(0.3f, 0.86f, 1f), new Color(0.75f, 0.83f, 1f), Projectile.identity / 19f % 1f);
+            float colorInterpolant = Projectile.identity / 19f % 1f;
+            if (Red)
+                ArcColor = Color.Lerp(new Color(1f, 0.3f, 0.38f), new Color(1f, 0.77f, 0.64f), colorInterpolant);
+            else
+                ArcColor = Color.Lerp(new Color(0.3f, 0.86f, 1f), new Color(0.75f, 0.83f, 1f), colorInterpolant);
+
             WidthFactor = 1f;
 
             PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);

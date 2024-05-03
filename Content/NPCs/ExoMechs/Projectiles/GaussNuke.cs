@@ -99,7 +99,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         // This IS a heavy chunk of metal, and as such it should do damage as it's flying forward, but otherwise it should just sit in place.
         // It'd be rather silly for a nuke that's just sitting in place to do damage.
-        public override bool? CanDamage() => Projectile.velocity.Length() >= 8f;
+        public override bool? CanDamage() => Projectile.velocity.Length() >= 15f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
 

@@ -72,6 +72,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             return false;
         }
 
+        /// <summary>
+        /// Performs Ares' part in the WalledSlashes attack.
+        /// </summary>
+        /// <param name="npc">Ares' NPC instance.</param>
         public static bool Perform_Ares(NPC npc)
         {
             if (!npc.TryGetBehavior(out AresBodyBehaviorOverride ares))
@@ -80,10 +84,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return false;
             }
 
-            ares.InstructionsForHands[0] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), AresSlashDelay, AresSlashCycleTime, 0));
-            ares.InstructionsForHands[1] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), AresSlashDelay, AresSlashCycleTime, 1));
-            ares.InstructionsForHands[2] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), AresSlashDelay, AresSlashCycleTime, 2));
-            ares.InstructionsForHands[3] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), AresSlashDelay, AresSlashCycleTime, 3));
+            ares.InstructionsForHands[0] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-400f, 40f), AresSlashDelay, AresSlashCycleTime, 0, true));
+            ares.InstructionsForHands[1] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(-280f, 224f), AresSlashDelay, AresSlashCycleTime, 1, true));
+            ares.InstructionsForHands[2] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(280f, 224f), AresSlashDelay, AresSlashCycleTime, 2, true));
+            ares.InstructionsForHands[3] = new(h => ares.KatanaSlashesHandUpdate(h, new Vector2(400f, 40f), AresSlashDelay, AresSlashCycleTime, 3, true));
 
             float movementWindUpInterpolant = Utilities.InverseLerp(0f, AresSlashDelay, AITimer).Squared();
             Vector2 hoverDestination = Target.Center + Vector2.UnitY * AresVerticalHoverOffset;
@@ -98,6 +102,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             return attackHasCompleted;
         }
 
+        /// <summary>
+        /// Performs Hades' part in the WalledSlashes attack.
+        /// </summary>
+        /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
             if (!npc.TryGetBehavior(out HadesHeadBehaviorOverride hades))

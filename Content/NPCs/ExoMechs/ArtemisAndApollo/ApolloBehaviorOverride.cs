@@ -249,9 +249,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (NPC.Size != actualHitboxSize)
                 NPC.Size = actualHitboxSize;
 
-            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
-            NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
-
             UpdateEngineSound();
 
             Vector2 thrusterPosition = NPC.Center - NPC.rotation.ToRotationVector2() * NPC.scale * 34f + NPC.velocity;
@@ -286,6 +283,10 @@ namespace WoTM.Content.NPCs.ExoMechs
                 NPC.Opacity = 1f;
             NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.As<Apollo>().SecondaryAIState = (int)Apollo.SecondaryPhase.Nothing;
+
+            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
+            NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
+
             NPC.damage = 0;
         }
 

@@ -107,51 +107,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             if (hand.HandType == AresHandType.GaussNuke)
-                NukeAoEAndPlasmaBlastsHandUpdate_GaussNuke(hand, handNPC);
+                HandleGaussNukeShots(hand, handNPC, AITimer, NukeAoEAndPlasmaBlasts_NukeChargeUpTime);
             else
                 NukeAoEAndPlasmaBlastsHandUpdate_PlasmaCannon(hand, handNPC);
-        }
-
-        public void NukeAoEAndPlasmaBlastsHandUpdate_GaussNuke(AresHand hand, NPC handNPC)
-        {
-            hand.RotateToLookAt(Target.Center);
-
-            if (hand.EnergyDrawer.chargeProgress > 0f)
-                hand.Frame = (int)(hand.EnergyDrawer.chargeProgress * 34f);
-            else
-            {
-                if (AITimer % 5 == 4)
-                    hand.Frame++;
-
-                // If the hand was already past frame 24 (which it is when starting this animation), it must complete its animation of rebuilding
-                // a nuke crystal.
-                if (hand.Frame >= 24)
-                {
-                    if (hand.Frame >= 80)
-                        hand.Frame = 0;
-                }
-
-                // Otherwise, it should simply loop.
-                else
-                    hand.Frame %= 23;
-            }
-
-            if (AITimer == NukeAoEAndPlasmaBlasts_NukeChargeUpTime - 12)
-            {
-                SoundEngine.PlaySound(CommonCalamitySounds.LargeWeaponFireSound, handNPC.Center);
-                ScreenShakeSystem.StartShakeAtPoint(handNPC.Center, 6f);
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
-                    Vector2 nukeSpawnPosition = handNPC.Center + handDirection * 40f;
-                    Vector2 nukeVelocity = handDirection * 80f;
-                    Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), nukeSpawnPosition, nukeVelocity, ModContent.ProjectileType<GaussNuke>(), NukeWeaponDamage, 0f);
-
-                    handNPC.velocity -= handDirection * 35f;
-                    handNPC.netUpdate = true;
-                }
-            }
         }
 
         public void NukeAoEAndPlasmaBlastsHandUpdate_PlasmaCannon(AresHand hand, NPC handNPC)
@@ -195,6 +153,48 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                     handNPC.velocity -= handDirection * 6f;
                     handNPC.netSpam = 0;
+                    handNPC.netUpdate = true;
+                }
+            }
+        }
+
+        public static void HandleGaussNukeShots(AresHand hand, NPC handNPC, int time, int chargeUpTime)
+        {
+            hand.RotateToLookAt(Target.Center);
+
+            if (hand.EnergyDrawer.chargeProgress > 0f)
+                hand.Frame = (int)(hand.EnergyDrawer.chargeProgress * 34f);
+            else
+            {
+                if (time % 5 == 4)
+                    hand.Frame++;
+
+                // If the hand was already past frame 24 (which it is when starting this animation), it must complete its animation of rebuilding
+                // a nuke crystal.
+                if (hand.Frame >= 24)
+                {
+                    if (hand.Frame >= 80)
+                        hand.Frame = 0;
+                }
+
+                // Otherwise, it should simply loop.
+                else
+                    hand.Frame %= 23;
+            }
+
+            if (time == chargeUpTime - 12)
+            {
+                SoundEngine.PlaySound(CommonCalamitySounds.LargeWeaponFireSound, handNPC.Center);
+                ScreenShakeSystem.StartShakeAtPoint(handNPC.Center, 6f);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
+                    Vector2 nukeSpawnPosition = handNPC.Center + handDirection * 40f;
+                    Vector2 nukeVelocity = handDirection * 80f;
+                    Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), nukeSpawnPosition, nukeVelocity, ModContent.ProjectileType<GaussNuke>(), NukeWeaponDamage, 0f);
+
+                    handNPC.velocity -= handDirection * 35f;
                     handNPC.netUpdate = true;
                 }
             }

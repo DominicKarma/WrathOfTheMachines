@@ -81,7 +81,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                     TransitionToNextState();
             }
 
-            twin.damage = 0;
+            if (SharedState.AIState != ExoTwinsAIState.PerformComboAttack)
+                twin.damage = 0;
+
             twin.defense = twin.defDefense;
             twin.dontTakeDamage = false;
 

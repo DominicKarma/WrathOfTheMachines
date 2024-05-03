@@ -38,6 +38,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             handNPC.Opacity = Utilities.Saturate(handNPC.Opacity + 0.025f);
             handNPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.7f, 0.5f);
             handNPC.rotation = handNPC.rotation.AngleLerp(-MathHelper.PiOver2, 0.12f);
+            handNPC.damage = 0;
 
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
