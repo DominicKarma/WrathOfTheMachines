@@ -1,8 +1,10 @@
 ﻿using System;
+using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
+using CalamityMod.Sounds;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -108,10 +110,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int spinTime = 60;
             int spinSlowdownAndRepositionTime = 40;
-            int dashTime = 8;
-            int redirectTime = 60;
-            int spinCycleTime = spinTime + spinSlowdownAndRepositionTime + dashTime + redirectTime;
-            int spinCycleTimer = AITimer % 180;
+            int dashTime = 32;
+            int spinCycleTime = spinTime + spinSlowdownAndRepositionTime + dashTime;
+            int spinCycleTimer = AITimer % spinCycleTime;
             bool isApollo = npc.type == ModContent.NPCType<Apollo>();
             float dashSpeed = 114f;
             float standardSpinRadius = 325f;
@@ -132,7 +133,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 float radiusExtension = MathF.Pow(radiusExtendInterpolant, 3.13f) * maxSpinRadiusExtension;
                 float currentRadius = standardSpinRadius + radiusExtension;
 
-                float spinOffsetAngle = EasingCurves.Quartic.Evaluate(EasingType.Out, 0f, MathHelper.Pi * 3f, spinCompletion) + ExoTwinsStateManager.SharedState.Values[0];
+                float spinOffsetAngle = EasingCurves.Cubic.Evaluate(EasingType.Out, 0f, MathHelper.Pi * 3f, spinCompletion) + ExoTwinsStateManager.SharedState.Values[0];
                 Vector2 hoverOffset = spinOffsetAngle.ToRotationVector2() * currentRadius;
 
                 // Invert the hover offset if Apollo is spinning, such that it is opposite to Artemis.
@@ -142,7 +143,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 hoverDestination = Target.Center + hoverOffset;
 
                 // Fly around in accordance with the radius offset.
-                npc.SmoothFlyNear(hoverDestination, 0.25f, 0.8f);
+                npc.SmoothFlyNear(hoverDestination, MathF.Cbrt(spinCompletion) * 0.5f, 0.01f);
                 npc.rotation = npc.AngleTo(Target.Center);
             }
 
@@ -158,39 +159,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.netUpdate = true;
             }
 
-            // Handle post-dash behaviors.
-            float thrusterBoost = 0f;
-            if (spinCycleTimer >= spinTime + spinSlowdownAndRepositionTime && spinCycleTimer <= spinTime + spinSlowdownAndRepositionTime + dashTime)
-            {
-                npc.damage = npc.defDamage;
-                thrusterBoost = 1.3f;
-            }
-
-            // Reposition after the dash.
-            if (spinCycleTimer >= spinTime + spinSlowdownAndRepositionTime + dashTime && spinCycleTimer <= spinTime + spinSlowdownAndRepositionTime + dashTime + redirectTime)
-            {
-                if (npc.velocity.Length() >= 60f)
-                    npc.damage = npc.defDamage;
-
-                // Specify the orientation for the upcoming spin.
-                if (spinCycleTimer == spinTime + spinSlowdownAndRepositionTime + dashTime + redirectTime - 1 && isApollo)
-                {
-                    ExoTwinsStateManager.SharedState.Values[0] = npc.AngleTo(Target.Center);
-                    npc.netUpdate = true;
-                }
-
-                float redirectInterpolant = Utilities.InverseLerp(0f, redirectTime, spinCycleTimer - spinTime - spinSlowdownAndRepositionTime - dashTime).Squared();
-                Vector2 hoverDestination = Target.Center + ExoTwinsStateManager.SharedState.Values[0].ToRotationVector2() * isApollo.ToDirectionInt() * standardSpinRadius;
-                npc.SmoothFlyNear(hoverDestination, redirectInterpolant * 0.19f, 1f - redirectInterpolant * 0.185f);
-                npc.rotation = npc.velocity.ToRotation();
-
-                if (redirectInterpolant <= 0.25f)
-                    npc.velocity *= 0.86f;
-                else
-                    npc.velocity = npc.velocity.RotatedBy((1.8f - redirectInterpolant).Squared() * -0.4f);
-            }
-
             float motionBlurInterpolant = Utilities.InverseLerp(90f, 150f, npc.velocity.Length());
+            float thrusterBoost = Utilities.InverseLerp(dashSpeed * 0.85f, dashSpeed, npc.velocity.Length()) * 1.3f;
             if (npc.TryGetBehavior(out ArtemisBehaviorOverride artemis))
             {
                 artemis.MotionBlurInterpolant = motionBlurInterpolant;
@@ -200,6 +170,38 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 apollo.MotionBlurInterpolant = motionBlurInterpolant;
                 apollo.ThrusterBoost = MathHelper.Max(apollo.ThrusterBoost, thrusterBoost);
+            }
+
+            // Handle post-dash behaviors.
+            if (spinCycleTimer >= spinTime + spinSlowdownAndRepositionTime && spinCycleTimer <= spinTime + spinSlowdownAndRepositionTime + dashTime)
+            {
+                NPC artemisOther = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
+                if (isApollo && npc.Hitbox.Intersects(artemisOther.Hitbox))
+                {
+                    Vector2 impactForce = npc.velocity.RotatedBy(-MathHelper.PiOver2) * 0.15f;
+                    npc.velocity -= impactForce;
+                    npc.netUpdate = true;
+                    artemisOther.velocity += impactForce;
+                    artemisOther.netUpdate = true;
+
+                    ScreenShakeSystem.StartShake(6f);
+                    SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound with { Volume = 4f });
+
+                    for (int i = 0; i < 15; i++)
+                    {
+                        npc.HitEffect();
+                        artemisOther.HitEffect();
+                    }
+                }
+
+                npc.damage = npc.defDamage;
+                npc.rotation = npc.velocity.ToRotation();
+
+                if (spinCycleTimer == spinCycleTime - 1 && isApollo)
+                {
+                    ExoTwinsStateManager.SharedState.Values[0] = npc.AngleTo(Target.Center) - MathHelper.PiOver2;
+                    npc.netUpdate = true;
+                }
             }
         }
     }
