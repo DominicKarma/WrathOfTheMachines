@@ -43,8 +43,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.width = (int)Projectile.ai[0] + 360;
-            Projectile.height = (int)Projectile.ai[0] + 360;
+            Projectile.Resize((int)Projectile.ai[0] + 360, (int)Projectile.ai[0] + 360);
         }
 
         public override void AI()
