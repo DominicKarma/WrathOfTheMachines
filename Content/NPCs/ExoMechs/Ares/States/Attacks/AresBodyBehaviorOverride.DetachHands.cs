@@ -1,4 +1,5 @@
-﻿using Luminance.Common.Utilities;
+﻿using System;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 
@@ -22,7 +23,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (AITimer >= 45)
             {
                 CurrentState = Main.rand.NextFromList(AresAIState.AimedLaserBursts, AresAIState.NukeAoEAndPlasmaBlasts, AresAIState.BackgroundCoreLaserBeams, AresAIState.KatanaSlashes);
-                //CurrentState = AresAIState.KatanaSlashes;
+                CurrentState = AresAIState.KatanaSlashes;
                 AITimer = 0;
                 NPC.netUpdate = true;
             }
@@ -39,7 +40,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             hand.UsesBackArm = armIndex == 0 || armIndex == ArmCount - 1;
             hand.ArmSide = (armIndex >= ArmCount / 2).ToDirectionInt();
-            hand.Frame = AITimer / 3 % 12;
+            hand.Frame = AITimer / 3 % Math.Min(hand.HandType.TotalHorizontalFrames * hand.HandType.TotalVerticalFrames, 12);
 
             hand.ArmEndpoint = Vector2.Lerp(hand.ArmEndpoint, handNPC.Center + handNPC.velocity, handNPC.Opacity);
             hand.EnergyDrawer.chargeProgress *= 0.7f;

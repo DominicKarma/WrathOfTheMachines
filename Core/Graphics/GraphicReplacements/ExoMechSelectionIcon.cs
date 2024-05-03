@@ -81,7 +81,7 @@ namespace WoTM.Core.Graphics.EffectManagers
         /// <summary>
         /// The draw position of this icon.
         /// </summary>
-        public Vector2 DrawPosition => Main.LocalPlayer.Center - Main.screenPosition + UnscaledOffset * Main.UIScale;
+        public Vector2 DrawPosition => Main.LocalPlayer.Center - Main.screenPosition + Vector2.UnitY * Main.LocalPlayer.gfxOffY + UnscaledOffset * Main.UIScale;
 
         public ExoMechSelectionIcon(ExoMech typeToSummon, string localizationKey, Vector2 unscaledOffset, LazyAsset<Texture2D> texture, SoundStyle hoverSound)
         {
