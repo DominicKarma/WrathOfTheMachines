@@ -106,15 +106,17 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 directionToNextSegment = aheadSegment.Center - NPC.Center;
             if (aheadSegment.rotation != NPC.rotation && ShouldReorientDirection)
             {
-                float angleOffset = MathHelper.Clamp(MathHelper.WrapAngle(aheadSegment.rotation - NPC.rotation), -0.04f, 0.04f);
+                float angleOffset = MathHelper.WrapAngle(aheadSegment.rotation - NPC.rotation) * 0.04f;
+                if (Main.npc[CalamityGlobalNPC.draedonExoMechWorm].velocity.Length() <= 5f)
+                    angleOffset = 0f;
+
                 directionToNextSegment = directionToNextSegment.RotatedBy(angleOffset);
             }
 
             // Hack to ensure that segments retain Hades' secondary AI state, and thusly use the correct map icon.
             NPC.Calamity().newAI[1] = aheadSegment.Calamity().newAI[1];
-
+            NPC.damage = NPC.defDamage;
             NPC.Opacity = aheadSegment.Opacity;
-
             NPC.Center = aheadSegment.Center - directionToNextSegment.SafeNormalize(Vector2.Zero) * NPC.width * NPC.scale * 0.97f;
             NPC.rotation = directionToNextSegment.ToRotation() + MathHelper.PiOver2;
             NPC.spriteDirection = directionToNextSegment.X.NonZeroSign();
@@ -143,6 +145,10 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (!hadesAI.BodyBehaviorAction?.Condition(NPC, RelativeIndex) ?? false)
                 return;
+
+            // TODO -- Move this.
+            if (hades.damage <= 0)
+                NPC.damage = 0;
 
             hadesAI.BodyBehaviorAction?.Action(this);
         }

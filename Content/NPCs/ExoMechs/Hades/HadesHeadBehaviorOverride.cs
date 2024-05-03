@@ -104,6 +104,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// The opacity of the reticle on the player.
+        /// </summary>
+        public float ReticleOpacity
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The action that should be taken by body segments.
         /// </summary>
         /// 
@@ -253,7 +262,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         public void PerformPreUpdateResets()
         {
-            NPC.damage = NPC.defDamage;
+            if (CurrentState != HadesAIState.PerformComboAttack)
+                NPC.damage = NPC.defDamage;
+
             NPC.defense = NPC.defDefense;
             NPC.dontTakeDamage = false;
             NPC.ShowNameOnHover = true;
@@ -263,6 +274,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant - StandardSegmentOpenRate);
             JawRotation = JawRotation.AngleLerp(0f, 0.01f).AngleTowards(0f, 0.02f);
+            ReticleOpacity = MathHelper.Lerp(ReticleOpacity, 0f, 0.1f);
 
             CalamityGlobalNPC.draedonExoMechWorm = NPC.whoAmI;
         }
@@ -455,7 +467,45 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.Draw(texture, drawPosition, NPC.frame, NPC.GetAlpha(lightColor), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, NPC.frame, NPC.GetAlpha(Color.White), NPC.rotation, NPC.frame.Size() * 0.5f, NPC.scale, 0, 0f);
 
+            if (ReticleOpacity >= 0.01f)
+                DrawReticle(ReticleOpacity);
+
             return false;
+        }
+
+        /// <summary>
+        /// Draws a telegraph reticle with a given opacity on Hades' target.
+        /// </summary>
+        /// <param name="reticleOpacity">The opacity of the reticle.</param>
+        public static void DrawReticle(float reticleOpacity)
+        {
+            Texture2D leftReticleTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleLeft").Value;
+            Texture2D rightReticleTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleRight").Value;
+            Texture2D topReticleTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleTop").Value;
+            Texture2D bottomReticleTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleHead").Value;
+            Texture2D leftReticleProngTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleProngLeft").Value;
+            Texture2D rightReticleProngTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Thanatos/ThanatosReticleProngRight").Value;
+
+            // The reticle fades away and moves farther away from the target the closer they are to the aura.
+            // Once far away, the reticle will flash between red and white as an indicator.
+            float reticleOffsetDistance = MathHelper.SmoothStep(300f, 0f, reticleOpacity);
+            float reticleFadeToWhite = (MathF.Cos(Main.GlobalTimeWrappedHourly * 6.8f) * 0.5f + 0.5f) * reticleOpacity * 0.67f;
+            Color reticleBaseColor = new Color(255, 0, 0, 127) * reticleOpacity;
+            Color reticleFlashBaseColor = Color.Lerp(reticleBaseColor, new Color(255, 255, 255, 0), reticleFadeToWhite) * reticleOpacity;
+            Vector2 origin = leftReticleTexture.Size() * 0.5f;
+
+            Vector2 playerDrawPosition = Target.Center - Main.screenPosition;
+            Main.spriteBatch.Draw(leftReticleTexture, playerDrawPosition - Vector2.UnitX * reticleOffsetDistance, null, reticleBaseColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(rightReticleTexture, playerDrawPosition + Vector2.UnitX * reticleOffsetDistance, null, reticleBaseColor, 0f, origin, 1f, SpriteEffects.None, 0f);
+
+            for (int i = 0; i < 3; i++)
+            {
+                float scale = 1f + i * 0.125f;
+                Main.spriteBatch.Draw(leftReticleProngTexture, playerDrawPosition - Vector2.UnitX * reticleOffsetDistance, null, reticleFlashBaseColor, 0f, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(rightReticleProngTexture, playerDrawPosition + Vector2.UnitX * reticleOffsetDistance, null, reticleFlashBaseColor, 0f, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(bottomReticleTexture, playerDrawPosition + Vector2.UnitY * reticleOffsetDistance, null, reticleFlashBaseColor, 0f, origin, scale, SpriteEffects.None, 0f);
+            }
+            Main.spriteBatch.Draw(topReticleTexture, playerDrawPosition - Vector2.UnitY * reticleOffsetDistance, null, reticleBaseColor, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

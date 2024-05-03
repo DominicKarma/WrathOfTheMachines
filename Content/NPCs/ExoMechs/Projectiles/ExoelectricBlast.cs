@@ -14,44 +14,29 @@ using Terraria.ModLoader;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
-    public class ExoEnergyBlast : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
+    public class ExoelectricBlast : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
     {
         public PixelationPrimitiveLayer LayerToRenderTo => PixelationPrimitiveLayer.AfterProjectiles;
 
         /// <summary>
-        /// How overheated the beam is. Brings colors from cool electric cyans and blues to terrifying reds.
-        /// </summary>
-        public ref float OverheatInterpolant => ref Projectile.localAI[0];
-
-        /// <summary>
         /// How long this sphere has existed, in frames.
         /// </summary>
-        public ref float Time => ref Projectile.ai[1];
+        public ref float Time => ref Projectile.ai[0];
 
         /// <summary>
         /// How long this laserbeam current is.
         /// </summary>
-        public ref float LaserbeamLength => ref Projectile.ai[2];
+        public ref float LaserbeamLength => ref Projectile.ai[1];
 
         /// <summary>
         /// How long the laserbeam exists for.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(4.8f);
+        public static int Lifetime => Utilities.SecondsToFrames(4.2f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
         /// </summary>
         public static float MaxLaserbeamLength => 6700f;
-
-        /// <summary>
-        /// The starting <see cref="Projectile.timeLeft"/> where overheating begins for the beam.
-        /// </summary>
-        public static int OverheatStartingTime => Utilities.SecondsToFrames(3.5f);
-
-        /// <summary>
-        /// The starting <see cref="Projectile.timeLeft"/> where overheating ends for the beam.
-        /// </summary>
-        public static int OverheatEndingTime => Utilities.SecondsToFrames(3f);
 
         /// <summary>
         /// How long the beam waits before beginning to expand.
@@ -77,7 +62,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.friendly = true;
             Projectile.timeLeft = Lifetime;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -98,8 +82,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 189f, 0f, MaxLaserbeamLength);
 
             float expandInterpolant = Utilities.InverseLerp(0f, ExpandTime, Time - ExpandDelay);
-            float bigWidth = MathHelper.Lerp(220f, 380f, OverheatInterpolant);
-            Projectile.width = (int)(MathHelper.Lerp(Time / 42f * 8f, bigWidth, expandInterpolant.Squared()) * Utilities.InverseLerp(0f, 10f, Projectile.timeLeft));
+            Projectile.width = (int)(MathHelper.Lerp(Time / 42f * 8f, 180f, expandInterpolant.Squared()) * Utilities.InverseLerp(0f, 10f, Projectile.timeLeft));
 
             CreateVisuals(expandInterpolant);
 
@@ -112,18 +95,16 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <param name="expandInterpolant"></param>
         public void CreateVisuals(float expandInterpolant)
         {
-            OverheatInterpolant = Utilities.InverseLerp(134f, 90f, Projectile.timeLeft);
-
             // Darken the sky to increase general contrast with everything.
             CustomExoMechsSky.CloudExposure = MathHelper.Lerp(CustomExoMechsSky.DefaultCloudExposure, 0.085f, expandInterpolant);
 
-            for (int i = 0; i < (1f - OverheatInterpolant) * Projectile.width / 21; i++)
+            for (int i = 0; i < Projectile.width / 21; i++)
             {
                 float laserbeamLengthInterpolant = Main.rand.NextFloat(0.07f, 1f);
                 Vector2 randomLinePosition = Projectile.Center + Projectile.velocity * laserbeamLengthInterpolant * LaserbeamLength + Main.rand.NextVector2CircularEdge(Projectile.width, Projectile.width) * 0.5f;
                 CreateElectricSpark(randomLinePosition);
             }
-            if (Main.rand.NextBool((1f - OverheatInterpolant) * Projectile.width / 300f))
+            if (Main.rand.NextBool(Projectile.width / 300f))
                 CreateElectricSpark(Projectile.Center + Projectile.velocity * 20f);
 
             ScreenShakeSystem.SetUniversalRumble(Projectile.width / 90f, MathHelper.TwoPi, null, 0.2f);
@@ -165,8 +146,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public Color LaserColorFunction(float completionRatio)
         {
             Color electricColor = new(0.4f, 1f, 1f);
-            Color overheatColor = new(1f, 0.11f, 0.17f);
-            return Projectile.GetAlpha(Color.Lerp(electricColor, overheatColor, OverheatInterpolant));
+            return Projectile.GetAlpha(electricColor);
         }
 
         public float BloomWidthFunction(float completionRatio) => LaserWidthFunction(completionRatio) * 1.5f;
@@ -174,16 +154,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public Color BloomColorFunction(float completionRatio)
         {
             Color electricColor = new(0.67f, 0.7f, 1f, 0f);
-            Color overheatColor = new(1f, 0.3f, 0f, 0f);
-
             float opacity = Utilities.InverseLerp(0.01f, 0.065f, completionRatio) * Utilities.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
-            return Projectile.GetAlpha(Color.Lerp(electricColor, overheatColor, OverheatInterpolant)) * opacity;
+            return Projectile.GetAlpha(electricColor) * opacity;
         }
 
         public void DrawBackBloom()
         {
-            Color outerBloomColor = Color.Lerp(new(0.34f, 0.75f, 1f, 0f), new(1f, 0f, 0f, 0f), OverheatInterpolant);
-
+            Color outerBloomColor = new(0.34f, 0.75f, 1f, 0f);
             float bloomScale = Projectile.width / 300f;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Projectile.velocity * Projectile.width * 0.21f;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
@@ -211,8 +188,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             ManagedShader shader = ShaderManager.GetShader("WoTM.HadesExoEnergyBlastShader");
             shader.TrySetParameter("laserDirection", Projectile.velocity);
-            shader.TrySetParameter("edgeColorSubtraction", Vector3.Lerp(new(0.7f, 0.4f, 0), new(0f, 0.5f, 1f), OverheatInterpolant));
-            shader.TrySetParameter("edgeGlowIntensity", MathHelper.Lerp(0.2f, 1f, OverheatInterpolant));
+            shader.TrySetParameter("edgeColorSubtraction", new Vector3(0.7f, 0.4f, 0));
+            shader.TrySetParameter("edgeGlowIntensity", 0.2f);
             shader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 2, SamplerState.LinearWrap);
 
@@ -239,8 +216,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float _ = 0f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 16f, ref _);
         }
-
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage += 50f;
 
         public override bool ShouldUpdatePosition() => false;
     }

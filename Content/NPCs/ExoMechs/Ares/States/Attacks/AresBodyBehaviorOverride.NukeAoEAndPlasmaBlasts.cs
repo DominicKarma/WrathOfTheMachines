@@ -199,7 +199,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 {
                     Vector2 handDirection = handNPC.rotation.ToRotationVector2() * handNPC.spriteDirection;
                     Vector2 nukeSpawnPosition = handNPC.Center + handDirection * 40f;
-                    Vector2 nukeVelocity = handDirection * 80f;
+                    Vector2 nukeVelocity = handDirection * 72f;
                     Utilities.NewProjectileBetter(handNPC.GetSource_FromAI(), nukeSpawnPosition, nukeVelocity, ModContent.ProjectileType<GaussNuke>(), NukeWeaponDamage, 0f, -1, explosionDiameter);
 
                     handNPC.velocity -= handDirection * 35f;
