@@ -134,6 +134,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             float maxDashSpeed = 150f;
             float standardSpinRadius = 325f;
             float maxSpinRadiusExtension = 872f;
+            ExoTwinAnimation animation = ExoTwinAnimation.ChargingUp;
 
             // Initialize the random spin orientation of the twins at the very beginning of the attack.
             if (AITimer == 1 && isApollo)
@@ -160,7 +161,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Vector2 hoverDestination = Target.Center + hoverOffset;
 
                 // Fly around in accordance with the radius offset.
-                npc.SmoothFlyNear(hoverDestination, MathF.Cbrt(spinCompletion) * 0.5f, 0.01f);
+                npc.SmoothFlyNear(hoverDestination, MathF.Cbrt(spinCompletion) * 0.9f, 0.01f);
                 npc.rotation = npc.AngleTo(Target.Center);
             }
 
@@ -169,24 +170,27 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 SoundEngine.PlaySound(Artemis.ChargeSound, npc.Center);
 
-                ScreenShakeSystem.StartShakeAtPoint(npc.Center, 9f);
+                ScreenShakeSystem.StartShakeAtPoint(npc.Center, 5.3f);
 
                 npc.velocity = npc.rotation.ToRotationVector2() * startingDashSpeed;
                 npc.rotation = npc.velocity.ToRotation();
                 npc.netUpdate = true;
             }
 
+            IExoTwin? twinInfo = null;
             float motionBlurInterpolant = Utilities.InverseLerp(90f, 150f, npc.velocity.Length());
             float thrusterBoost = Utilities.InverseLerp(maxDashSpeed * 0.85f, maxDashSpeed, npc.velocity.Length()) * 1.3f;
             if (npc.TryGetBehavior(out ArtemisBehaviorOverride artemisBehavior))
             {
                 artemisBehavior.MotionBlurInterpolant = motionBlurInterpolant;
                 artemisBehavior.ThrusterBoost = MathHelper.Max(artemisBehavior.ThrusterBoost, thrusterBoost);
+                twinInfo = artemisBehavior;
             }
-            if (npc.TryGetBehavior(out ApolloBehaviorOverride apolloBehavior))
+            else if (npc.TryGetBehavior(out ApolloBehaviorOverride apolloBehavior))
             {
                 apolloBehavior.MotionBlurInterpolant = motionBlurInterpolant;
                 apolloBehavior.ThrusterBoost = MathHelper.Max(apolloBehavior.ThrusterBoost, thrusterBoost);
+                twinInfo = apolloBehavior;
             }
 
             // Handle post-dash behaviors.
@@ -215,6 +219,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.damage = npc.defDamage;
                 npc.rotation = npc.velocity.ToRotation();
 
+                animation = ExoTwinAnimation.Attacking;
+
                 if (spinCycleTimer == spinCycleTime - 1 && isApollo)
                 {
                     ExoTwinsStateManager.SharedState.Values[0] = npc.AngleTo(Target.Center) - MathHelper.PiOver2;
@@ -222,7 +228,12 @@ namespace WoTM.Content.NPCs.ExoMechs
                 }
             }
 
-            // TODO -- Update animations.
+            // Update animations.
+            if (twinInfo is not null)
+            {
+                twinInfo.Animation = animation;
+                twinInfo.Frame = twinInfo.Animation.CalculateFrame(AITimer / 40f % 1f, twinInfo.InPhase2);
+            }
         }
 
         /// <summary>
