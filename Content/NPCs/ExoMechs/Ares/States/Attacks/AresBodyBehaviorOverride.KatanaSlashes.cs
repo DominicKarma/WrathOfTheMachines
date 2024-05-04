@@ -143,7 +143,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             float rotateForwardInterpolant = Utilities.InverseLerpBump(0.1f, AnticipationCurveEnd * 1.1f, 0.9f, 1f, animationCompletion).Squared();
             if (AITimer >= KatanaSlashes_AttackDelay)
             {
-                if (animationTimer == (int)(attackCycleTime * AnticipationCurveEnd))
+                if (animationTimer == (int)(attackCycleTime * AnticipationCurveEnd) + 3)
                     KatanaSlashesHandUpdate_DoSlashEffects(handNPC);
 
                 hoverDestination = CalculateSlashHandDestination(hand, animationCompletion, hoverOffset);
@@ -169,8 +169,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="handNPC">The hand's NPC instance.</param>
         public void KatanaSlashesHandUpdate_DoSlashEffects(NPC handNPC)
         {
-            NPC.oldPos = new Vector2[NPC.oldPos.Length];
-            NPC.oldRot = new float[NPC.oldRot.Length];
+            NPC.velocity += (handNPC.position - handNPC.oldPosition).SafeNormalize(Vector2.Zero) * new Vector2(7f, 1.5f);
             ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 4.1f);
             SoundEngine.PlaySound(Exoblade.BigSwingSound with { Volume = 0.5f, MaxInstances = 0 }, handNPC.Center);
         }

@@ -70,7 +70,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!npc.TryGetBehavior(out AresBodyBehaviorOverride ares))
                 return;
 
-            npc.SmoothFlyNear(Target.Center - Vector2.UnitY * 360f, 0.031f, 0.96f);
+            Vector2 hoverDestination = Target.Center - Vector2.UnitY * 350f;
+            Vector2 flyDirection = npc.SafeDirectionTo(hoverDestination);
+            if (!npc.WithinRange(hoverDestination, 300f))
+                npc.velocity += flyDirection * 1.1f;
+            if (npc.velocity.AngleBetween(flyDirection) >= 1.4f)
+                npc.velocity *= 0.9f;
 
             ares.InstructionsForHands[0] = new(h => Perform_Ares_GaussNuke(npc, h, new Vector2(-400f, 40f), 0));
             ares.InstructionsForHands[1] = new(h => ares.BasicHandUpdate(h, new Vector2(-280f, 224f), 1));
@@ -173,36 +178,36 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             float motionBlurInterpolant = Utilities.InverseLerp(90f, 150f, npc.velocity.Length());
             float thrusterBoost = Utilities.InverseLerp(maxDashSpeed * 0.85f, maxDashSpeed, npc.velocity.Length()) * 1.3f;
-            if (npc.TryGetBehavior(out ArtemisBehaviorOverride artemis))
+            if (npc.TryGetBehavior(out ArtemisBehaviorOverride artemisBehavior))
             {
-                artemis.MotionBlurInterpolant = motionBlurInterpolant;
-                artemis.ThrusterBoost = MathHelper.Max(artemis.ThrusterBoost, thrusterBoost);
+                artemisBehavior.MotionBlurInterpolant = motionBlurInterpolant;
+                artemisBehavior.ThrusterBoost = MathHelper.Max(artemisBehavior.ThrusterBoost, thrusterBoost);
             }
-            if (npc.TryGetBehavior(out ApolloBehaviorOverride apollo))
+            if (npc.TryGetBehavior(out ApolloBehaviorOverride apolloBehavior))
             {
-                apollo.MotionBlurInterpolant = motionBlurInterpolant;
-                apollo.ThrusterBoost = MathHelper.Max(apollo.ThrusterBoost, thrusterBoost);
+                apolloBehavior.MotionBlurInterpolant = motionBlurInterpolant;
+                apolloBehavior.ThrusterBoost = MathHelper.Max(apolloBehavior.ThrusterBoost, thrusterBoost);
             }
 
             // Handle post-dash behaviors.
             if (spinCycleTimer >= spinTime + spinSlowdownAndRepositionTime && spinCycleTimer <= spinTime + spinSlowdownAndRepositionTime + dashTime)
             {
-                NPC artemisOther = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
-                if (isApollo && npc.Hitbox.Intersects(artemisOther.Hitbox))
+                // Apply hit forces when Artemis and Apollo collide, in accordance with Newton's third law.
+                NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
+                if (isApollo && npc.Hitbox.Intersects(artemis.Hitbox))
                 {
                     Vector2 impactForce = npc.velocity.RotatedBy(-MathHelper.PiOver2) * 0.15f;
                     npc.velocity -= impactForce;
                     npc.netUpdate = true;
-                    artemisOther.velocity += impactForce;
-                    artemisOther.netUpdate = true;
+                    artemis.velocity += impactForce;
+                    artemis.netUpdate = true;
 
-                    ScreenShakeSystem.StartShake(6f);
-                    SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound with { Volume = 4f });
+                    SoundEngine.PlaySound(CommonCalamitySounds.ExoHitSound, npc.Center);
 
                     for (int i = 0; i < 35; i++)
                     {
                         npc.HitEffect();
-                        artemisOther.HitEffect();
+                        artemis.HitEffect();
                     }
                 }
 
