@@ -121,6 +121,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 npc.netUpdate = true;
             }
 
+            if (AITimer <= 60)
+                npc.damage = 0;
+
             float spinAngle = MathHelper.TwoPi * AITimer / HadesSpinPeriod;
             Vector2 spinOffset = spinAngle.ToRotationVector2() * HadesSpinRadius;
             Vector2 hoverDestination = new Vector2(npc.ai[0], npc.ai[1]) + spinOffset;
