@@ -14,7 +14,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long the walled slashes attack goes on for until a new combo is selected.
         /// </summary>
-        public static int AttackDuration => Utilities.SecondsToFrames(8f);
+        public static int AttackDuration => Utilities.SecondsToFrames(9f);
 
         /// <summary>
         /// Ares' slash cycle time, which dictates how fast each set of slashes are.
@@ -24,7 +24,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Ares waits before slashing.
         /// </summary>
-        public static int AresSlashDelay => Utilities.SecondsToFrames(1f);
+        public static int AresSlashDelay => Utilities.SecondsToFrames(2f);
 
         /// <summary>
         /// The max speed at which Ares can fly when trying to reach the player.
@@ -114,7 +114,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
-            if (npc.ai[0] == 0f)
+            if (AITimer == 1)
             {
                 npc.ai[0] = Target.Center.X;
                 npc.ai[1] = Target.Center.Y;

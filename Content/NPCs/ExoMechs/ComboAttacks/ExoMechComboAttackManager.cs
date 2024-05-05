@@ -154,8 +154,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             ComboAttackTimer = 0;
 
-            var potentialCandidates = RegisteredComboAttacks.Where(VerifyComboStateIsValid);
-            CurrentState = potentialCandidates.FirstOrDefault() ?? NullComboState;
+            var potentialCandidates = RegisteredComboAttacks.Where(VerifyComboStateIsValid).OrderBy(_ => Main.rand.NextFloat());
+            var previousState = CurrentState;
+
+            for (int i = 0; i < 100; i++)
+            {
+                CurrentState = potentialCandidates.FirstOrDefault() ?? NullComboState;
+                if (CurrentState != previousState)
+                    break;
+            }
         }
 
         /// <summary>

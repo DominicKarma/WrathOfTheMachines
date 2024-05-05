@@ -57,10 +57,10 @@ namespace WoTM.Content.NPCs.ExoMechs
             NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.01f);
             StandardFlyTowards(hoverDestination);
 
-            InstructionsForHands[0] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-430f, 50f), 0));
-            InstructionsForHands[1] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-280f, 224f), 1));
-            InstructionsForHands[2] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(280f, 224f), 2));
-            InstructionsForHands[3] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(430f, 50f), 3));
+            InstructionsForHands[0] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-430f, 50f), 0, AimedLaserBursts_CannonChargeUpTime));
+            InstructionsForHands[1] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(-280f, 224f), 1, AimedLaserBursts_CannonChargeUpTime));
+            InstructionsForHands[2] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(280f, 224f), 2, AimedLaserBursts_CannonChargeUpTime));
+            InstructionsForHands[3] = new(h => AimedLaserBurstsHandUpdate(h, new Vector2(430f, 50f), 3, AimedLaserBursts_CannonChargeUpTime));
 
             if (AITimer >= AimedLaserBursts_CannonChargeUpTime + CannonLaserbeam.Lifetime + 45)
             {
@@ -77,7 +77,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
         }
 
-        public void AimedLaserBurstsHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex)
+        public void AimedLaserBurstsHandUpdate(AresHand hand, Vector2 hoverOffset, int armIndex, int chargeUpTime)
         {
             NPC handNPC = hand.NPC;
             handNPC.SmoothFlyNear(NPC.Center + hoverOffset * NPC.scale, 0.3f, 0.8f);
@@ -97,7 +97,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             };
 
             int relativeTimer = AITimer + handNPC.whoAmI * 101 % 30;
-            hand.EnergyDrawer.chargeProgress = Utilities.InverseLerp(0f, AimedLaserBursts_CannonChargeUpTime, relativeTimer);
+            hand.EnergyDrawer.chargeProgress = Utilities.InverseLerp(0f, chargeUpTime, relativeTimer);
             if (hand.EnergyDrawer.chargeProgress >= 1f)
                 hand.EnergyDrawer.chargeProgress = 0f;
 
@@ -146,7 +146,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             ScreenShakeSystem.SetUniversalRumble(hand.EnergyDrawer.chargeProgress.Cubed() * 3f, MathHelper.TwoPi, null, 0.2f);
 
             // Fire.
-            if (relativeTimer == AimedLaserBursts_CannonChargeUpTime)
+            if (relativeTimer == chargeUpTime)
             {
                 ScreenShakeSystem.StartShake(7.5f);
 
@@ -164,7 +164,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // Look at the player before firing.
-            if (relativeTimer < AimedLaserBursts_CannonChargeUpTime)
+            if (relativeTimer < chargeUpTime)
                 hand.RotateToLookAt(handNPC.AngleTo(aimDestination), 0.15f);
 
             // Handle post-firing particles.
@@ -191,7 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 // This doesn't use hand.RotateToLookAt because that changes the spriteDirection of the cannon.
                 // For most cases this looks natural, but when a laser is being fired from the cannon it's super important that it never "jump" in terms of position.
                 // By locking the spriteDirection in place and just rotating normally, this issue is avoided.
-                float cannonTurnSpeed = Utilities.InverseLerp(0f, 45f, relativeTimer - AimedLaserBursts_CannonChargeUpTime) * 0.085f;
+                float cannonTurnSpeed = Utilities.InverseLerp(0f, 45f, relativeTimer - chargeUpTime) * 0.085f;
                 float idealCannonRotation = handNPC.AngleTo(Target.Center);
                 if (handNPC.spriteDirection == -1)
                     idealCannonRotation += MathHelper.Pi;

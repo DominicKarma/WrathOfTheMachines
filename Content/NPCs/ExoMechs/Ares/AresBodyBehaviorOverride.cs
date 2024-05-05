@@ -277,6 +277,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case AresAIState.ReturnToBeingActive:
                     DoBehavior_ReturnToBeingActive();
                     break;
+                case AresAIState.PerformComboAttack:
+                    AITimer = ExoMechComboAttackManager.ComboAttackTimer;
+                    break;
             }
         }
 

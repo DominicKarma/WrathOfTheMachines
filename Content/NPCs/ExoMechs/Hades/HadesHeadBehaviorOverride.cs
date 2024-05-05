@@ -327,6 +327,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case HadesAIState.Inactive:
                     DoBehavior_Inactive();
                     break;
+                case HadesAIState.PerformComboAttack:
+                    AITimer = ExoMechComboAttackManager.ComboAttackTimer;
+                    break;
             }
         }
 

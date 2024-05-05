@@ -56,6 +56,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (artemis.active && artemis.TryGetBehavior(out ArtemisBehaviorOverride artemisAI))
                     PerformUpdateLoop(artemis, artemisAI);
             }
+
+            if (SharedState.AIState == ExoTwinsAIState.PerformComboAttack)
+                SharedState.AITimer = ExoMechComboAttackManager.ComboAttackTimer;
         }
 
         public override void NetSend(BinaryWriter writer) => SharedState.WriteTo(writer);
