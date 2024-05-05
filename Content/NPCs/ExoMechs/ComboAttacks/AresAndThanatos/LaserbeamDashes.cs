@@ -95,10 +95,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 hades.BodyBehaviorAction = new(HadesHeadBehaviorOverride.EveryNthSegment(3), HadesHeadBehaviorOverride.OpenSegment());
 
                 if (wrappedTimer == dashDelay)
-                {
-                    //SoundEngine.PlaySound(HadesHeadBehaviorOverride.LaserChargeUpSound);
                     ScreenShakeSystem.StartShake(7.5f);
-                }
             }
             else if (npc.velocity.Length() <= 120f)
             {
