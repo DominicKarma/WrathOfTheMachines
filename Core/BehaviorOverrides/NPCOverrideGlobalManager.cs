@@ -12,6 +12,9 @@ namespace WoTM
 {
     public class NPCOverrideGlobalManager : GlobalNPC
     {
+        // TODO -- Re-enable later, once porting for the standalone version is ready.
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         /// <summary>
         /// The relationship of NPC ID to corresponding override.
         /// </summary>
