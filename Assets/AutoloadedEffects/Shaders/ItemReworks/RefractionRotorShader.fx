@@ -28,8 +28,12 @@ float2 RotatedBy(in float2 coords, float angle)
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
+    // Apply base pixelation to the refraction rotor.
     coords = floor(coords / pixelationFactor) * pixelationFactor;
     
+    float distanceFromCenter = distance(coords, 0.5);
+    
+    // Smear the color with rotational blur.
     float4 smearedColor = 0;
     for (int i = 0; i < 32; i++)
     {
@@ -39,16 +43,14 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
         smearedColor += tex2D(baseTexture, rotatedCoords) * (1 - erasePixel) / clamp(32 - blur * 200, 1, 32);
     }
     
-    float distanceFromCenter = distance(coords, 0.5);
+    // Calculate a center glow color based on the angle from the center of the texture.
+    // This is intended to enhance the vibrancy of the inner rainbow part of the refraction rotor when it's spinning extremely fast.
     float glow = pow(glowIntensity / (distanceFromCenter - 0.11), 2) * smoothstep(0.4, 0.2, distanceFromCenter);
-    
     float glowColorHue = atan2(coords.y - 0.5, coords.x - 0.5) / 6.283 + 0.5;
     float4 glowColor = PaletteLerp(glowColorHue);
     
+    // Combine the rotationally smeared color and glow.
     return saturate(smearedColor + glowColor * glow) * sampleColor;
-    
-    float4 baseColor = tex2D(baseTexture, coords) * sampleColor;
-    return baseColor;
 }
 
 technique Technique1
