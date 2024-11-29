@@ -21,6 +21,7 @@ Projectiles: {
 	// AresMissile.DisplayName: Thermal Missile
 	// AresMissileBackground.DisplayName: Thermal Missile
 	// ExoelectricBlast.DisplayName: Exoelectric Blast
+	// RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor
 }
 
 NPCs: {

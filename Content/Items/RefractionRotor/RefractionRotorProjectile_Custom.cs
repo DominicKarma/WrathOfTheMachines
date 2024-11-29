@@ -16,15 +16,23 @@ namespace WoTM.Content.Items.RefractionRotor
     public class RefractionRotorProjectile_Custom : ModProjectile
     {
         /// <summary>
-        /// The amount of max-updates that this rotor has.
+        /// Whether this rotor has hit an enemy or not.
         /// </summary>
-        public static int MaxUpdates => 20;
-
         public bool HasHitEnemy
         {
             get => Projectile.ai[0] == 1f;
             set => Projectile.ai[0] = value.ToInt();
         }
+
+        /// <summary>
+        /// The amount of max-updates that this rotor has.
+        /// </summary>
+        public static int MaxUpdates => 20;
+
+        /// <summary>
+        /// The speed that this rotor travels at after decelerating.
+        /// </summary>
+        public static float SlowedSpeed => 4f;
 
         /// <summary>
         /// How long this rotor has existed for, in frames.
@@ -62,12 +70,12 @@ namespace WoTM.Content.Items.RefractionRotor
         public override void AI()
         {
             bool slowDown = Time >= Projectile.MaxUpdates * 5f;
-            float slowSpeed = 6f;
+            float slowSpeed = SlowedSpeed;
             float decelerationFactor = 0.987f;
             if (HasHitEnemy)
             {
                 slowDown = true;
-                slowSpeed = 3f;
+                slowSpeed *= 0.75f;
                 decelerationFactor = 0.93f;
             }
 
