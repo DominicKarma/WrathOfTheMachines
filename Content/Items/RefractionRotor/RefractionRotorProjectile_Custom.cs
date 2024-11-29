@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod;
+using CalamityMod.NPCs.NormalNPCs;
 using CalamityMod.Particles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -99,7 +100,7 @@ namespace WoTM.Content.Items.RefractionRotor
         {
             Vector2 impactOrigin = (Projectile.Center + target.Center) * 0.5f;
 
-            if (target.Organic())
+            if (target.Organic() && target.type != ModContent.NPCType<SuperDummyNPC>() && target.type != NPCID.TargetDummy)
                 CreateBlood(impactOrigin, target);
             else
                 CreateSparks(impactOrigin, target);
