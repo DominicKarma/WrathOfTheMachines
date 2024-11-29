@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
+using WoTM.Content.Particles.Metaballs;
 
 namespace WoTM.Content.Items.RefractionRotor
 {
@@ -96,7 +97,54 @@ namespace WoTM.Content.Items.RefractionRotor
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Vector2 sparkOrigin = (Projectile.Center + target.Center) * 0.5f;
+            Vector2 impactOrigin = (Projectile.Center + target.Center) * 0.5f;
+
+            if (target.Organic())
+                CreateBlood(impactOrigin, target);
+            else
+                CreateSparks(impactOrigin, target);
+            ScreenShakeSystem.StartShakeAtPoint(impactOrigin, 0.8f);
+
+            if (HasHitEnemy)
+                return;
+
+            HasHitEnemy = true;
+            Projectile.netUpdate = true;
+        }
+
+        /// <summary>
+        /// Creates impact sparks relative to a given target.
+        /// </summary>
+        /// <param name="impactOrigin">The origin of the impact.</param>
+        /// <param name="target">The NPC target that is being hit.</param>
+        public void CreateBlood(Vector2 impactOrigin, NPC target)
+        {
+            BloodMetaball metaball = ModContent.GetInstance<BloodMetaball>();
+
+            for (int i = 0; i < 14; i++)
+            {
+                float bloodSpread = Main.rand.NextFloatDirection();
+                float bloodSpeed = MathHelper.SmoothStep(20f, 4f, MathF.Abs(bloodSpread));
+                Vector2 bloodVelocity = (Projectile.AngleTo(target.Center) + MathHelper.PiOver2 + bloodSpread * 0.51f + Main.rand.NextFloatDirection() * 0.05f).ToRotationVector2() * bloodSpeed;
+                Vector2 bloodSpawnPosition = Main.rand.NextVector2Circular(target.width, target.height) * 0.1f + impactOrigin;
+
+                float bloodSize = 30f;
+                if (Main.rand.NextBool(8))
+                    bloodSize *= 0.67f;
+                if (Main.rand.NextBool(16))
+                    bloodSize *= 1.7f;
+
+                metaball.CreateParticle(bloodSpawnPosition, bloodVelocity, bloodSize, Main.rand.NextFloat(0.05f));
+            }
+        }
+
+        /// <summary>
+        /// Creates impact sparks relative to a given target.
+        /// </summary>
+        /// <param name="impactOrigin">The origin of the impact.</param>
+        /// <param name="target">The NPC target that is being hit.</param>
+        public void CreateSparks(Vector2 impactOrigin, NPC target)
+        {
             for (int i = 0; i < 22; i++)
             {
                 float sparkSpread = Main.rand.NextFloatDirection();
@@ -108,7 +156,7 @@ namespace WoTM.Content.Items.RefractionRotor
                     sparkLifetime += 14;
 
                 Vector2 sparkVelocity = (Projectile.AngleTo(target.Center) + MathHelper.PiOver2 + sparkSpread * 0.35f + Main.rand.NextFloatDirection() * 0.04f).ToRotationVector2() * sparkSpeed;
-                Vector2 sparkSpawnPosition = Main.rand.NextVector2Circular(target.width, target.height) * 0.1f + sparkOrigin;
+                Vector2 sparkSpawnPosition = Main.rand.NextVector2Circular(target.width, target.height) * 0.1f + impactOrigin;
 
                 Color[] sparkPalette = new Color[]
                 {
@@ -123,16 +171,8 @@ namespace WoTM.Content.Items.RefractionRotor
                 spark.Spawn();
             }
 
-            StrongBloom bloom = new(sparkOrigin + Main.rand.NextVector2Circular(30f, 30f), Vector2.Zero, Projectile.GetAlpha(Color.Wheat) * 0.85f, Projectile.scale * 0.7f, 5);
+            StrongBloom bloom = new(impactOrigin + Main.rand.NextVector2Circular(30f, 30f), Vector2.Zero, Projectile.GetAlpha(Color.Wheat) * 0.85f, Projectile.scale * 0.7f, 5);
             GeneralParticleHandler.SpawnParticle(bloom);
-
-            ScreenShakeSystem.StartShakeAtPoint(sparkOrigin, 0.75f);
-
-            if (HasHitEnemy)
-                return;
-
-            HasHitEnemy = true;
-            Projectile.netUpdate = true;
         }
 
         public override bool PreDraw(ref Color lightColor)

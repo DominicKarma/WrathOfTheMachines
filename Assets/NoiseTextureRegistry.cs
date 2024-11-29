@@ -17,11 +17,25 @@ namespace WoTM.Assets
 
         #region Noise Textures
 
+        public static readonly LazyAsset<Texture2D> BubblyNoise = LoadDeferred($"{ExtraTexturesPath}/BubblyNoise");
+
         public static readonly LazyAsset<Texture2D> CloudDensityMap = LoadDeferred($"{ExtraTexturesPath}/CloudDensityMap");
+
+        public static readonly LazyAsset<Texture2D> DendriticNoise = LoadDeferred($"{ExtraTexturesPath}/BubblyNoise");
 
         public static readonly LazyAsset<Texture2D> ElectricNoise = LoadDeferred($"{ExtraTexturesPath}/ElectricNoise");
 
+        public static readonly LazyAsset<Texture2D> PerlinNoise = LoadDeferred($"{ExtraTexturesPath}/PerlinNoise");
+
         public static readonly LazyAsset<Texture2D> RadialNoise = LoadDeferred($"{ExtraTexturesPath}/RadialNoise");
+
+        public static readonly LazyAsset<Texture2D> SlimeNoise = LoadDeferred($"{ExtraTexturesPath}/SlimeNoise");
+
+        public static readonly LazyAsset<Texture2D> TurbulentNoise = LoadDeferred($"{ExtraTexturesPath}/TurbulentNoise");
+
+        public static readonly LazyAsset<Texture2D> WavyBlotchNoise = LoadDeferred($"{ExtraTexturesPath}/WavyBlotchNoise");
+
+        public static readonly LazyAsset<Texture2D> WavyBlotchNoiseDetailed = LoadDeferred($"{ExtraTexturesPath}/WavyBlotchNoiseDetailed");
 
         #endregion Noise Textures
 
