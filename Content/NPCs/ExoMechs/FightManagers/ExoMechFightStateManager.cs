@@ -219,6 +219,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void DetermineBattleState()
         {
+            // TODO -- Re-enable later.
+            return;
+
             RecordActiveMechs();
 
             bool draedonIsPresent = NPC.AnyNPCs(ModContent.NPCType<Draedon>());
