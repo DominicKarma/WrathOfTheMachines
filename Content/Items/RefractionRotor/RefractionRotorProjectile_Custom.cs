@@ -60,7 +60,7 @@ namespace WoTM.Content.Items.RefractionRotor
             Projectile.friendly = true;
             Projectile.penetrate = 16;
             Projectile.MaxUpdates = MaxUpdates;
-            Projectile.timeLeft = Projectile.MaxUpdates * 42;
+            Projectile.timeLeft = Projectile.MaxUpdates * 45;
             Projectile.tileCollide = false;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * 2;
@@ -86,7 +86,7 @@ namespace WoTM.Content.Items.RefractionRotor
             float spinSpeed = Projectile.velocity.Length() * 0.1f;
             Projectile.rotation += Projectile.velocity.X.NonZeroSign() * spinSpeed;
 
-            float scaleInterpolant = Utilities.InverseLerpBump(0f, 5f, 34f, 42f, Time / Projectile.MaxUpdates) * Utilities.InverseLerp(0f, 9f, Projectile.penetrate);
+            float scaleInterpolant = Utilities.InverseLerpBump(0f, 5f, 34f, 45f, Time / Projectile.MaxUpdates) * Utilities.InverseLerp(0f, 9f, Projectile.penetrate);
             Projectile.scale = MathHelper.SmoothStep(0f, 1f, scaleInterpolant);
 
             if (Time >= Projectile.MaxUpdates)
@@ -205,14 +205,15 @@ namespace WoTM.Content.Items.RefractionRotor
             rotorShader.TrySetParameter("sizeCorrection", Vector2.One * MathF.Max(texture.Width, texture.Height) / MathF.Min(texture.Width, texture.Height));
             rotorShader.Apply();
 
+            Vector2 origin = new(71f, 64f);
             for (int i = Projectile.oldPos.Length - 1; i >= 0; i -= 3)
             {
                 float afterimageInterpolant = Utilities.InverseLerp(Projectile.oldPos.Length, 0f, i);
                 float afterimageOpacity = MathF.Pow(afterimageInterpolant, 3.5f);
 
                 Vector2 drawPosition = Projectile.oldPos[i] + Projectile.Size * 0.5f - Main.screenPosition;
-                Main.spriteBatch.Draw(texture, drawPosition, null, Projectile.GetAlpha(lightColor) * afterimageOpacity, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, 0, 0f);
-                Main.spriteBatch.Draw(glowmask, drawPosition, null, Projectile.GetAlpha(Color.White) * afterimageOpacity, Projectile.rotation, glowmask.Size() * 0.5f, Projectile.scale, 0, 0f);
+                Main.spriteBatch.Draw(texture, drawPosition, null, Projectile.GetAlpha(lightColor) * afterimageOpacity, Projectile.rotation, origin, Projectile.scale, 0, 0f);
+                Main.spriteBatch.Draw(glowmask, drawPosition, null, Projectile.GetAlpha(Color.White) * afterimageOpacity, Projectile.rotation, origin, Projectile.scale, 0, 0f);
             }
 
             Main.spriteBatch.ResetToDefault();
