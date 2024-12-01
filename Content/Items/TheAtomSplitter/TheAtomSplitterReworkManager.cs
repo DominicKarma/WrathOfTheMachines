@@ -4,7 +4,7 @@ using CalamityMod.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using RefractionRotorItem = CalamityMod.Items.Weapons.Rogue.RefractionRotor;
+using AtomSplitterItem = CalamityMod.Items.Weapons.Rogue.TheAtomSplitter;
 
 namespace WoTM.Content.Items.TheAtomSplitter
 {
@@ -18,11 +18,11 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// The starting speed of fired atom splitters.
         /// </summary>
-        public static float StartingSpeed => 92f;
+        public static float StartingSpeed => 0.2f;
 
         public override void SetDefaults(Item item)
         {
-            if (item.type == ModContent.ItemType<RefractionRotorItem>())
+            if (item.type == ModContent.ItemType<AtomSplitterItem>())
             {
                 item.width = item.height = 120;
                 item.damage = BaseDamage;
