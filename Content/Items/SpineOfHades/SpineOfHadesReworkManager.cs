@@ -22,7 +22,7 @@ namespace WoTM.Content.Items.SpinOfHades
         /// <summary>
         /// The base damage done by the spin.
         /// </summary>
-        public static int BaseDamage => 372;
+        public static int BaseDamage => 572;
 
         public override void SetDefaults(Item item)
         {
