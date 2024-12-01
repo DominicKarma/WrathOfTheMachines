@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
+using static WoTM.Content.Items.RefractionRotor.RefractionRotorReworkManager;
 
 namespace WoTM.Content.Items.RefractionRotor
 {
@@ -25,16 +26,6 @@ namespace WoTM.Content.Items.RefractionRotor
             get => Projectile.ai[0] == 1f;
             set => Projectile.ai[0] = value.ToInt();
         }
-
-        /// <summary>
-        /// The amount of max-updates that this rotor has.
-        /// </summary>
-        public static int MaxUpdates => 20;
-
-        /// <summary>
-        /// The speed that this rotor travels at after decelerating.
-        /// </summary>
-        public static float SlowedSpeed => 4f;
 
         /// <summary>
         /// How long this rotor has existed for, in frames.
@@ -73,23 +64,26 @@ namespace WoTM.Content.Items.RefractionRotor
         {
             bool slowDown = Time >= Projectile.MaxUpdates * 5f;
             float slowSpeed = SlowedSpeed;
-            float decelerationFactor = 0.987f;
+            float decelerationFactor = BaseDecelerationFactor;
             if (HasHitEnemy)
             {
                 slowDown = true;
                 slowSpeed *= 0.75f;
-                decelerationFactor = 0.93f;
+                decelerationFactor = GrindingDecelerationFactor;
             }
 
             if (slowDown && Projectile.velocity.Length() > slowSpeed / Projectile.MaxUpdates)
                 Projectile.velocity *= decelerationFactor;
 
+            // Spin rapidly.
             float spinSpeed = Projectile.velocity.Length() * 0.1f;
             Projectile.rotation += Projectile.velocity.X.NonZeroSign() * spinSpeed;
 
+            // Scale down into nothing before dying.
             float scaleInterpolant = Utilities.InverseLerpBump(0f, 5f, 34f, 45f, Time / Projectile.MaxUpdates) * Utilities.InverseLerp(0f, 9f, Projectile.penetrate);
             Projectile.scale = MathHelper.SmoothStep(0f, 1f, scaleInterpolant);
 
+            // Fade in after one frame.
             if (Time >= Projectile.MaxUpdates)
                 Projectile.Opacity = Utilities.Saturate(Projectile.Opacity + 0.04f);
 
