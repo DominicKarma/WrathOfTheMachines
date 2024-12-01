@@ -104,12 +104,17 @@ namespace WoTM.Content.Items.RefractionRotor
             float swingDirection = 0;
             switch (animationCycle)
             {
+                // Right swing.
                 case 0:
                     swingDirection = 1;
                     break;
+
+                // Left swing.
                 case 1:
                     swingDirection = -1;
                     break;
+
+                // Forward lunge.
                 case 2:
                     currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 0.9f);
                     currentReach = currentReachInterpolant * 800f;
@@ -138,16 +143,21 @@ namespace WoTM.Content.Items.RefractionRotor
             if (Owner.channel || animationCompletion < 0.9f)
                 Projectile.timeLeft = 2;
 
+            // Update the starting direction at the beginning of the animation, to allow the player to use the weapon without having to click again.
             if (Main.myPlayer == Projectile.owner)
             {
                 float idealDirection = Start.AngleTo(Main.MouseWorld);
                 float redirectInterpolant = Utilities.InverseLerp(0.2f, 0f, animationCompletion) * 0.5f;
                 StartingDirection = StartingDirection.AngleLerp(idealDirection, redirectInterpolant);
 
-                Projectile.netUpdate = true;
-                Projectile.netSpam = 0;
+                if (redirectInterpolant > 0f)
+                {
+                    Projectile.netUpdate = true;
+                    Projectile.netSpam = 0;
+                }
             }
 
+            // Create electricity at the end of the spine.
             if (currentReach >= 75f)
                 CreateArc(Main.rand.NextVector2Unit(), WhipPoints[^1], 1f);
 
@@ -160,6 +170,9 @@ namespace WoTM.Content.Items.RefractionRotor
             }
         }
 
+        /// <summary>
+        /// Creates a single red tesla arc.
+        /// </summary>
         public void CreateArc(Vector2 direction, Vector2 spawnPosition, float arcLengthFactor)
         {
             int arcLifetime = Main.rand.Next(12, 24);
@@ -209,6 +222,9 @@ namespace WoTM.Content.Items.RefractionRotor
             WhipPoints = bezierCurve.GetPoints(totalChains);
         }
 
+        /// <summary>
+        /// Renders a given instance of the spin with a given angular offset and opacity.
+        /// </summary>
         public void Render(float angularOffset, float opacity)
         {
             Color glowmaskColor = Color.Lerp(Color.White, Color.Crimson, SuperchargeInterpolant);
@@ -229,7 +245,7 @@ namespace WoTM.Content.Items.RefractionRotor
                 Vector2 origin = whipSegmentTexture.Size() * 0.5f;
                 float rotation = (WhipPoints[i + 1] - WhipPoints[i]).ToRotation() + MathHelper.PiOver2;
                 Vector2 drawPosition = WhipPoints[i].RotatedBy(angularOffset, Start) - Main.screenPosition;
-                Color color = Projectile.GetAlpha(Lighting.GetColor((int)WhipPoints[i].X / 16, (int)WhipPoints[i].Y / 16));
+                Color color = Projectile.GetAlpha(Lighting.GetColor(WhipPoints[i].ToTileCoordinates()));
                 Main.EntitySpriteDraw(whipSegmentTexture, drawPosition, null, color * opacity, rotation, origin, scale, SpriteEffects.None, 0);
                 Main.EntitySpriteDraw(whipSegmentGlowmaskTexture, drawPosition, null, glowmaskColor * opacity, rotation, origin, scale, SpriteEffects.None, 0);
             }
@@ -237,26 +253,38 @@ namespace WoTM.Content.Items.RefractionRotor
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Main.spriteBatch.PrepareForShaders();
-
-            ManagedShader electricityShader = ShaderManager.GetShader("WoTM.SpineOfHadesSuperchargeShader");
-            electricityShader.TrySetParameter("electricityColor", new Color(255, 14, 20).ToVector4() * SuperchargeInterpolant * 2f);
-            electricityShader.TrySetParameter("electrifyInterpolant", SuperchargeInterpolant);
-            electricityShader.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 1, SamplerState.LinearWrap);
-            electricityShader.Apply();
-
-            int afterimageCount = Projectile.oldRot.Length;
-            float angularVelocity = Projectile.oldRot[1].AngleBetween(Projectile.rotation);
-            for (int i = afterimageCount - 1; i >= 0; i -= 2)
+            bool usingShader = SuperchargeInterpolant > 0f;
+            if (usingShader)
             {
-                float opacity = MathF.Pow(1f - i / (float)afterimageCount, 3.2f) * 0.3f;
+                Main.spriteBatch.PrepareForShaders();
 
-                float angularOffset = angularVelocity * i * -0.16f;
-                Render(angularOffset, opacity);
+                ManagedShader electricityShader = ShaderManager.GetShader("WoTM.SpineOfHadesSuperchargeShader");
+                electricityShader.TrySetParameter("electricityColor", new Color(255, 14, 20).ToVector4() * SuperchargeInterpolant * 2f);
+                electricityShader.TrySetParameter("electrifyInterpolant", SuperchargeInterpolant);
+                electricityShader.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 1, SamplerState.LinearWrap);
+                electricityShader.Apply();
             }
 
-            Render(0f, 1f);
-            Main.spriteBatch.ResetToDefault();
+            try
+            {
+                int afterimageCount = Projectile.oldRot.Length;
+                float angularVelocity = Projectile.oldRot[1].AngleBetween(Projectile.rotation);
+                for (int i = afterimageCount - 1; i >= 0; i -= 2)
+                {
+                    float opacity = MathF.Pow(1f - i / (float)afterimageCount, 3.2f) * 0.3f;
+
+                    float angularOffset = angularVelocity * i * -0.16f;
+                    Render(angularOffset, opacity);
+                }
+
+                Render(0f, 1f);
+            }
+            finally
+            {
+                if (usingShader)
+                    Main.spriteBatch.ResetToDefault();
+            }
+
             return false;
         }
 
