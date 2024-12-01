@@ -13,6 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
+using static WoTM.Content.Items.SpineOfHades.SpineOfHadesReworkManager;
 
 namespace WoTM.Content.Items.SpineOfHades
 {
@@ -95,7 +96,7 @@ namespace WoTM.Content.Items.SpineOfHades
 
             float animationCompletion = Time / animationTime;
             float currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 4.75f);
-            float currentReach = currentReachInterpolant * 640f;
+            float currentReach = currentReachInterpolant * WhipReach;
 
             SuperchargeInterpolant = 0f;
             HorizontalStretch *= 0.9f;
@@ -117,7 +118,7 @@ namespace WoTM.Content.Items.SpineOfHades
                 // Forward lunge.
                 case 2:
                     currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 0.7f);
-                    currentReach = currentReachInterpolant * 800f;
+                    currentReach = currentReachInterpolant * LungeReach;
                     SuperchargeInterpolant = Utilities.InverseLerpBump(0.2f, 0.4f, 0.6f, 0.8f, animationCompletion);
                     HorizontalStretch = SuperchargeInterpolant * 0.2f;
 
@@ -125,21 +126,19 @@ namespace WoTM.Content.Items.SpineOfHades
                     {
                         ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 2f);
                         for (int i = 0; i < 5; i++)
-                        {
                             CreateArc(StartingDirection.ToRotationVector2().RotatedByRandom(0.7f), Main.rand.Next(WhipPoints), 3f);
-                        }
                     }
 
                     break;
             }
 
-            float swingOffsetArc = 1.1f;
-            float swingOffsetAngle = MathHelper.SmoothStep(-swingOffsetArc, swingOffsetArc, animationCompletion) * swingDirection;
-
+            float swingOffsetAngle = MathHelper.SmoothStep(-SwingOffsetArc, SwingOffsetArc, animationCompletion) * swingDirection;
             Vector2 directionOffset = (StartingDirection + swingOffsetAngle).ToRotationVector2();
             Projectile.Center = Start + directionOffset * currentReach;
             Projectile.rotation = swingOffsetAngle;
 
+            // Stay alive so long as the owner is using the item.
+            // If they aren't, wait until the animation is almost done to disappear.
             if (Owner.channel || animationCompletion < 0.9f)
                 Projectile.timeLeft = 2;
 
@@ -259,7 +258,7 @@ namespace WoTM.Content.Items.SpineOfHades
                 Main.spriteBatch.PrepareForShaders();
 
                 ManagedShader electricityShader = ShaderManager.GetShader("WoTM.SpineOfHadesSuperchargeShader");
-                electricityShader.TrySetParameter("electricityColor", new Color(255, 14, 20).ToVector4() * SuperchargeInterpolant * 2f);
+                electricityShader.TrySetParameter("electricityColor", SuperchargeColor * SuperchargeInterpolant);
                 electricityShader.TrySetParameter("electrifyInterpolant", SuperchargeInterpolant);
                 electricityShader.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 1, SamplerState.LinearWrap);
                 electricityShader.Apply();

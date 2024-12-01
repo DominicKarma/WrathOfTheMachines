@@ -19,9 +19,29 @@ namespace WoTM.Content.Items.SpineOfHades
         public LocalizedText? Tooltip => Language.GetText("Mods.WoTM.Items.SpineOfHades.Tooltip");
 
         /// <summary>
-        /// The base damage done by the spin.
+        /// The base damage done by the spine.
         /// </summary>
         public static int BaseDamage => 572;
+
+        /// <summary>
+        /// How far the spine reaches when it's being used like a whip.
+        /// </summary>
+        public static float WhipReach => 660f;
+
+        /// <summary>
+        /// How far the spine reaches when it's lunged forward.
+        /// </summary>
+        public static float LungeReach => 800f;
+
+        /// <summary>
+        /// The angular arc created by the spine when it's whipping.
+        /// </summary>
+        public static float SwingOffsetArc => 1.24f;
+
+        /// <summary>
+        /// The color that the spine approaches when supercharged.
+        /// </summary>
+        public static Vector4 SuperchargeColor => new Color(255, 14, 20).ToVector4() * 2f;
 
         public override void SetDefaults(Item item)
         {
