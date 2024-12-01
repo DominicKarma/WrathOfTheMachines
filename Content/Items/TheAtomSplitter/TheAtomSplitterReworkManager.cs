@@ -27,7 +27,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
                 item.width = item.height = 120;
                 item.damage = BaseDamage;
                 item.knockBack = 7f;
-                item.useAnimation = item.useTime = 25;
+                item.useAnimation = item.useTime = 37;
                 item.DamageType = ModContent.GetInstance<RogueDamageClass>();
                 item.autoReuse = true;
                 item.shootSpeed = StartingSpeed;

@@ -102,12 +102,10 @@ namespace WoTM.Content.Items.TheAtomSplitter
             if (enteringPortal)
             {
                 portalElectricityCount += 5;
-                Projectile.damage = 0;
-
                 if (!HasPlayedPortalEnterSound)
                 {
-                    SoundEngine.PlaySound(WarpSound with { MaxInstances = 0, Volume = 0.65f }, Projectile.Center);
-                    ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 8f, shakeStrengthDissipationIncrement: 0.6f);
+                    SoundEngine.PlaySound(WarpSound with { MaxInstances = 0, Volume = 0.9f }, Projectile.Center);
+                    ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 5f, shakeStrengthDissipationIncrement: 0.6f);
                     HasPlayedPortalEnterSound = true;
                 }
             }
@@ -151,12 +149,18 @@ namespace WoTM.Content.Items.TheAtomSplitter
             }
         }
 
+        public override void OnKill(int timeLeft)
+        {
+            if (Main.myPlayer == Projectile.owner)
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.player[Projectile.owner].Center, Vector2.Zero, ModContent.ProjectileType<AtomSplitterSpamSource>(), Projectile.damage, 0f, Projectile.owner);
+        }
+
         /// <summary>
         /// Renders this spear's portal.
         /// </summary>
         public void RenderPortal()
         {
-            Vector2 portalSize = new(130f, 400f);
+            Vector2 portalSize = new(200f, 600f);
             Vector2 drawPosition = PortalPosition - Main.screenPosition;
 
             if (PortalScale <= 0f)

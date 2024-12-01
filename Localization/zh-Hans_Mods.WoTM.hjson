@@ -23,7 +23,9 @@ Projectiles: {
 	// ExoelectricBlast.DisplayName: Exoelectric Blast
 	// RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor
 	// SpineOfHadesProjectile_Custom.DisplayName: Spine Of Hades
-	// TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter Projectile_ Custom
+	// TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter
+	// AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
+	// SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
 }
 
 NPCs: {
