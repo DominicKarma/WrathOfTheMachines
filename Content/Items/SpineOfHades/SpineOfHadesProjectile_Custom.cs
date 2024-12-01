@@ -91,7 +91,7 @@ namespace WoTM.Content.Items.RefractionRotor
             int animationTime = Owner.HeldMouseItem().useAnimation;
             int animationCycle = (int)AnimationCounter % 3;
             if (animationCycle == 2)
-                animationTime = (int)(animationTime * 1.25f);
+                animationTime = (int)(animationTime * 1.4f);
 
             float animationCompletion = Time / animationTime;
             float currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 4.75f);
@@ -116,7 +116,7 @@ namespace WoTM.Content.Items.RefractionRotor
 
                 // Forward lunge.
                 case 2:
-                    currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 0.9f);
+                    currentReachInterpolant = MathF.Pow(Utilities.Convert01To010(animationCompletion) + 0.001f, 0.7f);
                     currentReach = currentReachInterpolant * 800f;
                     SuperchargeInterpolant = Utilities.InverseLerpBump(0.2f, 0.4f, 0.6f, 0.8f, animationCompletion);
                     HorizontalStretch = SuperchargeInterpolant * 0.2f;
