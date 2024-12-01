@@ -7,9 +7,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using WoTM.Content.Items.RefractionRotor;
 
-namespace WoTM.Content.Items.SpinOfHades
+namespace WoTM.Content.Items.SpineOfHades
 {
     public class SpineOfHadesReworkManager : GlobalItem, IItemRename
     {

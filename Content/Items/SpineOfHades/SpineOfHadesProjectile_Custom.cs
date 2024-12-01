@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.Items.RefractionRotor
+namespace WoTM.Content.Items.SpineOfHades
 {
     public class SpineOfHadesProjectile_Custom : ModProjectile
     {
