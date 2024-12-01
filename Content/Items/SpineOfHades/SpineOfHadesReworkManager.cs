@@ -5,13 +5,20 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using WoTM.Content.Items.RefractionRotor;
 
 namespace WoTM.Content.Items.SpinOfHades
 {
-    public class SpineOfHadesReworkManager : GlobalItem
+    public class SpineOfHadesReworkManager : GlobalItem, IItemRename
     {
+        public int OverrideID => ModContent.ItemType<SpineOfThanatos>();
+
+        public LocalizedText? DisplayName => Language.GetText("Mods.WoTM.Items.SpineOfHades.DisplayName");
+
+        public LocalizedText? Tooltip => Language.GetText("Mods.WoTM.Items.SpineOfHades.Tooltip");
+
         /// <summary>
         /// The base damage done by the spin.
         /// </summary>
@@ -19,7 +26,7 @@ namespace WoTM.Content.Items.SpinOfHades
 
         public override void SetDefaults(Item item)
         {
-            if (item.type == ModContent.ItemType<SpineOfThanatos>())
+            if (item.type == OverrideID)
             {
                 item.width = item.height = 28;
                 item.damage = BaseDamage;
@@ -40,7 +47,7 @@ namespace WoTM.Content.Items.SpinOfHades
 
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if (item.type == ModContent.ItemType<SpineOfThanatos>())
+            if (item.type == OverrideID)
             {
                 Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, velocity.ToRotation(), 0f);
                 return false;

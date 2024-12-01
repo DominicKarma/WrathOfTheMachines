@@ -98,6 +98,13 @@ NPCs: {
 	ThanatosRename: XM-04 Hades
 }
 
+Items: {
+	SpineOfHades: {
+		DisplayName: Spine of Hades
+		Tooltip: Releases an electrically supercharged whip
+	}
+}
+
 Bestiary: {
 	Draedon: A disposable recon body for the esteemed scientist, Draedon. His unyielding dedication to the pursuit of knowledge is as extraordinary as his marked amorality.
 	Hades: One of Draedon's finest creations. This automaton expels built up heat and pressure through its vents, concentrating the resulting energy into potent wide-range attacks.
