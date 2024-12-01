@@ -13,7 +13,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// The base damage done by the atom splitter.
         /// </summary>
-        public static int BaseDamage => 400;
+        public static int BaseDamage => 1200;
 
         /// <summary>
         /// The starting speed of fired atom splitters.

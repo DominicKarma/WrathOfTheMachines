@@ -133,7 +133,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// </summary>
         public void RenderPortal(Vector2 portalPosition, float portalScale, float rotation)
         {
-            Vector2 portalSize = new Vector2(100f, 340f) * MathHelper.Lerp(0.925f, 1.1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly * 31f + Projectile.identity * 3f)) * Projectile.scale;
+            Vector2 portalSize = new Vector2(150f, 420f) * MathHelper.Lerp(0.925f, 1.1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly * 31f + Projectile.identity * 3f)) * Projectile.scale;
             Vector2 drawPosition = portalPosition - Main.screenPosition;
 
             if (portalScale <= 0f)

@@ -19,7 +19,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// The rate at which split spears can be summoned by this source.
         /// </summary>
-        public static int SplitSummonRate => 4;
+        public static int SplitSummonRate => 8;
 
         /// <summary>
         /// How far this source can search for a target.
