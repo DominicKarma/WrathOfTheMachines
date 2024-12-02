@@ -19,7 +19,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// How long this source for exist for, in frames.
         /// </summary>
-        public static int Lifetime => 60;
+        public static int Lifetime => 36;
 
         /// <summary>
         /// The rate at which split spears can be summoned by this source.
