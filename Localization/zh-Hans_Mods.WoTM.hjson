@@ -28,6 +28,8 @@ Projectiles: {
 	// SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
 	// ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
 	// ExoelectricFieldDestabilizerOrb.DisplayName: Exoelectric Field Destabilizer Orb
+	// SurgeDriverBlast.DisplayName: Surge Driver Blast
+	// SurgeDriverProjectile.DisplayName: Surge Driver Projectile
 }
 
 NPCs: {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -19,6 +20,11 @@ namespace WoTM.Content.Items.SurgeDriver
         /// The shoot timer for this cannon. Once it exceeds a certain threshold, the cannon fires.
         /// </summary>
         public ref float ShootTimer => ref Projectile.ai[0];
+
+        /// <summary>
+        /// How many shots have been fired by this cannon so far.
+        /// </summary>
+        public ref float ShootCounter => ref Projectile.ai[1];
 
         public override string Texture => "CalamityMod/Items/Weapons/Ranged/SurgeDriver";
 
@@ -46,15 +52,22 @@ namespace WoTM.Content.Items.SurgeDriver
             ShootTimer++;
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
-                Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 132f;
+                Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f;
                 if (Main.myPlayer == Projectile.owner)
                 {
-                    int lifetime = 23;
-                    float hue = Main.rand.NextFloat(0.023f, 0.081f);
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), blastSpawnPosition, Projectile.velocity, ModContent.ProjectileType<SurgeDriverBlast>(), Projectile.damage, Projectile.knockBack, Projectile.whoAmI, lifetime, hue);
+                    ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 2.75f);
+
+                    int lifetime = 15;
+                    float hue = Main.rand.NextFloat(0.053f, 0.123f);
+                    if (ShootCounter % 2f == 0f)
+                        hue += 0.33f;
+
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), blastSpawnPosition, Projectile.velocity, ModContent.ProjectileType<SurgeDriverBlast>(), Projectile.damage, Projectile.knockBack, Projectile.owner, lifetime, hue);
                 }
 
+                ShootCounter++;
                 ShootTimer = 0f;
+                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -0.23f);
                 Projectile.netUpdate = true;
             }
         }
@@ -81,7 +94,7 @@ namespace WoTM.Content.Items.SurgeDriver
             if (Main.myPlayer == Projectile.owner)
             {
                 Vector2 idealDirection = Projectile.SafeDirectionTo(Main.MouseWorld);
-                Vector2 newDirection = Vector2.Lerp(Projectile.velocity, idealDirection, 0.12f).SafeNormalize(Vector2.Zero);
+                Vector2 newDirection = Vector2.Lerp(Projectile.velocity, idealDirection, 0.15f).SafeNormalize(Vector2.Zero);
                 if (Projectile.velocity != newDirection)
                 {
                     Projectile.velocity = newDirection;
@@ -100,7 +113,7 @@ namespace WoTM.Content.Items.SurgeDriver
 
             float rotation = Projectile.rotation;
             SpriteEffects direction = SpriteEffects.None;
-            Vector2 origin = new(0.57f, 0.75f);
+            Vector2 origin = new(0.14f, 0.71f);
             if (MathF.Cos(rotation) < 0f)
             {
                 origin.X = 1f - origin.X;

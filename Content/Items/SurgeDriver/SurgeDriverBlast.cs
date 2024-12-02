@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using CalamityMod.Particles;
+using CalamityMod.Projectiles.Ranged;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.Particles;
 
 namespace WoTM.Content.Items.SurgeDriver
 {
@@ -43,16 +47,14 @@ namespace WoTM.Content.Items.SurgeDriver
 
         public override void SetDefaults()
         {
-            Projectile.width = 32;
-            Projectile.height = 32;
+            Projectile.width = 128;
+            Projectile.height = 128;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.timeLeft = 7200;
             Projectile.tileCollide = false;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 6;
-            Projectile.scale = 1f;
-            Projectile.Opacity = 0f;
+            Projectile.localNPCHitCooldown = 4;
             Projectile.DamageType = DamageClass.Ranged;
         }
 
@@ -65,25 +67,68 @@ namespace WoTM.Content.Items.SurgeDriver
             Time++;
             if (Time >= Lifetime)
                 Projectile.Kill();
+
+            float lifetimeRatio = Time / Lifetime;
+            Projectile.Opacity = Utilities.InverseLerp(1f, 0.55f, lifetimeRatio);
+            Projectile.scale = Utilities.InverseLerpBump(0f, 0.2f, 0.45f, 1f, lifetimeRatio);
         }
 
         public void ReleaseParticles()
         {
+            StrongBloom weakBloom = new(Projectile.Center, Vector2.Zero, LaserColorFunction(0.5f).HueShift(0.04f) * 0.4f, 1.25f, 9);
+            GeneralParticleHandler.SpawnParticle(weakBloom);
+
+            StrongBloom bloom = new(Projectile.Center, Vector2.Zero, LaserColorFunction(0.5f) * 0.7f, 0.7f, 7);
+            GeneralParticleHandler.SpawnParticle(bloom);
+
+            StrongBloom glow = new(Projectile.Center, Vector2.Zero, Color.White, 0.2f, 13);
+            GeneralParticleHandler.SpawnParticle(glow);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 sparkSpawnPosition = Projectile.Center;
+                ElectricSparkParticle spark = new(sparkSpawnPosition, Main.rand.NextVector2Circular(11f, 11f), Color.Wheat, LaserColorFunction(0.5f) * 0.8f, 14, Vector2.One * 0.2f);
+                spark.Spawn();
+            }
+
+            Vector2 perpendicular = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2);
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 pixelSpawnPosition = Projectile.Center + Projectile.velocity * Main.rand.NextFloat(LaserLength) + perpendicular * Main.rand.NextFloatDirection() * Projectile.width * 0.4f;
+                BloomPixelParticle pixel = new(pixelSpawnPosition, Projectile.velocity * Main.rand.NextFloat(10f, 27f), Color.White, LaserColorFunction(0.5f) * 0.7f, 13, Vector2.One * Main.rand.NextFloat(0.8f, 1.6f));
+                pixel.Spawn();
+            }
         }
 
-        public float LaserWidthFunction(float completionRatio) => Projectile.scale * 32f;
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (Main.myPlayer == Projectile.owner && Owner.ownedProjectileCounts[ModContent.ProjectileType<PrismExplosionLarge>()] <= 3)
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<PrismExplosionLarge>(), 0, 0f, Projectile.owner).MaxUpdates = 6;
+        }
 
-        public Color LaserColorFunction(float completionRatio) => Projectile.GetAlpha(Main.hslToRgb(LaserHue, 0.93f, 0.55f));
+        public float LaserWidthFunction(float completionRatio)
+        {
+            float maxWidth = Projectile.width * MathHelper.SmoothStep(0.7f, 1f, Utilities.Cos01(MathHelper.Pi * completionRatio * 3f - Main.GlobalTimeWrappedHourly * 20f));
+            return Projectile.scale * MathHelper.SmoothStep(0f, maxWidth, Utilities.InverseLerp(0f, 0.1f, completionRatio));
+        }
+
+        public Color LaserColorFunction(float completionRatio) => Projectile.GetAlpha(Main.hslToRgb(LaserHue, 0.93f, 0.55f)) * Utilities.InverseLerp(1f, 0.67f, completionRatio);
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, null, Pixelate: true);
+            ManagedShader blastShader = ShaderManager.GetShader("WoTM.SurgeDriverBlastShader");
+            blastShader.TrySetParameter("innerGlowColor", LaserColorFunction(0.5f).HueShift(-0.07f));
+            blastShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 1, SamplerState.LinearWrap);
+            blastShader.SetTexture(TextureAssets.Extra[ExtrasID.RainbowRodTrailShape], 2, SamplerState.LinearWrap);
+            blastShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 3, SamplerState.LinearWrap);
+
+            PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, null, Pixelate: true, Shader: blastShader);
             List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(12, LaserLength);
 
             PrimitiveRenderer.RenderTrail(laserControlPoints, settings, 48);
         }
 
-        public override bool? CanDamage() => false;
+        public override bool? CanDamage() => true;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
