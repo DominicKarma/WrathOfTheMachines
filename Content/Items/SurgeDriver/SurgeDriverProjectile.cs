@@ -1,9 +1,11 @@
 ﻿using System;
+using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
@@ -57,6 +59,8 @@ namespace WoTM.Content.Items.SurgeDriver
             ShootTimer++;
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
+                SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, Projectile.Center);
+
                 Vector2 upwardCorrection = Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * Projectile.scale * Projectile.velocity.X.NonZeroSign() * 20f;
                 Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f + upwardCorrection;
                 if (Main.myPlayer == Projectile.owner)

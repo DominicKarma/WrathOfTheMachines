@@ -1,9 +1,11 @@
 ﻿using System;
+using CalamityMod.Items.Weapons.DraedonsArsenal;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -78,6 +80,8 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
 
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
+                SoundEngine.PlaySound(TeslaCannon.FireSound, Projectile.Center);
+
                 ShootTimer = 0f;
                 Projectile.netUpdate = true;
 

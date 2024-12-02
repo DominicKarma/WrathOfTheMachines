@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using CalamityMod;
 using CalamityMod.DataStructures;
 using CalamityMod.Particles;
+using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -130,6 +132,12 @@ namespace WoTM.Content.Items.SpineOfHades
                     }
 
                     break;
+            }
+
+            if (Time == 1f)
+            {
+                SoundStyle sound = CommonCalamitySounds.LargeWeaponFireSound;
+                SoundEngine.PlaySound(sound with { MaxInstances = 0, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, Volume = 3f }, Owner.Center);
             }
 
             float swingOffsetAngle = MathHelper.SmoothStep(-SwingOffsetArc, SwingOffsetArc, animationCompletion) * swingDirection;

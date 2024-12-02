@@ -1,9 +1,11 @@
 ﻿using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ModLoader;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
@@ -40,6 +42,17 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
         /// </summary>
         public ref float Time => ref Projectile.ai[2];
 
+        /// <summary>
+        /// The loop sound instance for this orb.
+        /// </summary>
+        public LoopedSoundInstance? TeslaLoopSoundInstance
+        {
+            get;
+            private set;
+        }
+
+        public static readonly SoundStyle TeslaLoopSound = new("WoTM/Assets/Sounds/Custom/ItemReworks/TeslaSphereLoop");
+
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
         public override void SetDefaults()
@@ -60,6 +73,9 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
         public override void AI()
         {
             ReleaseParticles();
+
+            TeslaLoopSoundInstance ??= LoopedSoundManager.CreateNew(TeslaLoopSound with { Volume = 0.6f, MaxInstances = 0 }, () => !Projectile.active || Projectile.type != Type);
+            TeslaLoopSoundInstance.Update(Projectile.Center);
 
             Time++;
             if (Launched)
@@ -149,6 +165,8 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
         {
             Projectile.velocity *= 0.17f;
         }
+
+        public override void OnKill(int timeLeft) => TeslaLoopSoundInstance?.Stop();
 
         public override bool PreDraw(ref Color lightColor)
         {
