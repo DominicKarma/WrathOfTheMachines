@@ -108,7 +108,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
         {
             if (Main.myPlayer == Projectile.owner)
             {
-                Vector2 hoverDestination = Owner.RotatedRelativePoint(Owner.MountedCenter) + Owner.SafeDirectionTo(Main.MouseWorld) * Projectile.width * Projectile.scale * 0.81f;
+                Vector2 hoverDestination = Owner.RotatedRelativePoint(Owner.MountedCenter) + Owner.SafeDirectionTo(Main.MouseWorld) * Projectile.width * Projectile.scale * 1.34f;
                 if (!Projectile.WithinRange(hoverDestination, 8f))
                 {
                     Projectile.SmoothFlyNear(hoverDestination, 0.14f, 0.8f);
