@@ -26,6 +26,8 @@ Projectiles: {
 	TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter
 	AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
 	SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
+	ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
+	ExoelectricFieldDestabilizerOrb.DisplayName: Exoelectric Field Destabilizer Orb
 }
 
 NPCs: {
@@ -102,6 +104,11 @@ NPCs: {
 }
 
 Items: {
+	ExoelectricFieldDestabilizer: {
+		DisplayName: Exoelectric Field Destabilizer
+		Tooltip: Charges up and releases enormous electric spheres
+	}
+
 	SpineOfHades: {
 		DisplayName: Spine of Hades
 		Tooltip: Releases an electrically supercharged whip
