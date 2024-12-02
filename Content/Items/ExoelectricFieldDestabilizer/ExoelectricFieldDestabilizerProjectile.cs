@@ -27,9 +27,9 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
         public Player Owner => Main.player[Projectile.owner];
 
         /// <summary>
-        /// How long this cannon has existed for, in frames.
+        /// The shoot timer for this cannon. Once it exceeds a certain threshold, the cannon fires.
         /// </summary>
-        public ref float Time => ref Projectile.ai[0];
+        public ref float ShootTimer => ref Projectile.ai[0];
 
         public override string Texture => "CalamityMod/Items/Weapons/Ranged/TheJailor";
 
@@ -54,18 +54,10 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             if (Owner.channel)
                 Projectile.timeLeft = 2;
 
-            Time++;
-
-            float electricityCreationChance = Utilities.InverseLerp(0f, 30f, Time).Squared();
-            if (Main.myPlayer == Projectile.owner && Main.rand.NextBool(electricityCreationChance))
-            {
-                Vector2 endOfCannon = Projectile.Center + Projectile.velocity * Projectile.scale * Squish * 50f;
-                Vector2 arcLength = Projectile.velocity.RotatedByRandom(1.04f) * Main.rand.NextFloat(300f);
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), endOfCannon, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, Projectile.owner, Main.rand.Next(8, 13));
-            }
+            ShootTimer++;
 
             // Summon a tesla sphere for the player on the first frame.
-            if (Main.myPlayer == Projectile.owner && Time == 1f)
+            if (Main.myPlayer == Projectile.owner && ShootTimer == 1f)
             {
                 Vector2 orbVelocity = Projectile.velocity * 30f;
                 if (Vector2.Dot(Owner.velocity, orbVelocity) > 0f)
@@ -84,14 +76,9 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
                     Projectile.Kill();
             }
 
-            float squishTime = MathHelper.TwoPi * Time / 13.5f;
-            float squishX = Utilities.Cos01(squishTime) * 0.15f;
-            float squishY = Utilities.Cos01(squishTime * 1.2f) * 0.1f;
-            Squish = new Vector2(1f + squishX, 1f + squishY);
-
-            if (Time >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
+            if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
-                Time = 0f;
+                ShootTimer = 0f;
                 Projectile.netUpdate = true;
 
                 int orbID = ModContent.ProjectileType<ExoelectricFieldDestabilizerOrb>();
@@ -106,6 +93,11 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
                     }
                 }
             }
+
+            float squishTime = MathHelper.TwoPi * ShootTimer / 13.5f;
+            float squishX = Utilities.Cos01(squishTime) * 0.15f;
+            float squishY = Utilities.Cos01(squishTime * 1.2f) * 0.1f;
+            Squish = new Vector2(1f + squishX, 1f + squishY);
         }
 
         /// <summary>
@@ -140,6 +132,20 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             }
 
             Projectile.rotation = Projectile.velocity.ToRotation();
+        }
+
+        /// <summary>
+        /// Creates electric arcs at the end of the cannon.
+        /// </summary>
+        public void CreateElectricity()
+        {
+            float electricityCreationChance = Utilities.InverseLerp(0f, 30f, ShootTimer).Squared();
+            if (Main.myPlayer == Projectile.owner && Main.rand.NextBool(electricityCreationChance))
+            {
+                Vector2 endOfCannon = Projectile.Center + Projectile.velocity * Projectile.scale * Squish * 50f;
+                Vector2 arcLength = Projectile.velocity.RotatedByRandom(1.04f) * Main.rand.NextFloat(300f);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), endOfCannon, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, Projectile.owner, Main.rand.Next(8, 13));
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)
