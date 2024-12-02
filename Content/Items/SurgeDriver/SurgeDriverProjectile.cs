@@ -12,19 +12,24 @@ namespace WoTM.Content.Items.SurgeDriver
     public class SurgeDriverProjectile : ModProjectile
     {
         /// <summary>
-        /// The owner of gun cannon.
+        /// The owner of this gun.
         /// </summary>
         public Player Owner => Main.player[Projectile.owner];
 
         /// <summary>
-        /// The shoot timer for this cannon. Once it exceeds a certain threshold, the cannon fires.
+        /// The shoot timer for this gun. Once it exceeds a certain threshold, the gun fires.
         /// </summary>
         public ref float ShootTimer => ref Projectile.ai[0];
 
         /// <summary>
-        /// How many shots have been fired by this cannon so far.
+        /// How many shots have been fired by this gun so far.
         /// </summary>
         public ref float ShootCounter => ref Projectile.ai[1];
+
+        /// <summary>
+        /// The amount of positional recoil on this gun.
+        /// </summary>
+        public ref float RecoilDistance => ref Projectile.ai[2];
 
         public override string Texture => "CalamityMod/Items/Weapons/Ranged/SurgeDriver";
 
@@ -52,7 +57,8 @@ namespace WoTM.Content.Items.SurgeDriver
             ShootTimer++;
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
-                Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f;
+                Vector2 upwardCorrection = Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * Projectile.scale * Projectile.velocity.X.NonZeroSign() * 20f;
+                Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f + upwardCorrection;
                 if (Main.myPlayer == Projectile.owner)
                 {
                     ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 2.75f);
@@ -67,9 +73,12 @@ namespace WoTM.Content.Items.SurgeDriver
 
                 ShootCounter++;
                 ShootTimer = 0f;
-                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -0.23f);
+                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -0.09f);
+                RecoilDistance -= 15f;
                 Projectile.netUpdate = true;
             }
+
+            RecoilDistance *= 0.81f;
         }
 
         /// <summary>
@@ -83,7 +92,7 @@ namespace WoTM.Content.Items.SurgeDriver
             Owner.ChangeDir(Projectile.velocity.X.NonZeroSign());
             Owner.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.velocity.ToRotation() - MathHelper.PiOver2);
 
-            Projectile.Center = Owner.RotatedRelativePoint(Owner.MountedCenter);
+            Projectile.Center = Owner.RotatedRelativePoint(Owner.MountedCenter + Projectile.velocity * RecoilDistance);
         }
 
         /// <summary>

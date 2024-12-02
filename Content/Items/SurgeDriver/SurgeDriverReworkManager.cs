@@ -47,6 +47,15 @@ namespace WoTM.Content.Items.SurgeDriver
             return base.CanConsumeAmmo(weapon, ammo, player);
         }
 
+        public override bool CanRightClick(Item item)
+        {
+            // Remove the right click functionality.
+            if (item.type == ModContent.ItemType<SurgeDriverClass>())
+                return false;
+
+            return base.CanRightClick(item);
+        }
+
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (item.type == ModContent.ItemType<SurgeDriverClass>())
