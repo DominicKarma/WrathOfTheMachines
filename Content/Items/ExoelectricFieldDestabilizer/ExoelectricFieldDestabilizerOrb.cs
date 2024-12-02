@@ -80,7 +80,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
 
             if (Disappearing)
             {
-                Projectile.velocity *= 0.94f;
+                Projectile.velocity *= 0.84f;
                 Projectile.scale *= 0.9f;
                 if (Projectile.scale <= 0.01f)
                     Projectile.Kill();
