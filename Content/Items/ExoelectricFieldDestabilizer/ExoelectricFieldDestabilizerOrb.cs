@@ -51,7 +51,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             Projectile.timeLeft = 9000000;
             Projectile.tileCollide = false;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 8;
+            Projectile.localNPCHitCooldown = 6;
             Projectile.scale = 1f;
             Projectile.Opacity = 0f;
             Projectile.DamageType = DamageClass.Ranged;
@@ -96,7 +96,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             }
 
             Projectile.Opacity = Utilities.InverseLerp(0f, 17f, Time);
-            Projectile.scale = MathHelper.SmoothStep(0f, 1f, Projectile.Opacity);
+            Projectile.scale = MathHelper.SmoothStep(0f, 1f, Projectile.Opacity.Squared());
 
             AimAheadOfMouse();
         }
@@ -147,7 +147,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.velocity *= 0.2f;
+            Projectile.velocity *= 0.17f;
         }
 
         public override bool PreDraw(ref Color lightColor)

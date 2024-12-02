@@ -47,6 +47,15 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             }
         }
 
+        public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
+        {
+            // Ensure that the cannon doesn't consume ammo when creating the cannon projectile.
+            if (weapon.type == OverrideID)
+                return player.ownedProjectileCounts[weapon.shoot] >= 1;
+
+            return base.CanConsumeAmmo(weapon, ammo, player);
+        }
+
         public override bool Shoot(Item item, Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (item.type == OverrideID)

@@ -71,12 +71,17 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
                 if (Vector2.Dot(Owner.velocity, orbVelocity) > 0f)
                     orbVelocity += Owner.velocity * 5f;
 
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, orbVelocity, ModContent.ProjectileType<ExoelectricFieldDestabilizerOrb>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-                ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 4f);
+                if (Owner.PickAmmo(Owner.HeldMouseItem(), out _, out _, out int damage, out float knockback, out _))
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, orbVelocity, ModContent.ProjectileType<ExoelectricFieldDestabilizerOrb>(), damage, knockback, Projectile.owner);
+                    ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 4f);
 
-                // Apply recoil to the cannon.
-                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -1.04f);
-                Projectile.netUpdate = true;
+                    // Apply recoil to the cannon.
+                    Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -1.04f);
+                    Projectile.netUpdate = true;
+                }
+                else
+                    Projectile.Kill();
             }
 
             float squishTime = MathHelper.TwoPi * Time / 13.5f;
