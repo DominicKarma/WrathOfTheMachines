@@ -137,7 +137,7 @@ namespace WoTM.Content.Items.SpineOfHades
             if (Time == 1f)
             {
                 SoundStyle sound = CommonCalamitySounds.LargeWeaponFireSound;
-                SoundEngine.PlaySound(sound with { MaxInstances = 0, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, Volume = 3f }, Owner.Center);
+                SoundEngine.PlaySound(sound with { MaxInstances = 0, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, Volume = 0.9f }, Owner.Center);
             }
 
             float swingOffsetAngle = MathHelper.SmoothStep(-SwingOffsetArc, SwingOffsetArc, animationCompletion) * swingDirection;

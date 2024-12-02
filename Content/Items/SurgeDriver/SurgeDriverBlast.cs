@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using CalamityMod.Particles;
 using CalamityMod.Projectiles.Ranged;
+using CalamityMod.Sounds;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -102,6 +104,7 @@ namespace WoTM.Content.Items.SurgeDriver
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaExplosionSound with { Volume = 0.35f, MaxInstances = 0 }, target.Center);
             if (Main.myPlayer == Projectile.owner && Owner.ownedProjectileCounts[ModContent.ProjectileType<PrismExplosionLarge>()] <= 3)
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), target.Center, Vector2.Zero, ModContent.ProjectileType<PrismExplosionLarge>(), 0, 0f, Projectile.owner).MaxUpdates = 6;
         }

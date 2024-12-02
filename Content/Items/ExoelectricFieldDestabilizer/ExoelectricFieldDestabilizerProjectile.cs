@@ -80,7 +80,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
 
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
-                SoundEngine.PlaySound(TeslaCannon.FireSound, Projectile.Center);
+                SoundEngine.PlaySound(TeslaCannon.FireSound with { MaxInstances = 0, Volume = 0.7f }, Projectile.Center);
 
                 ShootTimer = 0f;
                 Projectile.netUpdate = true;
