@@ -31,7 +31,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
                 item.height = 70;
                 item.damage = BaseDamage;
                 item.DamageType = DamageClass.Ranged;
-                item.useTime = item.useAnimation = 28;
+                item.useTime = item.useAnimation = 22;
                 item.useStyle = ItemUseStyleID.Shoot;
                 item.noMelee = true;
                 item.knockBack = 8f;

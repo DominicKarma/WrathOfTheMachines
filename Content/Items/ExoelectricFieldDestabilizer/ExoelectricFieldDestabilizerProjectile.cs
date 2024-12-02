@@ -89,7 +89,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             float squishY = Utilities.Cos01(squishTime * 1.2f) * 0.1f;
             Squish = new Vector2(1f + squishX, 1f + squishY);
 
-            if (Time >= 45f)
+            if (Time >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
                 Time = 0f;
                 Projectile.netUpdate = true;
