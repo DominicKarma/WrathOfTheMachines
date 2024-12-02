@@ -168,7 +168,7 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
             Main.spriteBatch.PrepareForShaders();
 
             ManagedShader shader = ShaderManager.GetShader("WoTM.LargeTeslaSphereShader");
-            shader.TrySetParameter("textureSize0", Projectile.Size);
+            shader.TrySetParameter("pixelationFactor", Vector2.One * 2f / Projectile.Size);
             shader.TrySetParameter("posterizationPrecision", 14f);
             shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
             shader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 2, SamplerState.LinearWrap);

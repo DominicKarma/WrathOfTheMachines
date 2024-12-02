@@ -3,7 +3,8 @@ sampler electricityNoiseTexture : register(s1);
 sampler distanceNoiseTexture : register(s2);
 
 float globalTime;
-float2 textureSize0;
+float posterizationPrecision;
+float2 pixelationFactor;
 
 float CalculateOuterGlowIntensity(float2 coords, float distanceFromCenter)
 {
@@ -57,6 +58,8 @@ float CalculateElectricityIntensity(float2 coords, float distanceFromCenter)
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
+    coords = round(coords / pixelationFactor) * pixelationFactor;
+    
     // Calculate the distance from the center at the start, rather than multiple times in function areas, and apply a bit of noise to it to make the successive calculations a bit more rough, and not as
     // mathematically perfect. This only affects the distance calculations by a maximum of 0.02 (where the overall circle has a radius of 0.5), ensuring that the effect is noticeable but subtle.
     // This also uses the same polar calculation from before, to ensure that the distance offset travels in an outflow manner.
@@ -89,6 +92,8 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     // This effect naturally fades off based on distance, so that it doesn't appear beyond the edge of the circle.
     // UPDATE -- This effect has been made stronger, to make the colors a bit less pastel.
     glowColor += float4(0, 0.45, 1, 1) * (1 - glowColor.a) * smoothstep(0.33, 0.2, distanceFromCenter) * 0.9;
+    
+    glowColor = round(glowColor * posterizationPrecision) / posterizationPrecision;
     
     return clamp(glowColor, 0, 2) * sampleColor.a;
 }
