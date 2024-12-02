@@ -9,6 +9,7 @@ using SurgeDriverClass = CalamityMod.Items.Weapons.Ranged.SurgeDriver;
 
 namespace WoTM.Content.Items.SurgeDriver
 {
+    // TODO -- Remove right click for good.
     public class SurgeDriverReworkManager : GlobalItem
     {
         /// <summary>
