@@ -72,9 +72,10 @@ namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
                     orbVelocity += Owner.velocity * 5f;
 
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, orbVelocity, ModContent.ProjectileType<ExoelectricFieldDestabilizerOrb>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
-
                 ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 4f);
-                Projectile.velocity.Y -= 2f;
+
+                // Apply recoil to the cannon.
+                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.velocity.X.NonZeroSign() * -1.04f);
                 Projectile.netUpdate = true;
             }
 
