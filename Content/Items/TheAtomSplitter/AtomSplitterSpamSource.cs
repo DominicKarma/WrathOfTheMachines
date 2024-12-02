@@ -12,6 +12,11 @@ namespace WoTM.Content.Items.TheAtomSplitter
     public class AtomSplitterSpamSource : ModProjectile
     {
         /// <summary>
+        /// The preferredt target index for this source.
+        /// </summary>
+        public int PreferredTargetIndex => (int)Projectile.ai[0];
+
+        /// <summary>
         /// How long this source for exist for, in frames.
         /// </summary>
         public static int Lifetime => 60;
@@ -19,7 +24,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// The rate at which split spears can be summoned by this source.
         /// </summary>
-        public static int SplitSummonRate => 8;
+        public static int SplitSummonRate => 6;
 
         /// <summary>
         /// How far this source can search for a target.
@@ -44,9 +49,12 @@ namespace WoTM.Content.Items.TheAtomSplitter
             if (Projectile.timeLeft % SplitSummonRate == 0)
             {
                 NPC? potentialTarget = Projectile.FindTargetWithinRange(TargetingRange);
+                if (PreferredTargetIndex != -1 && Main.npc[PreferredTargetIndex].CanBeChasedBy())
+                    potentialTarget = Main.npc[PreferredTargetIndex];
+
                 if (potentialTarget is not null)
                 {
-                    Vector2 spearSpawnPosition = potentialTarget.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(180f, 335f);
+                    Vector2 spearSpawnPosition = potentialTarget.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(140f, 265f);
 
                     SoundEngine.PlaySound(TheAtomSplitterProjectile_Custom.WarpSound with { MaxInstances = 0, Volume = 0.1f }, spearSpawnPosition);
                     if (Main.myPlayer == Projectile.owner)

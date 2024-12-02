@@ -1,5 +1,6 @@
-﻿using System.IO;
-using CalamityMod;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -42,7 +43,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// How long this spear has existed for, in frames.
         /// </summary>
-        public ref float Time => ref Projectile.ai[0];
+        public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
         /// How long this spear (and by extension its portal) should exist before dying.
@@ -74,7 +75,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
             Projectile.tileCollide = false;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * 3;
-            Projectile.DamageType = ModContent.GetInstance<RogueDamageClass>();
+            Projectile.DamageType = ModContent.GetInstance<CalamityMod.RogueDamageClass>();
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.WriteVector2(PortalPosition);
@@ -152,7 +153,22 @@ namespace WoTM.Content.Items.TheAtomSplitter
         public override void OnKill(int timeLeft)
         {
             if (Main.myPlayer == Projectile.owner)
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.player[Projectile.owner].Center, Vector2.Zero, ModContent.ProjectileType<AtomSplitterSpamSource>(), Projectile.damage, 0f, Projectile.owner);
+            {
+                List<NPC> potentialTargets = [];
+                foreach (NPC npc in Main.ActiveNPCs)
+                {
+                    if (npc.CanBeChasedBy())
+                        potentialTargets.Add(npc);
+                }
+
+                potentialTargets = potentialTargets.OrderBy(n =>
+                {
+                    return -Projectile.SafeDirectionTo(n.Center).AngleBetween(Projectile.velocity) + PortalPosition.Distance(n.Center) * 0.015f;
+                }).ToList();
+                int preferredTargetIndex = potentialTargets.FirstOrDefault()?.whoAmI ?? -1;
+
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Main.player[Projectile.owner].Center, Vector2.Zero, ModContent.ProjectileType<AtomSplitterSpamSource>(), Projectile.damage, 0f, Projectile.owner, preferredTargetIndex);
+            }
         }
 
         /// <summary>

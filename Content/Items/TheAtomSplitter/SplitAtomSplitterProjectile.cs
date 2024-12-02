@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using CalamityMod;
+using CalamityMod.Particles;
+using CalamityMod.Projectiles.Melee;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -49,7 +51,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
         /// <summary>
         /// How long this spear should exist before dying.
         /// </summary>
-        public static int Lifetime => 50;
+        public static int Lifetime => 72;
 
         public override string Texture => "CalamityMod/Projectiles/Rogue/TheAtomSplitterDuplicate";
 
@@ -68,6 +70,7 @@ namespace WoTM.Content.Items.TheAtomSplitter
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.timeLeft = Lifetime;
+            Projectile.MaxUpdates = 2;
             Projectile.tileCollide = false;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 5;
@@ -94,13 +97,26 @@ namespace WoTM.Content.Items.TheAtomSplitter
             if (StartingPortalPosition == Vector2.Zero)
             {
                 StartingPortalPosition = Projectile.Center;
-                EndingPortalPosition = StartingPortalPosition + Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(350f, 450f);
+                EndingPortalPosition = StartingPortalPosition + Projectile.velocity.SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(250f, 350f);
             }
 
             if (Projectile.WithinRange(EndingPortalPosition, 100f))
                 Projectile.damage = 0;
 
             Time++;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Color impactColor = Utilities.MulticolorLerp(Main.rand.NextFloat(), Color.Aqua, Color.Lime, Color.Yellow);
+            StrongBloom impact = new(target.Center, Vector2.Zero, impactColor, 0.96f, 9);
+            GeneralParticleHandler.SpawnParticle(impact);
+
+            StrongBloom heatCore = new(target.Center, Vector2.Zero, Color.Wheat, 0.6f, 9);
+            GeneralParticleHandler.SpawnParticle(heatCore);
+
+            if (Main.myPlayer == Projectile.owner)
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), target.Center, Projectile.velocity.SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<ExobeamSlash>(), 0, 0f, Projectile.owner);
         }
 
         /// <summary>
@@ -157,8 +173,8 @@ namespace WoTM.Content.Items.TheAtomSplitter
         public override bool PreDraw(ref Color lightColor)
         {
             Main.spriteBatch.PrepareForShaders();
-            RenderPortal(StartingPortalPosition, Utilities.InverseLerpBump(0f, 5f, 16f, 27f, Time), Projectile.velocity.ToRotation());
-            RenderPortal(EndingPortalPosition, Utilities.InverseLerp(25f, 5f, Lifetime - Time), Projectile.velocity.ToRotation() + MathHelper.Pi);
+            RenderPortal(StartingPortalPosition, Utilities.InverseLerpBump(0f, 0.2f, 0.25f, 0.5f, Time / Lifetime), Projectile.velocity.ToRotation());
+            RenderPortal(EndingPortalPosition, Utilities.InverseLerpBump(0f, 0.2f, 0.3f, 1f, Time / Lifetime), Projectile.velocity.ToRotation() + MathHelper.Pi);
             RenderSpear();
             Main.spriteBatch.ResetToDefault();
 
