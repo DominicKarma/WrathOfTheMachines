@@ -128,8 +128,6 @@ namespace WoTM.Content.Items.SurgeDriver
             PrimitiveRenderer.RenderTrail(laserControlPoints, settings, 48);
         }
 
-        public override bool? CanDamage() => true;
-
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float _ = 0f;
