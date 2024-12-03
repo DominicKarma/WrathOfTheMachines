@@ -120,10 +120,11 @@ namespace WoTM.Content.Items.SurgeDriver
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             ManagedShader blastShader = ShaderManager.GetShader("WoTM.SurgeDriverBlastShader");
+            blastShader.TrySetParameter("noiseOffset", Projectile.identity / 7f);
             blastShader.TrySetParameter("innerGlowColor", LaserColorFunction(0.5f).HueShift(-0.07f));
             blastShader.SetTexture(TextureAssets.Extra[ExtrasID.FlameLashTrailShape], 1, SamplerState.LinearWrap);
             blastShader.SetTexture(TextureAssets.Extra[ExtrasID.RainbowRodTrailShape], 2, SamplerState.LinearWrap);
-            blastShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 3, SamplerState.LinearWrap);
+            blastShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 3, SamplerState.LinearWrap);
 
             PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, null, Pixelate: true, Shader: blastShader);
             List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(12, LaserLength);
