@@ -66,7 +66,7 @@ namespace WoTM.Content.Items.SurgeDriver
                 Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f + upwardCorrection;
                 if (Main.myPlayer == Projectile.owner)
                 {
-                    ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 2.75f);
+                    ScreenShakeSystem.StartShakeAtPoint(Owner.Center, 2.2f);
 
                     int lifetime = 15;
                     float hue = Main.rand.NextFloat(0.053f, 0.123f);
