@@ -1,5 +1,4 @@
 ﻿using System;
-using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -33,6 +32,8 @@ namespace WoTM.Content.Items.SurgeDriver
         /// </summary>
         public ref float RecoilDistance => ref Projectile.ai[2];
 
+        public static readonly SoundStyle FireSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ItemReworks/SurgeDriverFire", 3) with { PitchVariance = 0.176f };
+
         public override string Texture => "CalamityMod/Items/Weapons/Ranged/SurgeDriver";
 
         public override void SetDefaults()
@@ -59,7 +60,7 @@ namespace WoTM.Content.Items.SurgeDriver
             ShootTimer++;
             if (ShootTimer >= Owner.HeldMouseItem().useAnimation * Projectile.MaxUpdates)
             {
-                SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, Projectile.Center);
+                SoundEngine.PlaySound(FireSound with { MaxInstances = 0 }, Projectile.Center);
 
                 Vector2 upwardCorrection = Projectile.velocity.RotatedBy(-MathHelper.PiOver2) * Projectile.scale * Projectile.velocity.X.NonZeroSign() * 20f;
                 Vector2 blastSpawnPosition = Projectile.Center + Projectile.velocity * Projectile.scale * 160f + upwardCorrection;
