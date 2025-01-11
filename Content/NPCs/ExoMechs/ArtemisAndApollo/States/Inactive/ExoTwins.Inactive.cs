@@ -3,7 +3,6 @@ using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo

@@ -50,7 +50,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon
         /// <summary>
         /// The siren sound played as the Exo Mechs wait to be summoned.
         /// </summary>
-        public static readonly SoundStyle SirenSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/GeneralExoMechs/ExoMechSiren");
+        public static readonly SoundStyle SirenSound = new("WoTM/Assets/Sounds/Custom/GeneralExoMechs/ExoMechSiren");
 
         /// <summary>
         /// The monologue that Draedon uses upon the player choosing an Exo Mech, assuming he hasn't spoken to the player before.

@@ -132,7 +132,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             for (int i = 0; i < palette.Length; i++)
                 palette[i] = Color.Lerp(CalamityUtils.ExoPalette[i], Color.White, 0.25f).ToVector3();
 
-            ManagedShader healthBarShader = ShaderManager.GetShader("FargowiltasCrossmod.ExoMechHealthBarShader");
+            ManagedShader healthBarShader = ShaderManager.GetShader("WoTM.ExoMechHealthBarShader");
             healthBarShader.TrySetParameter("imageSize", barTexture.Size());
             healthBarShader.TrySetParameter("horizontalSquish", lifeRatio);
             healthBarShader.TrySetParameter("sourceRectangle", new Vector4(barFrame.X, barFrame.Y, barFrame.Width, barFrame.Height));

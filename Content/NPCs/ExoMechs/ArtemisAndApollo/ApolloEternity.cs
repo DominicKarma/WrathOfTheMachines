@@ -10,7 +10,6 @@ using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using CalamityMod.UI;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -268,9 +267,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            BaseTexture = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/Apollo");
-            Glowmask = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/ApolloGlow");
-            DestroyedTexture = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/ApolloDestroyed");
+            BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Apollo");
+            Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ApolloGlow");
+            DestroyedTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ApolloDestroyed");
         }
 
         public override void Unload()
@@ -523,7 +522,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             for (int i = 0; i < flamePositions.Length; i++)
                 flamePositions[i] = NPC.Center - NPC.oldRot[i].ToRotationVector2() * (i * 90f - 96f);
 
-            ManagedShader flameShader = ShaderManager.GetShader("FargowiltasCrossmod.FlameEngulfShader");
+            ManagedShader flameShader = ShaderManager.GetShader("WoTM.FlameEngulfShader");
             flameShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             flameShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
 

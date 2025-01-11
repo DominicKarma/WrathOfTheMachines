@@ -11,7 +11,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
@@ -76,12 +75,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <summary>
         /// The sound played when Ares charges up a pulse cannon.
         /// </summary>
-        public static readonly SoundStyle CannonChargeUpSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/PulseCannonCharge") with { Volume = 1.2f, MaxInstances = 0 };
+        public static readonly SoundStyle CannonChargeUpSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/PulseCannonCharge") with { Volume = 1.2f, MaxInstances = 0 };
 
         /// <summary>
         /// The sound played when Ares fires from one of his pulse cannons.
         /// </summary>
-        public static readonly SoundStyle CannonFireSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/PulseCannonFire") with { MaxInstances = 0 };
+        public static readonly SoundStyle CannonFireSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/PulseCannonFire") with { MaxInstances = 0 };
 
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<ThanatosHead>(), ModContent.NPCType<AresBody>()];
 

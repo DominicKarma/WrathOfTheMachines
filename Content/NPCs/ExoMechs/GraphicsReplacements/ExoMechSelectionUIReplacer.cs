@@ -73,7 +73,7 @@ namespace WoTM.Content.NPCs.ExoMechs.GraphicsReplacements
             AresIcon = new(ExoMech.Prime, "Mods.WoTM.UI.AresIconMessage", Vector2.UnitY * -60f, aresIconTexture, ExoMechSelectionUI.AresHoverSound);
 
             var artemisApolloIconTexture = LazyAsset<Texture2D>.Request("CalamityMod/UI/DraedonSummoning/HeadIcon_ArtemisApollo");
-            var artemisApolloHoverSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/GeneralExoMechs/ExoTwinsIconHover");
+            var artemisApolloHoverSound = new SoundStyle("WoTM/Assets/Sounds/Custom/GeneralExoMechs/ExoTwinsIconHover");
             ArtemisAndApolloIcon = new(ExoMech.Twins, "Mods.WoTM.UI.ArtemisAndApolloIconMessage", new(64f, -46f), artemisApolloIconTexture, artemisApolloHoverSound);
         }
 

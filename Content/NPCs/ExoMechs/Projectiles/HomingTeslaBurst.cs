@@ -116,7 +116,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaBurstShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaBurstShader");
 
             PrimitiveSettings settings = new(ElectricityWidthFunction, ElectricityColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity * 2f, Pixelate: true, Shader: shader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 24);

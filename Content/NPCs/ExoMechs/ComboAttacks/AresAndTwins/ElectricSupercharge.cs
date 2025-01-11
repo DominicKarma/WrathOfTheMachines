@@ -17,8 +17,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.Ares;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
@@ -382,7 +380,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                 else if (n.type == ExoMechNPCIDs.ApolloID)
                     electricityColor += new Vector4(0f, 0.97f, 0f, 0f);
 
-                ManagedShader superchargeShader = ShaderManager.GetShader("FargowiltasCrossmod.ElectricSuperchargeShader");
+                ManagedShader superchargeShader = ShaderManager.GetShader("WoTM.ElectricSuperchargeShader");
                 superchargeShader.TrySetParameter("textureSize", texture.Size());
                 superchargeShader.TrySetParameter("frame", new Vector4(n.frame.X, n.frame.Y, n.frame.Width, n.frame.Height));
                 superchargeShader.TrySetParameter("electricColor", electricityColor);

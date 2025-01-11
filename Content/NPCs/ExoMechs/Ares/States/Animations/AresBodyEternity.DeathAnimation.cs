@@ -10,8 +10,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
@@ -97,7 +95,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// The sound played as Ares' death animation progresses.
         /// </summary>
-        public static readonly SoundStyle DeathBuildupSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/DeathBuildup");
+        public static readonly SoundStyle DeathBuildupSound = new("WoTM/Assets/Sounds/Custom/Ares/DeathBuildup");
 
         /// <summary>
         /// The AI update loop method for Ares' death animation.
@@ -321,7 +319,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// </summary>
         public void RenderAfterSilhouette()
         {
-            Texture2D skullTexture = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Ares/AresSkull").Value;
+            Texture2D skullTexture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Ares/AresSkull").Value;
             Vector2 drawPosition = NPC.Center - Main.screenPosition;
             Main.spriteBatch.Draw(skullTexture, drawPosition, null, Color.Black * MathF.Pow(SilhouetteOpacity, 10f), NPC.rotation, skullTexture.Size() * 0.5f, NPC.scale, 0, 0f);
         }

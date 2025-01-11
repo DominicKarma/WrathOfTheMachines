@@ -1,5 +1,4 @@
 ﻿using CalamityMod.NPCs;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -34,7 +33,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 float[] blurWeights = new float[12];
                 for (int i = 0; i < blurWeights.Length; i++)
                     blurWeights[i] = LumUtils.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f) * 0.81f;
-                ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.MotionBlurShader");
+                ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
                 shader.TrySetParameter("blurInterpolant", aresBehavior.MotionBlurInterpolant);
                 shader.TrySetParameter("blurWeights", blurWeights);
                 shader.TrySetParameter("blurDirection", Vector2.UnitY * 7.2f);
@@ -66,7 +65,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         private static void DrawAresSilhouette(Vector2 aresCenter, float opacity, float dissolveInterpolant)
         {
             Texture2D aresTarget = AresRenderTargetSystem.AresTarget;
-            ManagedShader silhouetteShader = ShaderManager.GetShader("FargowiltasCrossmod.AresSilhouetteShader");
+            ManagedShader silhouetteShader = ShaderManager.GetShader("WoTM.AresSilhouetteShader");
             silhouetteShader.TrySetParameter("textureSize0", aresTarget.Size());
             silhouetteShader.TrySetParameter("dissolveInterpolant", dissolveInterpolant);
             silhouetteShader.TrySetParameter("dissolveDirection", Vector2.UnitY);

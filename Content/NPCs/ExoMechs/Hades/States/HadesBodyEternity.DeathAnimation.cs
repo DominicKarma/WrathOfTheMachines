@@ -10,8 +10,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles.Metaballs;
@@ -44,7 +42,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <summary>
         /// The sound played as Hades' death animation progresses.
         /// </summary>
-        public static readonly SoundStyle DeathBuildupSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/DeathBuildup");
+        public static readonly SoundStyle DeathBuildupSound = new("WoTM/Assets/Sounds/Custom/Hades/DeathBuildup");
 
         /// <summary>
         /// AI update loop method for the death animation.

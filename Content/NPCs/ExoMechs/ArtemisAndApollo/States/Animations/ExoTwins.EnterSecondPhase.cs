@@ -14,8 +14,6 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.Particles;
@@ -62,12 +60,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         /// <summary>
         /// The sound the Exo Twins make when ejecting their lens.
         /// </summary>
-        public static readonly SoundStyle LensEjectSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/LensEject");
+        public static readonly SoundStyle LensEjectSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/LensEject");
 
         /// <summary>
         /// The sound the Exo Twins make when entering their second phase.
         /// </summary>
-        public static readonly SoundStyle Phase2TransitionSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/Phase2Transition");
+        public static readonly SoundStyle Phase2TransitionSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/Phase2Transition");
 
         public static void ReleaseLens(NPC npc)
         {
@@ -331,7 +329,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 Main.spriteBatch.PrepareForShaders();
 
             Texture2D invisible = MiscTexturesRegistry.InvisiblePixel.Value;
-            Texture2D forcefield = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Forcefield").Value;
+            Texture2D forcefield = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
             float spreadScale = 425f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
@@ -378,7 +376,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
             }
 
-            ManagedShader forcefieldShader = ShaderManager.GetShader("FargowiltasCrossmod.LensShieldShader");
+            ManagedShader forcefieldShader = ShaderManager.GetShader("WoTM.LensShieldShader");
             forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
             forcefieldShader.Apply();
 

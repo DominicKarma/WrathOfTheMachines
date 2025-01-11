@@ -157,7 +157,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void DrawOrb(Vector2 drawPosition)
         {
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.HadesExoEnergyOrbShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesExoEnergyOrbShader");
             shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.PointWrap);
             shader.TrySetParameter("textureSize0", Projectile.Size);
             shader.TrySetParameter("pulseIntensity", 0.09f);

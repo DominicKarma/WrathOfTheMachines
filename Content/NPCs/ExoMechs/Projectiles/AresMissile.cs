@@ -191,7 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.MissileFlameTrailShader");
+            ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(c => FlameTrailWidthFunction(c, 1f), c => FlameTrailColorFunction(c, 1f), _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

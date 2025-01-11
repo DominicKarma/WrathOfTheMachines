@@ -8,8 +8,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Core.BehaviorOverrides;
@@ -66,12 +64,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// The sound played when Ares performs a slash.
         /// </summary>
-        public static readonly SoundStyle SlashSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/Slash") with { Volume = 1.2f, MaxInstances = 0 };
+        public static readonly SoundStyle SlashSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/Slash") with { Volume = 1.2f, MaxInstances = 0 };
 
         /// <summary>
         /// The sound played when Ares unsheathes his katanas.
         /// </summary>
-        public static readonly SoundStyle KatanaUnsheatheSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/EnergyKatanaUnsheathe") with { Volume = 1.2f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew };
+        public static readonly SoundStyle KatanaUnsheatheSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/EnergyKatanaUnsheathe") with { Volume = 1.2f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew };
 
         /// <summary>
         /// AI update loop method for the Katana Cyclone Dashes attack.

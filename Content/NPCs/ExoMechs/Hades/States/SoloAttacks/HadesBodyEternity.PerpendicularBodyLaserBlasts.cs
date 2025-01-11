@@ -11,8 +11,6 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -88,12 +86,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// </summary>
         public static int BasicLaserDamage => Variables.GetAIInt("BasicLaserDamage", ExoMechAIVariableType.Hades);
 
-        public static readonly SoundStyle LaserChargeUpSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/LaserChargeUp");
+        public static readonly SoundStyle LaserChargeUpSound = new("WoTM/Assets/Sounds/Custom/Hades/LaserChargeUp");
 
         /// <summary>
         /// The sound Hades plays when firing his perpendicular laserbeams.
         /// </summary>
-        public static readonly SoundStyle SideLaserBurstSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/SideLaserBurst");
+        public static readonly SoundStyle SideLaserBurstSound = new("WoTM/Assets/Sounds/Custom/Hades/SideLaserBurst");
 
         /// <summary>
         /// AI update loop method for the PerpendicularBodyLaserBlasts attack.

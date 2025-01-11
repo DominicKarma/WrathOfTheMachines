@@ -2,7 +2,6 @@
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.Audio;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 
 namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {

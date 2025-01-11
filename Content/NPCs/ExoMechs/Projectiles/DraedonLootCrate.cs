@@ -1,6 +1,5 @@
 ﻿using CalamityMod.Items.TreasureBags;
 using Luminance.Common.DataStructures;
-using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

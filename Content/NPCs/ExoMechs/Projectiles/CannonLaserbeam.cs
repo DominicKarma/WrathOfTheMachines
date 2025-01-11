@@ -148,7 +148,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.45f);
 
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, _ => Projectile.Size * 0.5f, Shader: shader);
@@ -161,7 +161,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.CannonLaserbeamShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.CannonLaserbeamShader");
             shader.TrySetParameter("laserDirection", Projectile.velocity);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
 

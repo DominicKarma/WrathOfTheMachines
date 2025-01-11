@@ -130,7 +130,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            HologramTexture = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Draedon/Hologram");
+            HologramTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/Draedon/Hologram");
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -289,13 +289,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon
             Texture2D pixel = MiscTexturesRegistry.Pixel.Value;
             Vector2 projectionArea = Vector2.One * 200f / pixel.Size();
             Color projectionColor = glowmaskColor.MultiplyRGB(new(0.75f, 1f, 1f)) * HologramOpacity;
-            ManagedShader projectionShader = ShaderManager.GetShader("FargowiltasCrossmod.HologramProjectorAreaShader");
+            ManagedShader projectionShader = ShaderManager.GetShader("WoTM.HologramProjectorAreaShader");
             projectionShader.TrySetParameter("textureSize", projectionArea);
             projectionShader.TrySetParameter("spread", HologramOpacity * (1f - HologramOverlayInterpolant) * 0.5f);
             projectionShader.Apply();
             Main.spriteBatch.Draw(pixel, projectorDrawPosition, null, projectionColor, 0f, pixel.Size() * new Vector2(0.5f, 1f), projectionArea, 0, 0f);
 
-            ManagedShader glitchShader = ShaderManager.GetShader("FargowiltasCrossmod.GlitchShader");
+            ManagedShader glitchShader = ShaderManager.GetShader("WoTM.GlitchShader");
             glitchShader.TrySetParameter("time", Main.GlobalTimeWrappedHourly * 0.89f + NPC.whoAmI * 0.517f);
             glitchShader.TrySetParameter("textureSize", hologram.Size());
             glitchShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
@@ -326,7 +326,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon
                 Main.spriteBatch.PrepareForShaders();
 
                 Vector4 frameArea = new(frame.Left / (float)texture.Width, frame.Top / (float)texture.Height, frame.Right / (float)texture.Width, frame.Bottom / (float)texture.Height);
-                ManagedShader hologramShader = ShaderManager.GetShader("FargowiltasCrossmod.HologramShader");
+                ManagedShader hologramShader = ShaderManager.GetShader("WoTM.HologramShader");
                 hologramShader.TrySetParameter("hologramInterpolant", HologramOverlayInterpolant);
                 hologramShader.TrySetParameter("hologramSinusoidalOffset", MathF.Pow(HologramOverlayInterpolant, 7f) * 0.02f + LumUtils.InverseLerp(0.4f, 1f, HologramOverlayInterpolant) * 0.04f);
                 hologramShader.TrySetParameter("textureSize0", texture.Size());

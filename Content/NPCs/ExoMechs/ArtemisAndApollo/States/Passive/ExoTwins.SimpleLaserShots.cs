@@ -1,8 +1,6 @@
 ﻿using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 
 namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {

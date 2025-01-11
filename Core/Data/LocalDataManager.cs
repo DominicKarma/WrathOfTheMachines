@@ -63,7 +63,7 @@ namespace WoTM.Core.Data
         /// <summary>
         /// The environment variable name for the data path.
         /// </summary>
-        public const string DataPathEnvironmentVariableName = "FargoDataPath";
+        public const string DataPathEnvironmentVariableName = "WoTMPath";
 
         /// <summary>
         /// The color of text displayed in the game chat indicating successful updating of a JSON file.

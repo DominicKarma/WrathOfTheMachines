@@ -10,7 +10,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;

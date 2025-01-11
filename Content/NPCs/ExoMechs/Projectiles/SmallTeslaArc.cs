@@ -139,7 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return;
 
             float lifetimeRatio = Time / Lifetime;
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaArcShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaArcShader");
             shader.TrySetParameter("lifetimeRatio", lifetimeRatio);
             shader.TrySetParameter("erasureThreshold", 0.7f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1, SamplerState.LinearWrap);

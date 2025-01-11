@@ -94,7 +94,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.HadesLaserShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesLaserShader");
             shader.TrySetParameter("glowIntensity", 1f);
             shader.TrySetParameter("noiseScrollOffset", Projectile.identity * 0.3149f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"), 1, SamplerState.LinearWrap);

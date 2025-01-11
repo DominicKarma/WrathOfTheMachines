@@ -18,10 +18,8 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM.Content.NPCs.ExoMechs;
 using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
@@ -258,7 +256,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <summary>
         /// The sound played idly by Hades.
         /// </summary>
-        public static readonly SoundStyle IdleSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/IdleLoop");
+        public static readonly SoundStyle IdleSound = new("WoTM/Assets/Sounds/Custom/Hades/IdleLoop");
 
         public override int NPCOverrideID => ExoMechNPCIDs.HadesHeadID;
 
@@ -638,10 +636,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             int frame = NPC.frame.Y / NPC.frame.Height;
-            Texture2D texture = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Hades/HadesHead").Value;
-            Texture2D glowmask = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Hades/HadesHeadGlow").Value;
-            Texture2D leftJawTexture = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Hades/HadesJawLeft").Value;
-            Texture2D rightJawTexture = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Hades/HadesJawRight").Value;
+            Texture2D texture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesHead").Value;
+            Texture2D glowmask = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesHeadGlow").Value;
+            Texture2D leftJawTexture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesJawLeft").Value;
+            Texture2D rightJawTexture = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/Hades/HadesJawRight").Value;
 
             Vector2 drawPosition = NPC.Center - screenPos;
             Color glowmaskColor = Color.White * LumUtils.InverseLerp(5f, 15f, (lightColor.R + lightColor.G + lightColor.B) * 0.333f);

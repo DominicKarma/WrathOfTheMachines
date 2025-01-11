@@ -17,7 +17,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
@@ -386,7 +385,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
                         for (int i = 0; i < flamePositions.Length; i++)
                             flamePositions[i] = npc.Center - npc.oldRot[i].ToRotationVector2() * (i * 90f - 100f);
 
-                        ManagedShader flameShader = ShaderManager.GetShader("FargowiltasCrossmod.FlameEngulfShader");
+                        ManagedShader flameShader = ShaderManager.GetShader("WoTM.FlameEngulfShader");
                         flameShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
                         flameShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
 

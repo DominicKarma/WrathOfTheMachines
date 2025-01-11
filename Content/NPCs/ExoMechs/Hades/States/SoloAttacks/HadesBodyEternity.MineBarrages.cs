@@ -5,8 +5,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 

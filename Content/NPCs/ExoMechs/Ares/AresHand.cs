@@ -4,7 +4,6 @@ using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -153,27 +152,27 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// The sound played when one of Ares' hands get swapped to a gauss nuke.
         /// </summary>
-        public static readonly SoundStyle GaussNukeSwapSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HandSwap_GaussNuke", 2);
+        public static readonly SoundStyle GaussNukeSwapSound = new("WoTM/Assets/Sounds/Custom/Ares/HandSwap_GaussNuke", 2);
 
         /// <summary>
         /// The sound played when one of Ares' hands get swapped to a laser cannon.
         /// </summary>
-        public static readonly SoundStyle LaserCannonSwapSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HandSwap_LaserCannon", 2);
+        public static readonly SoundStyle LaserCannonSwapSound = new("WoTM/Assets/Sounds/Custom/Ares/HandSwap_LaserCannon", 2);
 
         /// <summary>
         /// The sound played when one of Ares' hands get swapped to a plasma cannon.
         /// </summary>
-        public static readonly SoundStyle PlasmaCannonSwapSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HandSwap_PlasmaCannon", 2);
+        public static readonly SoundStyle PlasmaCannonSwapSound = new("WoTM/Assets/Sounds/Custom/Ares/HandSwap_PlasmaCannon", 2);
 
         /// <summary>
         /// The sound played when one of Ares' hands get swapped to a pulse cannon.
         /// </summary>
-        public static readonly SoundStyle PulseCannonSwapSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HandSwap_PulseCannon", 2);
+        public static readonly SoundStyle PulseCannonSwapSound = new("WoTM/Assets/Sounds/Custom/Ares/HandSwap_PulseCannon", 2);
 
         /// <summary>
         /// The sound played when one of Ares' hands get swapped to a tesla cannon.
         /// </summary>
-        public static readonly SoundStyle TeslaCannonSwapSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HandSwap_TeslaCannon", 2);
+        public static readonly SoundStyle TeslaCannonSwapSound = new("WoTM/Assets/Sounds/Custom/Ares/HandSwap_TeslaCannon", 2);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -375,7 +374,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             float magnetismWidthFunction(float completionRatio) => aresBody.Opacity * aresBody.scale * 12f;
             Color magnetismColorFunction(float completionRatio) => aresBody.GetAlpha(Color.Cyan) * opacity * 0.45f;
 
-            ManagedShader magnetismShader = ShaderManager.GetShader("FargowiltasCrossmod.AresMagneticConnectionShader");
+            ManagedShader magnetismShader = ShaderManager.GetShader("WoTM.AresMagneticConnectionShader");
             magnetismShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
 
             PrimitiveSettings magnetismLineSettings = new(magnetismWidthFunction, magnetismColorFunction, Shader: magnetismShader);
@@ -629,7 +628,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             float katanaWidthFunction(float completionRatio) => npc.Opacity * npc.scale * MathHelper.Lerp(11f, 8f, squishInterpolant);
             Color katanaColorFunction(float completionRatio) => npc.GetAlpha(Color.Crimson);
 
-            ManagedShader katanaShader = ShaderManager.GetShader("FargowiltasCrossmod.AresEnergyKatanaShader");
+            ManagedShader katanaShader = ShaderManager.GetShader("WoTM.AresEnergyKatanaShader");
             katanaShader.TrySetParameter("flip", npc.As<AresHand>().ArmSide == 1);
             katanaShader.TrySetParameter("appearanceInterpolant", appearanceInterpolant);
             katanaShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.PointWrap);
@@ -694,7 +693,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 controlPoints[i] = Vector2.Lerp(drawPosition, a, 1f - KatanaAfterimageOpacity);
             }
 
-            ManagedShader afterimageShader = ShaderManager.GetShader("FargowiltasCrossmod.AresEnergyKatanaAfterimage");
+            ManagedShader afterimageShader = ShaderManager.GetShader("WoTM.AresEnergyKatanaAfterimage");
             afterimageShader.TrySetParameter("verticalFlip", ArmSide == -1);
             afterimageShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
 

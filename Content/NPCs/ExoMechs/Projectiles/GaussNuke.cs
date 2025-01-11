@@ -42,7 +42,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound this nuke plays when it explodes.
         /// </summary>
-        public static readonly SoundStyle ExplodeSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/LiveNuclearReaction");
+        public static readonly SoundStyle ExplodeSound = new("WoTM/Assets/Sounds/Custom/Ares/LiveNuclearReaction");
 
         /// <summary>
         /// How long this nuke should exist before exploding, in frames.

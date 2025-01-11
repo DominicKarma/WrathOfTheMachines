@@ -84,7 +84,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.ArtemisLaserShotShader");
+            ManagedShader trailShader = ShaderManager.GetShader("WoTM.ArtemisLaserShotShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

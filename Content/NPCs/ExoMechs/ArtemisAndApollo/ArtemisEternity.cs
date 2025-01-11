@@ -229,7 +229,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         /// <summary>
         /// The engine loop sound Artemis and Apollo idly play.
         /// </summary>
-        public static readonly SoundStyle EngineSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/EngineLoop");
+        public static readonly SoundStyle EngineSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/EngineLoop");
 
         public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
 
@@ -259,9 +259,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            BaseTexture = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/Artemis");
-            Glowmask = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
-            DestroyedTexture = LazyAsset<Texture2D>.Request("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Textures/ArtemisDestroyed");
+            BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Artemis");
+            Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
+            DestroyedTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisDestroyed");
         }
 
         public override void Unload()

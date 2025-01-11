@@ -2,7 +2,6 @@
 using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -153,7 +152,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             RightPlatingTextures[0] = new LazyAsset<Texture2D>[4];
             RightPlatingTextures[1] = new LazyAsset<Texture2D>[3];
 
-            string platingPrefix = $"FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Hades/Plates";
+            string platingPrefix = $"WoTM/Content/NPCs/ExoMechs/Hades/Plates";
             for (int i = 0; i < 4; i++)
             {
                 LeftPlatingTextures[0][i] = LazyAsset<Texture2D>.Request($"{platingPrefix}/HadesBody1Part{i + 1}Left");

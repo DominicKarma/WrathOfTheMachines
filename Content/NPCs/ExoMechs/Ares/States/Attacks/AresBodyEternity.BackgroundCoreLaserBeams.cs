@@ -10,7 +10,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -51,7 +50,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// The sound played when a distant missile is fired by Ares.
         /// </summary>
-        public static readonly SoundStyle DistantMissileLaunchSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/DistantMissileLaunch") with { MaxInstances = 0, Volume = 0.6f, PitchVariance = 0.15f };
+        public static readonly SoundStyle DistantMissileLaunchSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/DistantMissileLaunch") with { MaxInstances = 0, Volume = 0.6f, PitchVariance = 0.15f };
 
         /// <summary>
         /// AI update loop method for the Background Core Laserbeams attack.

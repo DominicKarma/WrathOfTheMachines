@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;

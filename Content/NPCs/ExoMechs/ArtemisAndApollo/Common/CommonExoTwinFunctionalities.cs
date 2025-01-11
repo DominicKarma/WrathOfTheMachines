@@ -1,14 +1,12 @@
-﻿using CalamityMod.NPCs;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+﻿using System;
+using CalamityMod.NPCs;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
@@ -67,7 +65,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
                 return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant) * twin.Opacity;
             }
 
-            ManagedShader nerveEndingShader = ShaderManager.GetShader("FargowiltasCrossmod.ExoTwinNerveEndingShader");
+            ManagedShader nerveEndingShader = ShaderManager.GetShader("WoTM.ExoTwinNerveEndingShader");
             nerveEndingShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 1, SamplerState.LinearWrap);
 
             // Draw nerve endings near the main thruster.
@@ -116,7 +114,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
                 return baseColor * completionRatioOpacity * generalOpacity;
             }
 
-            ManagedShader windShader = ShaderManager.GetShader("FargowiltasCrossmod.WingtipVortexTrailShader");
+            ManagedShader windShader = ShaderManager.GetShader("WoTM.WingtipVortexTrailShader");
             windShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1, SamplerState.LinearWrap);
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
@@ -186,7 +184,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
                     flameTrailCache[i] = Vector2.Lerp(oldPosition, twin.position, 0.6f) - twin.rotation.ToRotationVector2() * i / (float)(flameTrailCache.Length - 1f) * 200f;
                 }
 
-                ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.ExoTwinThrusterShader");
+                ManagedShader shader = ShaderManager.GetShader("WoTM.ExoTwinThrusterShader");
                 shader.TrySetParameter("whiteHotNoiseInterpolant", twinInterface.ThrusterBoost);
                 shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
 
@@ -227,7 +225,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
 
             if (!twinInterface.SpecialShaderAction?.Invoke(texture, twin) ?? true)
             {
-                ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.MotionBlurShader");
+                ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
                 shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);
                 shader.TrySetParameter("blurWeights", blurWeights);
                 shader.TrySetParameter("blurDirection", Vector2.UnitY);

@@ -6,8 +6,6 @@ using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.Particles;
 using WoTM.Core.BehaviorOverrides;
 

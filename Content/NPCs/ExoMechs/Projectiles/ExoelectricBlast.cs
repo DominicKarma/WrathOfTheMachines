@@ -174,7 +174,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             DrawBackBloom();
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.45f);
 
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, Shader: shader);
@@ -187,7 +187,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.HadesExoEnergyBlastShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesExoEnergyBlastShader");
             shader.TrySetParameter("laserDirection", Projectile.velocity);
             shader.TrySetParameter("edgeColorSubtraction", new Vector3(0.7f, 0.4f, 0));
             shader.TrySetParameter("edgeGlowIntensity", 0.2f);

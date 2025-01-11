@@ -113,7 +113,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound played idly by this jet.
         /// </summary>
-        public static readonly SoundStyle LoopSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/PlasmaJetLoop");
+        public static readonly SoundStyle LoopSound = new("WoTM/Assets/Sounds/Custom/Ares/PlasmaJetLoop");
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -210,7 +210,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.29f);
 
             PrimitiveSettings bloomSettings = new(FlameJetBloomWidthFunction, FlameJetBloomColorFunction, Shader: shader);
@@ -220,7 +220,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader flameShader = ShaderManager.GetShader("FargowiltasCrossmod.PlasmaFlameJetShader");
+            ManagedShader flameShader = ShaderManager.GetShader("WoTM.PlasmaFlameJetShader");
             flameShader.TrySetParameter("localTime", Main.GlobalTimeWrappedHourly + Projectile.identity * 0.412f);
             flameShader.TrySetParameter("glowPower", 2.5f);
             flameShader.TrySetParameter("glowColor", GlowColor);

@@ -14,11 +14,8 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
-using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -92,7 +89,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
         /// <summary>
         /// The sound the Exo Twins make when teleporting into existence.
         /// </summary>
-        public static readonly SoundStyle HolographicTeleportSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/HolographicGlintTeleport");
+        public static readonly SoundStyle HolographicTeleportSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/HolographicGlintTeleport");
 
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<ThanatosHead>(), ModContent.NPCType<Apollo>()];
 
@@ -274,7 +271,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
                         for (int i = 0; i < flamePositions.Length; i++)
                             flamePositions[i] = npc.Center - npc.oldRot[i].ToRotationVector2() * (i * 90f - 100f);
 
-                        ManagedShader flameShader = ShaderManager.GetShader("FargowiltasCrossmod.FlameEngulfShader");
+                        ManagedShader flameShader = ShaderManager.GetShader("WoTM.FlameEngulfShader");
                         flameShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
                         flameShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
 
@@ -322,7 +319,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
         {
             float hologramOverlayInterpolant = 1f - npc.Opacity;
             Vector4 frameArea = new(npc.frame.Left / (float)texture.Width, npc.frame.Top / (float)texture.Height, npc.frame.Right / (float)texture.Width, npc.frame.Bottom / (float)texture.Height);
-            ManagedShader hologramShader = ShaderManager.GetShader("FargowiltasCrossmod.HologramShader");
+            ManagedShader hologramShader = ShaderManager.GetShader("WoTM.HologramShader");
             hologramShader.TrySetParameter("hologramInterpolant", hologramOverlayInterpolant);
             hologramShader.TrySetParameter("hologramSinusoidalOffset", MathF.Pow(hologramOverlayInterpolant, 7f) * 0.01f + LumUtils.InverseLerp(0.4f, 1f, hologramOverlayInterpolant) * 0.02f);
             hologramShader.TrySetParameter("textureSize0", texture.Size());

@@ -65,7 +65,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound that this laserbeam loops.
         /// </summary>
-        public static readonly SoundStyle LaserLoopSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/ApolloLaserLoop");
+        public static readonly SoundStyle LaserLoopSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/ApolloLaserLoop");
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -172,7 +172,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.45f);
 
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, _ => Projectile.Size * 0.5f, Shader: shader);
@@ -185,7 +185,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.BlazingExoLaserbeamShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.BlazingExoLaserbeamShader");
             shader.TrySetParameter("laserDirection", Projectile.velocity);
             shader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
 

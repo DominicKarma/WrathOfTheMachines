@@ -70,7 +70,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Main.spriteBatch.PrepareForShaders();
             Vector2 size = Projectile.Size;
-            ManagedShader portalShader = ShaderManager.GetShader("FargowiltasCrossmod.HyperfuturisticPortalShader");
+            ManagedShader portalShader = ShaderManager.GetShader("WoTM.HyperfuturisticPortalShader");
             portalShader.TrySetParameter("useTextureForDistanceField", false);
             portalShader.TrySetParameter("textureSize0", size);
             portalShader.TrySetParameter("scale", Projectile.scale);

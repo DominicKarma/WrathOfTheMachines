@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Terraria;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;

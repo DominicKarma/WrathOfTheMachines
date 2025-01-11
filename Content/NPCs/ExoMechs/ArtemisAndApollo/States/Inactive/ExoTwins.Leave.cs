@@ -2,7 +2,6 @@
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.DataStructures;
 using Terraria;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 
 namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {

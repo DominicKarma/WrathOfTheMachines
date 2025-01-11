@@ -1,5 +1,4 @@
 ﻿using Terraria;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 

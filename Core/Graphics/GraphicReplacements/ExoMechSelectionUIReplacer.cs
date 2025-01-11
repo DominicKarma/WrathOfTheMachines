@@ -2,7 +2,6 @@
 using CalamityMod.UI.DraedonSummoning;
 using CalamityMod.World;
 using Luminance.Assets;
-using Luminance.Common.Utilities;
 using Luminance.Core.Hooking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

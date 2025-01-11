@@ -1,12 +1,12 @@
-﻿using CalamityMod.UI.DraedonSummoning;
+﻿using System;
+using System.Collections.Generic;
+using CalamityMod.UI.DraedonSummoning;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Localization;
@@ -91,7 +91,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            layers.Add(new LegacyGameInterfaceLayer("FargowiltasCrossmod: Draedon Subtitles", () =>
+            layers.Add(new LegacyGameInterfaceLayer("WoTM: Draedon Subtitles", () =>
             {
                 RenderSubtitlesWithPostProcessing();
                 return true;
@@ -139,7 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
             float pixelation = MathHelper.SmoothStep(1f, 6f, pixelationInterpolant) + LumUtils.InverseLerp(0.5f, 1f, TextOffsetInterpolant) * 10f;
             float opacity = LumUtils.InverseLerp(0.95f, 0.1f, TextOffsetInterpolant);
 
-            ManagedShader overlayShader = ShaderManager.GetShader("FargowiltasCrossmod.DraedonSubtitleShader");
+            ManagedShader overlayShader = ShaderManager.GetShader("WoTM.DraedonSubtitleShader");
             overlayShader.TrySetParameter("pixelation", pixelation);
             overlayShader.TrySetParameter("textureSize", SubtitleRenderTarget.Size());
             overlayShader.Apply();

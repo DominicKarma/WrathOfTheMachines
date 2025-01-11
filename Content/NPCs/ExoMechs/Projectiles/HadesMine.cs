@@ -42,12 +42,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound played momentarily before this mine explodes.
         /// </summary>
-        public static readonly SoundStyle ExplosionWarningSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/MineWarning") with { MaxInstances = 0, Volume = 0.54f };
+        public static readonly SoundStyle ExplosionWarningSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Hades/MineWarning") with { MaxInstances = 0, Volume = 0.54f };
 
         /// <summary>
         /// The sound played when this mine explodes.
         /// </summary>
-        public static readonly SoundStyle ExplodeSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/MineExplode", 3) with { MaxInstances = 0, Volume = 0.8f };
+        public static readonly SoundStyle ExplodeSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Hades/MineExplode", 3) with { MaxInstances = 0, Volume = 0.8f };
 
         public override void SetStaticDefaults()
         {

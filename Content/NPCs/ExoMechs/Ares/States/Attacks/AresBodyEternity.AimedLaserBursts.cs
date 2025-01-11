@@ -11,8 +11,6 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
 using WoTM.Core.BehaviorOverrides;

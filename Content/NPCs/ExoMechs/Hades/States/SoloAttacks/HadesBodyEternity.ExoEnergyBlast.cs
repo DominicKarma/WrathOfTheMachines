@@ -10,8 +10,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
 using WoTM.Core.BehaviorOverrides;
@@ -67,22 +65,22 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <summary>
         /// The sound Hades plays when charging up energy for his weaker deathray.
         /// </summary>
-        public static readonly SoundStyle DeathrayChargeUpSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/DeathrayChargeUp");
+        public static readonly SoundStyle DeathrayChargeUpSound = new("WoTM/Assets/Sounds/Custom/Hades/DeathrayChargeUp");
 
         /// <summary>
         /// The sound Hades plays when charging up energy for his stronger deathray.
         /// </summary>
-        public static readonly SoundStyle DeathrayChargeUpStrongSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/SuperLaserBuildupSound");
+        public static readonly SoundStyle DeathrayChargeUpStrongSound = new("WoTM/Assets/Sounds/Custom/Hades/SuperLaserBuildupSound");
 
         /// <summary>
         /// The sound Hades plays when firing his deathray.
         /// </summary>
-        public static readonly SoundStyle DeathrayFireSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/DeathrayFire");
+        public static readonly SoundStyle DeathrayFireSound = new("WoTM/Assets/Sounds/Custom/Hades/DeathrayFire");
 
         /// <summary>
         /// The sound Hades plays when firing his strong deathray.
         /// </summary>
-        public static readonly SoundStyle DeathrayFireStrongSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/SuperLaserFire");
+        public static readonly SoundStyle DeathrayFireStrongSound = new("WoTM/Assets/Sounds/Custom/Hades/SuperLaserFire");
 
         /// <summary>
         /// AI update loop method for the ExoEnergyBlast attack.

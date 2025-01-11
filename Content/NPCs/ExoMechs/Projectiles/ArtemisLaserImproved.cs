@@ -37,7 +37,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound played upon grazing the player.
         /// </summary>
-        public static readonly SoundStyle GrazeSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/LaserGraze", 2) with { Volume = 1.2f };
+        public static readonly SoundStyle GrazeSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/LaserGraze", 2) with { Volume = 1.2f };
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -112,7 +112,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.ArtemisLaserShotShader");
+            ManagedShader trailShader = ShaderManager.GetShader("WoTM.ArtemisLaserShotShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

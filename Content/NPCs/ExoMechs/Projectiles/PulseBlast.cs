@@ -314,13 +314,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             for (int i = 0; i < beamPositions.Count; i++)
                 beamPositions[i] += perpendicular * MathF.Sin(MathHelper.TwoPi * i / beamPositions.Count * 4f) * 24f;
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.45f);
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, Shader: shader, Pixelate: true);
             PrimitiveRenderer.RenderTrail(beamPositions, bloomSettings, 50);
 
             // Draw the beam.
-            ManagedShader blastShader = ShaderManager.GetShader("FargowiltasCrossmod.PulseBlastShader");
+            ManagedShader blastShader = ShaderManager.GetShader("WoTM.PulseBlastShader");
             blastShader.TrySetParameter("lengthRatios", lengthRatios.ToArray());
             blastShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
 

@@ -91,7 +91,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2 size = Projectile.Size * 1.19f;
             Color lightColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates());
 
-            ManagedShader slashShader = ShaderManager.GetShader("FargowiltasCrossmod.EnergyKatanaSlashShader");
+            ManagedShader slashShader = ShaderManager.GetShader("WoTM.EnergyKatanaSlashShader");
             slashShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             slashShader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 2, SamplerState.LinearWrap);
             slashShader.TrySetParameter("clipTopHalf", clipTopHalf);

@@ -68,7 +68,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Main.spriteBatch.PrepareForShaders();
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaExplosionShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaExplosionShader");
             shader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             shader.TrySetParameter("lifetimeRatio", Time / Lifetime);
             shader.TrySetParameter("textureSize0", Projectile.Size);

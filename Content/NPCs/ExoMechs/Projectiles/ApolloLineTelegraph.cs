@@ -71,7 +71,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             var telegraphPoints = Projectile.GetLaserControlPoints(12, TelegraphLength);
 
-            ManagedShader telegraphShader = ShaderManager.GetShader("FargowiltasCrossmod.ApolloLineTelegraphShader");
+            ManagedShader telegraphShader = ShaderManager.GetShader("WoTM.ApolloLineTelegraphShader");
             telegraphShader.Apply();
 
             PrimitiveSettings settings = new(TelegraphWidthFunction, TelegraphColorFunction, Pixelate: true, Shader: telegraphShader);

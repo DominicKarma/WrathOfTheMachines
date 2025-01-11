@@ -61,7 +61,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             float lifetimeRatio = MathF.Pow(Time / Lifetime, 0.32f);
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.GaussNukeExplosionShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.GaussNukeExplosionShader");
             shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
             shader.TrySetParameter("lifetimeRatio", lifetimeRatio);
             shader.TrySetParameter("textureSize0", Projectile.Size * Projectile.scale);

@@ -13,7 +13,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
@@ -71,7 +70,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <summary>
         /// The sound Ares plays when electrifying Hades.
         /// </summary>
-        public static readonly SoundStyle HadesElectrifySound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/HadesElectrify");
+        public static readonly SoundStyle HadesElectrifySound = new("WoTM/Assets/Sounds/Custom/Ares/HadesElectrify");
 
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<ThanatosHead>(), ModContent.NPCType<AresBody>()];
 
@@ -366,7 +365,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                 float flash = LumUtils.InverseLerpBump(0.6f, 0.7f, 0.7f, 0.8f, electrifyInterpolant);
                 for (int i = 0; i < 4; i++)
                 {
-                    ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.MotionBlurShader");
+                    ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
                     shader.TrySetParameter("blurInterpolant", electrifyInterpolant * 0.8f);
                     shader.TrySetParameter("blurWeights", blurWeights);
                     shader.TrySetParameter("blurDirection", (MathHelper.TwoPi * i / 4f).ToRotationVector2());
@@ -374,7 +373,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                     Main.spriteBatch.Draw(HadesPostProcessingSystem.HadesTarget, Main.screenLastPosition - Main.screenPosition, new Color(255, 34, 1, 0) * electrifyInterpolant);
                 }
 
-                ManagedShader electricShader = ShaderManager.GetShader("FargowiltasCrossmod.HadesSuperchargeShader");
+                ManagedShader electricShader = ShaderManager.GetShader("WoTM.HadesSuperchargeShader");
                 electricShader.TrySetParameter("electricityColor", new Color(255, 14, 20).ToVector4() * electrifyInterpolant * 2f);
                 electricShader.TrySetParameter("electrifyInterpolant", electrifyInterpolant + flash);
                 electricShader.Apply();

@@ -10,8 +10,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -61,12 +59,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <summary>
         /// The sound played when Hades charges up for a dash.
         /// </summary>
-        public static readonly SoundStyle DashChargeUpSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/DashChargeUp") with { Volume = 1.7f };
+        public static readonly SoundStyle DashChargeUpSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Hades/DashChargeUp") with { Volume = 1.7f };
 
         /// <summary>
         /// The sound played when Hades impacts the ground.
         /// </summary>
-        public static readonly SoundStyle GroundImpactSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/GroundImpact") with { Volume = 1.4f };
+        public static readonly SoundStyle GroundImpactSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Hades/GroundImpact") with { Volume = 1.4f };
 
         /// <summary>
         /// AI update loop method for the MissileLunges attack.

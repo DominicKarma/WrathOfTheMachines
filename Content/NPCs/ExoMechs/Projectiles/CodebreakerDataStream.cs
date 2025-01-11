@@ -46,12 +46,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound played when this beam appears and persists throughout its lifetime.
         /// </summary>
-        public static readonly SoundStyle DroneSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/GeneralExoMechs/CodebreakerDrone") with { Volume = 1.4f };
+        public static readonly SoundStyle DroneSound = new SoundStyle("WoTM/Assets/Sounds/Custom/GeneralExoMechs/CodebreakerDrone") with { Volume = 1.4f };
 
         /// <summary>
         /// The sound played when this beam appears.
         /// </summary>
-        public static readonly SoundStyle PulseSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/GeneralExoMechs/CodebreakerPulse") with { Volume = 0.95f };
+        public static readonly SoundStyle PulseSound = new SoundStyle("WoTM/Assets/Sounds/Custom/GeneralExoMechs/CodebreakerPulse") with { Volume = 0.95f };
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -161,7 +161,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             List<Vector2> beamPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader dataShader = ShaderManager.GetShader("FargowiltasCrossmod.DataStreamShader");
+            ManagedShader dataShader = ShaderManager.GetShader("WoTM.DataStreamShader");
             dataShader.SetTexture(NoiseTexturesRegistry.BinaryPoem.Value, 1, SamplerState.PointClamp);
 
             PrimitiveSettings laserSettings = new(BeamWidthFunction, BeamColorFunction, Shader: dataShader);

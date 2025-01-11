@@ -1,5 +1,4 @@
 ﻿using System;
-using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -11,6 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Assets;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using WoTM.Core.Graphics.Models;
 
 namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
@@ -89,7 +89,7 @@ namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
         /// <summary>
         /// The identifier key for this sky.
         /// </summary>
-        public const string SkyKey = "FargowiltasCrossmod:ExoMechsSky";
+        public const string SkyKey = "WoTM:ExoMechsSky";
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
@@ -163,7 +163,7 @@ namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
                 lightningPositions[i] = Lightning[i].LightningPosition;
             }
 
-            ManagedShader cloudShader = ShaderManager.GetShader("FargowiltasCrossmod.ExoMechCloudShader");
+            ManagedShader cloudShader = ShaderManager.GetShader("WoTM.ExoMechCloudShader");
             cloudShader.TrySetParameter("screenSize", screenSize);
             cloudShader.TrySetParameter("invertedGravity", Main.LocalPlayer.gravDir == -1f);
             cloudShader.TrySetParameter("sunPosition", new Vector3(screenSize.X * 0.5f, screenSize.Y * 0.7f, -600f));
@@ -239,8 +239,8 @@ namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
             Model plane = ModelRegistry.CargoPlane;
 
             // Prepare shaders.
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.ModelPrimitiveShader");
-            Main.instance.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/CargoPlaneModelTexture").Value;
+            ManagedShader shader = ShaderManager.GetShader("WoTM.ModelPrimitiveShader");
+            Main.instance.GraphicsDevice.Textures[0] = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/CargoPlaneModelTexture").Value;
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             Main.instance.GraphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
 

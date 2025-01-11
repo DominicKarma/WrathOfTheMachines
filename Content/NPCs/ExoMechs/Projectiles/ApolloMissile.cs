@@ -61,7 +61,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound the plasma missiles play idly on loop.
         /// </summary>
-        public static readonly SoundStyle LoopSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/PlasmaMissileLoop") with { Volume = 0.35f };
+        public static readonly SoundStyle LoopSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.35f };
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Plasma;
 
@@ -208,7 +208,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.MissileFlameTrailShader");
+            ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

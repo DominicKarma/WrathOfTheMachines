@@ -46,7 +46,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound played idly by this sphere.
         /// </summary>
-        public static readonly SoundStyle LoopSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/TeslaSphereLoop");
+        public static readonly SoundStyle LoopSound = new("WoTM/Assets/Sounds/Custom/Ares/TeslaSphereLoop");
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -210,7 +210,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Main.spriteBatch.PrepareForShaders();
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.LargeTeslaSphereShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.LargeTeslaSphereShader");
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/HarshNoise"), 1, SamplerState.LinearWrap);
             shader.SetTexture(NoiseTexturesRegistry.ElectricNoise.Value, 2, SamplerState.LinearWrap);
             shader.TrySetParameter("textureSize0", Projectile.Size);

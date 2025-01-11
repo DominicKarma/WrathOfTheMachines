@@ -1,5 +1,4 @@
 ﻿using CalamityMod.NPCs;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

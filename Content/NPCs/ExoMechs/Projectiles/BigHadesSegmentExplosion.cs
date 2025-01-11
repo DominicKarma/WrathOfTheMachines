@@ -60,7 +60,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2 size = Projectile.Size * Projectile.scale;
 
             float lifetimeRatio = MathF.Pow(Time / Lifetime, 0.67f);
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.HadesElectricBoomShader");
+            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesElectricBoomShader");
             shader.SetTexture(MiscTexturesRegistry.DendriticNoise.Value, 1, SamplerState.LinearWrap);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 2, SamplerState.LinearWrap);
             shader.TrySetParameter("lifetimeRatio", lifetimeRatio);

@@ -13,7 +13,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -67,7 +66,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         /// <summary>
         /// The sound the Exo Twins make when warping through their portals.
         /// </summary>
-        public static readonly SoundStyle PortalWarpSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/PortalWarp", 2);
+        public static readonly SoundStyle PortalWarpSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/PortalWarp", 2);
 
         public override int[] ExpectedManagingExoMechs => [ModContent.NPCType<AresBody>(), ModContent.NPCType<Apollo>()];
 

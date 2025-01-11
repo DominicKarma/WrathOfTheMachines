@@ -294,12 +294,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// The sound played when Ares laughs.
         /// </summary>
-        public static readonly SoundStyle LaughSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/Laugh") with { Volume = 1.4f };
+        public static readonly SoundStyle LaughSound = new SoundStyle("WoTM/Assets/Sounds/Custom/Ares/Laugh") with { Volume = 1.4f };
 
         /// <summary>
         /// The sound played idly by Ares.
         /// </summary>
-        public static readonly SoundStyle IdleSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Ares/IdleLoop");
+        public static readonly SoundStyle IdleSound = new("WoTM/Assets/Sounds/Custom/Ares/IdleLoop");
 
         /// <summary>
         /// Represents an action that should be performed by hands attached to Ares.
@@ -640,8 +640,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
 
             Main.spriteBatch.PrepareForShaders();
 
-            Texture2D glowmask = ModContent.Request<Texture2D>($"FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Ares/Glowmasks/{glowmaskPath}").Value;
-            Texture2D bloom = ModContent.Request<Texture2D>($"FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Ares/Glowmasks/{glowmaskPath}Bloom").Value;
+            Texture2D glowmask = ModContent.Request<Texture2D>($"WoTM/Content/NPCs/ExoMechs/Ares/Glowmasks/{glowmaskPath}").Value;
+            Texture2D bloom = ModContent.Request<Texture2D>($"WoTM/Content/NPCs/ExoMechs/Ares/Glowmasks/{glowmaskPath}Bloom").Value;
 
             // Safety check to ensure that the alternative color palette, even if not used currently, is defined.
             bodyOverride.AlternateLightColorPalette ??= new Color[bodyOverride.StandardLightColorPalette.Length];
@@ -657,7 +657,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 palette[i] = Color.Lerp(standardColor, alternateColor, bodyOverride.LightColorPaletteShiftInterpolant).ToVector3();
             }
 
-            ManagedShader rgbShader = ShaderManager.GetShader("FargowiltasCrossmod.AresRGBLightShader");
+            ManagedShader rgbShader = ShaderManager.GetShader("WoTM.AresRGBLightShader");
             rgbShader.TrySetParameter("gradient", palette);
             rgbShader.TrySetParameter("gradientCount", palette.Length);
             rgbShader.TrySetParameter("scrollSpeed", 3f);
@@ -685,7 +685,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             Main.spriteBatch.PrepareForShaders();
 
             float glowIntensity = LumUtils.Saturate(teslaSphere.width / 560f);
-            ManagedShader normalMapShader = ShaderManager.GetShader("FargowiltasCrossmod.NormalMapGlowShader");
+            ManagedShader normalMapShader = ShaderManager.GetShader("WoTM.NormalMapGlowShader");
             normalMapShader.TrySetParameter("textureSize0", texture.Size());
             normalMapShader.TrySetParameter("lightColor", new Vector4(0f, 0.8f, 1.8f, 0f) * glowIntensity);
             normalMapShader.TrySetParameter("frame", new Vector4(frame.X, frame.Y, frame.Width, frame.Height));

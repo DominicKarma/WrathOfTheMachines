@@ -243,7 +243,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             Color bloomColor = Color.White with { A = 0 };
 
-            ManagedShader bloomShader = ShaderManager.GetShader("FargowiltasCrossmod.CylinderPrimitiveBloomShader");
+            ManagedShader bloomShader = ShaderManager.GetShader("WoTM.CylinderPrimitiveBloomShader");
             bloomShader.TrySetParameter("innerGlowIntensity", 0.45f);
             bloomShader.TrySetParameter("uWorldViewProjection", projection);
             bloomShader.Apply();
@@ -280,7 +280,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             RenderBloom(start, end, overallProjection);
 
-            ManagedShader overloadShader = ShaderManager.GetShader("FargowiltasCrossmod.ExoOverloadDeathrayShader");
+            ManagedShader overloadShader = ShaderManager.GetShader("WoTM.ExoOverloadDeathrayShader");
             overloadShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             overloadShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
             overloadShader.TrySetParameter("uWorldViewProjection", overallProjection);

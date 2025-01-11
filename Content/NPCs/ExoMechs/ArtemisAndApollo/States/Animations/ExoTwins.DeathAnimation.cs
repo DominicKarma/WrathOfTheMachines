@@ -10,8 +10,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs;
-using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -82,12 +80,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         /// <summary>
         /// The sound Artemis and Apollo make upon colliding with each other during their death animation.
         /// </summary>
-        public static readonly SoundStyle CollisionSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/DeathAnimationCollision") with { Volume = 1.6f };
+        public static readonly SoundStyle CollisionSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/DeathAnimationCollision") with { Volume = 1.6f };
 
         /// <summary>
         /// The beep sound Artemis and Apollo play as a warning.
         /// </summary>
-        public static readonly SoundStyle WarningBeepSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/WarningBeep", 2) with { MaxInstances = 0 };
+        public static readonly SoundStyle WarningBeepSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/WarningBeep", 2) with { MaxInstances = 0 };
 
         /// <summary>
         /// AI update loop method for the death animation of the Exo Twins.
@@ -265,7 +263,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         {
             if (Main.netMode != NetmodeID.Server)
             {
-                ManagedScreenFilter impactFrameShader = ShaderManager.GetFilter("FargowiltasCrossmod.ImpactFrameShader");
+                ManagedScreenFilter impactFrameShader = ShaderManager.GetFilter("WoTM.ImpactFrameShader");
                 Color darkFrameColor = Color.Black;
                 Color lightFrameColor = Color.White;
                 impactFrameShader.TrySetParameter("darkFrameColor", darkFrameColor);
