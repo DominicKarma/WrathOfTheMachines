@@ -1,11 +1,11 @@
 ﻿using CalamityMod.Skies;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class CustomExoMechsSkyScene : ModSceneEffect
     {

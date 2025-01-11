@@ -9,9 +9,6 @@ using CalamityMod.Items.Weapons.Ranged;
 using CalamityMod.Items.Weapons.Summon;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
@@ -22,9 +19,13 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public sealed partial class AresBodyEternity : NPCBehaviorOverride, IExoMech
     {

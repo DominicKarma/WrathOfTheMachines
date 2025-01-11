@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -10,8 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class SmallTeslaArc : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -115,7 +115,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
                         arcProtrudeDistance *= 7f;
                     Vector2 arcOffset = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(arcProtrudeAngleOffset) * arcProtrudeDistance;
 
-                    ArcPoints[i] += arcOffset * Utilities.Convert01To010(trailCompletionRatio);
+                    ArcPoints[i] += arcOffset * LumUtils.Convert01To010(trailCompletionRatio);
                 }
             }
 
@@ -127,8 +127,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public float ArcWidthFunction(float completionRatio)
         {
             float lifetimeRatio = Time / Lifetime;
-            float lifetimeSquish = Utilities.InverseLerpBump(0.1f, 0.35f, 0.75f, 1f, lifetimeRatio);
-            return MathHelper.Lerp(1f, 3f, Utilities.Convert01To010(completionRatio)) * lifetimeSquish * WidthFactor;
+            float lifetimeSquish = LumUtils.InverseLerpBump(0.1f, 0.35f, 0.75f, 1f, lifetimeRatio);
+            return MathHelper.Lerp(1f, 3f, LumUtils.Convert01To010(completionRatio)) * lifetimeSquish * WidthFactor;
         }
 
         public Color ArcColorFunction(float completionRatio) => Projectile.GetAlpha(ArcColor);

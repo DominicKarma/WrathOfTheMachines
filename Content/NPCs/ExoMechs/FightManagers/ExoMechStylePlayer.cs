@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     public sealed class ExoMechStylePlayer : ModPlayer
     {
@@ -47,7 +47,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
         /// <summary>
         /// Whether the boss would be considered melted if the fight were to stop now.
         /// </summary>
-        public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < Utilities.MinutesToFrames(1.75f);
+        public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < LumUtils.MinutesToFrames(1.75f);
 
         /// <summary>
         /// How long each phase lasted, in frames, during the Exo Mech fight, indexed according to phase.
@@ -57,22 +57,22 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
         /// <summary>
         /// How short the Exo Mechs fight has to be in order to receive minimum style points for it.
         /// </summary>
-        public static float MinStyleBoostFightTime => Utilities.MinutesToFrames(1.5f);
+        public static float MinStyleBoostFightTime => LumUtils.MinutesToFrames(1.5f);
 
         /// <summary>
         /// How long the Exo Mechs fight has to be in order to receive maximum style points for it.
         /// </summary>
-        public static float MaxStyleBoostFightTime => Utilities.MinutesToFrames(3.75f);
+        public static float MaxStyleBoostFightTime => LumUtils.MinutesToFrames(3.75f);
 
         /// <summary>
         /// The influence of player buff count on overall style.
         /// </summary>
-        public float BuffsWeight => Utilities.Saturate(1f - (BuffCount - 39f) / 11f);
+        public float BuffsWeight => LumUtils.Saturate(1f - (BuffCount - 39f) / 11f);
 
         /// <summary>
         /// The influence of hit count on overall style.
         /// </summary>
-        public float HitsWeight => Utilities.Saturate(1f - (HitCount - 2f) / 13f);
+        public float HitsWeight => LumUtils.Saturate(1f - (HitCount - 2f) / 13f);
 
         /// <summary>
         /// The influence of fight time on overall style.
@@ -82,7 +82,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
             get
             {
                 int fightDuration = PhaseDurations.Sum();
-                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
+                float fightTimeInterpolant = LumUtils.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
                 float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
                 return fightTimeWeight;
             }
@@ -101,7 +101,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
             get
             {
                 float unclampedStyle = HitsWeight * 0.26f + BuffsWeight * 0.13f + FightTimeWeight * 0.31f + AggressivenessWeight * 0.3f;
-                return Utilities.Saturate(unclampedStyle);
+                return LumUtils.Saturate(unclampedStyle);
             }
         }
 
@@ -187,7 +187,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
                     distanceToClosestNPC = distanceFromNPC;
             }
 
-            AggressivenessBonus += Utilities.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 20f;
+            AggressivenessBonus += LumUtils.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 20f;
 
             Rectangle extendedPlayerHitbox = Player.Hitbox;
             extendedPlayerHitbox.Inflate(30, 30);

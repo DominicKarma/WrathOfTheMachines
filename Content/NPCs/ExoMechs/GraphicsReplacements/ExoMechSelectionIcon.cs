@@ -9,7 +9,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.Localization;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.GraphicsReplacements
+namespace WoTM.Content.NPCs.ExoMechs.GraphicsReplacements
 {
     /// <summary>
     /// A representation of an Exo Mech selection icon.

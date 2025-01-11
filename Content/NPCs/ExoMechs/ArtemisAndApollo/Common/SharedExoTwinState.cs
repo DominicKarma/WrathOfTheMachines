@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
 {
     /// <summary>
     /// A representation of a shared collection of state variables, that both Artemis and Apollo access for their attacks.

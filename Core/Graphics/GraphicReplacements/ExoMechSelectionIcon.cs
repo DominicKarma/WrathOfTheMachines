@@ -8,7 +8,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.Localization;
 
-namespace WoTM.Core.Graphics.EffectManagers
+namespace WoTM.Core.Graphics.GraphicReplacements
 {
     /// <summary>
     /// A representation of an Exo Mech selection icon.

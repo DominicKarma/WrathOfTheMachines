@@ -1,9 +1,9 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue;
-using Luminance.Common.Utilities;
+﻿using Luminance.Common.Utilities;
 using Terraria;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon
+namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
     public sealed partial class DraedonEternity : NPCBehaviorOverride
     {

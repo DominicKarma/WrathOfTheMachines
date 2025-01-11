@@ -3,11 +3,8 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -15,10 +12,14 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
 {
     public class SuperchargedTurbodashes : ExoMechComboHandler
     {
@@ -349,8 +350,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
                         int mineLifetime = Main.rand.NextBool(4) ? 3 : 120;
 
                         float mineShootSpeed = Main.rand.NextFloat(120f);
-                        Utilities.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
-                        Utilities.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * -mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
+                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
+                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * -mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
                     }
                 }
             }));
@@ -360,7 +361,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
             {
                 float[] blurWeights = new float[12];
                 for (int i = 0; i < blurWeights.Length; i++)
-                    blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
+                    blurWeights[i] = LumUtils.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
 
                 float flash = LumUtils.InverseLerpBump(0.6f, 0.7f, 0.7f, 0.8f, electrifyInterpolant);
                 for (int i = 0; i < 4; i++)

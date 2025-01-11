@@ -3,9 +3,6 @@ using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,9 +10,15 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {

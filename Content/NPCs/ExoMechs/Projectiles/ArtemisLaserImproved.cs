@@ -1,7 +1,6 @@
 ﻿using System;
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -12,8 +11,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ArtemisLaserImproved : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>, IExoMechProjectile
     {
@@ -90,7 +90,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 
         public float LaserWidthFunction(float completionRatio)
         {
-            float tipSqueeze = MathF.Pow(Utilities.InverseLerp(0f, 0.15f, completionRatio), 1.5f);
+            float tipSqueeze = MathF.Pow(LumUtils.InverseLerp(0f, 0.15f, completionRatio), 1.5f);
             return (1f - completionRatio) * tipSqueeze * Projectile.width * 0.67f + 0.5f;
         }
 

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
+namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 {
     // TODO -- Add weak ref attributes to the various subtitle system classes.
     public class DraedonSubtitleManager : ModSystem

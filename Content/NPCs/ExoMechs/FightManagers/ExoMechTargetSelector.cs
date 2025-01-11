@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     public sealed class ExoMechTargetSelector : ModSystem
     {

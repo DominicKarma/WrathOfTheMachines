@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -11,8 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ExoTwinHyperfuturisticPortal : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -24,7 +24,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long this portal should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(0.45f);
+        public static int Lifetime => LumUtils.SecondsToFrames(0.45f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -48,7 +48,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public override void AI()
         {
             Time++;
-            Projectile.Opacity = Utilities.InverseLerp(1f, 0.82f, Time / Lifetime);
+            Projectile.Opacity = LumUtils.InverseLerp(1f, 0.82f, Time / Lifetime);
             Projectile.rotation = Projectile.velocity.ToRotation();
 
             float fadeIn = LumUtils.InverseLerp(0f, 9f, Time);
@@ -93,6 +93,6 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public override bool ShouldUpdatePosition() => false;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.52f, targetHitbox);
+            LumUtils.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.52f, targetHitbox);
     }
 }

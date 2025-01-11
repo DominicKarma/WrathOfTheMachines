@@ -1,14 +1,17 @@
 ﻿using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public class ExoTwinsStateManager : ModSystem
     {

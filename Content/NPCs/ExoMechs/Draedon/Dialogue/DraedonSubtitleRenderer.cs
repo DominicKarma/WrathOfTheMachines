@@ -13,9 +13,9 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue.DraedonSubtitleManager;
+using static WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue.DraedonSubtitleManager;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
+namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 {
     [Autoload(Side = ModSide.Client)]
     public class DraedonSubtitleRenderer : ModSystem

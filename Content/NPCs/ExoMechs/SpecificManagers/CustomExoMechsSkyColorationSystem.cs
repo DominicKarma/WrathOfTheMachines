@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class CustomExoMechsSkyColorationSystem : ModSystem
     {

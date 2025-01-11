@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     /// <summary>
     /// Represents a conditional preset that customizes Ares' glowmask light color palettes.

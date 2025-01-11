@@ -1,8 +1,7 @@
 ﻿using System;
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -14,9 +13,10 @@ using Terraria.Audio;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class GaussNuke : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<AresBody>
     {
@@ -88,8 +88,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Main.spriteBatch.ExitShaderRegion();
 
             Texture2D glowmask = ModContent.Request<Texture2D>("CalamityMod/Projectiles/Boss/AresGaussNukeProjectileGlow").Value;
-            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
-            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], Color.White, 1, texture: glowmask);
+            LumUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
+            LumUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], Color.White, 1, texture: glowmask);
 
             return false;
         }
@@ -97,10 +97,10 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public void DrawAreaOfEffectTelegraph()
         {
             float lifetimeRatio = 1f - Projectile.timeLeft / (float)Lifetime;
-            float opacity = Utilities.Saturate(lifetimeRatio * 8f) * 0.36f;
-            float maxFlashIntensity = Utilities.InverseLerp(0.25f, 0.75f, lifetimeRatio);
-            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
-            Color innerColor = Color.Lerp(Color.Goldenrod, Color.Gold, MathF.Pow(Utilities.Sin01(Main.GlobalTimeWrappedHourly), 3f) * 0.85f);
+            float opacity = LumUtils.Saturate(lifetimeRatio * 8f) * 0.36f;
+            float maxFlashIntensity = LumUtils.InverseLerp(0.25f, 0.75f, lifetimeRatio);
+            float flashColorInterpolant = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
+            Color innerColor = Color.Lerp(Color.Goldenrod, Color.Gold, MathF.Pow(LumUtils.Sin01(Main.GlobalTimeWrappedHourly), 3f) * 0.85f);
             Color edgeColor = Color.Lerp(Color.Yellow, Color.Wheat, 0.6f);
 
             innerColor = Color.Lerp(innerColor, Color.Crimson, MathF.Pow(flashColorInterpolant, 0.7f));
@@ -113,7 +113,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             aoeShader.UseSaturation(lifetimeRatio);
             aoeShader.Apply();
 
-            float explosionDiameter = ExplosionDiameter * MathF.Pow(Utilities.InverseLerp(0f, 0.25f, lifetimeRatio), 1.6f) * 0.94f;
+            float explosionDiameter = ExplosionDiameter * MathF.Pow(LumUtils.InverseLerp(0f, 0.25f, lifetimeRatio), 1.6f) * 0.94f;
             Texture2D pixel = MiscTexturesRegistry.InvisiblePixel.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Main.EntitySpriteDraw(pixel, drawPosition, null, Color.White, 0, pixel.Size() * 0.5f, Vector2.One * explosionDiameter / pixel.Size(), 0, 0);
@@ -123,7 +123,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         // It'd be rather silly for a nuke that's just sitting in place to do damage.
         public override bool? CanDamage() => Projectile.velocity.Length() >= 25f;
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => LumUtils.CircularHitboxCollision(Projectile.Center, 45f, targetHitbox);
 
         public override void OnKill(int timeLeft)
         {
@@ -133,7 +133,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             // NOTE -- There used to be gores spawned here as well, but that effect was removed on account of the fact that realistically the outer shell of the
             // nuke would be obliterated instantly upon its detonation.
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyEternity.NukeExplosionDamage, 0f, -1, ExplosionDiameter);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyEternity.NukeExplosionDamage, 0f, -1, ExplosionDiameter);
         }
     }
 }

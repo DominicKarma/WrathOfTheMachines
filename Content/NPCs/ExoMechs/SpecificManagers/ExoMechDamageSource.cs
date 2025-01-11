@@ -1,4 +1,4 @@
-﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+﻿namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     /// <summary>
     /// Represents a type of damage that the Exo Mechs and their projectiles can inflict upon the player.

@@ -1,8 +1,8 @@
 ﻿using Luminance.Common.Utilities;
 using Terraria.Audio;
-using WoTM;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon
+namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
     public sealed partial class DraedonEternity : NPCBehaviorOverride
     {

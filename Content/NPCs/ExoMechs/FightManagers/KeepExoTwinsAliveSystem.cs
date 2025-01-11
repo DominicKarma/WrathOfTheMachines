@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     // This is probably the most stupid thing I've ever written.
     // I don't know why it's necessary, but it is. Without it Artemis and Apollo despawn for reasons unknown sometimes upon being called to return to the Mecha Mayhem phase.

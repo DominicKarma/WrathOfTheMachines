@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
+namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 {
     public class DraedonDialogueManager : ModSystem
     {

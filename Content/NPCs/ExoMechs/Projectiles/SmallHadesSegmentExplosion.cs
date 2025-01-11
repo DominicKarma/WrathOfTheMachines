@@ -2,16 +2,15 @@
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Common.DataStructures;
-using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class SmallHadesSegmentExplosion : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<ThanatosHead>
     {
@@ -25,7 +24,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long this sphere should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(0.3f);
+        public static int Lifetime => LumUtils.SecondsToFrames(0.3f);
 
         public override void SetStaticDefaults() => Main.projFrames[Type] = 7;
 

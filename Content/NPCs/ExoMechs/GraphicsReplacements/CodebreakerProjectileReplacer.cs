@@ -1,14 +1,14 @@
 ﻿using System.Reflection;
 using CalamityMod.Systems;
 using CalamityMod.World;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Core.Hooking;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.GraphicsReplacements
+namespace WoTM.Content.NPCs.ExoMechs.GraphicsReplacements
 {
     public class CodebreakerProjectileReplacer : ModSystem
     {

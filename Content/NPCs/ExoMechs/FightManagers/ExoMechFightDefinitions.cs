@@ -1,11 +1,12 @@
 ﻿using System;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Terraria;
 using Terraria.ModLoader;
-using WoTM;
-using static FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers.ExoMechFightStateManager;
+using WoTM.Common.Utilities;
+using WoTM.Core.BehaviorOverrides;
+using static WoTM.Content.NPCs.ExoMechs.FightManagers.ExoMechFightStateManager;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     /// <summary>
     /// The central location for all Exo Mech phase definitions.

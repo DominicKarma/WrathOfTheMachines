@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class DraedonLootCrate : ModProjectile, IProjOwnedByBoss<CalamityMod.NPCs.ExoMechs.Draedon>
     {
@@ -35,7 +35,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         {
             Time++;
 
-            Projectile.Opacity = Utilities.InverseLerp(0f, 45f, Time);
+            Projectile.Opacity = LumUtils.InverseLerp(0f, 45f, Time);
             Projectile.Center = new Vector2(Recipient.Center.X, Projectile.Center.Y);
             Projectile.velocity.Y = MathHelper.Lerp(Projectile.velocity.Y, 24f, 0.006f);
 

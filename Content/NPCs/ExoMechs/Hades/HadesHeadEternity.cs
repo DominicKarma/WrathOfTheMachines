@@ -8,9 +8,6 @@ using CalamityMod.Items.Weapons.Rogue;
 using CalamityMod.Items.Weapons.Summon;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Common.Utilities;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -21,11 +18,16 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
+namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
     public sealed partial class HadesHeadEternity : NPCBehaviorOverride, IHadesSegment, IExoMech
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -9,10 +9,11 @@ using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
 using WoTM.Assets;
+using WoTM.Common.Utilities;
+using WoTM.Core.Graphics.Models;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class CustomExoMechsSky : CustomSky
     {
@@ -24,7 +25,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
 
             public void Update()
             {
-                Brightness = Utilities.Saturate(Brightness * 0.991f - 0.0011f);
+                Brightness = LumUtils.Saturate(Brightness * 0.991f - 0.0011f);
             }
         }
 
@@ -228,7 +229,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.45f), MathHelper.Lerp(100f, -0.95f, MathF.Pow(1f - forwardInterpolant, 0.67f)));
             float scale = 0.7f / (planePosition.Z + 1f);
-            float opacity = Utilities.InverseLerp(100f, 54f, planePosition.Z);
+            float opacity = LumUtils.InverseLerp(100f, 54f, planePosition.Z);
             planePosition.Y -= scale * 1560f;
 
             Matrix rotation = Matrix.CreateRotationX((1f - forwardInterpolant) * 0.5f) * Matrix.CreateRotationZ(MathHelper.Pi);
@@ -263,7 +264,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
 
         public static void ResetVariablesWhileInactive()
         {
-            RedSirensIntensity = Utilities.Saturate(RedSirensIntensity - 0.1f);
+            RedSirensIntensity = LumUtils.Saturate(RedSirensIntensity - 0.1f);
         }
 
         #region Boilerplate

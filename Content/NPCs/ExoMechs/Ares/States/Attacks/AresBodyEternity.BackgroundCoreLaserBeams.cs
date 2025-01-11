@@ -2,7 +2,6 @@
 using System.Linq;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Particles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
@@ -11,9 +10,11 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public sealed partial class AresBodyEternity : NPCBehaviorOverride
     {

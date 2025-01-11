@@ -1,19 +1,22 @@
 ﻿using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
 {
     public class ExothermalLaserDashes : ExoMechComboHandler
     {

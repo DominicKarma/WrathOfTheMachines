@@ -1,5 +1,4 @@
 ﻿using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -9,9 +8,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class LargeTeslaSphereExplosion : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -23,7 +23,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(0.33f);
+        public static int Lifetime => LumUtils.SecondsToFrames(0.33f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 

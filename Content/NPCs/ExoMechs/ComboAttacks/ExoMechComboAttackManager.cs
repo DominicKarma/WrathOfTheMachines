@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using Terraria;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
 {
     public class ExoMechComboAttackManager : ModSystem
     {

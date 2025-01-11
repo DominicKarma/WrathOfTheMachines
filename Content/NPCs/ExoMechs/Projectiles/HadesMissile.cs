@@ -2,7 +2,6 @@
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -15,9 +14,10 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer, IExoMechProjectile
     {
@@ -200,7 +200,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Color startingColor = Color.Lerp(Color.SkyBlue, Color.White, 0.6f);
             Color middleColor = Color.Lerp(Color.Red, Color.Yellow, 0.32f);
             Color endColor = Color.Lerp(Color.Orange, Color.Red, 0.7f);
-            return Utilities.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity * opacityFactor;
+            return LumUtils.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity * opacityFactor;
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)

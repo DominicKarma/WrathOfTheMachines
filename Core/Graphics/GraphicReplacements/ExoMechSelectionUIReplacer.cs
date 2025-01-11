@@ -12,8 +12,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Core.CrossCompatibility;
 
-namespace WoTM.Core.Graphics.EffectManagers
+namespace WoTM.Core.Graphics.GraphicReplacements
 {
     public class ExoMechSelectionUIReplacer : ILEditProvider
     {
@@ -70,7 +71,7 @@ namespace WoTM.Core.Graphics.EffectManagers
 
         public override void Subscribe(ManagedILEdit edit)
         {
-            HookHelper.ModifyMethodWithIL(typeof(ExoMechSelectionUI).GetMethod("Draw", Utilities.UniversalBindingFlags), edit.SubscriptionWrapper);
+            HookHelper.ModifyMethodWithIL(typeof(ExoMechSelectionUI).GetMethod("Draw", LumUtils.UniversalBindingFlags), edit.SubscriptionWrapper);
         }
 
         public override void Unsubscribe(ManagedILEdit edit) { }

@@ -4,8 +4,7 @@ using System.IO;
 using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -15,9 +14,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ExoOverloadDeathray : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -43,7 +43,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(9f);
+        public static int Lifetime => LumUtils.SecondsToFrames(9f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -117,7 +117,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
             float cosine = MathF.Cos(MathHelper.TwoPi * rotationTime);
-            float upwardsInterpolant = Utilities.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyEternity.BackgroundCoreLaserBeams_MissileShootDelay);
+            float upwardsInterpolant = LumUtils.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyEternity.BackgroundCoreLaserBeams_MissileShootDelay);
             float zRotation = MathHelper.SmoothStep(cosine * 0.1f, -MathHelper.PiOver2, upwardsInterpolant);
             var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
@@ -125,7 +125,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Projectile.Center = ares.CorePosition;
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 98f, 0f, MaxLaserbeamLength);
 
-            Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 11f, Time), 0.63f);
+            Projectile.Opacity = MathF.Pow(LumUtils.InverseLerp(0f, 11f, Time), 0.63f);
 
             if (Projectile.timeLeft <= 60)
                 Projectile.scale *= 0.9f;
@@ -202,7 +202,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
                 {
                     int upperLeft = i * (CylinderWidthSegments + 1) + j;
                     int upperRight = upperLeft + 1;
-                    int lowerLeft = upperLeft + (CylinderWidthSegments + 1);
+                    int lowerLeft = upperLeft + CylinderWidthSegments + 1;
                     int lowerRight = lowerLeft + 1;
 
                     indices[(i * CylinderWidthSegments + j) * 6] = upperLeft;
@@ -257,8 +257,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float hueShift = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 9f) * -0.09f;
-            float bloomScaleFactor = MathHelper.Lerp(0.9f, 1.1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly * 22f)) * Projectile.Opacity;
+            float hueShift = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 9f) * -0.09f;
+            float bloomScaleFactor = MathHelper.Lerp(0.9f, 1.1f, LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 22f)) * Projectile.Opacity;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.White with { A = 0 }) * Projectile.Opacity * 0.5f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 0.24f, 0, 0f);
@@ -275,7 +275,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 
             int width = Main.screenWidth;
             int height = Main.screenHeight;
-            Utilities.CalculatePrimitiveMatrices(width, height, out Matrix view, out Matrix projection);
+            LumUtils.CalculatePrimitiveMatrices(width, height, out Matrix view, out Matrix projection);
             Matrix overallProjection = view * projection;
 
             RenderBloom(start, end, overallProjection);

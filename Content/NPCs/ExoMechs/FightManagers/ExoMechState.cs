@@ -1,4 +1,4 @@
-﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+﻿namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     /// <summary>
     /// A representation of the state of a single Exo Mech.

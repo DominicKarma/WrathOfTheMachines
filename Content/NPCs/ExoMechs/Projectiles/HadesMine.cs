@@ -2,7 +2,6 @@
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Particles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -14,9 +13,10 @@ using Terraria.Audio;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesMine : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<ThanatosHead>
     {
@@ -92,7 +92,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             DrawAreaOfEffectTelegraph();
             Main.spriteBatch.ExitShaderRegion();
 
-            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
+            LumUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], lightColor, 1);
             DrawGlowTelegraph();
 
             return false;
@@ -101,9 +101,9 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public void DrawAreaOfEffectTelegraph()
         {
             float lifetimeRatio = Time / Lifetime;
-            float opacity = Utilities.Saturate(lifetimeRatio * 5f) * Utilities.InverseLerp(15f, 7f, Projectile.velocity.Length()) * 0.275f;
-            float maxFlashIntensity = Utilities.InverseLerp(0.25f, 0.75f, lifetimeRatio);
-            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
+            float opacity = LumUtils.Saturate(lifetimeRatio * 5f) * LumUtils.InverseLerp(15f, 7f, Projectile.velocity.Length()) * 0.275f;
+            float maxFlashIntensity = LumUtils.InverseLerp(0.25f, 0.75f, lifetimeRatio);
+            float flashColorInterpolant = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 10f).Squared() * maxFlashIntensity;
             Color innerColor = Color.Coral;
             Color edgeColor = Color.Lerp(Color.Yellow, Color.Wheat, 0.9f);
 
@@ -125,8 +125,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public void DrawGlowTelegraph()
         {
             float lifetimeRatio = Time / Lifetime;
-            float maxFlashIntensity = Utilities.InverseLerp(0.75f, 0.9f, lifetimeRatio);
-            float flashColorInterpolant = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 32f).Squared() * maxFlashIntensity;
+            float maxFlashIntensity = LumUtils.InverseLerp(0.75f, 0.9f, lifetimeRatio);
+            float flashColorInterpolant = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 32f).Squared() * maxFlashIntensity;
             float glowScale = Utils.Remap(lifetimeRatio, 0.8f, 1f, 1f, 1.8f);
 
             Texture2D glow = MiscTexturesRegistry.BloomCircleSmall.Value;
@@ -137,7 +137,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Main.spriteBatch.Draw(glow, drawPosition, null, glowColor, 0f, glow.Size() * 0.5f, 0.14f, 0, 0f);
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 3.2f;
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => LumUtils.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 3.2f;
 
         public override void OnKill(int timeLeft)
         {

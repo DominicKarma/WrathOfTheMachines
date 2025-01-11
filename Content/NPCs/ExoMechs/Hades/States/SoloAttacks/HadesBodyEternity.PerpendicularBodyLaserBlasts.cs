@@ -1,6 +1,5 @@
 ﻿using CalamityMod;
 using CalamityMod.Particles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -11,9 +10,13 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.Hades;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
+namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
     public sealed partial class HadesHeadEternity : NPCBehaviorOverride
     {

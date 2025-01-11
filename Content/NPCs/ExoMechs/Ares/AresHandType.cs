@@ -6,7 +6,7 @@ using System.IO;
 using Terraria;
 using Terraria.Audio;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     /// <summary>
     /// Represents a type of hand that Ares may use.

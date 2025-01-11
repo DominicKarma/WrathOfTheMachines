@@ -5,7 +5,7 @@ using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public class AresGlowmaskLightPresetRegistry : ModSystem
     {

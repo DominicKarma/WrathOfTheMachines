@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class HadesPostProcessingSystem : ModSystem
     {

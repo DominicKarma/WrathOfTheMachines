@@ -1,7 +1,7 @@
 ﻿using ReLogic.Utilities;
 using Terraria.Audio;
 
-namespace WoTM
+namespace WoTM.Common.Utilities
 {
     public static class SoundUtilities
     {

@@ -10,7 +10,7 @@ using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
 using CalamityMod.UI;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -28,11 +28,14 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public sealed partial class ApolloEternity : NPCBehaviorOverride, IExoMech, IExoTwin
     {
@@ -371,8 +374,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
             CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
-            MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
-            FlameEngulfInterpolant = Utilities.Saturate(FlameEngulfInterpolant - 0.06f);
+            MotionBlurInterpolant = LumUtils.Saturate(MotionBlurInterpolant - 0.05f);
+            FlameEngulfInterpolant = LumUtils.Saturate(FlameEngulfInterpolant - 0.06f);
             SpecificDrawAction = null;
             SpecialShaderAction = (_, _2) => false;
 
@@ -401,8 +404,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
                 if (s.Sound is null)
                     return;
 
-                s.Volume = Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
-                s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+                s.Volume = LumUtils.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
+                s.Pitch = LumUtils.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
                 if (Inactive)
                     s.Volume *= 0.01f;
             });
@@ -498,7 +501,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
         public float FlameEngulfWidthFunction(float completionRatio)
         {
             float baseWidth = MathHelper.Lerp(114f, 50f, completionRatio);
-            float tipSmoothenFactor = MathF.Sqrt(1f - Utilities.InverseLerp(0.3f, 0.015f, completionRatio).Cubed());
+            float tipSmoothenFactor = MathF.Sqrt(1f - LumUtils.InverseLerp(0.3f, 0.015f, completionRatio).Cubed());
             return NPC.scale * baseWidth * tipSmoothenFactor;
         }
 
@@ -507,7 +510,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
             Color flameTipColor = new(255, 255, 208);
             Color limeFlameColor = new(173, 255, 36);
             Color greenFlameColor = new(52, 156, 17);
-            Color trailColor = Utilities.MulticolorLerp(MathF.Pow(completionRatio, 0.75f) * 0.7f, flameTipColor, limeFlameColor, greenFlameColor);
+            Color trailColor = LumUtils.MulticolorLerp(MathF.Pow(completionRatio, 0.75f) * 0.7f, flameTipColor, limeFlameColor, greenFlameColor);
             return NPC.GetAlpha(trailColor) * (1 - completionRatio) * FlameEngulfInterpolant;
         }
 

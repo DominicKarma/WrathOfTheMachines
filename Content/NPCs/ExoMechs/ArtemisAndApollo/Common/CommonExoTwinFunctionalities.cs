@@ -1,5 +1,5 @@
 ﻿using CalamityMod.NPCs;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -8,8 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
 {
     public static class CommonExoTwinFunctionalities
     {
@@ -45,8 +48,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 
         private static float NerveEndingWidthFunction(NPC twin, float completionRatio)
         {
-            float baseWidth = Utilities.InverseLerp(1f, 0.54f, completionRatio) * 6f;
-            float endTipWidth = Utilities.Convert01To010(Utilities.InverseLerp(0.96f, 0.83f, completionRatio)) * 6f;
+            float baseWidth = LumUtils.InverseLerp(1f, 0.54f, completionRatio) * 6f;
+            float endTipWidth = LumUtils.Convert01To010(LumUtils.InverseLerp(0.96f, 0.83f, completionRatio)) * 6f;
             return (baseWidth + endTipWidth) * twin.scale;
         }
 
@@ -59,8 +62,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
         {
             Color nerveEndingColorFunction(float completionRatio)
             {
-                float blackInterpolant = Utilities.InverseLerp(0.17f, 0.34f, completionRatio);
-                Color paletteColor = Utilities.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
+                float blackInterpolant = LumUtils.InverseLerp(0.17f, 0.34f, completionRatio);
+                Color paletteColor = LumUtils.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
                 return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant) * twin.Opacity;
             }
 
@@ -81,7 +84,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
                 for (int i = 0; i < nerveDrawPositions.Length; i++)
                 {
                     float completionRatio = i / (float)(nerveDrawPositions.Length - 1);
-                    float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
+                    float inwardBendInterpolant = LumUtils.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
                     Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * nerveEndingLength;
                     Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2) * twin.scale;
@@ -148,13 +151,13 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 
             float thrusterWidthFunction(float completionRatio)
             {
-                float thrusterPulse = Utilities.Cos01(Main.GlobalTimeWrappedHourly * -42.3f + twin.whoAmI + completionRatio * 5f) * (1f - completionRatio) * 0.5f;
+                float thrusterPulse = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * -42.3f + twin.whoAmI + completionRatio * 5f) * (1f - completionRatio) * 0.5f;
                 return (MathHelper.Lerp(1f, 0.1f, MathF.Pow(completionRatio, 0.5f)) + thrusterPulse) * thrusterWidth;
             }
             Color thrusterColorFunction(float completionRatio)
             {
                 Color baseColor = twin.GetAlpha(new(0.3f, 0.5f, 1f));
-                float completionRatioOpacity = MathF.Pow(Utilities.InverseLerp(0.9f, 0f, completionRatio), 1.85f);
+                float completionRatioOpacity = MathF.Pow(LumUtils.InverseLerp(0.9f, 0f, completionRatio), 1.85f);
                 float generalOpacity = twin.Opacity;
                 return baseColor * completionRatioOpacity * generalOpacity;
             }
@@ -220,7 +223,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 
             float[] blurWeights = new float[12];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
+                blurWeights[i] = LumUtils.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
 
             if (!twinInterface.SpecialShaderAction?.Invoke(texture, twin) ?? true)
             {

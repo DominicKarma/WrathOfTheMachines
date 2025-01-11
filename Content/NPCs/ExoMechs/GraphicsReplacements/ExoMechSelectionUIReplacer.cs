@@ -12,7 +12,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.GraphicsReplacements
+namespace WoTM.Content.NPCs.ExoMechs.GraphicsReplacements
 {
     public class ExoMechSelectionUIReplacer : ModSystem
     {

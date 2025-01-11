@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.Items.Weapons.DraedonsArsenal;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -9,6 +8,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.Items.ExoelectricFieldDestabilizer
 {

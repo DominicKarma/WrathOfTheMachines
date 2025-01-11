@@ -1,6 +1,7 @@
 ﻿using Terraria;
+using WoTM.Core.BehaviorOverrides;
 
-namespace WoTM
+namespace WoTM.Common.Utilities
 {
     public static class NPCExtensionMethods
     {

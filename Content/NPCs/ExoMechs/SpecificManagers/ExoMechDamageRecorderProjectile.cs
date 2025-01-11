@@ -1,8 +1,8 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class ExoMechDamageRecorderProjectile : GlobalProjectile
     {

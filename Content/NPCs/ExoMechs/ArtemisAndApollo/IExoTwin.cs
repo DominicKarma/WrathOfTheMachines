@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public interface IExoTwin
     {

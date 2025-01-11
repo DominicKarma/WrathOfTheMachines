@@ -2,9 +2,11 @@
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public sealed partial class AresBodyEternity : NPCBehaviorOverride
     {

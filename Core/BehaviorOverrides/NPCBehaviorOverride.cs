@@ -7,7 +7,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace WoTM
+namespace WoTM.Core.BehaviorOverrides
 {
     public abstract class NPCBehaviorOverride : ModType<NPC, NPCBehaviorOverride>
     {

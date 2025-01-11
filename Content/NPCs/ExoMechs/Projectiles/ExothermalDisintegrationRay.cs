@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Easings;
@@ -13,9 +12,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class ExothermalDisintegrationRay : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Artemis>, IExoMechProjectile
     {
@@ -34,7 +34,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long this laserbeam should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(2.2f);
+        public static int Lifetime => LumUtils.SecondsToFrames(2.2f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -74,14 +74,14 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Projectile.velocity = artemis.SafeDirectionTo(beamStart);
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 400f, 0f, MaxLaserbeamLength);
 
-            float scaleFactor = EasingCurves.Elastic.Evaluate(EasingType.Out, Utilities.InverseLerp(0f, 60f, Time)) * Utilities.InverseLerp(0f, 12f, Projectile.timeLeft);
+            float scaleFactor = EasingCurves.Elastic.Evaluate(EasingType.Out, LumUtils.InverseLerp(0f, 60f, Time)) * LumUtils.InverseLerp(0f, 12f, Projectile.timeLeft);
             Projectile.width = (int)(scaleFactor * 100f);
 
             for (int i = 0; i < 18; i++)
             {
                 Vector2 fireSpawnPosition = Projectile.Center + Projectile.velocity * Main.rand.NextFloat(LaserbeamLength * 0.9f);
                 Vector2 fireVelocity = Main.rand.NextVector2Circular(14f, 14f) + artemis.velocity;
-                Color fireGlowColor = Utilities.MulticolorLerp(Main.rand.NextFloat(0.75f), Color.Yellow, Color.Orange, Color.Red) * Main.rand.NextFloat(0.5f, 0.8f);
+                Color fireGlowColor = LumUtils.MulticolorLerp(Main.rand.NextFloat(0.75f), Color.Yellow, Color.Orange, Color.Red) * Main.rand.NextFloat(0.5f, 0.8f);
                 Vector2 fireGlowScaleFactor = Vector2.One * Main.rand.NextFloat(0.095f, 0.175f);
                 BloomPixelParticle fire = new(fireSpawnPosition, fireVelocity, Color.White, fireGlowColor, Main.rand.Next(17, 37), Vector2.One * 2f, null, fireGlowScaleFactor);
                 fire.Spawn();
@@ -94,7 +94,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         {
             float pulsation = MathF.Sin(MathHelper.Pi * completionRatio * 8f - MathHelper.TwoPi * Time / 10f) * 18f;
             float baseWidth = pulsation + Projectile.width;
-            float startInterpolant = Utilities.InverseLerp(0.02f, 0.09f, completionRatio);
+            float startInterpolant = LumUtils.InverseLerp(0.02f, 0.09f, completionRatio);
             float startingScaleFactor = MathHelper.SmoothStep(0f, 1f, MathF.Pow(startInterpolant, 0.45f));
             return baseWidth * startingScaleFactor;
         }
@@ -108,7 +108,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 
         public Color BloomColorFunction(float completionRatio)
         {
-            float opacity = Utilities.InverseLerp(0.01f, 0.065f, completionRatio) * Utilities.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
+            float opacity = LumUtils.InverseLerp(0.01f, 0.065f, completionRatio) * LumUtils.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
             return Projectile.GetAlpha(Color.OrangeRed) * opacity;
         }
 
@@ -145,7 +145,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             // Measure how far along the laser's length the target is.
             // If the signed distance is negative (a.k.a. they're behind the laser) or above the laser length (a.k.a. they're beyond the laser), terminate this
             // method immediately.
-            float signedDistanceAlongLaser = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
+            float signedDistanceAlongLaser = LumUtils.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
             if (signedDistanceAlongLaser < 0f || signedDistanceAlongLaser >= LaserbeamLength)
                 return false;
 

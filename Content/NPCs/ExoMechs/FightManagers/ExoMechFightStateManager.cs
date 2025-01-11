@@ -5,17 +5,18 @@ using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     public sealed class ExoMechFightStateManager : ModSystem
     {
@@ -286,7 +287,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
             if (exoMech is null || !exoMech.active)
                 return new(0f, wasSummoned, true);
 
-            return new(Utilities.Saturate(exoMech.life / (float)exoMech.lifeMax), true, false);
+            return new(LumUtils.Saturate(exoMech.life / (float)exoMech.lifeMax), true, false);
         }
 
         /// <summary>

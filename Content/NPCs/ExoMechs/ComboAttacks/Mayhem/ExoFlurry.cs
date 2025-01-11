@@ -5,10 +5,8 @@ using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Assets;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
@@ -18,9 +16,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
 {
     public class ExoFlurry : ExoMechComboHandler
     {
@@ -282,11 +283,11 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
                 npc.netUpdate = true;
             }
 
-            float spinCompletion = Utilities.InverseLerp(0f, spinTime + spinSlowdownAndRepositionTime, spinCycleTimer);
+            float spinCompletion = LumUtils.InverseLerp(0f, spinTime + spinSlowdownAndRepositionTime, spinCycleTimer);
             if (spinCompletion < 1f)
             {
                 // Determine the radius of the spin for the two Exo Twins.
-                float radiusExtendInterpolant = Utilities.InverseLerp(0f, spinSlowdownAndRepositionTime, spinCycleTimer - spinTime);
+                float radiusExtendInterpolant = LumUtils.InverseLerp(0f, spinSlowdownAndRepositionTime, spinCycleTimer - spinTime);
                 float radiusExtension = MathF.Pow(radiusExtendInterpolant, 3.13f) * ExoTwinsMaxSpinRadius;
                 float currentRadius = ExoTwinsStandardSpinRadius + radiusExtension;
 
@@ -317,8 +318,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
             }
 
             IExoTwin? twinInfo = null;
-            float motionBlurInterpolant = Utilities.InverseLerp(90f, 150f, npc.velocity.Length());
-            float thrusterBoost = Utilities.InverseLerp(ExoTwinsMaxDashSpeed * 0.85f, ExoTwinsMaxDashSpeed, npc.velocity.Length()) * 1.3f;
+            float motionBlurInterpolant = LumUtils.InverseLerp(90f, 150f, npc.velocity.Length());
+            float thrusterBoost = LumUtils.InverseLerp(ExoTwinsMaxDashSpeed * 0.85f, ExoTwinsMaxDashSpeed, npc.velocity.Length()) * 1.3f;
             if (npc.TryGetBehavior(out ArtemisEternity artemisBehavior))
             {
                 artemisBehavior.MotionBlurInterpolant = motionBlurInterpolant;
@@ -366,7 +367,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
                     float FlameEngulfWidthFunction(float completionRatio)
                     {
                         float baseWidth = MathHelper.Lerp(114f, 50f, completionRatio);
-                        float tipSmoothenFactor = MathF.Sqrt(1f - Utilities.InverseLerp(0.3f, 0.015f, completionRatio).Cubed());
+                        float tipSmoothenFactor = MathF.Sqrt(1f - LumUtils.InverseLerp(0.3f, 0.015f, completionRatio).Cubed());
                         return npc.scale * baseWidth * tipSmoothenFactor;
                     }
 
@@ -375,7 +376,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
                         Color flameTipColor = new(255, 255, 208);
                         Color limeFlameColor = new(173, 255, 36);
                         Color greenFlameColor = new(52, 156, 17);
-                        Color trailColor = Utilities.MulticolorLerp(MathF.Pow(completionRatio, 0.75f) * 0.7f, flameTipColor, limeFlameColor, greenFlameColor);
+                        Color trailColor = LumUtils.MulticolorLerp(MathF.Pow(completionRatio, 0.75f) * 0.7f, flameTipColor, limeFlameColor, greenFlameColor);
                         return npc.GetAlpha(trailColor) * (1 - completionRatio);
                     }
 

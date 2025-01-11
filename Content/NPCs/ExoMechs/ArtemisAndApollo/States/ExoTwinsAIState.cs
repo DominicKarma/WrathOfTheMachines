@@ -1,6 +1,6 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
+﻿using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States
 {
     public enum ExoTwinsAIState
     {

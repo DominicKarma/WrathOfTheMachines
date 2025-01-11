@@ -1,7 +1,6 @@
 ﻿using System;
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -11,8 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class BigHadesSegmentExplosion : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<ThanatosHead>
     {
@@ -26,7 +26,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long this sphere should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(2.34f);
+        public static int Lifetime => LumUtils.SecondsToFrames(2.34f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 

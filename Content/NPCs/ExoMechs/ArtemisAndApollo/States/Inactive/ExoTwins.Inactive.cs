@@ -1,11 +1,12 @@
 ﻿using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Artemis;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
+namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 {
     public class DraedonDialogueChain(int pauseBetweenDialogue = 30)
     {
@@ -99,7 +99,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
             // Check if the dialogue just began.
             // If it has, and subtitles are disabled, create a chat text message.
             if (relativeTime == 1 && Main.netMode != NetmodeID.MultiplayerClient && !DraedonDialogueManager.UseSubtitles)
-                Utilities.BroadcastLocalizedText(dialogue.LocalizationKey, dialogue.Text.TextColor);
+                LumUtils.BroadcastLocalizedText(dialogue.LocalizationKey, dialogue.Text.TextColor);
 
             if (DraedonDialogueManager.UseSubtitles)
                 DraedonSubtitleManager.Play(relativeTime, dialogue);

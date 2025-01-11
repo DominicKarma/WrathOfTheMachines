@@ -1,4 +1,4 @@
-﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+﻿namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States
 {
     public enum ExoTwinsIndividualAIState
     {

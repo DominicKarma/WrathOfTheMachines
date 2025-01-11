@@ -1,4 +1,4 @@
-﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue
+﻿namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 {
     public class DraedonDialogue(string localizationKey, DraedonSubtitle subtitle, DraedonChatTextData text)
     {

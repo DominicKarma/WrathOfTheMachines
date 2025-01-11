@@ -1,8 +1,8 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.MiscTweaks
 {
     public class HeartDropDisablingSystem : ModSystem
     {

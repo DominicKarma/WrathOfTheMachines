@@ -1,6 +1,5 @@
 ﻿using CalamityMod;
 using CalamityMod.UI.VanillaBossBars;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -12,8 +11,9 @@ using Terraria.GameContent.UI.BigProgressBar;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Assets;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public class ExoMechBossBar : ModBossBar
     {

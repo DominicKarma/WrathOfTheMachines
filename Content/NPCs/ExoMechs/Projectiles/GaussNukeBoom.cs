@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -11,8 +10,9 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class GaussNukeBoom : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -30,7 +30,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(1.2f);
+        public static int Lifetime => LumUtils.SecondsToFrames(1.2f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -60,7 +60,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public override void AI()
         {
             Time++;
-            Projectile.Opacity = Utilities.InverseLerp(1f, 0.82f, Time / Lifetime);
+            Projectile.Opacity = LumUtils.InverseLerp(1f, 0.82f, Time / Lifetime);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -92,6 +92,6 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public override bool? CanDamage() => Projectile.Opacity >= 0.6f;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.52f, targetHitbox);
+            LumUtils.CircularHitboxCollision(Projectile.Center, MathF.Sqrt(Time / Lifetime) * Projectile.width * 0.52f, targetHitbox);
     }
 }

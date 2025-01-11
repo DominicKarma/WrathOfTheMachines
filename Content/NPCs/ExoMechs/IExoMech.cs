@@ -1,4 +1,4 @@
-﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
+﻿namespace WoTM.Content.NPCs.ExoMechs
 {
     public interface IExoMech
     {

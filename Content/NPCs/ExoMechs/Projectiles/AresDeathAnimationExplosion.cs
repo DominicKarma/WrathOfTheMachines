@@ -1,7 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -11,8 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class AresDeathAnimationExplosion : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -49,7 +49,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         public override void AI()
         {
             Time++;
-            Projectile.Opacity = Utilities.InverseLerp(1f, 0.73f, Time / Lifetime).Cubed();
+            Projectile.Opacity = LumUtils.InverseLerp(1f, 0.73f, Time / Lifetime).Cubed();
             Projectile.scale = MathHelper.Clamp(Projectile.scale + 2f, 1f, 22f);
         }
 

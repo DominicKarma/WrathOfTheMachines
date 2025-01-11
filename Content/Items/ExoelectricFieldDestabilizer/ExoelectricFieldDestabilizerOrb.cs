@@ -1,5 +1,4 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
-using Luminance.Assets;
+﻿using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
@@ -8,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.Items.ExoelectricFieldDestabilizer

@@ -2,8 +2,7 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Particles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -16,9 +15,10 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Assets;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class LargeTeslaSphere : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -121,7 +121,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             if (Main.rand.NextBool(5))
                 arcLength *= 1.5f;
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
         /// <summary>
@@ -182,23 +182,23 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             for (int i = 0; i < 20; i++)
             {
                 Vector2 burstVelocity = (MathHelper.TwoPi * i / 20f).ToRotationVector2() * 0.54f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
             for (int i = 0; i < 9; i++)
             {
                 Vector2 burstVelocity = (MathHelper.TwoPi * i / 9f + MathHelper.Pi / 6f).ToRotationVector2() * 0.92f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
             Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
             for (int i = 0; i < 7; i++)
             {
                 Vector2 burstVelocity = Projectile.SafeDirectionTo(target.Center).RotatedBy(MathHelper.Lerp(-0.51f, 0.51f, i / 6f)) * 1.4f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -228,6 +228,6 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.37f, targetHitbox);
+            LumUtils.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.37f, targetHitbox);
     }
 }

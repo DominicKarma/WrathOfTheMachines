@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Particles;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -14,8 +12,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class PulseBlast : ModProjectile, IProjOwnedByBoss<AresBody>, IPixelatedPrimitiveRenderer
     {

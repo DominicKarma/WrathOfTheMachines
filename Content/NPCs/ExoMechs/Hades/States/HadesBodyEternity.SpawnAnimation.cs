@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Terraria;
-using WoTM;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
+namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
     public sealed partial class HadesHeadEternity : NPCBehaviorOverride
     {

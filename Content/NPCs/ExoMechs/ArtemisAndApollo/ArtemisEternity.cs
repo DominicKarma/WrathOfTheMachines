@@ -9,7 +9,6 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Hooking;
@@ -25,11 +24,15 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public sealed partial class ArtemisEternity : NPCBehaviorOverride, IExoMech, IExoTwin
     {
@@ -372,7 +375,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
             CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
-            MotionBlurInterpolant = Utilities.Saturate(MotionBlurInterpolant - 0.05f);
+            MotionBlurInterpolant = LumUtils.Saturate(MotionBlurInterpolant - 0.05f);
             SpecificDrawAction = null;
             SpecialShaderAction = (_, _2) => false;
 
@@ -398,8 +401,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
                 if (s.Sound is null)
                     return;
 
-                s.Volume = (Utilities.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
-                s.Pitch = Utilities.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
+                s.Volume = (LumUtils.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
+                s.Pitch = LumUtils.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
                 if (Inactive)
                     s.Volume *= 0.01f;
             });
@@ -445,7 +448,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 
         public override Color? GetAlpha(Color drawColor)
         {
-            float backgroundVfxInterpolant = Utilities.InverseLerp(0.9f, 3.7f, ZPosition);
+            float backgroundVfxInterpolant = LumUtils.InverseLerp(0.9f, 3.7f, ZPosition);
             float backgroundOpacity = MathHelper.Lerp(1f, 0.65f, backgroundVfxInterpolant);
             drawColor = Color.Lerp(drawColor, Color.DarkGray, backgroundVfxInterpolant * 0.56f) * backgroundOpacity;
             return drawColor * NPC.Opacity;

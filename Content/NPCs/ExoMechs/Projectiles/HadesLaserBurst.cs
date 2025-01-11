@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -10,9 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesLaserBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
     {
@@ -70,7 +70,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <param name="completionRatio">How far along the trail the sampled position is.</param>
         public float LaserWidthFunction(float completionRatio)
         {
-            float sizeInterpolant = MathF.Pow(Utilities.InverseLerpBump(0.05f, 0.13f, 0.87f, 0.95f, completionRatio), 0.9f);
+            float sizeInterpolant = MathF.Pow(LumUtils.InverseLerpBump(0.05f, 0.13f, 0.87f, 0.95f, completionRatio), 0.9f);
             return MathHelper.Lerp(1f, Projectile.width * 0.6f, sizeInterpolant);
         }
 

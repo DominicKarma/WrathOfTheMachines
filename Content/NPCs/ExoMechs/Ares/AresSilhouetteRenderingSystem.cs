@@ -1,4 +1,5 @@
 ﻿using CalamityMod.NPCs;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -6,9 +7,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public sealed class AresSilhouetteRenderingSystem : ModSystem
     {
@@ -32,7 +33,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
 
                 float[] blurWeights = new float[12];
                 for (int i = 0; i < blurWeights.Length; i++)
-                    blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f) * 0.81f;
+                    blurWeights[i] = LumUtils.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f) * 0.81f;
                 ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.MotionBlurShader");
                 shader.TrySetParameter("blurInterpolant", aresBehavior.MotionBlurInterpolant);
                 shader.TrySetParameter("blurWeights", blurWeights);

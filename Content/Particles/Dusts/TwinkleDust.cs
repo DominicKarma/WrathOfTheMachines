@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Assets.Particles.Dusts
+namespace WoTM.Content.Particles.Dusts
 {
     public class TwinkleDust : ModDust
     {

@@ -3,8 +3,6 @@ using System.IO;
 using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon.Dialogue;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -17,9 +15,11 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM;
+using WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon
+namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
     public sealed partial class DraedonEternity : NPCBehaviorOverride
     {

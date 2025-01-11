@@ -2,7 +2,7 @@
 using WoTM.Common;
 using WoTM.Core.Data;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs
 {
     public static class Variables
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Ares;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -11,9 +10,10 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HomingTeslaBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -34,7 +34,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long this burst spends homing in on players before accelerating.
         /// </summary>
-        public static int HomeInTime => Utilities.SecondsToFrames(0.45f);
+        public static int HomeInTime => LumUtils.SecondsToFrames(0.45f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -73,7 +73,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             if (Projectile.IsFinalExtraUpdate())
                 Time++;
 
-            float homeInInterpolant = MathF.Sqrt(Utilities.InverseLerp(HomeInTime, 0f, Time));
+            float homeInInterpolant = MathF.Sqrt(LumUtils.InverseLerp(HomeInTime, 0f, Time));
             Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
             if (!Projectile.WithinRange(target.Center, 270f))
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) / Projectile.MaxUpdates * 14f, homeInInterpolant * 0.1f);
@@ -103,8 +103,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <param name="completionRatio">How far along the trail the sampled position is.</param>
         public float ElectricityWidthFunction(float completionRatio)
         {
-            float pulseInterpolant = MathF.Cos(Main.GlobalTimeWrappedHourly * 10f) * Utilities.InverseLerpBump(0f, 0.1f, 0.45f, 1f, completionRatio) * 0.2f;
-            float sizeInterpolant = MathF.Pow(Utilities.InverseLerpBump(0.05f, 0.13f, 0.87f, 0.95f, completionRatio), 0.45f) + pulseInterpolant;
+            float pulseInterpolant = MathF.Cos(Main.GlobalTimeWrappedHourly * 10f) * LumUtils.InverseLerpBump(0f, 0.1f, 0.45f, 1f, completionRatio) * 0.2f;
+            float sizeInterpolant = MathF.Pow(LumUtils.InverseLerpBump(0.05f, 0.13f, 0.87f, 0.95f, completionRatio), 0.45f) + pulseInterpolant;
             return MathHelper.Lerp(1f, Projectile.width * 0.85f, sizeInterpolant);
         }
 

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Easings;
@@ -12,8 +11,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class HadesSuperLaserbeam : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
     {
@@ -37,7 +37,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// How long the laserbeam exists for.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(7.4f);
+        public static int Lifetime => LumUtils.SecondsToFrames(7.4f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -47,22 +47,22 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <summary>
         /// The starting <see cref="Projectile.timeLeft"/> where overheating begins for the beam.
         /// </summary>
-        public static int OverheatStartingTime => Utilities.SecondsToFrames(6f);
+        public static int OverheatStartingTime => LumUtils.SecondsToFrames(6f);
 
         /// <summary>
         /// The starting <see cref="Projectile.timeLeft"/> where overheating ends for the beam.
         /// </summary>
-        public static int OverheatEndingTime => Utilities.SecondsToFrames(5f);
+        public static int OverheatEndingTime => LumUtils.SecondsToFrames(5f);
 
         /// <summary>
         /// How long the beam waits before beginning to expand.
         /// </summary>
-        public static int ExpandDelay => Utilities.SecondsToFrames(0.0667f);
+        public static int ExpandDelay => LumUtils.SecondsToFrames(0.0667f);
 
         /// <summary>
         /// How long the beam spends expanding.
         /// </summary>
-        public static int ExpandTime => Utilities.SecondsToFrames(0.2f);
+        public static int ExpandTime => LumUtils.SecondsToFrames(0.2f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -98,10 +98,10 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Projectile.velocity = hades.SafeDirectionTo(beamStart);
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 189f, 0f, MaxLaserbeamLength);
 
-            float expandInterpolant = Utilities.InverseLerp(0f, ExpandTime, Time - ExpandDelay);
+            float expandInterpolant = LumUtils.InverseLerp(0f, ExpandTime, Time - ExpandDelay);
             float bigWidth = MathHelper.Lerp(338f, 500f, OverheatInterpolant);
 
-            Projectile.width = (int)(MathHelper.Lerp(Time / 40f * 9.5f, bigWidth, expandInterpolant.Squared()) * Utilities.InverseLerp(0f, 10f, Projectile.timeLeft));
+            Projectile.width = (int)(MathHelper.Lerp(Time / 40f * 9.5f, bigWidth, expandInterpolant.Squared()) * LumUtils.InverseLerp(0f, 10f, Projectile.timeLeft));
 
             CreateVisuals(expandInterpolant);
 
@@ -114,7 +114,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
         /// <param name="expandInterpolant"></param>
         public void CreateVisuals(float expandInterpolant)
         {
-            OverheatInterpolant = Utilities.InverseLerp(324f, 280f, Projectile.timeLeft);
+            OverheatInterpolant = LumUtils.InverseLerp(324f, 280f, Projectile.timeLeft);
 
             // Darken the sky to increase general contrast with everything.
             CustomExoMechsSky.CloudExposure = MathHelper.Lerp(CustomExoMechsSky.DefaultCloudExposure, 0.085f, expandInterpolant);
@@ -154,12 +154,12 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             if (Main.rand.NextBool(4))
                 arcLength *= 1.6f;
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
         public float LaserWidthFunction(float completionRatio)
         {
-            float frontExpansionInterpolant = Utilities.InverseLerp(0.022f, 0.14f, completionRatio);
+            float frontExpansionInterpolant = LumUtils.InverseLerp(0.022f, 0.14f, completionRatio);
             float maxSize = Projectile.width + completionRatio * Projectile.width * 1.2f;
             return EasingCurves.Quadratic.Evaluate(EasingType.Out, 2f, maxSize, frontExpansionInterpolant);
         }
@@ -178,7 +178,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             Color electricColor = new(0.67f, 0.7f, 1f, 0f);
             Color overheatColor = new(1f, 0.3f, 0f, 0f);
 
-            float opacity = Utilities.InverseLerp(0.02f, 0.065f, completionRatio) * Utilities.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
+            float opacity = LumUtils.InverseLerp(0.02f, 0.065f, completionRatio) * LumUtils.InverseLerp(0.9f, 0.7f, completionRatio) * 0.32f;
             return Projectile.GetAlpha(Color.Lerp(electricColor, overheatColor, OverheatInterpolant)) * opacity;
         }
 
@@ -227,7 +227,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
             // Measure how far along the laser's length the target is.
             // If the signed distance is negative (a.k.a. they're behind the laser) or above the laser length (a.k.a. they're beyond the laser), terminate this
             // method immediately.
-            float signedDistanceAlongLaser = Utilities.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
+            float signedDistanceAlongLaser = LumUtils.SignedDistanceToLine(targetHitbox.Center(), Projectile.Center, Projectile.velocity);
             if (signedDistanceAlongLaser < 0f || signedDistanceAlongLaser >= LaserbeamLength)
                 return false;
 

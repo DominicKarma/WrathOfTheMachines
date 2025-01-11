@@ -4,6 +4,7 @@ using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -14,10 +15,10 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
 using WoTM.Content.Particles.Metaballs;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public class AresHand : ModNPC, IPixelatedPrimitiveRenderer
     {
@@ -238,7 +239,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
             AttachedToArm = true;
             KatanaInUse = false;
             OptionalDrawAction = null;
-            KatanaAfterimageOpacity = Utilities.Saturate(KatanaAfterimageOpacity * 0.84f - 0.07f);
+            KatanaAfterimageOpacity = LumUtils.Saturate(KatanaAfterimageOpacity * 0.84f - 0.07f);
             EnergyDrawer.ParticleSpawnRate = int.MaxValue;
             EnergyDrawer.ParticleColor = HandType.EnergyTelegraphColor;
             NPC.damage = 0;
@@ -430,10 +431,10 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
 
             Vector2 armStart = shoulderDrawPosition + aresBody.scale * new Vector2(ArmSide * 22f, 2f);
 
-            bool elbowPointsUp = (ArmSide == 1) ^ (ArmEndpoint.Y > armStart.Y);
+            bool elbowPointsUp = ArmSide == 1 ^ ArmEndpoint.Y > armStart.Y;
             Texture2D armTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresArmTopPart1").Value;
             Texture2D forearmTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart2").Value;
-            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
+            Vector2 elbowDrawPosition = LumUtils.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
             Vector2 armOrigin = armTexture.Size() * new Vector2(0.81f, 0.66f);
             float shoulderRotation = aresBody.rotation;
             float armRotation = (elbowDrawPosition - armStart).ToRotation() + MathHelper.Pi + shoulderRotation;
@@ -540,8 +541,8 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
             Texture2D armTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart1").Value;
             Texture2D forearmTexture = ModContent.Request<Texture2D>("CalamityMod/NPCs/ExoMechs/Ares/AresBottomArmPart2").Value;
 
-            bool elbowPointsUp = (ArmSide == 1) ^ (ArmEndpoint.Y > armStart.Y);
-            Vector2 elbowDrawPosition = Utilities.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
+            bool elbowPointsUp = ArmSide == 1 ^ ArmEndpoint.Y > armStart.Y;
+            Vector2 elbowDrawPosition = LumUtils.CalculateElbowPosition(armStart, ArmEndpoint - screenPosition, armTexture.Width * aresBody.scale, forearmTexture.Width * aresBody.scale * 1.2f, elbowPointsUp);
             Rectangle armFrame = armTexture.Frame(1, 9, 0, (int)(Main.GlobalTimeWrappedHourly * 12f) % 9);
             Vector2 armOrigin = armFrame.Size() * new Vector2(0.81f, 0.66f);
             float armRotation = (elbowDrawPosition - armStart).ToRotation() + MathHelper.Pi;
@@ -655,14 +656,14 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
         /// <param name="completionRatio">The completion ratio along the primitives.</param>
         public float EnergyKatanaAfterimageWidthFunction(float completionRatio)
         {
-            return NPC.scale * Utilities.InverseLerp(0f, 0.23f, completionRatio) * 28f;
+            return NPC.scale * LumUtils.InverseLerp(0f, 0.23f, completionRatio) * 28f;
         }
 
         /// <summary>
         /// The color function for slash afterimage trails used by Ares' hands when they're energy katanas.
         /// </summary>
         /// <param name="completionRatio">The completion ratio along the primitives.</param>
-        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * Utilities.InverseLerp(0.75f, 0.65f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.3f) * NPC.scale;
+        public Color EnergyKatanaAfterimageColorFunction(float completionRatio) => NPC.GetAlpha(Color.Red) * LumUtils.InverseLerp(0.75f, 0.65f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.3f) * NPC.scale;
 
         /// <summary>
         /// The width function for slash afterimage bloom trails used by Ares' hands when they're energy katanas.
@@ -674,7 +675,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
         /// The color function for slash afterimage bloom trails used by Ares' hands when they're energy katanas.
         /// </summary>
         /// <param name="completionRatio">The completion ratio along the primitives.</param>
-        public Color EnergyKatanaBloomColorFunction(float completionRatio) => NPC.GetAlpha(new(1f, 0.1f, 0f, 0f)) * Utilities.InverseLerp(0.86f, 0.6f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.4f) * 0.56f;
+        public Color EnergyKatanaBloomColorFunction(float completionRatio) => NPC.GetAlpha(new(1f, 0.1f, 0f, 0f)) * LumUtils.InverseLerp(0.86f, 0.6f, completionRatio) * MathF.Pow(KatanaAfterimageOpacity, 0.4f) * 0.56f;
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
@@ -689,7 +690,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
                 Vector2 b = NPC.oldPos[NPC.oldPos.Length / 2];
                 Vector2 c = NPC.oldPos[^1];
 
-                Vector2 drawPosition = Utilities.QuadraticBezier(a, b, c, (i / (float)(controlPoints.Length - 1f)).Squared());
+                Vector2 drawPosition = LumUtils.QuadraticBezier(a, b, c, (i / (float)(controlPoints.Length - 1f)).Squared());
                 controlPoints[i] = Vector2.Lerp(drawPosition, a, 1f - KatanaAfterimageOpacity);
             }
 

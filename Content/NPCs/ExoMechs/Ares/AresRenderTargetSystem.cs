@@ -1,11 +1,12 @@
 ﻿using CalamityMod.NPCs;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares
+namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
     public sealed class AresRenderTargetSystem : ModSystem
     {

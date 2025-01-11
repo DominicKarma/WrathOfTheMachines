@@ -1,7 +1,7 @@
-﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Draedon;
+﻿using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Terraria;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     /// <summary>
     /// A representation of the state of the <i>overall</i> Exo Mechs fight, holding all of the Exo Mech NPC data.

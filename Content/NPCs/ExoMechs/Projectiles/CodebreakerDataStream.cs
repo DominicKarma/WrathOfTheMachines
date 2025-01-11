@@ -14,7 +14,7 @@ using WoTM.Assets;
 using WoTM.Content.Particles;
 using WoTM.Content.Particles.Metaballs;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public class CodebreakerDataStream : ModProjectile
     {

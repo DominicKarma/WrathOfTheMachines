@@ -2,7 +2,7 @@
 using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -12,9 +12,11 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using WoTM;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Core.BehaviorOverrides;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
+namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
     public sealed class HadesBodyEternity : NPCBehaviorOverride, IHadesSegment
     {
@@ -132,7 +134,7 @@ namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
         /// <remarks>
         /// This exists to give a short window of time in multiplayer to allow for body segments to all spawn, so that if latency occurs with any of the segments the worm doesn't become just a head due to not having a valid ahead segment yet.
         /// </remarks>
-        public static readonly int ActivationDelay = Utilities.SecondsToFrames(0.25f);
+        public static readonly int ActivationDelay = LumUtils.SecondsToFrames(0.25f);
 
         public override int NPCOverrideID => ModContent.NPCType<ThanatosBody1>();
 

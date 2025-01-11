@@ -4,7 +4,6 @@ using CalamityMod;
 using CalamityMod.DataStructures;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
-using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -14,6 +13,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.Particles;
 using static WoTM.Content.Items.SpineOfHades.SpineOfHadesReworkManager;
 

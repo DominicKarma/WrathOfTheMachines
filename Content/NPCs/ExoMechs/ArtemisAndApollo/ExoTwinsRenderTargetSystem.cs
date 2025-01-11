@@ -1,4 +1,5 @@
 ﻿using CalamityMod.NPCs;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,7 +7,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public sealed class ExoTwinsRenderTargetSystem : ModSystem
     {
