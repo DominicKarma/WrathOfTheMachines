@@ -203,7 +203,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             else
                 artemisAttributes.Animation = ExoTwinAnimation.ChargingUp;
 
-            Vector2 hoverDestination = Target.Center + new Vector2(npc.OnRightSideOf(Target).ToDirectionInt() * 600f, -300f) - npc.velocity * 3f;
+            Vector2 hoverDestination = Target.Center + new Vector2(npc.OnRightSideOf(Target).ToDirectionInt() * 500f, -270f) - npc.velocity * 3f;
             npc.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.038f, 0.74f, 74f);
 
             // Get really close to the desired destination on the first few frames, to ensure that Artemis doesn't fire from offscreen.
