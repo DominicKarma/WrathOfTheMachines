@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -23,6 +23,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 bool dronnor = Main.LocalPlayer.name.Equals("Dronnor", StringComparison.OrdinalIgnoreCase);
                 return connor || dronnor;
             }, [new Color(0, 67, 235), new Color(250, 195, 24), new Color(255, 24, 2)]);
+
+            // Blue colors.
+            RegisterNew(2f, () =>
+            {
+                return Main.LocalPlayer.name.Equals("midnight", StringComparison.OrdinalIgnoreCase);
+            }, [new Color(65, 105, 225), new Color(167, 199, 231), new Color(25, 25, 112), new Color(135, 206, 235), new Color(100, 149, 237)]);
 
             // Baby blue/light pink. You know the drill.
             RegisterNew(2f, () =>
