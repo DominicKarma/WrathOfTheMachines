@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public class IndividualExoTwinStateHandler
     {

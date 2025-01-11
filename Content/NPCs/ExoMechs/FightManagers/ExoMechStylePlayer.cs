@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
-using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
 {
     public sealed class ExoMechStylePlayer : ModPlayer
     {
-        private static bool resetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<Draedon>());
+        private static bool ResetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
 
         /// <summary>
         /// How many hits the player took during the Exo Mech fight.
@@ -47,7 +45,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Whether the boss would be considered melted if it were to stop now.
+        /// Whether the boss would be considered melted if the fight were to stop now.
         /// </summary>
         public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < Utilities.MinutesToFrames(1.75f);
 
@@ -69,7 +67,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The influence of player buff count on overall style.
         /// </summary>
-        public float BuffsWeight => Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
+        public float BuffsWeight => Utilities.Saturate(1f - (BuffCount - 39f) / 11f);
 
         /// <summary>
         /// The influence of hit count on overall style.
@@ -134,11 +132,15 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void PostUpdate()
         {
-            if (resetData)
+            if (ResetData || ExoMechFightStateManager.CurrentPhase is null)
             {
                 Reset();
                 return;
             }
+
+            // Stop evaluating the fight if it's over or has yet to start.
+            if (ExoMechFightStateManager.ActiveExoMechs.Count <= 0)
+                return;
 
             int currentPhase = ExoMechFightStateManager.CurrentPhase.PhaseOrdering;
             if (currentPhase >= 1)
@@ -201,13 +203,13 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
-            if (!resetData)
+            if (!ResetData)
                 HitCount++;
         }
 
         public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
-            if (!resetData)
+            if (!ResetData)
                 HitCount++;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -8,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class LingeringPlasmaFireball : ModProjectile, IProjOwnedByBoss<Apollo>, IExoMechProjectile
     {
@@ -63,7 +64,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             }
         }
 
-        public override bool? CanDamage() => Projectile.Opacity >= 0.5f;
+        public override bool? CanDamage() => Projectile.Opacity >= 0.5f && Time >= 95f;
 
         public override bool PreDraw(ref Color lightColor)
         {

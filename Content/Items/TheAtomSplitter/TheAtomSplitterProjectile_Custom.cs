@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -11,7 +12,6 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.Items.TheAtomSplitter
 {

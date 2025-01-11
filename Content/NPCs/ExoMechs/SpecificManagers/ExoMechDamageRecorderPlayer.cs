@@ -2,7 +2,7 @@
 using System.Linq;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
 {
     public class ExoMechDamageRecorderPlayer : ModPlayer
     {
@@ -44,7 +44,6 @@ namespace WoTM.Content.NPCs.ExoMechs
             get
             {
                 // Fallback case.
-                // TODO -- Should this be a separate enumeration value?
                 if (damageDonePerSource.Count <= 0)
                     return ExoMechDamageSource.Thermal;
 

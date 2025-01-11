@@ -1,4 +1,6 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
+
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public enum ExoTwinsAIState
     {
@@ -6,12 +8,14 @@
         DashesAndLasers,
         CloseShots,
         MachineGunLasers,
+        ExothermalOverload,
 
         Inactive,
+        Leave,
 
         EnterSecondPhase,
 
-        UltimateAttack,
+        DeathAnimation,
 
         PerformIndividualAttacks,
 

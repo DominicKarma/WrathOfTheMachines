@@ -1,5 +1,6 @@
 ﻿using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Apollo;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Common.DataStructures;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -8,13 +9,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class AresMissileBackground : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer, IExoMechProjectile
     {
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Thermal;
 
-        public override string Texture => "WoTM/Content/NPCs/ExoMechs/Projectiles/AresMissile";
+        public override string Texture => "FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/Projectiles/AresMissile";
 
         public override void SetStaticDefaults()
         {
@@ -61,10 +62,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
+            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.MissileFlameTrailShader");
             trailShader.Apply();
 
-            PrimitiveSettings settings = new(c => AresMissile.FlameTrailWidthFunction(c, Projectile.scale), c => AresMissile.FlameTrailColorFunction(c, Projectile.Opacity * 0.4f), 
+            PrimitiveSettings settings = new(c => AresMissile.FlameTrailWidthFunction(c, Projectile.scale), c => AresMissile.FlameTrailColorFunction(c, Projectile.Opacity * 0.4f),
                 _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 5f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 14);
         }

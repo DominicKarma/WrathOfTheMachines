@@ -1,12 +1,14 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
+using WoTM;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public class ExoTwinsStateManager : ModSystem
     {
@@ -17,7 +19,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             get;
             set;
-        } = new(ExoTwinsAIState.DashesAndLasers, new float[5]);
+        } = new(ExoTwinsAIState.SpawnAnimation, new float[5]);
 
         /// <summary>
         /// The set of all passive individual AI states the Exo Twins can perform.
@@ -41,29 +43,31 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void PostUpdateNPCs()
         {
-            SharedState.Update();
-
+            bool anyExoTwinIsPresent = false;
             if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1)
             {
                 NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
-                if (apollo.active && apollo.TryGetBehavior(out ApolloBehaviorOverride apolloAI))
+                if (apollo.active && apollo.TryGetBehavior(out ApolloEternity apolloAI))
                     PerformUpdateLoop(apollo, apolloAI);
+
+                anyExoTwinIsPresent = true;
             }
 
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1)
             {
                 NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
-                if (artemis.active && artemis.TryGetBehavior(out ArtemisBehaviorOverride artemisAI))
+                if (artemis.active && artemis.TryGetBehavior(out ArtemisEternity artemisAI))
                     PerformUpdateLoop(artemis, artemisAI);
+
+                anyExoTwinIsPresent = true;
             }
+
+            if (anyExoTwinIsPresent)
+                SharedState.Update();
 
             if (SharedState.AIState == ExoTwinsAIState.PerformComboAttack)
                 SharedState.AITimer = ExoMechComboAttackManager.ComboAttackTimer;
         }
-
-        public override void NetSend(BinaryWriter writer) => SharedState.WriteTo(writer);
-
-        public override void NetReceive(BinaryReader reader) => SharedState.ReadFrom(reader);
 
         /// <summary>
         /// Performs the central AI state update loop for a given Exo Twin.
@@ -73,10 +77,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static void PerformUpdateLoop(NPC twin, IExoTwin twinAttributes)
         {
             bool shouldEnterSecondPhase = twin.life < twin.lifeMax * ExoMechFightDefinitions.FightAloneLifeRatio || ExoMechFightStateManager.CurrentPhase == ExoMechFightDefinitions.BerserkSoloPhaseDefinition;
-            if (shouldEnterSecondPhase && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase)
+            if (shouldEnterSecondPhase && !twinAttributes.InPhase2 && SharedState.AIState != ExoTwinsAIState.EnterSecondPhase && SharedState.AIState != ExoTwinsAIState.DeathAnimation)
                 TransitionToNextState(ExoTwinsAIState.EnterSecondPhase);
 
-            if (twinAttributes is IExoMech exoMech)
+            if (twinAttributes is IExoMech exoMech && SharedState.AIState != ExoTwinsAIState.Leave)
             {
                 if (exoMech.Inactive && SharedState.AIState != ExoTwinsAIState.Inactive)
                     TransitionToNextState(ExoTwinsAIState.Inactive);
@@ -84,8 +88,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                     TransitionToNextState();
             }
 
+            // Reset damage. This is not performed during combo attacks.
             if (SharedState.AIState != ExoTwinsAIState.PerformComboAttack)
                 twin.damage = 0;
+
+            // Leave if the target is dead.
+            if ((ExoMechTargetSelector.Target.dead || !ExoMechTargetSelector.Target.active) && SharedState.AIState != ExoTwinsAIState.Leave)
+                TransitionToNextState(ExoTwinsAIState.Leave);
 
             twin.defense = twin.defDefense;
             twin.dontTakeDamage = false;
@@ -104,6 +113,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.MachineGunLasers:
                     ExoTwinsStates.DoBehavior_MachineGunLasers(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.ExothermalOverload:
+                    ExoTwinsStates.DoBehavior_ExothermalOverload(twin, twinAttributes);
+                    break;
                 case ExoTwinsAIState.PerformIndividualAttacks:
                     PerformIndividualizedAttacks(twin, twinAttributes);
                     break;
@@ -111,13 +123,16 @@ namespace WoTM.Content.NPCs.ExoMechs
                 case ExoTwinsAIState.Inactive:
                     ExoTwinsStates.DoBehavior_Inactive(twin, twinAttributes);
                     break;
+                case ExoTwinsAIState.Leave:
+                    ExoTwinsStates.DoBehavior_Leave(twin, twinAttributes);
+                    break;
 
                 case ExoTwinsAIState.EnterSecondPhase:
                     ExoTwinsStates.DoBehavior_EnterSecondPhase(twin, twinAttributes);
                     break;
 
-                case ExoTwinsAIState.UltimateAttack:
-                    ExoTwinsStates.DoBehavior_UltimateAttack(twin, twinAttributes);
+                case ExoTwinsAIState.DeathAnimation:
+                    ExoTwinsStates.DoBehavior_DeathAnimation(twin, twinAttributes);
                     break;
             }
         }
@@ -158,10 +173,24 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static ExoTwinsAIState MakeAIStateChoice()
         {
-            if (SharedState.TotalFinishedAttacks % 2 == 1)
-                return ExoTwinsAIState.PerformIndividualAttacks;
+            ExoTwinsAIState previousState = SharedState.AIState;
+            ExoTwinsAIState choice;
 
-            return Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots, ExoTwinsAIState.MachineGunLasers);
+            do
+            {
+                bool phase2 = false;
+                if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
+                    phase2 = apollo.InPhase2;
+
+                choice = Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots);
+                if (SharedState.TotalFinishedAttacks % 2 == 1)
+                    choice = ExoTwinsAIState.PerformIndividualAttacks;
+                if (Main.rand.NextBool() && phase2)
+                    choice = Main.rand.NextFromList(ExoTwinsAIState.MachineGunLasers, ExoTwinsAIState.ExothermalOverload);
+            }
+            while (choice == previousState);
+
+            return choice;
         }
 
         /// <summary>
@@ -169,10 +198,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         public static void PickIndividualAIStates()
         {
-            if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
+            if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisEternity artemis))
                 return;
 
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
                 return;
 
             bool apolloWillPerformActiveState = Main.rand.NextBool();
@@ -226,12 +255,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             SharedState.ResetForNextState();
             SharedState.AIState = stateToUse ?? MakeAIStateChoice();
 
-            SoundEngine.PlaySound(Artemis.AttackSelectionSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
+            if (SharedState.AIState != ExoTwinsAIState.Leave)
+                SoundEngine.PlaySound(Artemis.AttackSelectionSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
 
-            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehaviorOverride artemis))
+            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisEternity artemis))
                 artemis.ResetLocalStateData();
 
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehaviorOverride apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
                 apollo.ResetLocalStateData();
 
             if (SharedState.AIState == ExoTwinsAIState.PerformIndividualAttacks)

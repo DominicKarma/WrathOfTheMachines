@@ -1,4 +1,6 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
+
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public interface IExoMechProjectile
     {

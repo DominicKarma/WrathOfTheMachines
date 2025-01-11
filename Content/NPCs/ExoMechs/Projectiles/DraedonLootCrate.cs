@@ -1,5 +1,4 @@
 ﻿using CalamityMod.Items.TreasureBags;
-using CalamityMod.NPCs.ExoMechs;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
@@ -7,9 +6,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
-    public class DraedonLootCrate : ModProjectile, IProjOwnedByBoss<Draedon>
+    public class DraedonLootCrate : ModProjectile, IProjOwnedByBoss<CalamityMod.NPCs.ExoMechs.Draedon>
     {
         /// <summary>
         /// The player that shall receive the spoils of this loot crate.

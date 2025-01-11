@@ -3,6 +3,7 @@ using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -17,7 +18,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class AresMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer, IExoMechProjectile
     {
@@ -35,6 +36,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The glowmask texture of this missile.
         /// </summary>
         internal static LazyAsset<Texture2D> Glowmask;
+
+        public bool SetActiveFalseInsteadOfKill => true;
 
         /// <summary>
         /// The Y position that determines whether this missile can do damage. Once the Y position of this projectile's center exceeds this value, tile collisions are enabled again.
@@ -179,7 +182,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public static Color FlameTrailColorFunction(float completionRatio, float opacityFactor)
         {
-            float trailOpacity = Utils.GetLerpValue(0.8f, 0.27f, completionRatio, true) * Utils.GetLerpValue(0f, 0.067f, completionRatio, true);
+            float trailOpacity = LumUtils.InverseLerp(0.8f, 0.27f, completionRatio) * LumUtils.InverseLerp(0f, 0.067f, completionRatio);
             Color startingColor = Color.Lerp(Color.SkyBlue, Color.White, 0.6f);
             Color middleColor = Color.Lerp(Color.Orange, Color.Yellow, 0.32f);
             Color endColor = Color.Lerp(Color.Orange, Color.Red, 0.29f);
@@ -188,7 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
+            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.MissileFlameTrailShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(c => FlameTrailWidthFunction(c, 1f), c => FlameTrailColorFunction(c, 1f), _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

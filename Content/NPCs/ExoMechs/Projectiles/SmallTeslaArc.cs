@@ -1,4 +1,6 @@
-﻿using CalamityMod.NPCs.ExoMechs.Ares;
+﻿using System.IO;
+using CalamityMod.NPCs.ExoMechs.Ares;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -9,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class SmallTeslaArc : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -73,6 +75,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
+        public override void SendExtraAI(BinaryWriter writer) => writer.Write(WidthFactor);
+
+        public override void ReceiveExtraAI(BinaryReader reader) => WidthFactor = reader.ReadSingle();
+
         public void GenerateArcPoints()
         {
             ArcPoints = new Vector2[25];
@@ -93,6 +99,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
+            if (WidthFactor <= 0f)
+                WidthFactor = 1f;
+
             if (ArcPoints is null)
                 GenerateArcPoints();
             else
@@ -130,7 +139,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 return;
 
             float lifetimeRatio = Time / Lifetime;
-            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaArcShader");
+            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaArcShader");
             shader.TrySetParameter("lifetimeRatio", lifetimeRatio);
             shader.TrySetParameter("erasureThreshold", 0.7f);
             shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1, SamplerState.LinearWrap);
@@ -143,8 +152,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 ArcColor = Color.Lerp(new Color(1f, 0.3f, 0.38f), new Color(1f, 0.77f, 0.64f), colorInterpolant);
             else
                 ArcColor = Color.Lerp(new Color(0.3f, 0.86f, 1f), new Color(0.75f, 0.83f, 1f), colorInterpolant);
-
-            WidthFactor = 1f;
 
             PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
         }

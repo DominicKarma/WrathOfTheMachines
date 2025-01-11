@@ -1,5 +1,6 @@
 ﻿using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -7,41 +8,39 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
         /// <summary>
         /// How long Artemis speeds charging up energy during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_ChargeUpTime => Utilities.SecondsToFrames(1.475f);
+        public static int FocusedLaserBursts_ChargeUpTime => Variables.GetAIInt("FocusedLaserBursts_ChargeUpTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis spends recoiling after doing the initial spread burst during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_ChargeRecoilTime => Utilities.SecondsToFrames(1.267f);
+        public static int FocusedLaserBursts_ChargeRecoilTime => Variables.GetAIInt("FocusedLaserBursts_ChargeRecoilTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis spends firing rapid shots during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_RapidShotsTime => Utilities.SecondsToFrames(2.3f);
-
+        public static int FocusedLaserBursts_RapidShotsTime => Variables.GetAIInt("FocusedLaserBursts_RapidShotsTime", ExoMechAIVariableType.Twins);
         /// <summary>
         /// The rate at which Artemis shoots lasers during the FocusedLaserBursts attack.
         /// </summary>
-        public static int FocusedLaserBursts_RapidShotRate => Utilities.SecondsToFrames(0.133f);
+        public static int FocusedLaserBursts_RapidShotRate => Variables.GetAIInt("FocusedLaserBursts_RapidShotRate", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The amount of cycles that happen during the FocusedLaserBursts attack before the mechs choose another one.
         /// </summary>
-        public static int FocusedLaserBursts_CycleCount => 2;
+        public static int FocusedLaserBursts_CycleCount => Variables.GetAIInt("FocusedLaserBursts_CycleCount", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The speed of rapid-fire lasers shot during the FocusedLaserBursts attack.
         /// </summary>
-        public static float FocusedLaserBursts_RapidShotShootSpeed => 9f;
+        public static float FocusedLaserBursts_RapidShotShootSpeed => Variables.GetAIFloat("FocusedLaserBursts_RapidShotShootSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// AI update loop method for the FocusedLaserBursts attack.
@@ -129,8 +128,10 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             if (!npc.WithinRange(Target.Center, 700f))
                 npc.SmoothFlyNear(Target.Center, 0.03f, 0.93f);
-            else
+            else if (!npc.WithinRange(Target.Center, 136f))
                 npc.velocity *= 0.951f;
+            else
+                npc.velocity -= npc.SafeDirectionTo(Target.Center) * 2f;
 
             if (AITimer % FocusedLaserBursts_RapidShotRate == FocusedLaserBursts_RapidShotRate - 1)
                 ShootArtemisLaser(npc, FocusedLaserBursts_RapidShotShootSpeed);

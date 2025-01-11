@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Ares;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -13,8 +15,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class ExoOverloadDeathray : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -33,7 +36,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
-        /// How long this laserbeam current is.
+        /// How long this laserbeam currently is.
         /// </summary>
         public ref float LaserbeamLength => ref Projectile.ai[2];
 
@@ -105,7 +108,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehaviorOverride ares))
+            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyEternity ares))
             {
                 Projectile.Kill();
                 return;
@@ -114,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
             float cosine = MathF.Cos(MathHelper.TwoPi * rotationTime);
-            float upwardsInterpolant = Utilities.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyBehaviorOverride.BackgroundCoreLaserBeams_MissileShootDelay);
+            float upwardsInterpolant = Utilities.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyEternity.BackgroundCoreLaserBeams_MissileShootDelay);
             float zRotation = MathHelper.SmoothStep(cosine * 0.1f, -MathHelper.PiOver2, upwardsInterpolant);
             var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
@@ -240,7 +243,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             Color bloomColor = Color.White with { A = 0 };
 
-            ManagedShader bloomShader = ShaderManager.GetShader("WoTM.CylinderPrimitiveBloomShader");
+            ManagedShader bloomShader = ShaderManager.GetShader("FargowiltasCrossmod.CylinderPrimitiveBloomShader");
             bloomShader.TrySetParameter("innerGlowIntensity", 0.45f);
             bloomShader.TrySetParameter("uWorldViewProjection", projection);
             bloomShader.Apply();
@@ -277,7 +280,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             RenderBloom(start, end, overallProjection);
 
-            ManagedShader overloadShader = ShaderManager.GetShader("WoTM.ExoOverloadDeathrayShader");
+            ManagedShader overloadShader = ShaderManager.GetShader("FargowiltasCrossmod.ExoOverloadDeathrayShader");
             overloadShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
             overloadShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
             overloadShader.TrySetParameter("uWorldViewProjection", overallProjection);

@@ -1,68 +1,69 @@
-﻿using System;
-using CalamityMod.NPCs.ExoMechs.Artemis;
-using CalamityMod.Projectiles.Boss;
+﻿using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Sounds;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
         /// <summary>
         /// How long Artemis and Apollo spend redirecting in anticipation of the dash during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_RedirectTime => Utilities.SecondsToFrames(0.6f);
+        public static int CloseShots_RedirectTime => Variables.GetAIInt("CloseShots_RedirectTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis and Apollo spend slowing down in anticipation of the dash during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_DashSlowdownTime => Utilities.SecondsToFrames(0.3f);
+        public static int CloseShots_DashSlowdownTime => Variables.GetAIInt("CloseShots_DashSlowdownTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis and Apollo spend dashing at the player at maximum during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_MaxDashTime => Utilities.SecondsToFrames(0.5f);
+        public static int CloseShots_MaxDashTime => Variables.GetAIInt("CloseShots_MaxDashTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis and Apollo spend shooting at the player during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_ShootAtPlayerTime => Utilities.SecondsToFrames(1.8f);
+        public static int CloseShots_ShootAtPlayerTime => Variables.GetAIInt("CloseShots_ShootAtPlayerTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The rate at which Artemis releases lasers during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_ArtemisShootRate => Utilities.SecondsToFrames(0.216f);
+        public static int CloseShots_ArtemisShootRate => Variables.GetAIInt("CloseShots_ArtemisShootRate", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The rate at which Apollo releases fireballs during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_ApolloShootRate => Utilities.SecondsToFrames(0.333f);
+        public static int CloseShots_ApolloShootRate => Variables.GetAIInt("CloseShots_ApolloShootRate", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The amount of attack cycles performed during the CloseShots attack.
         /// </summary>
-        public static int CloseShots_AttackCycleCount => 3;
+        public static int CloseShots_AttackCycleCount => Variables.GetAIInt("CloseShots_AttackCycleCount", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How fast Artemis and Apollo dash during the CloseShots attack.
         /// </summary>
-        public static float CloseShots_DashSpeed => 100f;
+        public static float CloseShots_DashSpeed => Variables.GetAIFloat("CloseShots_DashSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How fast Artemis' shot lasers are during the CloseShots attack.
         /// </summary>
-        public static float CloseShots_ArtemisLaserShootSpeed => 20f;
+        public static float CloseShots_ArtemisLaserShootSpeed => Variables.GetAIFloat("CloseShots_ArtemisLaserShootSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How fast Apollo's shot fireballs are during the CloseShots attack.
         /// </summary>
-        public static float CloseShots_ApolloFireballShootSpeed => 23f;
+        public static float CloseShots_ApolloFireballShootSpeed => Variables.GetAIFloat("CloseShots_ApolloFireballShootSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// AI update loop method for the CloseShots attack.
@@ -138,12 +139,13 @@ namespace WoTM.Content.NPCs.ExoMechs
                 }
 
                 idealRotation += MathF.Sin(MathHelper.TwoPi * wrappedTimer * spinDirection / 70f) * 0.08f;
-                idealRotation = idealRotation.AngleLerp(npc.AngleTo(Target.Center + Target.velocity * 12f), 0.1f);
+                idealRotation = idealRotation.AngleLerp(npc.AngleTo(Target.Center + Target.velocity * 24f), 0.1f);
                 npc.rotation = npc.rotation.AngleLerp(MathHelper.WrapAngle(idealRotation), 0.25f);
                 npc.velocity *= 0.825f;
                 npc.Center = Vector2.Lerp(npc.Center, Target.Center - Vector2.UnitX * isApollo.ToDirectionInt() * 150f, 0.02f);
 
-                if (!npc.WithinRange(Target.Center, 150f))
+                bool canShoot = wrappedTimer >= redirectTime + dashSlowdownTime + maxDashTime + 30;
+                if (!npc.WithinRange(Target.Center, 150f) && canShoot)
                 {
                     if (isApollo && AITimer % CloseShots_ApolloShootRate == CloseShots_ApolloShootRate - 1)
                     {
@@ -154,7 +156,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                             Vector2 aimDirection = npc.rotation.ToRotationVector2();
                             Vector2 fireballSpawnPosition = npc.Center + aimDirection * 70f;
                             Vector2 fireballShootVelocity = aimDirection * CloseShots_ApolloFireballShootSpeed;
-                            Utilities.NewProjectileBetter(npc.GetSource_FromAI(), fireballSpawnPosition, fireballShootVelocity, ModContent.ProjectileType<ApolloFireball>(), BasicShotDamage, 0f, -1, Target.Center.X, Target.Center.Y, 1f);
+                            Utilities.NewProjectileBetter(npc.GetSource_FromAI(), fireballSpawnPosition, fireballShootVelocity, ModContent.ProjectileType<ApolloPlasmaFireball>(), BasicShotDamage, 0f, -1, Target.Center.X, Target.Center.Y, 1f);
                         }
                     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Ares;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -12,7 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class HomingTeslaBurst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -62,7 +63,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             if (!HasPlayedShootSound)
             {
-                SoundEngine.PlaySound(AresTeslaCannon.TeslaOrbShootSound with { MaxInstances = 2 }, Projectile.Center);
+                SoundEngine.PlaySound(AresTeslaCannon.TeslaOrbShootSound with { MaxInstances = 2, PitchVariance = 0.2f }, Projectile.Center);
                 HasPlayedShootSound = true;
             }
 
@@ -77,9 +78,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (!Projectile.WithinRange(target.Center, 270f))
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) / Projectile.MaxUpdates * 14f, homeInInterpolant * 0.1f);
 
-            if (Projectile.velocity.Length() < 30f)
+            if (Projectile.velocity.Length() < 24f)
             {
-                float acceleration = Utils.Remap(homeInInterpolant, 0f, 0.4f, 1.015f, 1f);
+                float acceleration = Utils.Remap(homeInInterpolant, 0f, 0.4f, 1.0128f, 1f);
                 Projectile.velocity *= acceleration;
             }
         }
@@ -115,7 +116,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaBurstShader");
+            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaBurstShader");
 
             PrimitiveSettings settings = new(ElectricityWidthFunction, ElectricityColorFunction, _ => Projectile.Size * 0.5f + Projectile.velocity * 2f, Pixelate: true, Shader: shader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 24);

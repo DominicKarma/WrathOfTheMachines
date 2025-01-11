@@ -6,7 +6,7 @@ using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers
 {
     public class ExoMechNPCIDs : ModSystem
     {

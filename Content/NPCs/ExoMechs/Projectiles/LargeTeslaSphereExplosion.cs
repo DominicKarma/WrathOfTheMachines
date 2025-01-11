@@ -1,4 +1,5 @@
 ﻿using CalamityMod.NPCs.ExoMechs.Ares;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -10,7 +11,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class LargeTeslaSphereExplosion : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
@@ -67,7 +68,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Main.spriteBatch.PrepareForShaders();
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.TeslaExplosionShader");
+            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.TeslaExplosionShader");
             shader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 1, SamplerState.LinearWrap);
             shader.TrySetParameter("lifetimeRatio", Time / Lifetime);
             shader.TrySetParameter("textureSize0", Projectile.Size);

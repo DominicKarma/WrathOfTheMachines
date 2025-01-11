@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.NPCs.ExoMechs.Apollo;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -10,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class ApolloLineTelegraph : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<Apollo>, IExoMechProjectile
     {
@@ -50,7 +51,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             Time++;
 
-            Projectile.Opacity = Utilities.InverseLerpBump(0f, 0.32f, 0.75f, 1f, Time / Lifetime);
+            Projectile.Opacity = Utilities.InverseLerpBump(0f, 0.32f, 0.75f, 1f, Time / Lifetime) * 0.65f;
 
             if (Time >= Lifetime)
                 Projectile.Kill();
@@ -70,11 +71,13 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             var telegraphPoints = Projectile.GetLaserControlPoints(12, TelegraphLength);
 
-            ManagedShader telegraphShader = ShaderManager.GetShader("WoTM.ApolloLineTelegraphShader");
+            ManagedShader telegraphShader = ShaderManager.GetShader("FargowiltasCrossmod.ApolloLineTelegraphShader");
             telegraphShader.Apply();
 
             PrimitiveSettings settings = new(TelegraphWidthFunction, TelegraphColorFunction, Pixelate: true, Shader: telegraphShader);
             PrimitiveRenderer.RenderTrail(telegraphPoints, settings, 28);
         }
+
+        public override bool ShouldUpdatePosition() => false;
     }
 }

@@ -1,6 +1,7 @@
-﻿using Terraria;
+﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using Terraria;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {

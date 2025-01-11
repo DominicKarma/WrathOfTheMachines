@@ -1,7 +1,10 @@
 ﻿using System;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
+using CalamityMod.NPCs.ExoMechs.Ares;
+using CalamityMod.Particles;
 using CalamityMod.Projectiles.Boss;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -14,7 +17,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
@@ -26,12 +29,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long the Exo Twins spend slowing down in place before beginning their phase transition.
         /// </summary>
-        public static int EnterSecondPhase_SlowDownTime => Utilities.SecondsToFrames(0.6f);
+        public static int EnterSecondPhase_SlowDownTime => Variables.GetAIInt("EnterSecondPhase_SlowDownTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long the phase 2 transition animation lasts.
         /// </summary>
-        public static int EnterSecondPhase_SecondPhaseAnimationTime => Utilities.SecondsToFrames(3f);
+        public static int EnterSecondPhase_SecondPhaseAnimationTime => Variables.GetAIInt("EnterSecondPhase_SecondPhaseAnimationTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis waits before she enters her second phase. This should be at least <see cref="EnterSecondPhase_SecondPhaseAnimationTime"/>, since she's meant to transition after Apollo does.
@@ -41,32 +44,27 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How long Apollo spends lowering the forcefield during the second phase transition.
         /// </summary>
-        public static int EnterSecondPhase_LowerForcefieldTime => Utilities.SecondsToFrames(0.67f);
+        public static int EnterSecondPhase_LowerForcefieldTime => Variables.GetAIInt("EnterSecondPhase_LowerForcefieldTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The speed at which the Exo Twins shoot their lens upon releasing it.
         /// </summary>
-        public static float EnterSecondPhase_LensPopOffSpeed => 30f;
-
-        /// <summary>
-        /// The offset at which the lens is spawned from the Exo Twins.
-        /// </summary>
-        public static float EnterSecondPhase_LensCenterOffset => 62f;
+        public static float EnterSecondPhase_LensPopOffSpeed => Variables.GetAIFloat("EnterSecondPhase_LensPopOffSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// What damage is multiplied by if Apollo is hit by a projectile while protecting Artemis.
         /// </summary>
-        public static float EnterSecondPhase_ApolloDamageProtectionFactor => 0.2f;
+        public static float EnterSecondPhase_ApolloDamageProtectionFactor => Variables.GetAIFloat("EnterSecondPhase_ApolloDamageProtectionFactor", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The sound the Exo Twins make when ejecting their lens.
         /// </summary>
-        public static readonly SoundStyle LensEjectSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/LensEject");
+        public static readonly SoundStyle LensEjectSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/LensEject");
 
         /// <summary>
         /// The sound the Exo Twins make when entering their second phase.
         /// </summary>
-        public static readonly SoundStyle Phase2TransitionSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/Phase2Transition");
+        public static readonly SoundStyle Phase2TransitionSound = new("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/Phase2Transition");
 
         public static void ReleaseLens(NPC npc)
         {
@@ -77,7 +75,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SoundEngine.PlaySound(Phase2TransitionSound);
 
             Vector2 lensDirection = npc.rotation.ToRotationVector2();
-            Vector2 lensOffset = lensDirection * EnterSecondPhase_LensCenterOffset;
+            Vector2 lensOffset = lensDirection * 62f;
             Vector2 lensPosition = npc.Center + lensOffset;
             for (int i = 0; i < 45; i++)
             {
@@ -120,6 +118,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             // Get near the target.
             if (AITimer < EnterSecondPhase_SlowDownTime)
             {
+                if (AITimer <= 2)
+                    npc.velocity *= 0.3f;
+
                 if (isApollo)
                     npc.Center = Vector2.Lerp(npc.Center, Target.Center + Target.SafeDirectionTo(npc.Center) * 640f, AITimer / (float)EnterSecondPhase_SlowDownTime * 0.07f);
 
@@ -240,6 +241,59 @@ namespace WoTM.Content.NPCs.ExoMechs
                 PrimitivePixelationSystem.RenderToPrimsNextFrame(() => ProjectLensShield(apollo, true), PixelationPrimitiveLayer.AfterNPCs);
             };
 
+            // Reflect projectiles that intersect with the forcefield.
+            if (EnterSecondPhase_ProtectiveForcefieldOpacity >= 0.75f)
+            {
+                Vector2 perpendicular = (apollo.rotation + MathHelper.PiOver2).ToRotationVector2();
+                Vector2 forcefieldStart = apollo.Center + apollo.rotation.ToRotationVector2() * 220f;
+                foreach (Projectile projectile in Main.ActiveProjectiles)
+                {
+                    bool canBeReflected = projectile.CanBeReflected() || (projectile.aiStyle == 0 && projectile.penetrate != -1 && !projectile.reflected);
+                    if (projectile.hostile || !canBeReflected)
+                        continue;
+
+                    bool movingTowardsForcefield = Vector2.Dot(projectile.velocity, apollo.rotation.ToRotationVector2()) < 0f;
+                    bool collidingWithForcefield =
+                        projectile.Colliding(projectile.Hitbox, Utils.CenteredRectangle(forcefieldStart - perpendicular * 110f, Vector2.One * 110f)) ||
+                        projectile.Colliding(projectile.Hitbox, Utils.CenteredRectangle(forcefieldStart + perpendicular * 110f, Vector2.One * 110f)) ||
+                        projectile.Colliding(projectile.Hitbox, Utils.CenteredRectangle(forcefieldStart, Vector2.One * 140f));
+
+                    if (collidingWithForcefield && movingTowardsForcefield)
+                    {
+                        Vector2 impactPoint = apollo.Center + apollo.SafeDirectionTo(projectile.Center) * 256f;
+                        ScreenShakeSystem.StartShakeAtPoint(impactPoint, 2f);
+
+                        SoundEngine.PlaySound(AresTeslaCannon.TeslaOrbShootSound, impactPoint);
+
+                        for (int i = 0; i < 14; i++)
+                        {
+                            int pixelLifetime = Main.rand.Next(11, 32);
+                            float pixelSize = Main.rand.NextFloat(0.85f, 1.7f);
+                            BloomPixelParticle pixel = new(impactPoint, perpendicular * Main.rand.NextFloatDirection() * 32f + Main.rand.NextVector2Circular(9f, 9f), Color.Wheat, Color.Lime * 0.65f, pixelLifetime, Vector2.One * pixelSize);
+                            pixel.Spawn();
+                        }
+
+                        float bloomScaleFactor = Main.rand.NextFloat(0.6f, 0.95f) + Main.rand.NextGaussian() * 0.4f;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            StrongBloom bloom = new(impactPoint, Vector2.Zero, Color.Wheat, bloomScaleFactor * 0.56f, 9);
+                            GeneralParticleHandler.SpawnParticle(bloom);
+
+                            StrongBloom glow = new(impactPoint, Vector2.Zero, Color.Lime * 0.6f, bloomScaleFactor * 0.95f, 12);
+                            GeneralParticleHandler.SpawnParticle(glow);
+
+                            StrongBloom outerGlow = new(impactPoint, Vector2.Zero, Color.Turquoise * 0.35f, bloomScaleFactor * 1.5f, 14);
+                            GeneralParticleHandler.SpawnParticle(outerGlow);
+                        }
+
+                        projectile.velocity *= -0.7f;
+                        projectile.velocity += Main.rand.NextVector2Circular(2f, 2f);
+                        projectile.damage = 0;
+                        projectile.netUpdate = true;
+                    }
+                }
+            }
+
             if (Main.rand.NextBool(EnterSecondPhase_ProtectiveForcefieldOpacity * 0.8f))
                 CreateForcefieldHologramDust(apollo);
         }
@@ -274,7 +328,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.PrepareForShaders();
 
             Texture2D invisible = MiscTexturesRegistry.InvisiblePixel.Value;
-            Texture2D forcefield = ModContent.Request<Texture2D>("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Forcefield").Value;
+            Texture2D forcefield = ModContent.Request<Texture2D>("FargowiltasCrossmod/Content/Calamity/Bosses/ExoMechs/ArtemisAndApollo/Forcefield").Value;
 
             float spreadScale = 425f;
             float opacity = EnterSecondPhase_ProtectiveForcefieldOpacity;
@@ -303,7 +357,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale * 1.6f, 0, 0f);
 
             hologramSpread.Parameters["mainOpacity"].SetValue(0.2f);
-            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 0.57f);
+            hologramSpread.Parameters["halfSpreadAngle"].SetValue(opacity * 0.56f);
             hologramSpread.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.Draw(invisible, spreadDrawPosition, null, Color.White, apollo.rotation + 0.09f, invisible.Size() * 0.5f, Vector2.One * opacity * spreadScale, 0, 0f);
 
@@ -321,7 +375,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
             }
 
-            ManagedShader forcefieldShader = ShaderManager.GetShader("WoTM.LensShieldShader");
+            ManagedShader forcefieldShader = ShaderManager.GetShader("FargowiltasCrossmod.LensShieldShader");
             forcefieldShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
             forcefieldShader.Apply();
 

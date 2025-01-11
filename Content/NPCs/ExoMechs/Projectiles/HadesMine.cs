@@ -2,7 +2,7 @@
 using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Particles;
-using CalamityMod.Sounds;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -16,7 +16,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class HadesMine : ModProjectile, IExoMechProjectile, IProjOwnedByBoss<ThanatosHead>
     {
@@ -25,19 +25,29 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ExoMechDamageSource DamageType => ExoMechDamageSource.BluntForceTrauma;
 
         /// <summary>
-        /// The general purpose frame timer of this mine.
-        /// </summary>
-        public ref float Time => ref Projectile.ai[0];
-
-        /// <summary>
         /// How long this mine should exist before exploding, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(4.5f);
+        public ref float Lifetime => ref Projectile.ai[0];
+
+        /// <summary>
+        /// The general purpose frame timer of this mine.
+        /// </summary>
+        public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
         /// The diameter of explosions created by this mine.
         /// </summary>
         public static float ExplosionDiameter => 250f;
+
+        /// <summary>
+        /// The sound played momentarily before this mine explodes.
+        /// </summary>
+        public static readonly SoundStyle ExplosionWarningSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/MineWarning") with { MaxInstances = 0, Volume = 0.54f };
+
+        /// <summary>
+        /// The sound played when this mine explodes.
+        /// </summary>
+        public static readonly SoundStyle ExplodeSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/Hades/MineExplode", 3) with { MaxInstances = 0, Volume = 0.8f };
 
         public override void SetStaticDefaults()
         {
@@ -53,7 +63,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
-            Projectile.timeLeft = Lifetime;
+            Projectile.timeLeft = 72000;
             Projectile.Calamity().DealsDefenseDamage = true;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -67,6 +77,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             DelegateMethods.v3_1 = new Vector3(1f, 0.8f, 0.35f);
             Utils.PlotTileLine(Projectile.Top, Projectile.Bottom, Projectile.width, DelegateMethods.CastLight);
+
+            if (Time == Lifetime - 75)
+                SoundEngine.PlaySound(ExplosionWarningSound, Projectile.Center);
 
             Time++;
             if (Time >= Lifetime)
@@ -124,15 +137,17 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Main.spriteBatch.Draw(glow, drawPosition, null, glowColor, 0f, glow.Size() * 0.5f, 0.14f, 0, 0f);
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 5f;
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) => Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.5f, targetHitbox) && Projectile.velocity.Length() <= 3.2f;
 
         public override void OnKill(int timeLeft)
         {
+            Projectile.velocity = Vector2.Zero;
+
             Projectile.Resize((int)(ExplosionDiameter * 0.8f), (int)(ExplosionDiameter * 0.8f));
             Projectile.Damage();
 
-            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 2.5f);
-            SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaExplosionSound with { Volume = 0.6f, MaxInstances = 0, PitchVariance = 0.2f }, Projectile.Center);
+            ScreenShakeSystem.StartShakeAtPoint(Projectile.Center, 2.5f, MathHelper.TwoPi, null, 0.2f, 1185f, 500f);
+            SoundEngine.PlaySound(ExplodeSound, Projectile.Center);
 
             // Create the generic burst explosion.
             MagicBurstParticle burst = new(Projectile.Center, Vector2.Zero, Color.Orange, 13, 1.15f);

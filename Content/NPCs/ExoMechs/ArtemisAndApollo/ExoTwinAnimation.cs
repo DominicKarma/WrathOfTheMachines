@@ -1,8 +1,8 @@
-﻿using System;
-using Luminance.Common.Utilities;
+﻿using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
+using System;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     /// <summary>
     /// Represents a sequence of animation frames that the Exo Twins can perform.

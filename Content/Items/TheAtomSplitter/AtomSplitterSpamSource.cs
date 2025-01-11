@@ -1,11 +1,11 @@
 ﻿using CalamityMod;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.Items.TheAtomSplitter
 {

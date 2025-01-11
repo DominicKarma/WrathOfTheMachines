@@ -36,6 +36,14 @@ namespace WoTM
             }
         }
 
+        public override void SetDefaults(NPC entity)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.SetDefaults();
+        }
+
         public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             if (NPCOverrideRelationship.TryGetValue(npc.type, out NPCBehaviorOverride? behaviorOverride))
@@ -61,6 +69,14 @@ namespace WoTM
             BehaviorOverride?.FindFrame(frameHeight);
         }
 
+        public override void BossHeadSlot(NPC npc, ref int index)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return;
+
+            BehaviorOverride?.BossHeadSlot(ref index);
+        }
+
         public override void ModifyTypeName(NPC npc, ref string typeName)
         {
             if (InfernumModeCompatibility.InfernumModeIsActive)
@@ -73,6 +89,9 @@ namespace WoTM
         {
             if (InfernumModeCompatibility.InfernumModeIsActive)
                 return true;
+
+            if (!(BehaviorOverride?.PreKill() ?? true))
+                return false;
 
             BehaviorOverride?.OnKill();
             return true;
@@ -120,6 +139,14 @@ namespace WoTM
                 return true;
 
             return BehaviorOverride?.PreDraw(spriteBatch, screenPos, drawColor) ?? true;
+        }
+
+        public override bool CheckDead(NPC npc)
+        {
+            if (InfernumModeCompatibility.InfernumModeIsActive)
+                return true;
+
+            return BehaviorOverride?.CheckDead() ?? true;
         }
     }
 }

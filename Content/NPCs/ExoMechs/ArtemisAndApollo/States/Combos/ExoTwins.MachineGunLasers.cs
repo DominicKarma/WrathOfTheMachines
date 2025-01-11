@@ -3,6 +3,8 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Luminance.Core.Sounds;
@@ -11,9 +13,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
@@ -27,52 +28,52 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The rate at which Artemis shoots lasers during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_LaserShootRate => Utilities.SecondsToFrames(0.04f);
+        public static int MachineGunLasers_LaserShootRate => Variables.GetAIInt("MachineGunLasers_LaserShootRate", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Artemis waits before firing during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_AttackDelay => Utilities.SecondsToFrames(1f);
+        public static int MachineGunLasers_AttackDelay => Variables.GetAIInt("MachineGunLasers_AttackDelay", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Apollo spends redirecting during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_ApolloRedirectTime => Utilities.SecondsToFrames(0.4167f);
+        public static int MachineGunLasers_ApolloRedirectTime => Variables.GetAIInt("MachineGunLasers_ApolloRedirectTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Apollo spends telegraphing in anticipation of his dash during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_ApolloTelegraphTime => Utilities.SecondsToFrames(0.75f);
+        public static int MachineGunLasers_ApolloTelegraphTime => Variables.GetAIInt("MachineGunLasers_ApolloTelegraphTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Apollo spends dashing during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_ApolloDashTime => Utilities.SecondsToFrames(0.3667f);
+        public static int MachineGunLasers_ApolloDashTime => Variables.GetAIInt("MachineGunLasers_ApolloDashTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long Apollo spends slow down after a dash during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_ApolloDashSlowdownTime => Utilities.SecondsToFrames(0.2667f);
+        public static int MachineGunLasers_ApolloDashSlowdownTime => Variables.GetAIInt("MachineGunLasers_ApolloDashSlowdownTime", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The rate at which Apollo releases lingering plasma during the MachineGunLasers attack.
         /// </summary>
-        public static int MachineGunLasers_ApolloPlasmaReleaseRate => Utilities.SecondsToFrames(0.0833f);
+        public static int MachineGunLasers_ApolloPlasmaReleaseRate => Variables.GetAIInt("MachineGunLasers_ApolloPlasmaReleaseRate", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// How long the MachineGunLasers attack goes on for.
         /// </summary>
-        public static int MachineGunLasers_AttackDuration => Utilities.SecondsToFrames(11f);
+        public static int MachineGunLasers_AttackDuration => Variables.GetAIInt("MachineGunLasers_AttackDuration", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The speed at which lasers fired by Artemis during the MachineGunLasers attack are shot.
         /// </summary>
-        public static float MachineGunLasers_LaserShootSpeed => 18.75f;
+        public static float MachineGunLasers_LaserShootSpeed => Variables.GetAIFloat("MachineGunLasers_LaserShootSpeed", ExoMechAIVariableType.Twins);
 
         /// <summary>
         /// The standard random spread of lasers fired by Artemis during the MachineGunLasers attack.
         /// </summary>
-        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(4.1f);
+        public static float MachineGunLasers_LaserShootSpread => MathHelper.ToRadians(Variables.GetAIFloat("MachineGunLasers_LaserShootSpreadDegrees", ExoMechAIVariableType.Twins));
 
         /// <summary>
         /// AI update loop method for the MachineGunLasers attack.
@@ -139,8 +140,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         {
             int wrappedTimer = AITimer % (MachineGunLasers_ApolloRedirectTime + MachineGunLasers_ApolloTelegraphTime + MachineGunLasers_ApolloDashTime + MachineGunLasers_ApolloDashSlowdownTime);
             float dashSpeed = 150f;
+            bool doneAttacking = AITimer >= MachineGunLasers_AttackDelay + MachineGunLasers_AttackDuration - 84;
 
-            if (wrappedTimer <= MachineGunLasers_ApolloRedirectTime)
+            if (wrappedTimer <= MachineGunLasers_ApolloRedirectTime || doneAttacking)
             {
                 float hoverFlySpeedInterpolant = Utilities.InverseLerpBump(0f, 0.6f, 0.8f, 1f, wrappedTimer / (float)MachineGunLasers_ApolloRedirectTime) * 0.09f;
                 Vector2 artemisPerpendicularOffset = Target.SafeDirectionTo(Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].Center).RotatedBy(MathHelper.PiOver2) * 1250f;

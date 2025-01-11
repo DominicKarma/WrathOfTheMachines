@@ -1,4 +1,4 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers
 {
     /// <summary>
     /// Represents a type of damage that the Exo Mechs and their projectiles can inflict upon the player.
@@ -9,7 +9,6 @@
         Thermal,
         Plasma,
         Electricity,
-        Magnetism,
         Internal,
         BluntForceTrauma,
 

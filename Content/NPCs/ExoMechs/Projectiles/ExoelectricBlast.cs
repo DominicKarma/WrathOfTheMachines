@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Easings;
@@ -12,7 +13,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class ExoelectricBlast : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<ThanatosHead>, IExoMechProjectile
     {
@@ -24,7 +25,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Time => ref Projectile.ai[0];
 
         /// <summary>
-        /// How long this laserbeam current is.
+        /// How long this laserbeam currently is.
         /// </summary>
         public ref float LaserbeamLength => ref Projectile.ai[1];
 
@@ -173,7 +174,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             DrawBackBloom();
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.PrimitiveBloomShader");
+            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.PrimitiveBloomShader");
             shader.TrySetParameter("innerGlowIntensity", 0.45f);
 
             PrimitiveSettings bloomSettings = new(BloomWidthFunction, BloomColorFunction, Shader: shader);
@@ -186,7 +187,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             List<Vector2> laserPositions = Projectile.GetLaserControlPoints(12, LaserbeamLength);
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.HadesExoEnergyBlastShader");
+            ManagedShader shader = ShaderManager.GetShader("FargowiltasCrossmod.HadesExoEnergyBlastShader");
             shader.TrySetParameter("laserDirection", Projectile.velocity);
             shader.TrySetParameter("edgeColorSubtraction", new Vector3(0.7f, 0.4f, 0));
             shader.TrySetParameter("edgeGlowIntensity", 0.2f);

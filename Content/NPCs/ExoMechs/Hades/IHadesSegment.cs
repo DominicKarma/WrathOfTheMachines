@@ -1,4 +1,4 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Hades
 {
     public interface IHadesSegment
     {

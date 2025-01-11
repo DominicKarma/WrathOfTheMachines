@@ -2,6 +2,7 @@
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.SpecificManagers;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -16,7 +17,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Content.Particles;
 
-namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.Projectiles
 {
     public class ApolloMissile : ModProjectile, IProjOwnedByBoss<Apollo>, IPixelatedPrimitiveRenderer, IExoMechProjectile
     {
@@ -34,6 +35,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The glowmask texture of this missile.
         /// </summary>
         internal static LazyAsset<Texture2D> Glowmask;
+
+        public bool SetActiveFalseInsteadOfKill => true;
 
         /// <summary>
         /// The Y position that determines whether this missile can do damage. Once the Y position of this projectile's center exceeds this value, tile collisions are enabled again.
@@ -58,7 +61,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The sound the plasma missiles play idly on loop.
         /// </summary>
-        public static readonly SoundStyle LoopSound = new SoundStyle("WoTM/Assets/Sounds/Custom/ExoTwins/PlasmaMissileLoop") with { Volume = 0.35f };
+        public static readonly SoundStyle LoopSound = new SoundStyle("FargowiltasCrossmod/Assets/Sounds/ExoMechs/ExoTwins/PlasmaMissileLoop") with { Volume = 0.35f };
 
         public ExoMechDamageSource DamageType => ExoMechDamageSource.Plasma;
 
@@ -196,7 +199,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public static Color FlameTrailColorFunction(float completionRatio)
         {
-            float trailOpacity = Utils.GetLerpValue(0.8f, 0.27f, completionRatio, true) * Utils.GetLerpValue(0f, 0.067f, completionRatio, true);
+            float trailOpacity = LumUtils.InverseLerp(0.8f, 0.27f, completionRatio) * LumUtils.InverseLerp(0f, 0.067f, completionRatio);
             Color startingColor = Color.Lerp(Color.SkyBlue, Color.White, 0.6f);
             Color middleColor = Color.Lerp(Color.Lime, Color.Yellow, 0.32f);
             Color endColor = Color.Lerp(Color.DarkGreen, Color.Red, 0.2f);
@@ -205,7 +208,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
+            ManagedShader trailShader = ShaderManager.GetShader("FargowiltasCrossmod.MissileFlameTrailShader");
             trailShader.Apply();
 
             PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 16f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);

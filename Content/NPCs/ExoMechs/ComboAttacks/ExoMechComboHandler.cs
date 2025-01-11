@@ -1,7 +1,8 @@
-﻿using Terraria;
+﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.ComboAttacks
 {
     public abstract class ExoMechComboHandler : ModType
     {

@@ -1,7 +1,8 @@
-﻿using Terraria;
+﻿using FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs.FightManagers;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace FargowiltasCrossmod.Content.Calamity.Bosses.ExoMechs
 {
     public class HeartDropDisablingSystem : ModSystem
     {
@@ -10,7 +11,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         private void DisablePotionsAndHeartsForExoMechs(On_NPC.orig_DoDeathEvents_DropBossPotionsAndHearts orig, NPC npc, ref string typeName)
         {
-            if (InfernumModeCompatibility.InfernumModeIsActive || !ExoMechNPCIDs.ExoMechIDs.Contains(npc.type))
+            if (!ExoMechNPCIDs.ExoMechIDs.Contains(npc.type))
                 orig(npc, ref typeName);
         }
     }
