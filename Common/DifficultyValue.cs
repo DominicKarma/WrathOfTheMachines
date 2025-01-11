@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CalamityMod.World;
+using Newtonsoft.Json;
 
 namespace WoTM.Common
 {
@@ -11,19 +12,19 @@ namespace WoTM.Common
     public struct DifficultyValue<TValue> where TValue : struct
     {
         /// <summary>
-        /// The value that should be selected in Revengeance Eternity mode.
+        /// The value that should be selected as a base.
         /// </summary>
-        public TValue EternityRevValue;
+        public TValue BaseValue;
 
         /// <summary>
-        /// The value that should be selected in Death Eternity mode.
+        /// The value that should be selected in Revengeance mode.
         /// </summary>
-        public TValue EternityDeathValue;
+        public TValue RevValue;
 
         /// <summary>
-        /// The value that should be selected in Masochist Mode.
+        /// The value that should be selected in Death Mode.
         /// </summary>
-        public TValue MasochistValue;
+        public TValue DeathValue;
 
         /// <summary>
         /// The value that should be selected
@@ -33,7 +34,12 @@ namespace WoTM.Common
         {
             get
             {
-                return EternityRevValue;
+                if (CalamityWorld.death)
+                    return DeathValue;
+                if (CalamityWorld.revenge)
+                    return RevValue;
+
+                return BaseValue;
             }
         }
 

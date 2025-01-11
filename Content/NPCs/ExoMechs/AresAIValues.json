@@ -1,252 +1,252 @@
 {
   "AimedLaserBursts_MaxHoverAcceleration": {
-    "EternityRevValue": 0.2,
-    "EternityDeathValue": 0.2,
-    "MasochistValue": 0.2
+    "BaseValue": 0.2,
+    "RevValue": 0.2,
+    "DeathValue": 0.2
   },
   "AimedLaserBursts_MaxHoverSpeed": {
-    "EternityRevValue": 6.95,
-    "EternityDeathValue": 6.95,
-    "MasochistValue": 6.95
+    "BaseValue": 6.95,
+    "RevValue": 6.95,
+    "DeathValue": 6.95
   },
   "AimedLaserBursts_SmallLaserShootRate": {
-    "EternityRevValue": 40.0,
-    "EternityDeathValue": 40.0,
-    "MasochistValue": 40.0
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
   },
   "AimedLaserBursts_SmallLaserCount": {
-    "EternityRevValue": 5.0,
-    "EternityDeathValue": 5.0,
-    "MasochistValue": 5.0
+    "BaseValue": 5.0,
+    "RevValue": 5.0,
+    "DeathValue": 5.0
   },
   "AimedLaserBursts_SmallLaserShootSpeed": {
-    "EternityRevValue": 7.0,
-    "EternityDeathValue": 7.0,
-    "MasochistValue": 7.0
+    "BaseValue": 7.0,
+    "RevValue": 7.0,
+    "DeathValue": 7.0
   },
   "BackgroundCoreLaserBeams_LoopSoundDelay": {
-    "EternityRevValue": 180.0,
-    "EternityDeathValue": 180.0,
-    "MasochistValue": 180.0
+    "BaseValue": 180.0,
+    "RevValue": 180.0,
+    "DeathValue": 180.0
   },
   "BackgroundCoreLaserBeams_MissileReleaseRate": {
-    "EternityRevValue": 8.0,
-    "EternityDeathValue": 8.0,
-    "MasochistValue": 8.0
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
   },
   "BackgroundCoreLaserBeams_MissileShootDelay": {
-    "EternityRevValue": 90.0,
-    "EternityDeathValue": 90.0,
-    "MasochistValue": 90.0
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
   },
   "CannonLaserbeamDamage": {
-    "EternityRevValue": 500.0,
-    "EternityDeathValue": 500.0,
-    "MasochistValue": 500.0
+    "BaseValue": 500.0,
+    "RevValue": 500.0,
+    "DeathValue": 500.0
   },
   "CoreLaserbeamDamage": {
-    "EternityRevValue": 540.0,
-    "EternityDeathValue": 540.0,
-    "MasochistValue": 540.0
+    "BaseValue": 540.0,
+    "RevValue": 540.0,
+    "DeathValue": 540.0
   },
   "DeathAnimation_DeathDelay": {
-    "EternityRevValue": 42.0,
-    "EternityDeathValue": 42.0,
-    "MasochistValue": 42.0
+    "BaseValue": 42.0,
+    "RevValue": 42.0,
+    "DeathValue": 42.0
   },
   "DeathAnimation_PulseRate": {
-    "EternityRevValue": 16.0,
-    "EternityDeathValue": 16.0,
-    "MasochistValue": 16.0
+    "BaseValue": 16.0,
+    "RevValue": 16.0,
+    "DeathValue": 16.0
   },
   "DeathAnimation_PulseTime": {
-    "EternityRevValue": 150.0,
-    "EternityDeathValue": 150.0,
-    "MasochistValue": 150.0
+    "BaseValue": 150.0,
+    "RevValue": 150.0,
+    "DeathValue": 150.0
   },
   "DeathAnimation_SilhouetteAppearDelay": {
-    "EternityRevValue": 0.0,
-    "EternityDeathValue": 0.0,
-    "MasochistValue": 0.0
+    "BaseValue": 0.0,
+    "RevValue": 0.0,
+    "DeathValue": 0.0
   },
   "DeathAnimation_SilhouetteDissolveDelay": {
-    "EternityRevValue": 8.0,
-    "EternityDeathValue": 8.0,
-    "MasochistValue": 8.0
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
   },
   "DeathAnimation_SilhouetteDissolveTime": {
-    "EternityRevValue": 84.0,
-    "EternityDeathValue": 84.0,
-    "MasochistValue": 84.0
+    "BaseValue": 84.0,
+    "RevValue": 84.0,
+    "DeathValue": 84.0
   },
   "DeathAnimation_SilhouetteFadeInTime": {
-    "EternityRevValue": 3.0,
-    "EternityDeathValue": 3.0,
-    "MasochistValue": 3.0
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
   },
   "DeathAnimation_SmokeReleaseBuildupTime": {
-    "EternityRevValue": 119.0,
-    "EternityDeathValue": 119.0,
-    "MasochistValue": 119.0
+    "BaseValue": 119.0,
+    "RevValue": 119.0,
+    "DeathValue": 119.0
   },
   "DetachHands_DetachmentDelay": {
-    "EternityRevValue": 45.0,
-    "EternityDeathValue": 45.0,
-    "MasochistValue": 45.0
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
   },
   "KatanaCycloneDashes_FlyAwayTime": {
-    "EternityRevValue": 66.0,
-    "EternityDeathValue": 66.0,
-    "MasochistValue": 66.0
+    "BaseValue": 66.0,
+    "RevValue": 66.0,
+    "DeathValue": 66.0
   },
   "KatanaCycloneDashes_RedirectTime": {
-    "EternityRevValue": 36.0,
-    "EternityDeathValue": 36.0,
-    "MasochistValue": 36.0
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
   },
   "KatanaCycloneDashes_SlashCount": {
-    "EternityRevValue": 9.0,
-    "EternityDeathValue": 9.0,
-    "MasochistValue": 9.0
+    "BaseValue": 9.0,
+    "RevValue": 9.0,
+    "DeathValue": 9.0
   },
   "KatanaCycloneDashes_AccelerationFactor": {
-    "EternityRevValue": 1.024,
-    "EternityDeathValue": 1.024,
-    "MasochistValue": 1.024
+    "BaseValue": 1.024,
+    "RevValue": 1.024,
+    "DeathValue": 1.024
   },
   "KatanaCycloneDashes_MaxRotationalVelocityDegrees": {
-    "EternityRevValue": 0.64,
-    "EternityDeathValue": 0.64,
-    "MasochistValue": 0.64
+    "BaseValue": 0.64,
+    "RevValue": 0.64,
+    "DeathValue": 0.64
   },
   "KatanaCycloneDashes_MinimumRestartDistance": {
-    "EternityRevValue": 1932.0,
-    "EternityDeathValue": 1932.0,
-    "MasochistValue": 1932.0
+    "BaseValue": 1932.0,
+    "RevValue": 1932.0,
+    "DeathValue": 1932.0
   },
   "KatanaDamage": {
-    "EternityRevValue": 375.0,
-    "EternityDeathValue": 375.0,
-    "MasochistValue": 375.0
+    "BaseValue": 375.0,
+    "RevValue": 375.0,
+    "DeathValue": 375.0
   },
   "KatanaSlashes_AttackCycleTime": {
-    "EternityRevValue": 96.0,
-    "EternityDeathValue": 96.0,
-    "MasochistValue": 96.0
+    "BaseValue": 96.0,
+    "RevValue": 96.0,
+    "DeathValue": 96.0
   },
   "KatanaSlashes_AttackDelay": {
-    "EternityRevValue": 30.0,
-    "EternityDeathValue": 30.0,
-    "MasochistValue": 30.0
+    "BaseValue": 30.0,
+    "RevValue": 30.0,
+    "DeathValue": 30.0
   },
   "KatanaCycloneDashes_StartingDashSpeed": {
-    "EternityRevValue": 32.5,
-    "EternityDeathValue": 32.5,
-    "MasochistValue": 32.5
+    "BaseValue": 32.5,
+    "RevValue": 32.5,
+    "DeathValue": 32.5
   },
   "KatanaCycloneDashes_TeleportOffset": {
-    "EternityRevValue": 1485.0,
-    "EternityDeathValue": 1485.0,
-    "MasochistValue": 1485.0
+    "BaseValue": 1485.0,
+    "RevValue": 1485.0,
+    "DeathValue": 1485.0
   },
   "LargeTeslaOrbBlast_AttackTransitionDelay": {
-    "EternityRevValue": 120.0,
-    "EternityDeathValue": 120.0,
-    "MasochistValue": 120.0
+    "BaseValue": 120.0,
+    "RevValue": 120.0,
+    "DeathValue": 120.0
   },
   "LargeTeslaOrbBlast_BurstReleaseRate": {
-    "EternityRevValue": 15.0,
-    "EternityDeathValue": 15.0,
-    "MasochistValue": 15.0
+    "BaseValue": 15.0,
+    "RevValue": 15.0,
+    "DeathValue": 15.0
   },
   "LargeTeslaOrbBlast_ExplodeAnticipationTime": {
-    "EternityRevValue": 48.0,
-    "EternityDeathValue": 48.0,
-    "MasochistValue": 48.0
+    "BaseValue": 48.0,
+    "RevValue": 48.0,
+    "DeathValue": 48.0
   },
   "LargeTeslaOrbBlast_HomingBurstReleaseDelay": {
-    "EternityRevValue": 60.0,
-    "EternityDeathValue": 60.0,
-    "MasochistValue": 60.0
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
   },
   "LargeTeslaOrbBlast_HomingBurstReleaseTime": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "LargeTeslaOrbBlast_OrbChargeUpTime": {
-    "EternityRevValue": 84.0,
-    "EternityDeathValue": 84.0,
-    "MasochistValue": 84.0
+    "BaseValue": 84.0,
+    "RevValue": 84.0,
+    "DeathValue": 84.0
   },
   "LargeTeslaOrbBlast_RecoilSpeed": {
-    "EternityRevValue": 44.0,
-    "EternityDeathValue": 44.0,
-    "MasochistValue": 44.0
+    "BaseValue": 44.0,
+    "RevValue": 44.0,
+    "DeathValue": 44.0
   },
   "LingeringPlasmaDamage": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "MissileDamage": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "NukeAoEAndPlasmaBlasts_AttackTransitionDelay": {
-    "EternityRevValue": 72.0,
-    "EternityDeathValue": 72.0,
-    "MasochistValue": 72.0
+    "BaseValue": 72.0,
+    "RevValue": 72.0,
+    "DeathValue": 72.0
   },
   "NukeAoEAndPlasmaBlasts_NukeChargeUpTime": {
-    "EternityRevValue": 152.0,
-    "EternityDeathValue": 152.0,
-    "MasochistValue": 152.0
+    "BaseValue": 152.0,
+    "RevValue": 152.0,
+    "DeathValue": 152.0
   },
   "NukeAoEAndPlasmaBlasts_NukeExplosionDelay": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "NukeAoEAndPlasmaBlasts_NukeExplosionDiameter": {
-    "EternityRevValue": 5400.0,
-    "EternityDeathValue": 5400.0,
-    "MasochistValue": 5400.0
+    "BaseValue": 5400.0,
+    "RevValue": 5400.0,
+    "DeathValue": 5400.0
   },
   "NukeExplosionDamage": {
-    "EternityRevValue": 675.0,
-    "EternityDeathValue": 675.0,
-    "MasochistValue": 675.0
+    "BaseValue": 675.0,
+    "RevValue": 675.0,
+    "DeathValue": 675.0
   },
   "NukeWeaponDamage": {
-    "EternityRevValue": 0.0,
-    "EternityDeathValue": 0.0,
-    "MasochistValue": 0.0
+    "BaseValue": 0.0,
+    "RevValue": 0.0,
+    "DeathValue": 0.0
   },
   "PlasmaJetDamage": {
-    "EternityRevValue": 420.0,
-    "EternityDeathValue": 420.0,
-    "MasochistValue": 420.0
+    "BaseValue": 420.0,
+    "RevValue": 420.0,
+    "DeathValue": 420.0
   },
   "SpawnAnimation_EnterForegroundTime": {
-    "EternityRevValue": 35.0,
-    "EternityDeathValue": 35.0,
-    "MasochistValue": 35.0
+    "BaseValue": 35.0,
+    "RevValue": 35.0,
+    "DeathValue": 35.0
   },
   "SmallLaserDamage": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "SmallTeslaSphereDamage": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   },
   "TeslaBurstDamage": {
-    "EternityRevValue": 300.0,
-    "EternityDeathValue": 300.0,
-    "MasochistValue": 300.0
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
   }
 }
