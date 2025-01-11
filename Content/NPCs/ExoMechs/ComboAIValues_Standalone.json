@@ -70,9 +70,9 @@
     "DeathValue": 32.0
   },
   "ExoFlurry_ExoTwinsSpinSlowdownTime": {
-    "BaseValue": 40.0,
-    "RevValue": 40.0,
-    "DeathValue": 40.0
+    "BaseValue": 55.0,
+    "RevValue": 55.0,
+    "DeathValue": 55.0
   },
   "ExoFlurry_ExoTwinsSpinTime": {
     "BaseValue": 60.0,
