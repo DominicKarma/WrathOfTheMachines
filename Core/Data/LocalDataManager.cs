@@ -190,9 +190,6 @@ namespace WoTM.Core.Data
         /// <exception cref="FileNotFoundException"></exception>
         public static Dictionary<string, TJsonData> Read<TJsonData>(string path)
         {
-            if (Main.gameMenu)
-                return [];
-
             // Check if a reference was already stored. If it was, use it instead for efficiency.
             string fileName = Path.GetFileName(path);
             if (DataReferences.TryGetValue(fileName, out WatchedData? storedData))
