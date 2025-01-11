@@ -97,7 +97,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Draedon.Dialogue
 
         internal static DraedonDialogue GenerateNew(string key, Color? chatTextColorOverride = null, int? chatTextSpeakTimeOverride = null)
         {
-            int chatTextSpeakTime = chatTextSpeakTimeOverride ?? DraedonEternity.StandardSpeakTime;
+            int chatTextSpeakTime = chatTextSpeakTimeOverride ?? DraedonBehavior.StandardSpeakTime;
             Color chatTextColor = chatTextColorOverride ?? CalamityMod.NPCs.ExoMechs.Draedon.TextColor;
 
             string localizationKey = $"Mods.WoTM.NPCs.Draedon.{key}";

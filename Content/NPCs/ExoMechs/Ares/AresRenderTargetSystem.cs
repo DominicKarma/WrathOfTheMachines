@@ -33,7 +33,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 return;
 
             NPC ares = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
-            if (!ares.TryGetBehavior(out AresBodyEternity aresBehavior))
+            if (!ares.TryGetBehavior(out AresBodyBehavior aresBehavior))
                 return;
 
             // Be efficient with computational resources and only render to the render target if Ares specifically needs it.
@@ -54,7 +54,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
         /// <summary>
         /// Renders Ares and his body parts.
         /// </summary>
-        private static void RenderAresToTarget(AresBodyEternity ares)
+        private static void RenderAresToTarget(AresBodyBehavior ares)
         {
             foreach (NPC npc in Main.ActiveNPCs)
             {

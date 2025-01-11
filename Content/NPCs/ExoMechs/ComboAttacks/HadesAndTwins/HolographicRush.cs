@@ -109,7 +109,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
         /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
-            if (!npc.TryGetBehavior(out HadesHeadEternity hades))
+            if (!npc.TryGetBehavior(out HadesHeadBehavior hades))
                 return;
 
             hades.SegmentReorientationStrength = 0.1f;
@@ -124,20 +124,20 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
                     npc.velocity = newDirection * newSpeed;
                 }
 
-                hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(4), HadesHeadEternity.OpenSegment());
+                hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(4), HadesHeadBehavior.OpenSegment());
             }
             else
             {
                 if (!npc.WithinRange(Target.Center, 450f))
                     npc.velocity = Vector2.Lerp(npc.velocity, npc.SafeDirectionTo(Target.Center) * 21f, 0.03f);
 
-                hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(3), DoBehavior_FireMine);
+                hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(3), DoBehavior_FireMine);
             }
 
             npc.rotation = npc.velocity.ToRotation() + MathHelper.PiOver2;
         }
 
-        public static void DoBehavior_FireMine(HadesBodyEternity behaviorOverride)
+        public static void DoBehavior_FireMine(HadesBodyBehavior behaviorOverride)
         {
             NPC segment = behaviorOverride.NPC;
 
@@ -151,14 +151,14 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
                     float mineSpeed = Main.rand.NextFloat(50f, 150f);
                     float mineOffsetAngle = Main.rand.NextGaussian(0.14f);
                     Vector2 mineVelocity = (Target.Center - mineSpawnPosition).SafeNormalize(Vector2.UnitY).RotatedBy(mineOffsetAngle) * mineSpeed;
-                    LumUtils.NewProjectileBetter(segment.GetSource_FromAI(), mineSpawnPosition, mineVelocity, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime, time);
+                    LumUtils.NewProjectileBetter(segment.GetSource_FromAI(), mineSpawnPosition, mineVelocity, ModContent.ProjectileType<HadesMine>(), HadesHeadBehavior.MineDamage, 0f, -1, mineLifetime, time);
                 }
 
                 SoundEngine.PlaySound(Apollo.MissileLaunchSound with { Volume = 0.6f, MaxInstances = 0 }, mineSpawnPosition);
                 segment.netUpdate = true;
             }
 
-            HadesHeadEternity.OpenSegment().Invoke(behaviorOverride);
+            HadesHeadBehavior.OpenSegment().Invoke(behaviorOverride);
         }
 
         /// <summary>

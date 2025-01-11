@@ -27,7 +27,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride, IHadesSegment, IExoMech
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride, IHadesSegment, IExoMech
     {
         public enum HadesAIState
         {
@@ -237,7 +237,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// Represents an action that should be performed by segments on Hades' body.
         /// </summary>
         /// <param name="behaviorOverride">The segment's overriding instance.</param>
-        public delegate void BodySegmentAction(HadesBodyEternity behaviorOverride);
+        public delegate void BodySegmentAction(HadesBodyBehavior behaviorOverride);
 
         /// <summary>
         /// Represents a condition that should be applied to Hades' body segments.
@@ -570,7 +570,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <param name="behaviorOverride">The segment.</param>
         /// <param name="bigInterpolant">How big the smoke should be.</param>
         /// <param name="quantityInterpolant">A multiplier for how much smoke should be released.</param>
-        public static void CreateSmoke(HadesBodyEternity behaviorOverride, float bigInterpolant, float quantityInterpolant = 1f)
+        public static void CreateSmoke(HadesBodyBehavior behaviorOverride, float bigInterpolant, float quantityInterpolant = 1f)
         {
             NPC npc = behaviorOverride.NPC;
             if (!npc.WithinRange(Main.LocalPlayer.Center, 1200f))

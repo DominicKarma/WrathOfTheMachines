@@ -10,7 +10,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The amount of damage mines from Hades do.
@@ -72,7 +72,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }
 
-        public void DoBehavior_MineBarrages_FireMine(HadesBodyEternity behaviorOverride)
+        public void DoBehavior_MineBarrages_FireMine(HadesBodyBehavior behaviorOverride)
         {
             NPC segment = behaviorOverride.NPC;
 

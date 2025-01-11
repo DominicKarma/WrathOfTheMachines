@@ -91,12 +91,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
         /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
-            if (!npc.TryGetBehavior(out HadesHeadEternity hades))
+            if (!npc.TryGetBehavior(out HadesHeadBehavior hades))
                 return;
 
-            hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(3), segment =>
+            hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(3), segment =>
             {
-                HadesHeadEternity.OpenSegment(HadesHeadEternity.StandardSegmentOpenRate, 0f).Invoke(segment);
+                HadesHeadBehavior.OpenSegment(HadesHeadBehavior.StandardSegmentOpenRate, 0f).Invoke(segment);
                 segment.NPC.damage = segment.NPC.defDamage;
             });
             hades.SegmentReorientationStrength = 0.07f;

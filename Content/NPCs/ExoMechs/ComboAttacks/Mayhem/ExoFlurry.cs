@@ -120,13 +120,13 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
         /// <param name="npc">Ares' NPC instance.</param>
         public static void Perform_Ares(NPC npc)
         {
-            if (!npc.TryGetBehavior(out AresBodyEternity ares))
+            if (!npc.TryGetBehavior(out AresBodyBehavior ares))
                 return;
 
             // The attack cycle of the slash is the same as that of Artemis and Apollo, to ensure that they don't drift and cause unavoidable hits.
             int attackCycleTime = ExoTwinsSpinTime + ExoTwinsSpinSlowdownTime + ExoTwinsDashTime;
-            bool armsAreDetaching = AITimer <= AresBodyEternity.DetachHands_DetachmentDelay;
-            float animationCompletion = (AITimer - AresBodyEternity.DetachHands_DetachmentDelay) / (float)attackCycleTime % 1f;
+            bool armsAreDetaching = AITimer <= AresBodyBehavior.DetachHands_DetachmentDelay;
+            float animationCompletion = (AITimer - AresBodyBehavior.DetachHands_DetachmentDelay) / (float)attackCycleTime % 1f;
             float riseUpwardInterpolant = LumUtils.InverseLerp(0f, 0.55f, animationCompletion);
             float flyDownwardInterpolant = LumUtils.InverseLerp(0.55f, 1f, animationCompletion);
             float lightActivationInterpolant = LumUtils.InverseLerp(0.5f, 0.65f, riseUpwardInterpolant) * LumUtils.InverseLerp(1f, 0.6f, flyDownwardInterpolant);
@@ -156,11 +156,11 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
             {
                 if (flyDownwardInterpolant <= 0.03f)
                 {
-                    SoundEngine.PlaySound(AresBodyEternity.SlashSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
+                    SoundEngine.PlaySound(AresBodyBehavior.SlashSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
                     ScreenShakeSystem.StartShakeAtPoint(npc.Center, 32f, MathHelper.TwoPi, null, 1.3f);
                 }
 
-                npc.damage = AresBodyEternity.KatanaDamage;
+                npc.damage = AresBodyBehavior.KatanaDamage;
                 npc.velocity.X *= 0.55f;
                 npc.velocity.Y = MathHelper.Clamp(npc.velocity.Y + AresFlyDownAcceleration, -25f, AresMaxFlyDownSpeed);
 
@@ -218,8 +218,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
         public static void Perform_Ares_HandUpdate(NPC ares, AresHand hand, float riseUpwardInterpolant, float flyDownwardInterpolant, Vector2 hoverOffset, int armIndex)
         {
             NPC handNPC = hand.NPC;
-            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyEternity.ArmCount - 1;
-            hand.ArmSide = (armIndex >= AresBodyEternity.ArmCount / 2).ToDirectionInt();
+            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyBehavior.ArmCount - 1;
+            hand.ArmSide = (armIndex >= AresBodyBehavior.ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.EnergyKatana;
             hand.Frame = 0;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
@@ -234,7 +234,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
             hoverOffset.Y -= LumUtils.InverseLerpBump(0f, 0.75f, 0.91f, 1f, riseUpwardInterpolant).Cubed() * 410f;
             hoverOffset.Y += LumUtils.InverseLerp(0f, 0.05f, flyDownwardInterpolant) * 200f + flyDownwardInterpolant * 300f;
 
-            float fastMovementInterpolant = LumUtils.InverseLerp(0f, 60f, AITimer - AresBodyEternity.DetachHands_DetachmentDelay);
+            float fastMovementInterpolant = LumUtils.InverseLerp(0f, 60f, AITimer - AresBodyBehavior.DetachHands_DetachmentDelay);
             float movementSharpness = MathHelper.Lerp(0.2f, 0.9f, fastMovementInterpolant);
             float movementSmoothness = MathHelper.Lerp(0.85f, 0.32f, fastMovementInterpolant);
 
@@ -250,7 +250,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
             handNPC.Opacity = LumUtils.Saturate(handNPC.Opacity + 0.2f);
             handNPC.spriteDirection = 1;
             handNPC.rotation = handNPC.AngleFrom(ares.Center).AngleLerp(hand.ShoulderToHandDirection, 0.8f).AngleLerp(MathHelper.PiOver2, MathF.Pow(riseUpwardInterpolant, 2.5f));
-            handNPC.damage = flyDownwardInterpolant >= 0.01f ? AresBodyEternity.KatanaDamage : 0;
+            handNPC.damage = flyDownwardInterpolant >= 0.01f ? AresBodyBehavior.KatanaDamage : 0;
 
             // Disable incoming damage to nullify ram dash cheese.
             if (handNPC.damage >= 1)
@@ -319,13 +319,13 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
             IExoTwin? twinInfo = null;
             float motionBlurInterpolant = LumUtils.InverseLerp(90f, 150f, npc.velocity.Length());
             float thrusterBoost = LumUtils.InverseLerp(ExoTwinsMaxDashSpeed * 0.85f, ExoTwinsMaxDashSpeed, npc.velocity.Length()) * 1.3f;
-            if (npc.TryGetBehavior(out ArtemisEternity artemisBehavior))
+            if (npc.TryGetBehavior(out ArtemisBehavior artemisBehavior))
             {
                 artemisBehavior.MotionBlurInterpolant = motionBlurInterpolant;
                 artemisBehavior.ThrusterBoost = MathHelper.Max(artemisBehavior.ThrusterBoost, thrusterBoost);
                 twinInfo = artemisBehavior;
             }
-            else if (npc.TryGetBehavior(out ApolloEternity apolloBehavior))
+            else if (npc.TryGetBehavior(out ApolloBehavior apolloBehavior))
             {
                 apolloBehavior.MotionBlurInterpolant = motionBlurInterpolant;
                 apolloBehavior.ThrusterBoost = MathHelper.Max(apolloBehavior.ThrusterBoost, thrusterBoost);
@@ -422,7 +422,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
         /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
-            if (!npc.TryGetBehavior(out HadesHeadEternity hades))
+            if (!npc.TryGetBehavior(out HadesHeadBehavior hades))
             {
                 npc.active = false;
                 return;
@@ -430,8 +430,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
 
             hades.SegmentReorientationStrength = 0.1f;
 
-            int wrappedTimer = AITimer % HadesHeadEternity.MineBarrages_AttackCycleTime;
-            if (wrappedTimer < HadesHeadEternity.MineBarrages_RedirectTime)
+            int wrappedTimer = AITimer % HadesHeadBehavior.MineBarrages_AttackCycleTime;
+            if (wrappedTimer < HadesHeadBehavior.MineBarrages_RedirectTime)
             {
                 if (!npc.WithinRange(Target.Center, 600f))
                 {
@@ -440,7 +440,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
                     npc.velocity = newDirection * newSpeed;
                 }
 
-                hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(4), HadesHeadEternity.OpenSegment());
+                hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(4), HadesHeadBehavior.OpenSegment());
             }
             else
             {
@@ -449,7 +449,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
                 else
                     npc.velocity *= 1.07f;
 
-                hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(4), hades.DoBehavior_MineBarrages_FireMine);
+                hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(4), hades.DoBehavior_MineBarrages_FireMine);
             }
 
             // GENIUS tech: Make Hades try to interpolate ahead of the player, cutting them off and eliminating horizontal fly strats.

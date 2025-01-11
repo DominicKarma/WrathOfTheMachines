@@ -6,7 +6,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
-    public sealed partial class DraedonEternity : NPCBehaviorOverride
+    public sealed partial class DraedonBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The monologue that Draedon should use at the start of the battle. Once he's been spoken to, his dialogue is a lot lighter.

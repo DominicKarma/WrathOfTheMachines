@@ -49,7 +49,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1)
             {
                 NPC apollo = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen];
-                if (apollo.active && apollo.TryGetBehavior(out ApolloEternity apolloAI))
+                if (apollo.active && apollo.TryGetBehavior(out ApolloBehavior apolloAI))
                     PerformUpdateLoop(apollo, apolloAI);
 
                 anyExoTwinIsPresent = true;
@@ -58,7 +58,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (CalamityGlobalNPC.draedonExoMechTwinRed != -1)
             {
                 NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
-                if (artemis.active && artemis.TryGetBehavior(out ArtemisEternity artemisAI))
+                if (artemis.active && artemis.TryGetBehavior(out ArtemisBehavior artemisAI))
                     PerformUpdateLoop(artemis, artemisAI);
 
                 anyExoTwinIsPresent = true;
@@ -181,7 +181,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             do
             {
                 bool phase2 = false;
-                if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
+                if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehavior apollo))
                     phase2 = apollo.InPhase2;
 
                 choice = Main.rand.NextFromList(ExoTwinsAIState.DashesAndLasers, ExoTwinsAIState.CloseShots);
@@ -200,10 +200,10 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         /// </summary>
         public static void PickIndividualAIStates()
         {
-            if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisEternity artemis))
+            if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehavior artemis))
                 return;
 
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehavior apollo))
                 return;
 
             bool apolloWillPerformActiveState = Main.rand.NextBool();
@@ -260,10 +260,10 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (SharedState.AIState != ExoTwinsAIState.Leave)
                 SoundEngine.PlaySound(Artemis.AttackSelectionSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew });
 
-            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisEternity artemis))
+            if (CalamityGlobalNPC.draedonExoMechTwinRed != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed].TryGetBehavior(out ArtemisBehavior artemis))
                 artemis.ResetLocalStateData();
 
-            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
+            if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloBehavior apollo))
                 apollo.ResetLocalStateData();
 
             if (SharedState.AIState == ExoTwinsAIState.PerformIndividualAttacks)

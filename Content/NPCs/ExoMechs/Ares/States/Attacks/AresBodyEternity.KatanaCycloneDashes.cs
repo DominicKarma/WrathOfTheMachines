@@ -14,7 +14,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
-    public sealed partial class AresBodyEternity : NPCBehaviorOverride
+    public sealed partial class AresBodyBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The amount of slash dashes Ares has performed during the Katana Cyclone Dashes attack.

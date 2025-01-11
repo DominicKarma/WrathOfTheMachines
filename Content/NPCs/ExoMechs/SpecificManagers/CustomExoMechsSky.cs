@@ -98,7 +98,7 @@ namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
             float maxSkyOpacity = 1f;
             float planeForwardInterpolant = 0f;
             int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonEternity behavior))
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
             {
                 maxSkyOpacity = behavior.MaxSkyOpacity;
                 planeForwardInterpolant = 1f - behavior.PlaneFlyForwardInterpolant;

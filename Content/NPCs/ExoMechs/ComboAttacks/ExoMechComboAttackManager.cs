@@ -214,7 +214,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
                     if (CurrentState?.AttackAction?.Invoke(npc) ?? true)
                         SelectNewComboAttackState();
 
-                    if (behavior is HadesHeadEternity hades)
+                    if (behavior is HadesHeadBehavior hades)
                     {
                         hades.ActionsToDeferAfterCombo?.Invoke();
                         hadesIsPresent = true;
@@ -228,7 +228,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
             {
                 foreach (NPC npc in Main.ActiveNPCs)
                 {
-                    if (npc.TryGetBehavior(out HadesBodyEternity body))
+                    if (npc.TryGetBehavior(out HadesBodyBehavior body))
                     {
                         body.ListenToHeadInstructions();
                         body.ModifyDRBasedOnOpenInterpolant();

@@ -6,7 +6,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
-    public sealed partial class DraedonEternity : NPCBehaviorOverride
+    public sealed partial class DraedonBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The vertical offset of Draedon's projector.

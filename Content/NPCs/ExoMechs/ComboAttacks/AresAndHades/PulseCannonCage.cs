@@ -99,13 +99,13 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <param name="npc">Ares' NPC instance.</param>
         public static bool Perform_Ares(NPC npc)
         {
-            if (!npc.TryGetBehavior(out AresBodyEternity ares))
+            if (!npc.TryGetBehavior(out AresBodyBehavior ares))
             {
                 npc.active = false;
                 return false;
             }
 
-            if (AITimer <= AresBodyEternity.DetachHands_DetachmentDelay)
+            if (AITimer <= AresBodyBehavior.DetachHands_DetachmentDelay)
             {
                 for (int i = 0; i < ares.InstructionsForHands.Length; i++)
                 {
@@ -140,8 +140,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             NPC handNPC = hand.NPC;
             Vector2 hoverDestination = aresBody.Center + hoverOffset.RotatedBy(aresBody.rotation) * aresBody.scale;
 
-            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyEternity.ArmCount - 1;
-            hand.ArmSide = (armIndex >= AresBodyEternity.ArmCount / 2).ToDirectionInt();
+            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyBehavior.ArmCount - 1;
+            hand.ArmSide = (armIndex >= AresBodyBehavior.ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.PulseCannon;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.GlowmaskDisabilityInterpolant = 0f;
@@ -192,7 +192,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
-            if (!npc.TryGetBehavior(out HadesHeadEternity hades))
+            if (!npc.TryGetBehavior(out HadesHeadBehavior hades))
                 return;
 
             // Initialize the spin origin if it's zeroed out or if the player managed to escape/got pushed out of the circle zone by Ares.
@@ -217,9 +217,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             hades.SegmentReorientationStrength = 0.151f;
 
             // Keep some segments open, so that the player can actually do damage to Hades.
-            hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(2), new(segment =>
+            hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(2), new(segment =>
             {
-                HadesHeadEternity.OpenSegment()?.Invoke(segment);
+                HadesHeadBehavior.OpenSegment()?.Invoke(segment);
                 segment.NPC.damage = doContactDamage ? segment.NPC.defDamage : 0;
             }));
         }

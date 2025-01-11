@@ -15,7 +15,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The amount of damage missiles from Hades do.
@@ -213,7 +213,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             }
         }
 
-        public void DoBehavior_MissileLunges_ReleaseMissile(HadesBodyEternity behaviorOverride)
+        public void DoBehavior_MissileLunges_ReleaseMissile(HadesBodyBehavior behaviorOverride)
         {
             NPC segment = behaviorOverride.NPC;
             int missileReleaseCycle = 10;

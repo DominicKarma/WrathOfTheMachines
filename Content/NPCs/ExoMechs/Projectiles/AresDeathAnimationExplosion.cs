@@ -24,7 +24,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => AresBodyEternity.DeathAnimation_SilhouetteAppearDelay + AresBodyEternity.DeathAnimation_SilhouetteFadeInTime + AresBodyEternity.DeathAnimation_SilhouetteDissolveDelay + AresBodyEternity.DeathAnimation_SilhouetteDissolveTime + AresBodyEternity.DeathAnimation_DeathDelay;
+        public static int Lifetime => AresBodyBehavior.DeathAnimation_SilhouetteAppearDelay + AresBodyBehavior.DeathAnimation_SilhouetteFadeInTime + AresBodyBehavior.DeathAnimation_SilhouetteDissolveDelay + AresBodyBehavior.DeathAnimation_SilhouetteDissolveTime + AresBodyBehavior.DeathAnimation_DeathDelay;
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 

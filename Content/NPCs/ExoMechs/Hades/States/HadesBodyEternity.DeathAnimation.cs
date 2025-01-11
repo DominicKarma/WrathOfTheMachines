@@ -17,7 +17,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// How long Hades spends redirecting towards the player at a slow pace during his death animation.
@@ -141,7 +141,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// <param name="segment">The segment to create gores for.</param>
         public static void CreateGores(NPC segment)
         {
-            if (!segment.TryGetBehavior(out HadesBodyEternity body))
+            if (!segment.TryGetBehavior(out HadesBodyBehavior body))
                 return;
 
             if (body.IsSecondaryBodySegment)

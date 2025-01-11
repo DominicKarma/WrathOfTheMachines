@@ -13,7 +13,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Draedon
 {
-    public sealed partial class DraedonEternity : NPCBehaviorOverride
+    public sealed partial class DraedonBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The monologue that Draedon uses upon the Exo Mechs battle concluding the first time you defeat them.

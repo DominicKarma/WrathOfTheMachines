@@ -182,20 +182,20 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             for (int i = 0; i < 20; i++)
             {
                 Vector2 burstVelocity = (MathHelper.TwoPi * i / 20f).ToRotationVector2() * 0.54f;
-                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
             for (int i = 0; i < 9; i++)
             {
                 Vector2 burstVelocity = (MathHelper.TwoPi * i / 9f + MathHelper.Pi / 6f).ToRotationVector2() * 0.92f;
-                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
             Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
             for (int i = 0; i < 7; i++)
             {
                 Vector2 burstVelocity = Projectile.SafeDirectionTo(target.Center).RotatedBy(MathHelper.Lerp(-0.51f, 0.51f, i / 6f)) * 1.4f;
-                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
             LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);

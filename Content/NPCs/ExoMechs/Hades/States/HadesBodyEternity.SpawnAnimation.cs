@@ -5,7 +5,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// Whether Hades is within ground during his Spawn Animation state.

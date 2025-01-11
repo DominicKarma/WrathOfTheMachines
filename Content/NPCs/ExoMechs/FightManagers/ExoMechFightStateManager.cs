@@ -193,9 +193,9 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
                 return;
             }
 
-            DraedonEternity.DraedonAIState? draedonState = null;
+            DraedonBehavior.DraedonAIState? draedonState = null;
             int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonEternity behavior))
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
                 draedonState = behavior.AIState;
 
             // Determine the overall fight state.

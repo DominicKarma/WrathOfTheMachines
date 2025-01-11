@@ -16,7 +16,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// The sound instance of Hades' super deathray.
@@ -201,7 +201,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             NPC.rotation = NPC.velocity.ToRotation() + MathHelper.PiOver2;
         }
 
-        public void DoBehavior_ExoEnergyBlast_UpdateSegment(HadesBodyEternity behaviorOverride, bool beamIsOverheating)
+        public void DoBehavior_ExoEnergyBlast_UpdateSegment(HadesBodyBehavior behaviorOverride, bool beamIsOverheating)
         {
             NPC segment = behaviorOverride.NPC;
 

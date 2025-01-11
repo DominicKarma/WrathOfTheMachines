@@ -17,7 +17,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
-    public sealed partial class AresBodyEternity : NPCBehaviorOverride
+    public sealed partial class AresBodyBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// How much forward Ares should aim his lasers on the second sweep during the Aimed Laser Bursts attack.

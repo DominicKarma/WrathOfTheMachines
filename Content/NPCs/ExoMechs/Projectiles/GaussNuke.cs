@@ -47,7 +47,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long this nuke should exist before exploding, in frames.
         /// </summary>
-        public static int Lifetime => AresBodyEternity.NukeAoEAndPlasmaBlasts_NukeExplosionDelay;
+        public static int Lifetime => AresBodyBehavior.NukeAoEAndPlasmaBlasts_NukeExplosionDelay;
 
         public override void SetStaticDefaults()
         {
@@ -133,7 +133,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             // NOTE -- There used to be gores spawned here as well, but that effect was removed on account of the fact that realistically the outer shell of the
             // nuke would be obliterated instantly upon its detonation.
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyEternity.NukeExplosionDamage, 0f, -1, ExplosionDiameter);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GaussNukeBoom>(), AresBodyBehavior.NukeExplosionDamage, 0f, -1, ExplosionDiameter);
         }
     }
 }

@@ -17,7 +17,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed class HadesBodyEternity : NPCBehaviorOverride, IHadesSegment
+    public sealed class HadesBodyBehavior : NPCBehaviorOverride, IHadesSegment
     {
         internal static LazyAsset<Texture2D>[] SpineTextures;
 
@@ -190,7 +190,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
                 return;
             }
 
-            if (NPC.realLife < 0 || NPC.realLife >= Main.maxNPCs || !Main.npc[NPC.realLife].TryGetBehavior(out HadesHeadEternity head))
+            if (NPC.realLife < 0 || NPC.realLife >= Main.maxNPCs || !Main.npc[NPC.realLife].TryGetBehavior(out HadesHeadBehavior head))
             {
                 if (CalamityGlobalNPC.draedonExoMechWorm != -1)
                 {
@@ -208,7 +208,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             // Hack to ensure that segments retain Hades' secondary AI state, and thusly use the correct map icon.
             NPC.Calamity().newAI[1] = aheadSegment.Calamity().newAI[1];
             NPC.hide = true;
-            NPC.defDamage = HadesHeadEternity.DefaultSegmentDamage;
+            NPC.defDamage = HadesHeadBehavior.DefaultSegmentDamage;
             NPC.defense = NPC.defDefense;
             NPC.damage = 0;
             NPC.Opacity = aheadSegment.Opacity;
@@ -229,7 +229,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             SpringOffset += SpringForce;
             SpringOffset *= 0.88f;
             SpringForce *= 0.7f;
-            if (RelativeIndex >= 1 && aheadSegment.TryGetBehavior(out HadesBodyEternity aheadSegmentBehavior))
+            if (RelativeIndex >= 1 && aheadSegment.TryGetBehavior(out HadesBodyBehavior aheadSegmentBehavior))
                 aheadSegmentBehavior.SpringOffset = MathHelper.Lerp(aheadSegmentBehavior.SpringOffset, SpringOffset, 0.99f);
 
             [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "vulnerable")]
@@ -264,7 +264,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
                 Vector2 directionalBearing = Vector2.Zero;
 
                 // Apply secondary snaking effects.
-                if (RelativeIndex >= 2 && aheadSegment.TryGetBehavior(out HadesBodyEternity aheadSegmentBehavior))
+                if (RelativeIndex >= 2 && aheadSegment.TryGetBehavior(out HadesBodyBehavior aheadSegmentBehavior))
                 {
                     NPC aheadSegment2 = Main.npc[aheadSegmentBehavior.AheadSegmentIndex];
                     directionalBearing = (aheadSegment.Center - aheadSegment2.Center) * segmentReorientationStrength * 0.055f;
@@ -285,12 +285,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             if (IsTailSegment)
                 index = SegmentOpenInterpolant >= 0.75f ? ThanatosTail.vulnerableIconIndex : ThanatosTail.normalIconIndex;
 
-            if (NPC.realLife >= 0 && Main.npc[NPC.realLife].TryGetBehavior(out HadesHeadEternity hades) && hades.DisableMapIcon)
+            if (NPC.realLife >= 0 && Main.npc[NPC.realLife].TryGetBehavior(out HadesHeadBehavior hades) && hades.DisableMapIcon)
                 index = -1;
         }
 
         /// <summary>
-        /// Listens to incoming instructions from the head's <see cref="HadesHeadEternity.BodyBehaviorAction"/>.
+        /// Listens to incoming instructions from the head's <see cref="HadesHeadBehavior.BodyBehaviorAction"/>.
         /// </summary>
         public void ListenToHeadInstructions()
         {
@@ -298,7 +298,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
                 return;
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!hades.TryGetBehavior(out HadesHeadEternity hadesAI))
+            if (!hades.TryGetBehavior(out HadesHeadBehavior hadesAI))
                 return;
 
             if (!hadesAI.BodyBehaviorAction?.Condition(NPC, RelativeIndex) ?? false)
@@ -311,7 +311,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         }
 
         /// <summary>
-        /// Listens to incoming instructions from the head's <see cref="HadesHeadEternity.BodyRenderAction"/> that dictate optional draw data.
+        /// Listens to incoming instructions from the head's <see cref="HadesHeadBehavior.BodyRenderAction"/> that dictate optional draw data.
         /// </summary>
         public void RenderInAccordanceWithHeadInstructions()
         {
@@ -319,7 +319,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
                 return;
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
-            if (!hades.TryGetBehavior(out HadesHeadEternity hadesAI))
+            if (!hades.TryGetBehavior(out HadesHeadBehavior hadesAI))
                 return;
 
             if (!hadesAI.BodyRenderAction?.Condition(NPC, RelativeIndex) ?? false)
@@ -333,7 +333,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         /// </summary>
         public void ModifyDRBasedOnOpenInterpolant()
         {
-            float damageReduction = MathHelper.SmoothStep(0.9999f, HadesHeadEternity.StandardOpenSegmentDR, SegmentOpenInterpolant);
+            float damageReduction = MathHelper.SmoothStep(0.9999f, HadesHeadBehavior.StandardOpenSegmentDR, SegmentOpenInterpolant);
             CalamityGlobalNPC globalNPC = NPC.Calamity();
             globalNPC.unbreakableDR = damageReduction >= 0.999f;
             globalNPC.DR = damageReduction;

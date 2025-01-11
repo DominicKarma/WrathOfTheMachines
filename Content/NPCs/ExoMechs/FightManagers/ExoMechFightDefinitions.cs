@@ -105,7 +105,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
         }, state =>
         {
             ExoMechSummonDelayTimer = 0;
-            SetDraedonState(DraedonEternity.DraedonAIState.FirstInterjection);
+            SetDraedonState(DraedonBehavior.DraedonAIState.FirstInterjection);
         });
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
             if (state.DraedonState is null)
                 return ExoMechSummonDelayTimer >= NoDraedonExoMechReturnDelay;
 
-            return state.DraedonState != DraedonEternity.DraedonAIState.FirstInterjection;
+            return state.DraedonState != DraedonBehavior.DraedonAIState.FirstInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
         }, state =>
         {
             ExoMechSummonDelayTimer = 0;
-            SetDraedonState(DraedonEternity.DraedonAIState.SecondInterjection);
+            SetDraedonState(DraedonBehavior.DraedonAIState.SecondInterjection);
         });
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
             if (state.DraedonState is null)
                 return ExoMechSummonDelayTimer >= NoDraedonExoMechReturnDelay;
 
-            return state.DraedonState != DraedonEternity.DraedonAIState.SecondInterjection;
+            return state.DraedonState != DraedonBehavior.DraedonAIState.SecondInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
             return state.TotalKilledMechs >= 3;
         }, state =>
         {
-            SetDraedonState(DraedonEternity.DraedonAIState.PostBattleInterjection);
+            SetDraedonState(DraedonBehavior.DraedonAIState.PostBattleInterjection);
         });
 
         public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
@@ -198,10 +198,10 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
             });
         }
 
-        public static void SetDraedonState(DraedonEternity.DraedonAIState state)
+        public static void SetDraedonState(DraedonBehavior.DraedonAIState state)
         {
             int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonEternity behavior))
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
             {
                 behavior.ChangeAIState(state);
                 Main.npc[draedonIndex].netUpdate = true;

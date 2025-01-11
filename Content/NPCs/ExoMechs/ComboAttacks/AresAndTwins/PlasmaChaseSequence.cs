@@ -88,7 +88,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         /// <param name="npc">Ares' NPC instance.</param>
         public static void Perform_Ares(NPC npc)
         {
-            if (!npc.TryGetBehavior(out AresBodyEternity ares))
+            if (!npc.TryGetBehavior(out AresBodyBehavior ares))
             {
                 npc.active = false;
                 return;
@@ -105,7 +105,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                 Vector2 hoverOffset = new(npc.HorizontalDirectionTo(Target.Center) * -350f, -300f);
                 npc.Center = Vector2.Lerp(npc.Center, Target.Center + hoverOffset, 0.016f);
                 npc.velocity *= 0.95f;
-                ares.AnimationState = AresBodyEternity.AresFrameAnimationState.Default;
+                ares.AnimationState = AresBodyBehavior.AresFrameAnimationState.Default;
             }
             else
             {
@@ -115,12 +115,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
 
                 float moveAbovePlayerInterpolant = LumUtils.InverseLerp(400f, 150f, Target.Center.Y - npc.Center.Y) + 0.2f;
                 npc.Center = Vector2.Lerp(npc.Center, new(npc.Center.X, hoverDestination.Y), moveAbovePlayerInterpolant * 0.2f);
-                ares.AnimationState = AresBodyEternity.AresFrameAnimationState.Laugh;
+                ares.AnimationState = AresBodyBehavior.AresFrameAnimationState.Laugh;
             }
 
             if (AITimer == PlasmaCannonChargeUpTime)
             {
-                SoundEngine.PlaySound(AresBodyEternity.LaughSound);
+                SoundEngine.PlaySound(AresBodyBehavior.LaughSound);
                 SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaShootSound);
                 SoundEngine.PlaySound(CommonCalamitySounds.ExoPlasmaExplosionSound);
                 ScreenShakeSystem.StartShake(10f);
@@ -138,7 +138,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
             Vector2 rightHandOffset = Vector2.SmoothStep(new Vector2(250f, 220f), new Vector2(140f, 274f), handRepositionInterpolant);
             Vector2 farRightHandOffset = Vector2.SmoothStep(new Vector2(448f, 90f), new Vector2(400f, 50f), handRepositionInterpolant);
 
-            if (AITimer <= AresBodyEternity.DetachHands_DetachmentDelay)
+            if (AITimer <= AresBodyBehavior.DetachHands_DetachmentDelay)
             {
                 for (int i = 0; i < ares.InstructionsForHands.Length; i++)
                 {
@@ -168,8 +168,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
             Vector2 hoverDestination = aresBody.Center + hoverOffset * aresBody.scale;
 
             hand.KatanaInUse = false;
-            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyEternity.ArmCount - 1;
-            hand.ArmSide = (armIndex >= AresBodyEternity.ArmCount / 2).ToDirectionInt();
+            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyBehavior.ArmCount - 1;
+            hand.ArmSide = (armIndex >= AresBodyBehavior.ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.PlasmaCannon;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.GlowmaskDisabilityInterpolant = 0f;
@@ -205,7 +205,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         /// <param name="npc">Artemis' NPC instance.</param>
         public static void Perform_Artemis(NPC npc)
         {
-            if (!npc.TryGetBehavior(out ArtemisEternity artemis))
+            if (!npc.TryGetBehavior(out ArtemisBehavior artemis))
             {
                 npc.active = false;
                 return;
@@ -221,7 +221,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         /// <param name="npc">Apollo's NPC instance.</param>
         public static void Perform_Apollo(NPC npc)
         {
-            if (!npc.TryGetBehavior(out ApolloEternity apollo))
+            if (!npc.TryGetBehavior(out ApolloBehavior apollo))
             {
                 npc.active = false;
                 return;

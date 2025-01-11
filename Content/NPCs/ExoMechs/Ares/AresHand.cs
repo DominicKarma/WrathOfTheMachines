@@ -222,7 +222,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
 
         public override void AI()
         {
-            if (CalamityGlobalNPC.draedonExoMechPrime <= -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyEternity body))
+            if (CalamityGlobalNPC.draedonExoMechPrime <= -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehavior body))
             {
                 NPC.active = false;
                 return;
@@ -250,7 +250,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             KatanaAppearanceInterpolant = LumUtils.Saturate(KatanaAppearanceInterpolant + KatanaInUse.ToDirectionInt() * 0.072f);
             if (KatanaInUse && oldAppearanceInterpolant == 0f && KatanaAppearanceInterpolant >= 0.001f)
             {
-                SoundEngine.PlaySound(AresBodyEternity.KatanaUnsheatheSound, NPC.Center);
+                SoundEngine.PlaySound(AresBodyBehavior.KatanaUnsheatheSound, NPC.Center);
                 ScreenShakeSystem.StartShakeAtPoint(NPC.Center, 4f);
             }
 
@@ -358,7 +358,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
 
         public void DrawMagneticLine(NPC aresBody, Vector2 start, Vector2 end, float opacity = 1f)
         {
-            if (!aresBody.TryGetBehavior(out AresBodyEternity aresBodyBehavior) || aresBodyBehavior.SilhouetteOpacity > 0f)
+            if (!aresBody.TryGetBehavior(out AresBodyBehavior aresBodyBehavior) || aresBodyBehavior.SilhouetteOpacity > 0f)
                 return;
 
             Vector2[] controlPoints = new Vector2[8];
@@ -452,7 +452,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             spriteBatch.Draw(shoulderPaddingTextureGlowmask, shoulderPaddingDrawPosition, shoulderPadFrame, glowmaskColor, shoulderRotation, shoulderPadFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally, 0f);
 
             spriteBatch.Draw(shoulderTexture, shoulderDrawPosition, shoulderFrame, shoulderColor, shoulderRotation, shoulderFrame.Size() * 0.5f, NPC.scale, ArmSide.ToSpriteDirection(), 0f);
-            AresBodyEternity.DrawRGBGlowmask("AresArmTopShoulder", shoulderDrawPosition, glowmaskColor, shoulderRotation, NPC.scale, Vector2.One * 0.5f, ArmSide.ToSpriteDirection());
+            AresBodyBehavior.DrawRGBGlowmask("AresArmTopShoulder", shoulderDrawPosition, glowmaskColor, shoulderRotation, NPC.scale, Vector2.One * 0.5f, ArmSide.ToSpriteDirection());
 
             ShoulderToHandDirection = (ArmEndpoint - screenPosition - elbowDrawPosition).ToRotation();
 
@@ -497,12 +497,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 DrawMagneticLine(aresBody, magnetismEnd - Vector2.UnitY.RotatedBy(forearmRotation) * aresBody.scale * 16f, ArmEndpoint, NPC.Opacity.Cubed());
 
             SpriteEffects direction = ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally;
-            AresBodyEternity.ApplyNormalMapShader(armSegmentTexture, shoulderFrame, true, true);
+            AresBodyBehavior.ApplyNormalMapShader(armSegmentTexture, shoulderFrame, true, true);
             spriteBatch.Draw(armSegmentTexture, segmentDrawPosition, shoulderFrame, segmentColor, segmentRotation, shoulderFrame.Size() * 0.5f, NPC.scale, direction, 0f);
             spriteBatch.Draw(forearmTexture, forearmDrawPosition, forearmFrame, segmentColor, forearmRotation, forearmOrigin, NPC.scale, direction, 0f);
 
-            AresBodyEternity.DrawRGBGlowmask("AresArmTopSegment", segmentDrawPosition, glowmaskColor, segmentRotation, NPC.scale, Vector2.One * 0.5f, direction);
-            AresBodyEternity.DrawRGBGlowmask("AresArmTopPart2", forearmDrawPosition, glowmaskColor, forearmRotation, NPC.scale, forearmOrigin / forearmFrame.Size(), direction);
+            AresBodyBehavior.DrawRGBGlowmask("AresArmTopSegment", segmentDrawPosition, glowmaskColor, segmentRotation, NPC.scale, Vector2.One * 0.5f, direction);
+            AresBodyBehavior.DrawRGBGlowmask("AresArmTopPart2", forearmDrawPosition, glowmaskColor, forearmRotation, NPC.scale, forearmOrigin / forearmFrame.Size(), direction);
         }
 
         /// <summary>
@@ -559,9 +559,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             Color glowmaskColor = aresBody.GetAlpha(Color.White);
             SpriteEffects direction = ArmSide.ToSpriteDirection() ^ SpriteEffects.FlipHorizontally;
 
-            AresBodyEternity.ApplyNormalMapShader(armTexture, armFrame, true, false);
+            AresBodyBehavior.ApplyNormalMapShader(armTexture, armFrame, true, false);
             spriteBatch.Draw(armTexture, armStart, armFrame, armColor, armRotation, armOrigin, NPC.scale, direction, 0f);
-            AresBodyEternity.DrawRGBGlowmask("AresBottomArmPart1", armStart, glowmaskColor, armRotation, NPC.scale, armOrigin / armFrame.Size(), direction);
+            AresBodyBehavior.DrawRGBGlowmask("AresBottomArmPart1", armStart, glowmaskColor, armRotation, NPC.scale, armOrigin / armFrame.Size(), direction);
 
             ShoulderToHandDirection = (ArmEndpoint - screenPosition - elbowDrawPosition).ToRotation();
 
@@ -597,9 +597,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             Color forearmColor = aresBody.GetAlpha(Lighting.GetColor((armStart + screenPosition).ToTileCoordinates()));
             Color glowmaskColor = aresBody.GetAlpha(Color.Wheat);
 
-            AresBodyEternity.ApplyNormalMapShader(forearmTexture, forearmFrame, true, false);
+            AresBodyBehavior.ApplyNormalMapShader(forearmTexture, forearmFrame, true, false);
             spriteBatch.Draw(forearmTexture, armStart, forearmFrame, forearmColor, forearmRotation, forearmOrigin, NPC.scale, direction, 0f);
-            AresBodyEternity.DrawRGBGlowmask("AresBottomArmPart2", armStart, glowmaskColor, forearmRotation, NPC.scale, forearmOrigin / forearmFrame.Size(), direction);
+            AresBodyBehavior.DrawRGBGlowmask("AresBottomArmPart2", armStart, glowmaskColor, forearmRotation, NPC.scale, forearmOrigin / forearmFrame.Size(), direction);
         }
 
         /// <summary>

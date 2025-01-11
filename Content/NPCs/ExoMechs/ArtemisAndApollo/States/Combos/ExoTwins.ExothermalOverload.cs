@@ -166,7 +166,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             ref float spinOffsetAngle = ref SharedState.Values[0];
             ref float spinRadius = ref SharedState.Values[1];
 
-            if (!npc.TryGetBehavior(out ApolloEternity apollo))
+            if (!npc.TryGetBehavior(out ApolloBehavior apollo))
                 return;
 
             if (wrappedAITimer == 1)

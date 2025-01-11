@@ -6,11 +6,13 @@ using CalamityMod.Items.TreasureBags;
 using CalamityMod.Items.Weapons.Ranged;
 using CalamityMod.Items.Weapons.Rogue;
 using CalamityMod.NPCs;
-using CalamityMod.NPCs.ExoMechs.Artemis;
+using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using CalamityMod.Sounds;
+using CalamityMod.UI;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
+using Luminance.Core.Graphics;
 using Luminance.Core.Hooking;
 using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
@@ -22,9 +24,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WoTM.Common.Utilities;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
@@ -34,7 +36,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
-    public sealed partial class ArtemisEternity : NPCBehaviorOverride, IExoMech, IExoTwin
+    public sealed partial class ApolloBehavior : NPCBehaviorOverride, IExoMech, IExoTwin
     {
         private static ILHook? hitEffectHook;
 
@@ -54,7 +56,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Whether Artemis should be inactive, leaving the battle to let other mechs attack on their own.
+        /// Whether Apollo should be inactive, leaving the battle to let other mechs attack on their own.
         /// </summary>
         public bool Inactive
         {
@@ -63,7 +65,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Whether Artemis is a primary mech or not, a.k.a the one that the player chose when starting the battle.
+        /// Whether Apollo is a primary mech or not, a.k.a the one that the player chose when starting the battle.
         /// </summary>
         public bool IsPrimaryMech
         {
@@ -72,7 +74,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Artemis' current frame.
+        /// Apollo's current frame.
         /// </summary>
         public int Frame
         {
@@ -81,7 +83,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Artemis' current AI timer.
+        /// Apollo's current AI timer.
         /// </summary>
         public int AITimer
         {
@@ -90,7 +92,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Whether Artemis has fully entered her second phase yet or not.
+        /// Whether Apollo has fully entered his second phase yet or not.
         /// </summary>
         public bool InPhase2
         {
@@ -99,7 +101,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Whether Artemis has been destroyed due to impact during her death animation.
+        /// Whether Apollo has been destroyed due to impact during his death animation.
         /// </summary>
         public bool HasBeenDestroyed
         {
@@ -108,16 +110,16 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Whether Artemis has verified that Apollo is alive or not.
+        /// Whether Apollo has verified that Artemis is alive or not.
         /// </summary>
-        public bool ApolloSummonCheckPerformed
+        public bool ArtemisSummonCheckPerformed
         {
             get;
             set;
         }
 
         /// <summary>
-        /// The opacity of wingtip vortices on Artemis.
+        /// The opacity of wingtip vortices on Apollo.
         /// </summary>
         public float WingtipVorticesOpacity
         {
@@ -126,7 +128,16 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// The interpolant of motion blur for Artemis.
+        /// The intensity boost of thrusters for Apollo.
+        /// </summary>
+        public float ThrusterBoost
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The interpolant of motion blur for Apollo.
         /// </summary>
         public float MotionBlurInterpolant
         {
@@ -144,25 +155,16 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// The intensity boost of thrusters for Artemis.
+        /// How much Apollo's form should be engulfed in frames, as a 0-1 interpolant.
         /// </summary>
-        public float ThrusterBoost
+        public float FlameEngulfInterpolant
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Artemis' Z position.
-        /// </summary>
-        public float ZPosition
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Artemis's current animation.
+        /// Apollo's current animation.
         /// </summary>
         public ExoTwinAnimation Animation
         {
@@ -171,7 +173,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         } = ExoTwinAnimation.Idle;
 
         /// <summary>
-        /// The engine sound Artemis plays.
+        /// The engine sound Apollo plays.
         /// </summary>
         public LoopedSoundInstance EngineLoopSound
         {
@@ -180,7 +182,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// The individual AI state of Artemis. Only used if the shared AI state is <see cref="ExoTwinsAIState.PerformIndividualAttacks"/>.
+        /// The individual AI state of Apollo. Only used if the shared AI state is <see cref="ExoTwinsAIState.PerformIndividualAttacks"/>.
         /// </summary>
         public IndividualExoTwinStateHandler IndividualState
         {
@@ -189,7 +191,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         } = new(0);
 
         /// <summary>
-        /// Artemis' specific draw action.
+        /// Apollo's specific draw action.
         /// </summary>
         public Action? SpecificDrawAction
         {
@@ -207,46 +209,39 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         }
 
         /// <summary>
-        /// Artemis' optic nerve colors.
+        /// Apollo's optic nerve colors.
         /// </summary>
-        public Color[] OpticNervePalette => [new(75, 14, 6), new(145, 35, 4), new(204, 101, 24), new(254, 172, 84), new(224, 147, 40)];
+        public Color[] OpticNervePalette => [new(28, 58, 60), new(62, 105, 80), new(108, 167, 94), new(144, 246, 100), new(81, 126, 85)];
 
         /// <summary>
-        /// Artemis' base texture.
+        /// Apollo's base texture.
         /// </summary>
         internal static LazyAsset<Texture2D> BaseTexture;
 
         /// <summary>
-        /// Artemis' glowmask texture.
+        /// Apollo's glowmask texture.
         /// </summary>
         internal static LazyAsset<Texture2D> Glowmask;
 
         /// <summary>
-        /// Artemis' destroyed texture.
+        /// Apollo's destroyed texture.
         /// </summary>
         internal static LazyAsset<Texture2D> DestroyedTexture;
 
-        /// <summary>
-        /// The engine loop sound Artemis and Apollo idly play.
-        /// </summary>
-        public static readonly SoundStyle EngineSound = new("WoTM/Assets/Sounds/Custom/ExoTwins/EngineLoop");
-
-        public override int NPCOverrideID => ExoMechNPCIDs.ArtemisID;
+        public override int NPCOverrideID => ExoMechNPCIDs.ApolloID;
 
         public void ResetLocalStateData()
         {
-            AITimer = 0;
             NPC.ai[2] = 0f;
             NPC.ai[3] = 0f;
-            NPC.netUpdate = true;
         }
 
         public override void SetStaticDefaults()
         {
-            MethodInfo? hitEffectMethod = typeof(Artemis).GetMethod("HitEffect");
+            MethodInfo? hitEffectMethod = typeof(Apollo).GetMethod("HitEffect");
             if (hitEffectMethod is not null)
             {
-                new ManagedILEdit("Change Artemis' on hit visuals", Mod, edit =>
+                new ManagedILEdit("Change Apollo's on hit visuals", Mod, edit =>
                 {
                     hitEffectHook = new(hitEffectMethod, new(c => edit.EditingFunction(c, edit)));
                 }, edit =>
@@ -256,12 +251,25 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 }, HitEffectILEdit).Apply();
             }
 
+            MethodInfo? addBarMethod = typeof(BossHealthBarManager).GetMethod("AttemptToAddBar");
+            if (addBarMethod is not null)
+            {
+                new ManagedILEdit("Change Apollo's name on Calamity's boss bar", Mod, edit =>
+                {
+                    hitEffectHook = new(addBarMethod, new(c => edit.EditingFunction(c, edit)));
+                }, edit =>
+                {
+                    hitEffectHook?.Undo();
+                    hitEffectHook?.Dispose();
+                }, RenameILEdit).Apply();
+            }
+
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Artemis");
-            Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisGlow");
-            DestroyedTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ArtemisDestroyed");
+            BaseTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/Apollo");
+            Glowmask = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ApolloGlow");
+            DestroyedTexture = LazyAsset<Texture2D>.Request("WoTM/Content/NPCs/ExoMechs/ArtemisAndApollo/Textures/ApolloDestroyed");
         }
 
         public override void Unload()
@@ -303,7 +311,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 
             NPC.netAlways = true;
             NPC.boss = true;
-            NPC.BossBar = ModContent.GetInstance<ExoMechBossBar>();
+            NPC.BossBar = Main.BigBossProgressBar.NeverValid;
 
             NPC.Calamity().VulnerableToSickness = false;
             NPC.Calamity().VulnerableToElectricity = true;
@@ -313,40 +321,30 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         {
             bitWriter.WriteBit(Inactive);
             bitWriter.WriteBit(IsPrimaryMech);
-
-            binaryWriter.Write(ZPosition);
         }
 
         public override void ReceiveExtraAI(BitReader bitReader, BinaryReader binaryReader)
         {
             Inactive = bitReader.ReadBit();
             IsPrimaryMech = bitReader.ReadBit();
-
-            ZPosition = binaryReader.ReadSingle();
         }
 
         public override void AI()
         {
-            if (!ApolloSummonCheckPerformed)
+            if (!ArtemisSummonCheckPerformed)
             {
-                if (!NPC.AnyNPCs(ExoMechNPCIDs.ApolloID))
-                    NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ExoMechNPCIDs.ApolloID, NPC.whoAmI);
+                if (!NPC.AnyNPCs(ExoMechNPCIDs.ArtemisID))
+                    NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ExoMechNPCIDs.ArtemisID, NPC.whoAmI);
 
-                ApolloSummonCheckPerformed = true;
+                ArtemisSummonCheckPerformed = true;
                 NPC.netUpdate = true;
             }
-            else if (CalamityGlobalNPC.draedonExoMechTwinGreen != -1 && Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].type == ExoMechNPCIDs.ApolloID)
-            {
-                NPC.realLife = CalamityGlobalNPC.draedonExoMechTwinGreen;
-                NPC.life = Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].life;
-                if (Main.npc[CalamityGlobalNPC.draedonExoMechTwinGreen].TryGetBehavior(out ApolloEternity apollo))
-                    Inactive = apollo.Inactive;
-            }
-            else if (ExoTwinsStateManager.SharedState.AIState != ExoTwinsAIState.Leave)
+            else if (CalamityGlobalNPC.draedonExoMechTwinRed == -1 && ExoTwinsStateManager.SharedState.AIState != ExoTwinsAIState.Leave)
                 NPC.active = false;
 
-            // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
-            NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
+            Vector2 actualHitboxSize = new(164f, 164f);
+            if (NPC.Size != actualHitboxSize)
+                NPC.Size = actualHitboxSize;
 
             UpdateEngineSound();
 
@@ -372,10 +370,11 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
         /// </remarks>
         public void PerformPreUpdateResets()
         {
-            CalamityGlobalNPC.draedonExoMechTwinRed = NPC.whoAmI;
+            CalamityGlobalNPC.draedonExoMechTwinGreen = NPC.whoAmI;
             NPC.chaseable = true;
             ThrusterBoost = MathHelper.Clamp(ThrusterBoost - 0.035f, 0f, 10f);
             MotionBlurInterpolant = LumUtils.Saturate(MotionBlurInterpolant - 0.05f);
+            FlameEngulfInterpolant = LumUtils.Saturate(FlameEngulfInterpolant - 0.06f);
             SpecificDrawAction = null;
             SpecialShaderAction = (_, _2) => false;
 
@@ -383,7 +382,10 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 NPC.Opacity = 1f;
             OpticNerveAngleSensitivity = 1f;
             NPC.Calamity().ShouldCloseHPBar = Inactive;
-            NPC.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.Nothing;
+            NPC.As<Apollo>().SecondaryAIState = (int)Apollo.SecondaryPhase.Nothing;
+
+            // Use base Calamity's ChargeCombo AIState at all times, since Apollo needs that to be enabled for his CanHitPlayer hook to return true.
+            NPC.As<Apollo>().AIState = (int)Apollo.Phase.ChargeCombo;
 
             NPC.timeLeft = 7200;
 
@@ -392,7 +394,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 
         public void UpdateEngineSound()
         {
-            EngineLoopSound ??= LoopedSoundManager.CreateNew(EngineSound, () =>
+            EngineLoopSound ??= LoopedSoundManager.CreateNew(ArtemisBehavior.EngineSound, () =>
             {
                 return !NPC.active;
             });
@@ -401,22 +403,22 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 if (s.Sound is null)
                     return;
 
-                s.Volume = (LumUtils.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f) * NPC.Opacity;
+                s.Volume = LumUtils.InverseLerp(12f, 60f, NPC.velocity.Length()) * 1.5f + 0.45f;
                 s.Pitch = LumUtils.InverseLerp(9f, 50f, NPC.velocity.Length()) * 0.5f;
                 if (Inactive)
                     s.Volume *= 0.01f;
             });
         }
 
-        public static void HitEffectOverride(ModNPC artemis)
+        public static void HitEffectOverride(ModNPC apollo)
         {
-            NPC npc = artemis.NPC;
+            NPC npc = apollo.NPC;
 
             if (Main.rand.NextBool())
             {
                 int pixelLifetime = Main.rand.Next(12, 19);
-                Color pixelColor = Color.Lerp(Color.Yellow, Color.White, Main.rand.NextFloat(0.5f, 1f));
-                Color pixelBloom = Color.Lerp(Color.Yellow, Color.OrangeRed, Main.rand.NextFloat()) * 0.45f;
+                Color pixelColor = Color.Lerp(Color.Cyan, Color.White, Main.rand.NextFloat(0.5f, 1f));
+                Color pixelBloom = Color.Lerp(Color.ForestGreen, Color.Lime, Main.rand.NextFloat()) * 0.45f;
                 Vector2 pixelScale = Vector2.One * Main.rand.NextFloat(0.67f, 1.5f);
                 Vector2 pixelVelocity = Main.LocalPlayer.SafeDirectionTo(npc.Center).RotatedByRandom(0.95f) * Main.rand.NextFloat(3f, 35f);
                 BloomPixelParticle pixel = new(npc.Center - pixelVelocity * 3.1f, pixelVelocity, pixelColor, pixelBloom, pixelLifetime, pixelScale);
@@ -442,19 +444,11 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 Mod calamity = ModContent.GetInstance<CalamityMod.CalamityMod>();
 
                 for (int i = 1; i <= 5; i++)
-                    Gore.NewGore(deathSource, npc.position, npc.velocity + Main.rand.NextVector2Circular(24f, 24f), calamity.Find<ModGore>($"Artemis{i}").Type, npc.scale);
+                    Gore.NewGore(deathSource, npc.position, npc.velocity + Main.rand.NextVector2Circular(24f, 24f), calamity.Find<ModGore>($"Apollo{i}").Type, npc.scale);
             }
         }
 
-        public override Color? GetAlpha(Color drawColor)
-        {
-            float backgroundVfxInterpolant = LumUtils.InverseLerp(0.9f, 3.7f, ZPosition);
-            float backgroundOpacity = MathHelper.Lerp(1f, 0.65f, backgroundVfxInterpolant);
-            drawColor = Color.Lerp(drawColor, Color.DarkGray, backgroundVfxInterpolant * 0.56f) * backgroundOpacity;
-            return drawColor * NPC.Opacity;
-        }
-
-        public static void HitEffectILEdit(ILContext context, ManagedILEdit edit)
+        private static void HitEffectILEdit(ILContext context, ManagedILEdit edit)
         {
             ILCursor cursor = new(context);
 
@@ -463,16 +457,87 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             cursor.Emit(OpCodes.Ret);
         }
 
+        private static void RenameILEdit(ILContext context, ManagedILEdit edit)
+        {
+            ILCursor cursor = new(context);
+
+            if (!cursor.TryGotoNext(i => i.MatchLdstr("UI.ExoTwinsName")))
+            {
+                edit.LogFailure("Could not locate the 'UI.ExoTwinsName' base string.");
+                return;
+            }
+
+            if (!cursor.TryGotoNext(MoveType.After, i => i.MatchCall(typeof(CalamityUtils).GetMethod("GetTextValue"))))
+            {
+                edit.LogFailure("Could not locate the GetTextValue call.");
+                return;
+            }
+
+            cursor.EmitDelegate((string originalText) =>
+            {
+                return Language.GetTextValue("Mods.WoTM.NPCs.ExoTwinsRenameNormal");
+            });
+        }
+
         public override bool PreKill()
         {
             DropHelper.BlockDrops(ModContent.ItemType<TheAtomSplitter>(), ModContent.ItemType<SurgeDriver>(), ModContent.ItemType<DraedonBag>());
             return true;
         }
 
+        public override void ModifyTypeName(ref string typeName)
+        {
+            typeName = Language.GetTextValue("Mods.WoTM.NPCs.ApolloRename");
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color lightColor)
         {
             CommonExoTwinFunctionalities.DrawBase(NPC, this, BaseTexture.Value, Glowmask.Value, DestroyedTexture.Value, lightColor, screenPos, Frame);
+            DrawPlasmaFlameEngulfEffect();
             return false;
+        }
+
+        public float FlameEngulfWidthFunction(float completionRatio)
+        {
+            float baseWidth = MathHelper.Lerp(114f, 50f, completionRatio);
+            float tipSmoothenFactor = MathF.Sqrt(1f - LumUtils.InverseLerp(0.3f, 0.015f, completionRatio).Cubed());
+            return NPC.scale * baseWidth * tipSmoothenFactor;
+        }
+
+        public Color FlameEngulfColorFunction(float completionRatio)
+        {
+            Color flameTipColor = new(255, 255, 208);
+            Color limeFlameColor = new(173, 255, 36);
+            Color greenFlameColor = new(52, 156, 17);
+            Color trailColor = LumUtils.MulticolorLerp(MathF.Pow(completionRatio, 0.75f) * 0.7f, flameTipColor, limeFlameColor, greenFlameColor);
+            return NPC.GetAlpha(trailColor) * (1 - completionRatio) * FlameEngulfInterpolant;
+        }
+
+        public void DrawPlasmaFlameEngulfEffect()
+        {
+            if (FlameEngulfInterpolant <= 0f)
+                return;
+
+            Vector2[] flamePositions = new Vector2[8];
+            for (int i = 0; i < flamePositions.Length; i++)
+                flamePositions[i] = NPC.Center - NPC.oldRot[i].ToRotationVector2() * (i * 90f - 96f);
+
+            ManagedShader flameShader = ShaderManager.GetShader("WoTM.FlameEngulfShader");
+            flameShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 1, SamplerState.LinearWrap);
+            flameShader.SetTexture(MiscTexturesRegistry.TurbulentNoise.Value, 2, SamplerState.LinearWrap);
+
+            PrimitiveSettings flameSettings = new(FlameEngulfWidthFunction, FlameEngulfColorFunction, Shader: flameShader);
+            PrimitiveRenderer.RenderTrail(flamePositions, flameSettings, 60);
+        }
+
+        public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            if (ExoTwinsStates.DoBehavior_EnterSecondPhase_ApolloIsProtectingArtemis(this))
+            {
+                modifiers.FinalDamage *= ExoTwinsStates.EnterSecondPhase_ApolloDamageProtectionFactor;
+                if (!CalamityLists.projectileDestroyExceptionList.Contains(projectile.type))
+                    projectile.active = false;
+            }
         }
 
         public override bool CheckDead() => CommonExoTwinFunctionalities.HandleDeath(NPC);

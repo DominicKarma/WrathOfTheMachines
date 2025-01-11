@@ -101,13 +101,13 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         /// <param name="npc">Ares' NPC instance.</param>
         public static void Perform_Ares(NPC npc)
         {
-            if (!npc.TryGetBehavior(out AresBodyEternity ares) || !Main.npc.IndexInRange(CalamityGlobalNPC.draedonExoMechTwinRed) || !Main.npc.IndexInRange(CalamityGlobalNPC.draedonExoMechTwinGreen))
+            if (!npc.TryGetBehavior(out AresBodyBehavior ares) || !Main.npc.IndexInRange(CalamityGlobalNPC.draedonExoMechTwinRed) || !Main.npc.IndexInRange(CalamityGlobalNPC.draedonExoMechTwinGreen))
             {
                 npc.active = false;
                 return;
             }
 
-            if (AITimer == AresBodyEternity.DetachHands_DetachmentDelay)
+            if (AITimer == AresBodyBehavior.DetachHands_DetachmentDelay)
                 SoundEngine.PlaySound(AresLaserCannon.TelSound);
 
             npc.rotation = npc.velocity.X * 0.0062f;
@@ -130,7 +130,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
 
             ScreenShakeSystem.SetUniversalRumble(LumUtils.InverseLerpBump(0f, 0.8f, 0.9f, 1f, AITimer / (float)ElectrifyTime).Squared() * 3f, MathHelper.TwoPi, null, 0.2f);
 
-            if (AITimer <= AresBodyEternity.DetachHands_DetachmentDelay)
+            if (AITimer <= AresBodyBehavior.DetachHands_DetachmentDelay)
             {
                 for (int i = 0; i < ares.InstructionsForHands.Length; i++)
                 {
@@ -145,7 +145,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                 ares.InstructionsForHands[2] = new(h => AresHandUpdate(npc, h, new Vector2(280f, 224f), rightHandAimDestination, 2));
                 ares.InstructionsForHands[3] = new(h => AresHandUpdate(npc, h, new Vector2(430f, 50f), rightHandAimDestination, 3));
             }
-            ares.AnimationState = AresBodyEternity.AresFrameAnimationState.Default;
+            ares.AnimationState = AresBodyBehavior.AresFrameAnimationState.Default;
         }
 
         /// <summary>
@@ -174,8 +174,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
             NPC handNPC = hand.NPC;
             Vector2 hoverDestination = aresBody.Center + hoverOffset * aresBody.scale;
 
-            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyEternity.ArmCount - 1;
-            hand.ArmSide = (armIndex >= AresBodyEternity.ArmCount / 2).ToDirectionInt();
+            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyBehavior.ArmCount - 1;
+            hand.ArmSide = (armIndex >= AresBodyBehavior.ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.TeslaCannon;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.GlowmaskDisabilityInterpolant = 0f;
@@ -293,7 +293,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                     SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { Volume = 0.8f }, laserSpawnPosition);
                 }
                 else
-                    LumUtils.NewProjectileBetter(npc.GetSource_FromAI(), laserSpawnPosition, laserVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                    LumUtils.NewProjectileBetter(npc.GetSource_FromAI(), laserSpawnPosition, laserVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
         }
 
@@ -344,7 +344,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                     for (int i = 0; i < DashSpreadProjectileCount; i++)
                     {
                         Vector2 teslaBurstVelocity = npc.SafeDirectionTo(Target.Center).RotatedBy(MathHelper.TwoPi * i / DashSpreadProjectileCount) * DashSpreadProjectileSpeed;
-                        LumUtils.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, teslaBurstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyEternity.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                        LumUtils.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, teslaBurstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
                     }
 
                     npc.velocity = npc.velocity.SafeNormalize(Vector2.Zero) * 85f;
@@ -360,9 +360,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
         public static void PerformSharedExoTwinsBehaviors(NPC npc)
         {
             IExoTwin twinInstance = null;
-            if (npc.TryGetBehavior(out ArtemisEternity artemis))
+            if (npc.TryGetBehavior(out ArtemisBehavior artemis))
                 twinInstance = artemis;
-            else if (npc.TryGetBehavior(out ApolloEternity apollo))
+            else if (npc.TryGetBehavior(out ApolloBehavior apollo))
                 twinInstance = apollo;
             if (twinInstance is null)
                 return;

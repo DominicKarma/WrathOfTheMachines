@@ -10,7 +10,7 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
     /// <param name="TotalAliveMechs">The amount of currently alive Exo Mechs in the fight.</param>
     /// <param name="InitialMechState">The state of the initial Exo Mech, aka the one that the player chose to the start the fight with.</param>
     /// <param name="OtherMechsStates">The state of all Exo Mechs other than the initial one.</param>
-    public record ExoMechFightState(DraedonEternity.DraedonAIState? DraedonState, int TotalAliveMechs, ExoMechState InitialMechState, params ExoMechState[] OtherMechsStates)
+    public record ExoMechFightState(DraedonBehavior.DraedonAIState? DraedonState, int TotalAliveMechs, ExoMechState InitialMechState, params ExoMechState[] OtherMechsStates)
     {
         /// <summary>
         /// The total amount of Exo Mechs that have been killed so far in the fight.

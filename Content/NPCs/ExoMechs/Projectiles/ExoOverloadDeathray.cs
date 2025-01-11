@@ -108,7 +108,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyEternity ares))
+            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehavior ares))
             {
                 Projectile.Kill();
                 return;
@@ -117,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
             float cosine = MathF.Cos(MathHelper.TwoPi * rotationTime);
-            float upwardsInterpolant = LumUtils.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyEternity.BackgroundCoreLaserBeams_MissileShootDelay);
+            float upwardsInterpolant = LumUtils.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyBehavior.BackgroundCoreLaserBeams_MissileShootDelay);
             float zRotation = MathHelper.SmoothStep(cosine * 0.1f, -MathHelper.PiOver2, upwardsInterpolant);
             var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);

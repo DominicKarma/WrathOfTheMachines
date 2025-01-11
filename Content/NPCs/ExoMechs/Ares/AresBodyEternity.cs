@@ -27,7 +27,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
-    public sealed partial class AresBodyEternity : NPCBehaviorOverride, IExoMech
+    public sealed partial class AresBodyBehavior : NPCBehaviorOverride, IExoMech
     {
         public enum AresAIState
         {
@@ -635,7 +635,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 return;
 
             NPC aresBody = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
-            if (!aresBody.TryGetBehavior(out AresBodyEternity bodyOverride))
+            if (!aresBody.TryGetBehavior(out AresBodyBehavior bodyOverride))
                 return;
 
             Main.spriteBatch.PrepareForShaders();

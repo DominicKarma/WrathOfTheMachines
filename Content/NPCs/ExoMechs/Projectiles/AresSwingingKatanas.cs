@@ -76,7 +76,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             {
                 Vector2 energySpawnPosition = Projectile.Center + Main.rand.NextVector2CircularEdge(100f, 100f);
                 Vector2 energyVelocity = energySpawnPosition.SafeDirectionTo(target.Center).RotatedByRandom(0.32f) * 7f;
-                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), energySpawnPosition, energyVelocity, ModContent.ProjectileType<AresCoreLaserSmall>(), AresBodyEternity.SmallLaserDamage, 0f);
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), energySpawnPosition, energyVelocity, ModContent.ProjectileType<AresCoreLaserSmall>(), AresBodyBehavior.SmallLaserDamage, 0f);
             }
 
             Time++;

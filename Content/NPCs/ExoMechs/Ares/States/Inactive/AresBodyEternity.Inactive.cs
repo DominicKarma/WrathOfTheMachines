@@ -6,7 +6,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
-    public sealed partial class AresBodyEternity : NPCBehaviorOverride
+    public sealed partial class AresBodyBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// AI update loop method for the inactive state.

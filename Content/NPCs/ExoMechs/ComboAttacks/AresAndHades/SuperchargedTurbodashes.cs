@@ -89,7 +89,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <param name="npc">Ares' NPC instance.</param>
         public static bool Perform_Ares(NPC npc)
         {
-            if (!npc.TryGetBehavior(out AresBodyEternity ares))
+            if (!npc.TryGetBehavior(out AresBodyBehavior ares))
             {
                 npc.active = false;
                 return false;
@@ -98,7 +98,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             // Bias light colors to red.
             ares.ShiftLightColors(LumUtils.InverseLerp(0f, 30f, AITimer), new(239, 62, 62), new(242, 112, 72));
 
-            if (AITimer <= AresBodyEternity.DetachHands_DetachmentDelay)
+            if (AITimer <= AresBodyBehavior.DetachHands_DetachmentDelay)
             {
                 for (int i = 0; i < ares.InstructionsForHands.Length; i++)
                 {
@@ -129,9 +129,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
 
             // Laugh while charging Hades up.
             if (AITimer == (int)(ElectrifyTime * 0.4f))
-                SoundEngine.PlaySound(AresBodyEternity.LaughSound).WithVolumeBoost(1.6f);
+                SoundEngine.PlaySound(AresBodyBehavior.LaughSound).WithVolumeBoost(1.6f);
             if (AITimer >= ElectrifyTime * 0.4f)
-                ares.AnimationState = AresBodyEternity.AresFrameAnimationState.Laugh;
+                ares.AnimationState = AresBodyBehavior.AresFrameAnimationState.Laugh;
 
             // Hover above Hades while charging him up.
             if (AITimer <= ElectrifyTime)
@@ -176,8 +176,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             NPC handNPC = hand.NPC;
             Vector2 hoverDestination = aresBody.Center + hoverOffset * aresBody.scale;
 
-            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyEternity.ArmCount - 1;
-            hand.ArmSide = (armIndex >= AresBodyEternity.ArmCount / 2).ToDirectionInt();
+            hand.UsesBackArm = armIndex == 0 || armIndex == AresBodyBehavior.ArmCount - 1;
+            hand.ArmSide = (armIndex >= AresBodyBehavior.ArmCount / 2).ToDirectionInt();
             hand.HandType = AresHandType.LaserCannon;
             hand.ArmEndpoint = handNPC.Center + handNPC.velocity;
             hand.GlowmaskDisabilityInterpolant = 0f;
@@ -239,7 +239,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                         handNPC.velocity -= handNPC.rotation.ToRotationVector2() * 30f;
                         handNPC.netUpdate = true;
 
-                        LumUtils.NewProjectileBetter(handNPC.GetSource_FromAI(), cannonEnd, handNPC.rotation.ToRotationVector2() * 9.3f, ModContent.ProjectileType<SmallCannonLaser>(), HadesHeadEternity.BasicLaserDamage, 0f);
+                        LumUtils.NewProjectileBetter(handNPC.GetSource_FromAI(), cannonEnd, handNPC.rotation.ToRotationVector2() * 9.3f, ModContent.ProjectileType<SmallCannonLaser>(), HadesHeadBehavior.BasicLaserDamage, 0f);
                     }
                 }
                 hand.EnergyDrawer.chargeProgress = LumUtils.InverseLerp(0f, AresCannonShootRate * 0.75f, AITimer % AresCannonShootRate);
@@ -255,7 +255,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
         /// <param name="npc">Hades' NPC instance.</param>
         public static void Perform_Hades(NPC npc)
         {
-            if (!npc.TryGetBehavior(out HadesHeadEternity hades))
+            if (!npc.TryGetBehavior(out HadesHeadBehavior hades))
             {
                 npc.active = false;
                 return;
@@ -277,7 +277,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             else
             {
                 if (AITimer == ElectrifyTime + 1)
-                    SoundEngine.PlaySound(HadesHeadEternity.DashChargeUpSound).WithVolumeBoost(2f);
+                    SoundEngine.PlaySound(HadesHeadBehavior.DashChargeUpSound).WithVolumeBoost(2f);
 
                 // Handle the dash cycle, teleporting behind the player and dashing, in a cycle.
                 int cycleTimer = (AITimer - ElectrifyTime) % HadesDashCycleTime;
@@ -296,7 +296,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                             segment.netUpdate = true;
                         }
                     }
-                    SoundEngine.PlaySound(HadesHeadEternity.DashChargeUpSound with { MaxInstances = 0 }).WithVolumeBoost(2f);
+                    SoundEngine.PlaySound(HadesHeadBehavior.DashChargeUpSound with { MaxInstances = 0 }).WithVolumeBoost(2f);
                 }
                 else
                 {
@@ -309,9 +309,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
             }
 
             hades.SegmentReorientationStrength = 0f;
-            hades.BodyBehaviorAction = new(HadesHeadEternity.EveryNthSegment(2), new(segment =>
+            hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(2), new(segment =>
             {
-                HadesHeadEternity.OpenSegment().Invoke(segment);
+                HadesHeadBehavior.OpenSegment().Invoke(segment);
 
                 // Do damage if Hades is doing damage.
                 if (npc.damage >= 1)
@@ -340,8 +340,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                     SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound with { MaxInstances = 0, Volume = 0.3f, PitchVariance = 0.27f }, laserSpawnPosition);
 
                     Vector2 perpendicularDirection = npc.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(MathHelper.PiOver2);
-                    HadesHeadEternity.PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, -perpendicularDirection);
-                    HadesHeadEternity.PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, perpendicularDirection);
+                    HadesHeadBehavior.PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, -perpendicularDirection);
+                    HadesHeadBehavior.PerpendicularBodyLaserBlasts_CreateLaserBurstParticles(laserSpawnPosition, perpendicularDirection);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -349,8 +349,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                         int mineLifetime = Main.rand.NextBool(4) ? 3 : 120;
 
                         float mineShootSpeed = Main.rand.NextFloat(120f);
-                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
-                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * -mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadEternity.MineDamage, 0f, -1, mineLifetime);
+                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadBehavior.MineDamage, 0f, -1, mineLifetime);
+                        LumUtils.NewProjectileBetter(segment.NPC.GetSource_FromAI(), laserSpawnPosition, perpendicularDirection * -mineShootSpeed, ModContent.ProjectileType<HadesMine>(), HadesHeadBehavior.MineDamage, 0f, -1, mineLifetime);
                     }
                 }
             }));

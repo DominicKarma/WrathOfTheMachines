@@ -22,7 +22,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
                 return;
 
             NPC ares = Main.npc[CalamityGlobalNPC.draedonExoMechPrime];
-            if (!ares.TryGetBehavior(out AresBodyEternity aresBehavior))
+            if (!ares.TryGetBehavior(out AresBodyBehavior aresBehavior))
                 return;
 
             // TODO -- Move this elsewhere.

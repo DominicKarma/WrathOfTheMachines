@@ -12,7 +12,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
-    public sealed partial class HadesHeadEternity : NPCBehaviorOverride
+    public sealed partial class HadesHeadBehavior : NPCBehaviorOverride
     {
         /// <summary>
         /// How far along Hades is with his firing animation during his ContinuousLaserBarrage attack.
@@ -145,10 +145,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         }
 
         /// <summary>
-        /// Renders a laser telegraph for a given <see cref="HadesBodyEternity"/> in a given direction.
+        /// Renders a laser telegraph for a given <see cref="HadesBodyBehavior"/> in a given direction.
         /// </summary>
         /// <param name="behaviorOverride">The behavior override responsible for the segment.</param>
-        public void ContinuousLaserBarrage_CreateTelegraphsOnSegments(HadesBodyEternity behaviorOverride, float telegraphCompletion, float telegraphSize)
+        public void ContinuousLaserBarrage_CreateTelegraphsOnSegments(HadesBodyBehavior behaviorOverride, float telegraphCompletion, float telegraphSize)
         {
             if (!ContinuousLaserBarrage_SegmentCanFire(behaviorOverride.NPC, NPC))
                 return;

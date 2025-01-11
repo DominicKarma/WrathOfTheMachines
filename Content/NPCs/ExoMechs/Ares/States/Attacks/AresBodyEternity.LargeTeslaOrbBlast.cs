@@ -13,7 +13,7 @@ using WoTM.Core.BehaviorOverrides;
 
 namespace WoTM.Content.NPCs.ExoMechs.Ares
 {
-    public sealed partial class AresBodyEternity : NPCBehaviorOverride
+    public sealed partial class AresBodyBehavior : NPCBehaviorOverride
     {
         public float LargeTeslaOrbBlast_ExplodeAnticipationInterpolant =>
             LumUtils.InverseLerp(0f, LargeTeslaOrbBlast_ExplodeAnticipationTime, AITimer - LargeTeslaOrbBlast_OrbChargeUpTime - LargeTeslaOrbBlast_HomingBurstReleaseDelay - LargeTeslaOrbBlast_HomingBurstReleaseTime);
