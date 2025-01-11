@@ -378,6 +378,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             SpecificDrawAction = null;
             SpecialShaderAction = (_, _2) => false;
 
+            NPC.defDamage = CommonExoTwinFunctionalities.ContactDamage;
+
             if (!Inactive)
                 NPC.Opacity = 1f;
             OpticNerveAngleSensitivity = 1f;

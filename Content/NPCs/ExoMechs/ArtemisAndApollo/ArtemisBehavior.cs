@@ -348,6 +348,8 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             // Use base Calamity's Charge AIState at all times, since Artemis needs that to be enabled for her CanHitPlayer hook to return true.
             NPC.As<Artemis>().AIState = (int)Artemis.Phase.Charge;
 
+            NPC.BossBar = ModContent.GetInstance<ExoMechBossBar>();
+
             UpdateEngineSound();
 
             Vector2 thrusterPosition = NPC.Center - NPC.rotation.ToRotationVector2() * NPC.scale * 34f + NPC.velocity;
@@ -384,7 +386,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             OpticNerveAngleSensitivity = 1f;
             NPC.Calamity().ShouldCloseHPBar = Inactive;
             NPC.As<Artemis>().SecondaryAIState = (int)Artemis.SecondaryPhase.Nothing;
-
+            NPC.defDamage = CommonExoTwinFunctionalities.ContactDamage;
             NPC.timeLeft = 7200;
 
             NPC.damage = 0;
