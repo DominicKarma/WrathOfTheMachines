@@ -209,7 +209,7 @@ namespace WoTM.Core.Data
             Dictionary<string, TJsonData>? data = JsonConvert.DeserializeObject<Dictionary<string, TJsonData>>(fileText);
             if (data is null)
                 throw new FileNotFoundException($"Could not locate the file at {path}.");
-            else
+            else if (!Main.gameMenu)
                 RegisterReference<TJsonData>(path, data.Select(kv => new KeyValuePair<string, object>(kv.Key, kv.Value!)).ToDictionary());
 
             return data;
