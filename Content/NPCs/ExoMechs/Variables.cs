@@ -19,6 +19,6 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="name">The value's named key.</param>
         /// <param name="prefix">The file name prefix.</param>
         public static float GetAIFloat(string name, ExoMechAIVariableType prefix) =>
-            LocalDataManager.Read<DifficultyValue<float>>($"Content/Calamity/Bosses/ExoMechs/{prefix}AIValues.json")[name];
+            LocalDataManager.Read<DifficultyValue<float>>($"Content/NPCs/ExoMechs/{prefix}AIValues.json")[name];
     }
 }

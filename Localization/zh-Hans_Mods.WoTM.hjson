@@ -30,6 +30,23 @@ Projectiles: {
 	// ExoelectricFieldDestabilizerOrb.DisplayName: Exoelectric Field Destabilizer Orb
 	// SurgeDriverBlast.DisplayName: Surge Driver Blast
 	// SurgeDriverProjectile.DisplayName: Surge Driver Projectile
+	// ApolloPlasmaFireball.DisplayName: Apollo Plasma Fireball
+	// AresCoreLaserSmall.DisplayName: Ares Core Laser Small
+	// AresDeathAnimationExplosion.DisplayName: Ares Death Animation Explosion
+	// AresHyperfuturisticPortal.DisplayName: Ares Hyperfuturistic Portal
+	// AresSwingingKatanas.DisplayName: Ares Swinging Katanas
+	// BigHadesSegmentExplosion.DisplayName: Big Hades Segment Explosion
+	// BlazingExoLaserbeam.DisplayName: Blazing Exo Laserbeam
+	// CodebreakerDataStream.DisplayName: Codebreaker Data Stream
+	// ExothermalDisintegrationRay.DisplayName: Exothermal Disintegration Ray
+	// ExoTwinHyperfuturisticPortal.DisplayName: Exo Twin Hyperfuturistic Portal
+	// HadesMissile.DisplayName: Hades Missile
+	// HadesSuperLaserbeam.DisplayName: Hades Super Laserbeam
+	// PlasmaFlameJet.DisplayName: Plasma Flame Jet
+	// PulseBlast.DisplayName: Pulse Blast
+	// SmallCannonLaser.DisplayName: Small Cannon Laser
+	// SmallHadesSegmentExplosion.DisplayName: Small Hades Segment Explosion
+	// SmallTeslaSphere.DisplayName: Small Tesla Sphere
 }
 
 NPCs: {
