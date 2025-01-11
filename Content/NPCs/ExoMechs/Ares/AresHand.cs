@@ -244,7 +244,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Ares
             NPC.damage = 0;
             NPC.Calamity().ShouldCloseHPBar = true;
             NPC.dontTakeDamage = NPC.Opacity < 0.95f || body.NPC.dontTakeDamage || !CanRender;
-            NPC.BossBar = aresBody.BossBar;
             body.InstructionsForHands[LocalIndex]?.Action?.Invoke(this);
 
             float oldAppearanceInterpolant = KatanaAppearanceInterpolant;
