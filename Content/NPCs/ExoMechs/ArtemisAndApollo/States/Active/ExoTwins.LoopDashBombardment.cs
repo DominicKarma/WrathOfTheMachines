@@ -124,9 +124,6 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             if (doneHovering && !acceleratingAfterSpin)
                 npc.damage = npc.defDamage;
 
-            if (localAITimer == (int)(hoverTime * 0.4f))
-                SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
-
             if (localAITimer == hoverTime)
             {
                 ScreenShakeSystem.StartShakeAtPoint(npc.Center, 7.5f);
