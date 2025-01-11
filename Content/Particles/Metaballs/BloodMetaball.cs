@@ -12,7 +12,7 @@ namespace WoTM.Content.Particles.Metaballs
 {
     public class BloodMetaball : MetaballType
     {
-        public override string MetaballAtlasTextureToUse => "NoxusBoss.DistancedMetaballCircle.png";
+        public override string MetaballAtlasTextureToUse => "WoTM.DistancedMetaballCircle.png";
 
         public override Color EdgeColor => Color.Transparent;
 
