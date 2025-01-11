@@ -74,6 +74,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
             // Reposition in anticipation of the laser firing.
             if (wrapperAITimer <= hoverRedirectTime)
             {
+                if (wrapperAITimer == (int)(hoverRedirectTime * 0.5f))
+                    SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
+
                 float hoverRedirectInterpolant = wrapperAITimer / (float)hoverRedirectTime;
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), hoverRedirectInterpolant * 0.75f);
 

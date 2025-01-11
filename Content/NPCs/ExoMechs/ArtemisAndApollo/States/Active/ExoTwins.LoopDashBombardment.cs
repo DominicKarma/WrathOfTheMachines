@@ -1,9 +1,9 @@
-﻿using CalamityMod.NPCs.ExoMechs.Apollo;
+﻿using System;
+using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -123,6 +123,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 
             if (doneHovering && !acceleratingAfterSpin)
                 npc.damage = npc.defDamage;
+
+            if (localAITimer == (int)(hoverTime * 0.4f))
+                SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
 
             if (localAITimer == hoverTime)
             {

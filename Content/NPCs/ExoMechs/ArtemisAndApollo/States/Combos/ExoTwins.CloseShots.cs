@@ -1,9 +1,9 @@
-﻿using CalamityMod.NPCs.ExoMechs.Artemis;
+﻿using System;
+using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Sounds;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -96,6 +96,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
                 npc.velocity.Y -= 0.5f;
                 npc.velocity.Y *= 1.01f;
                 npc.rotation = npc.rotation.AngleLerp(npc.AngleTo(Target.Center), 0.2f);
+
+                if (wrappedTimer == (int)(redirectTime * 0.5f))
+                    SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, npc.Center);
             }
 
             else if (wrappedTimer <= redirectTime + dashSlowdownTime)

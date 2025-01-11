@@ -173,6 +173,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 
                 npc.velocity *= 1.031f;
                 apolloAttributes.Animation = ExoTwinAnimation.ChargingUp;
+
+                if (wrappedTimer == MachineGunLasers_ApolloRedirectTime + (int)(MachineGunLasers_ApolloTelegraphTime * 0.32f))
+                    SoundEngine.PlaySound(Artemis.ChargeTelegraphSound, Target.Center);
             }
             else
             {

@@ -169,6 +169,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Vector2 origin = frame.Size() * 0.5f;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
 
+            // Draw a bit of a backglow.
+            Texture2D glow = MiscTexturesRegistry.BloomCircleSmall.Value;
+            Vector2 glowDrawPosition = drawPosition - (Projectile.rotation - MathHelper.PiOver2).ToRotationVector2() * Projectile.scale * 20f;
+            Main.spriteBatch.Draw(glow, glowDrawPosition, null, Projectile.GetAlpha(Color.OrangeRed with { A = 0 }) * 0.5f, 0f, glow.Size() * 0.5f, Projectile.scale * 0.35f, 0, 0f);
+            Main.spriteBatch.Draw(glow, glowDrawPosition, null, Projectile.GetAlpha(Color.Yellow with { A = 0 }) * 0.27f, 0f, glow.Size() * 0.5f, Projectile.scale * 0.5f, 0, 0f);
+
             Main.spriteBatch.Draw(texture, drawPosition, frame, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, 0, 0f);
             Main.spriteBatch.Draw(glowmask, drawPosition, frame, Projectile.GetAlpha(Color.White), Projectile.rotation, origin, Projectile.scale, 0, 0f);
             return false;
