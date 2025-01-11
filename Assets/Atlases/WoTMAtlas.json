@@ -72,10 +72,34 @@
         "y": 0.5
       }
     },
-    "SmokeParticle.png": {
+    "Spark.png": {
       "frame": {
         "x": 0,
         "y": 998,
+        "w": 72,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "SmokeParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 1254,
         "w": 80,
         "h": 218
       },
@@ -98,8 +122,8 @@
     },
     "HollowCircle.png": {
       "frame": {
-        "x": 0,
-        "y": 1216,
+        "x": 72,
+        "y": 998,
         "w": 156,
         "h": 156
       },
@@ -114,6 +138,30 @@
       "sourceSize": {
         "w": 156,
         "h": 156
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BasicMetaballCircle.png": {
+      "frame": {
+        "x": 72,
+        "y": 1154,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
       },
       "pivot": {
         "x": 0.5,
@@ -121,30 +169,6 @@
       }
     },
     "GlowSquareParticle.png": {
-      "frame": {
-        "x": 80,
-        "y": 998,
-        "w": 128,
-        "h": 128
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 128,
-        "h": 128
-      },
-      "sourceSize": {
-        "w": 128,
-        "h": 128
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "GlowSquareParticleBlurred.png": {
       "frame": {
         "x": 125,
         "y": 498,
@@ -168,24 +192,24 @@
         "y": 0.5
       }
     },
-    "BasicMetaballCircle.png": {
+    "GlowSquareParticleBlurred.png": {
       "frame": {
         "x": 125,
         "y": 626,
-        "w": 100,
-        "h": 100
+        "w": 128,
+        "h": 128
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 100
+        "w": 128,
+        "h": 128
       },
       "sourceSize": {
-        "w": 100,
-        "h": 100
+        "w": 128,
+        "h": 128
       },
       "pivot": {
         "x": 0.5,
@@ -195,7 +219,7 @@
     "Pixel.png": {
       "frame": {
         "x": 125,
-        "y": 726,
+        "y": 754,
         "w": 2,
         "h": 2
       },
