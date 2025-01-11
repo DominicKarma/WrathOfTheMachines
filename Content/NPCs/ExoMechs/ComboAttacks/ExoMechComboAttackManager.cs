@@ -2,12 +2,15 @@
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
+using WoTM.Core.BehaviorOverrides;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
 {
     public class ExoMechComboAttackManager : ModSystem
     {
-        // TODO -- This is definitely gonna need to be synced somewhere.
         /// <summary>
         /// The current attack timer for the combo attack.
         /// </summary>
@@ -24,7 +27,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static ExoMechComboAttack CurrentState
         {
             get;
-            private set;
+            internal set;
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static readonly ExoMechComboAttack NullComboState = new(n => false);
 
         /// <summary>
-        /// The underlying value that should be used for all AI state enumerations across the Exo Mechs.
+        /// The underlying value that should be used for all AI state enumerations across the Exo Mechs to represent a combo attack.
         /// </summary>
         public const int ComboAttackValue = 1000;
 
@@ -66,7 +69,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
 
             // This is indirectly responsible for ensuring that Exo Mechs return to solo attacks once the combo attacks need to end.
-            if (ExoMechFightStateManager.FightState.TotalActiveMechs <= 1)
+            if (ExoMechFightStateManager.ActiveManagingExoMechs.Count <= 1)
             {
                 Reset();
                 SetComboStateForAllActiveExoMechs(false);
@@ -83,8 +86,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void Reset()
         {
-            CurrentState = NullComboState;
-            ComboAttackTimer = 0;
+            if (CurrentState != NullComboState)
+                CurrentState = NullComboState;
+            if (ComboAttackTimer != 0)
+                ComboAttackTimer = 0;
         }
 
         /// <summary>
@@ -93,8 +98,14 @@ namespace WoTM.Content.NPCs.ExoMechs
         private static void EnsureAllExoMechsArePerformingCombo()
         {
             bool everyoneIsPerformingCombo = ExoMechFightStateManager.ActiveManagingExoMechs.All(m => ((IExoMech)m).PerformingComboAttack);
+            bool anyPlayersAreAlive = false;
+            foreach (Player player in Main.ActivePlayers)
+            {
+                if (!player.dead)
+                    anyPlayersAreAlive = true;
+            }
 
-            if (!everyoneIsPerformingCombo)
+            if (!everyoneIsPerformingCombo && anyPlayersAreAlive)
             {
                 if (CurrentState?.Undefined ?? true)
                     SelectNewComboAttackState();
@@ -170,11 +181,32 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void PuppeteerActiveExoMechs()
         {
+            // Check if any players are present.
+            // If none are, that means that the Exo Mechs should despawn (which they'll do naturally on their own), not perform combo attacks.
+            bool everyoneIsDead = true;
+            foreach (Player player in Main.ActivePlayers)
+            {
+                if (!player.dead)
+                {
+                    everyoneIsDead = false;
+                    break;
+                }
+            }
+
+            if (everyoneIsDead)
+                return;
+
             bool hadesIsPresent = false;
+            bool shouldSyncTimer = false;
             foreach (NPC npc in Main.ActiveNPCs)
             {
                 if (!ExoMechNPCIDs.ExoMechIDs.Contains(npc.type) || !npc.TryGetBehavior(out NPCBehaviorOverride behavior))
                     continue;
+
+                // Check if any of the Exo Mechs want to sync.
+                // If they do, that could mean a time sensitive event has occurred, and as such it's best to be safe and sync the timer.
+                if (npc.netUpdate)
+                    shouldSyncTimer = true;
 
                 if (behavior is IExoMech exoMech && !exoMech.Inactive)
                 {
@@ -182,8 +214,11 @@ namespace WoTM.Content.NPCs.ExoMechs
                     if (CurrentState?.AttackAction?.Invoke(npc) ?? true)
                         SelectNewComboAttackState();
 
-                    if (behavior is HadesHeadBehaviorOverride)
+                    if (behavior is HadesHeadBehavior hades)
+                    {
+                        hades.ActionsToDeferAfterCombo?.Invoke();
                         hadesIsPresent = true;
+                    }
                 }
             }
 
@@ -193,13 +228,17 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 foreach (NPC npc in Main.ActiveNPCs)
                 {
-                    if (npc.TryGetBehavior(out HadesBodyBehaviorOverride body))
+                    if (npc.TryGetBehavior(out HadesBodyBehavior body))
                     {
                         body.ListenToHeadInstructions();
                         body.ModifyDRBasedOnOpenInterpolant();
                     }
                 }
             }
+
+            // Automatically sync the AI timer periodically, to ensure nothing drifts too much.
+            if (ComboAttackTimer % 60 == 0)
+                shouldSyncTimer = true;
         }
     }
 }

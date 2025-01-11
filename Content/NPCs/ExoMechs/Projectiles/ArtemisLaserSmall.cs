@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -72,7 +73,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public float LaserWidthFunction(float completionRatio)
         {
-            float tipSqueeze = MathF.Pow(Utilities.InverseLerp(0f, 0.15f, completionRatio), 1.5f);
+            float tipSqueeze = MathF.Pow(LumUtils.InverseLerp(0f, 0.15f, completionRatio), 1.5f);
             return (1f - completionRatio) * tipSqueeze * Projectile.width * 0.67f + 0.5f;
         }
 

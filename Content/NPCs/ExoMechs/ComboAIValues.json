@@ -1,0 +1,267 @@
+{
+  "BlazingLaserbeamDamage": {
+    "BaseValue": 500.0,
+    "RevValue": 500.0,
+    "DeathValue": 500.0
+  },
+  "ElectricSupercharge_AresRedirectTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "ElectricSupercharge_ArtemisShootRate": {
+    "BaseValue": 24.0,
+    "RevValue": 24.0,
+    "DeathValue": 24.0
+  },
+  "ElectricSupercharge_ArtemisTurnSpeedInterpolant": {
+    "BaseValue": 0.133,
+    "RevValue": 0.133,
+    "DeathValue": 0.133
+  },
+  "ElectricSupercharge_ApolloMaxSpeed": {
+    "BaseValue": 28.5,
+    "RevValue": 28.5,
+    "DeathValue": 28.5
+  },
+  "ElectricSupercharge_AttackDuration": {
+    "BaseValue": 660.0,
+    "RevValue": 660.0,
+    "DeathValue": 660.0
+  },
+  "ElectricSupercharge_DashSpreadProjectileCount": {
+    "BaseValue": 19.0,
+    "RevValue": 19.0,
+    "DeathValue": 19.0
+  },
+  "ElectricSupercharge_DashSpreadProjectileSpeed": {
+    "BaseValue": 2.1,
+    "RevValue": 2.1,
+    "DeathValue": 2.1
+  },
+  "ElectricSupercharge_ElectrifyTime": {
+    "BaseValue": 210.0,
+    "RevValue": 210.0,
+    "DeathValue": 210.0
+  },
+  "ElectricSupercharge_TeslaSphereShootRate": {
+    "BaseValue": 152.0,
+    "RevValue": 152.0,
+    "DeathValue": 152.0
+  },
+  "ElectricSupercharge_TeslaSphereShootSpeed": {
+    "BaseValue": 9.5,
+    "RevValue": 9.5,
+    "DeathValue": 9.5
+  },
+  "ExoFlurry_AresFlyDownAcceleration": {
+    "BaseValue": 25.0,
+    "RevValue": 25.0,
+    "DeathValue": 25.0
+  },
+  "ExoFlurry_AresMaxFlyDownSpeed": {
+    "BaseValue": 256.0,
+    "RevValue": 256.0,
+    "DeathValue": 256.0
+  },
+  "ExoFlurry_ExoTwinsDashTime": {
+    "BaseValue": 32.0,
+    "RevValue": 32.0,
+    "DeathValue": 32.0
+  },
+  "ExoFlurry_ExoTwinsSpinSlowdownTime": {
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
+  },
+  "ExoFlurry_ExoTwinsSpinTime": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "ExoFlurry_ExoTwinsMaxDashSpeed": {
+    "BaseValue": 150.0,
+    "RevValue": 150.0,
+    "DeathValue": 150.0
+  },
+  "ExoFlurry_ExoTwinsMaxSpinRadius": {
+    "BaseValue": 872.0,
+    "RevValue": 872.0,
+    "DeathValue": 872.0
+  },
+  "ExoFlurry_ExoTwinsStandardSpinRadius": {
+    "BaseValue": 325.0,
+    "RevValue": 325.0,
+    "DeathValue": 325.0
+  },
+  "ExoFlurry_ExoTwinsStartingDashSpeed": {
+    "BaseValue": 10.0,
+    "RevValue": 10.0,
+    "DeathValue": 10.0
+  },
+  "ExoFlurry_HadesTurnSpeedCoefficient": {
+    "BaseValue": 6.4,
+    "RevValue": 6.4,
+    "DeathValue": 6.4
+  },
+  "ExoFlurry_MinExoTwinYOrientation": {
+    "BaseValue": 0.33,
+    "RevValue": 0.33,
+    "DeathValue": 0.33
+  },
+  "ExoFlurry_NukeChargeUpTime": {
+    "BaseValue": 180.0,
+    "RevValue": 180.0,
+    "DeathValue": 180.0
+  },
+  "ExoFlurry_NukeShotDelay": {
+    "BaseValue": 510.0,
+    "RevValue": 510.0,
+    "DeathValue": 510.0
+  },
+  "ExothermalLaserDashes_ExoTwinSpinAngularVelocityDegrees": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "ExothermalLaserDashes_ExoTwinSpinRadius": {
+    "BaseValue": 545.0,
+    "RevValue": 545.0,
+    "DeathValue": 545.0
+  },
+  "ExothermalLaserDashes_ExoTwinSpinWindUpTime": {
+    "BaseValue": 75.0,
+    "RevValue": 75.0,
+    "DeathValue": 75.0
+  },
+  "ExothermalLaserDashes_RedirectTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "HolographicRush_ExoTwinDashCount": {
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
+  },
+  "HolographicRush_ExoTwinDashTime": {
+    "BaseValue": 24.0,
+    "RevValue": 24.0,
+    "DeathValue": 24.0
+  },
+  "HolographicRush_ExoTwinEndingRadius": {
+    "BaseValue": 780.0,
+    "RevValue": 780.0,
+    "DeathValue": 780.0
+  },
+  "HolographicRush_ExoTwinLockOnTime": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "HolographicRush_ExoTwinStartingRadius": {
+    "BaseValue": 303.0,
+    "RevValue": 303.0,
+    "DeathValue": 303.0
+  },
+  "HolographicRush_HadesMineReleaseTime": {
+    "BaseValue": 120.0,
+    "RevValue": 120.0,
+    "DeathValue": 120.0
+  },
+  "HolographicRush_HadesRedirectTime": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "LaserbeamDashes_HadesDashDelay": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "LaserbeamDashes_HadesDashTime": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "PlasmaChaseSequence_AresChaseSpeedInterpolant": {
+    "BaseValue": 0.0284,
+    "RevValue": 0.0284,
+    "DeathValue": 0.0284
+  },
+  "PlasmaChaseSequence_AttackDuration": {
+    "BaseValue": 570.0,
+    "RevValue": 570.0,
+    "DeathValue": 570.0
+  },
+  "PlasmaChaseSequence_ExoTwinDashSpeed": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "PlasmaChaseSequence_ExoTwinIdleHoverTime": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "PlasmaChaseSequence_ExoTwinReelBackTime": {
+    "BaseValue": 43.0,
+    "RevValue": 43.0,
+    "DeathValue": 43.0
+  },
+  "PlasmaChaseSequence_ExoTwinDashSpinTime": {
+    "BaseValue": 63.0,
+    "RevValue": 63.0,
+    "DeathValue": 63.0
+  },
+  "PlasmaChaseSequence_PlasmaCannonChargeUpTime": {
+    "BaseValue": 157.0,
+    "RevValue": 157.0,
+    "DeathValue": 157.0
+  },
+  "AresAcceleration_Electrify": {
+    "BaseValue": 0.4,
+    "RevValue": 0.4,
+    "DeathValue": 0.4
+  },
+  "SuperchargedTurbodashes_AresCannonShootRate": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "SuperchargedTurbodashes_AresMaxFlySpeed_Electrify": {
+    "BaseValue": 23.5,
+    "RevValue": 23.5,
+    "DeathValue": 23.5
+  },
+  "SuperchargedTurbodashes_ElectrifyTime": {
+    "BaseValue": 240.0,
+    "RevValue": 240.0,
+    "DeathValue": 240.0
+  },
+  "SuperchargedTurbodashes_HadesDashCount": {
+    "BaseValue": 6.0,
+    "RevValue": 6.0,
+    "DeathValue": 6.0
+  },
+  "SuperchargedTurbodashes_HadesDashCycleTime": {
+    "BaseValue": 72.0,
+    "RevValue": 72.0,
+    "DeathValue": 72.0
+  },
+  "SuperchargedTurbodashes_HadesMaxDashSpeed": {
+    "BaseValue": 125.0,
+    "RevValue": 125.0,
+    "DeathValue": 125.0
+  },
+  "SuperchargedTurbodashes_HadesMineReleaseCycleTime": {
+    "BaseValue": 99.0,
+    "RevValue": 99.0,
+    "DeathValue": 99.0
+  },
+  "SuperchargedTurbodashes_HadesTeleportOffset": {
+    "BaseValue": 1700.0,
+    "RevValue": 1700.0,
+    "DeathValue": 1700.0
+  }
+}

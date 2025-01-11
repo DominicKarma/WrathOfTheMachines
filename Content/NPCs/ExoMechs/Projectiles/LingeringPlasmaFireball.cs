@@ -2,11 +2,11 @@
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.Particles;
 using Luminance.Common.DataStructures;
-using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -63,11 +63,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             }
         }
 
-        public override bool? CanDamage() => Projectile.Opacity >= 0.5f;
+        public override bool? CanDamage() => Projectile.Opacity >= 0.5f && Time >= 95f;
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Utilities.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Type], Color.White, positionClumpInterpolant: 0.45f);
+            LumUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Type], Color.White, positionClumpInterpolant: 0.45f);
             return false;
         }
     }

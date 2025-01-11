@@ -1,4 +1,4 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     /// <summary>
     /// A representation of the state of a single Exo Mech.

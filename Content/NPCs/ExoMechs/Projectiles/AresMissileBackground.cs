@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -64,7 +65,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             ManagedShader trailShader = ShaderManager.GetShader("WoTM.MissileFlameTrailShader");
             trailShader.Apply();
 
-            PrimitiveSettings settings = new(c => AresMissile.FlameTrailWidthFunction(c, Projectile.scale), c => AresMissile.FlameTrailColorFunction(c, Projectile.Opacity * 0.4f), 
+            PrimitiveSettings settings = new(c => AresMissile.FlameTrailWidthFunction(c, Projectile.scale), c => AresMissile.FlameTrailColorFunction(c, Projectile.Opacity * 0.4f),
                 _ => (Projectile.rotation + MathHelper.PiOver2).ToRotationVector2() * 5f + Projectile.Size * 0.5f, Pixelate: true, Shader: trailShader);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 14);
         }

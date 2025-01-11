@@ -1,4 +1,6 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿using WoTM.Content.NPCs.ExoMechs.ComboAttacks;
+
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States
 {
     public enum ExoTwinsAIState
     {
@@ -6,12 +8,14 @@
         DashesAndLasers,
         CloseShots,
         MachineGunLasers,
+        ExothermalOverload,
 
         Inactive,
+        Leave,
 
         EnterSecondPhase,
 
-        UltimateAttack,
+        DeathAnimation,
 
         PerformIndividualAttacks,
 

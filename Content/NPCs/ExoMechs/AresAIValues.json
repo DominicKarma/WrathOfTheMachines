@@ -1,0 +1,252 @@
+{
+  "AimedLaserBursts_MaxHoverAcceleration": {
+    "BaseValue": 0.2,
+    "RevValue": 0.2,
+    "DeathValue": 0.2
+  },
+  "AimedLaserBursts_MaxHoverSpeed": {
+    "BaseValue": 6.95,
+    "RevValue": 6.95,
+    "DeathValue": 6.95
+  },
+  "AimedLaserBursts_SmallLaserShootRate": {
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
+  },
+  "AimedLaserBursts_SmallLaserCount": {
+    "BaseValue": 5.0,
+    "RevValue": 5.0,
+    "DeathValue": 5.0
+  },
+  "AimedLaserBursts_SmallLaserShootSpeed": {
+    "BaseValue": 7.0,
+    "RevValue": 7.0,
+    "DeathValue": 7.0
+  },
+  "BackgroundCoreLaserBeams_LoopSoundDelay": {
+    "BaseValue": 180.0,
+    "RevValue": 180.0,
+    "DeathValue": 180.0
+  },
+  "BackgroundCoreLaserBeams_MissileReleaseRate": {
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
+  },
+  "BackgroundCoreLaserBeams_MissileShootDelay": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "CannonLaserbeamDamage": {
+    "BaseValue": 500.0,
+    "RevValue": 500.0,
+    "DeathValue": 500.0
+  },
+  "CoreLaserbeamDamage": {
+    "BaseValue": 540.0,
+    "RevValue": 540.0,
+    "DeathValue": 540.0
+  },
+  "DeathAnimation_DeathDelay": {
+    "BaseValue": 42.0,
+    "RevValue": 42.0,
+    "DeathValue": 42.0
+  },
+  "DeathAnimation_PulseRate": {
+    "BaseValue": 16.0,
+    "RevValue": 16.0,
+    "DeathValue": 16.0
+  },
+  "DeathAnimation_PulseTime": {
+    "BaseValue": 150.0,
+    "RevValue": 150.0,
+    "DeathValue": 150.0
+  },
+  "DeathAnimation_SilhouetteAppearDelay": {
+    "BaseValue": 0.0,
+    "RevValue": 0.0,
+    "DeathValue": 0.0
+  },
+  "DeathAnimation_SilhouetteDissolveDelay": {
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
+  },
+  "DeathAnimation_SilhouetteDissolveTime": {
+    "BaseValue": 84.0,
+    "RevValue": 84.0,
+    "DeathValue": 84.0
+  },
+  "DeathAnimation_SilhouetteFadeInTime": {
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
+  },
+  "DeathAnimation_SmokeReleaseBuildupTime": {
+    "BaseValue": 119.0,
+    "RevValue": 119.0,
+    "DeathValue": 119.0
+  },
+  "DetachHands_DetachmentDelay": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "KatanaCycloneDashes_FlyAwayTime": {
+    "BaseValue": 66.0,
+    "RevValue": 66.0,
+    "DeathValue": 66.0
+  },
+  "KatanaCycloneDashes_RedirectTime": {
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
+  },
+  "KatanaCycloneDashes_SlashCount": {
+    "BaseValue": 9.0,
+    "RevValue": 9.0,
+    "DeathValue": 9.0
+  },
+  "KatanaCycloneDashes_AccelerationFactor": {
+    "BaseValue": 1.024,
+    "RevValue": 1.024,
+    "DeathValue": 1.024
+  },
+  "KatanaCycloneDashes_MaxRotationalVelocityDegrees": {
+    "BaseValue": 0.64,
+    "RevValue": 0.64,
+    "DeathValue": 0.64
+  },
+  "KatanaCycloneDashes_MinimumRestartDistance": {
+    "BaseValue": 1932.0,
+    "RevValue": 1932.0,
+    "DeathValue": 1932.0
+  },
+  "KatanaDamage": {
+    "BaseValue": 375.0,
+    "RevValue": 375.0,
+    "DeathValue": 375.0
+  },
+  "KatanaSlashes_AttackCycleTime": {
+    "BaseValue": 96.0,
+    "RevValue": 96.0,
+    "DeathValue": 96.0
+  },
+  "KatanaSlashes_AttackDelay": {
+    "BaseValue": 30.0,
+    "RevValue": 30.0,
+    "DeathValue": 30.0
+  },
+  "KatanaCycloneDashes_StartingDashSpeed": {
+    "BaseValue": 32.5,
+    "RevValue": 32.5,
+    "DeathValue": 32.5
+  },
+  "KatanaCycloneDashes_TeleportOffset": {
+    "BaseValue": 1485.0,
+    "RevValue": 1485.0,
+    "DeathValue": 1485.0
+  },
+  "LargeTeslaOrbBlast_AttackTransitionDelay": {
+    "BaseValue": 120.0,
+    "RevValue": 120.0,
+    "DeathValue": 120.0
+  },
+  "LargeTeslaOrbBlast_BurstReleaseRate": {
+    "BaseValue": 15.0,
+    "RevValue": 15.0,
+    "DeathValue": 15.0
+  },
+  "LargeTeslaOrbBlast_ExplodeAnticipationTime": {
+    "BaseValue": 48.0,
+    "RevValue": 48.0,
+    "DeathValue": 48.0
+  },
+  "LargeTeslaOrbBlast_HomingBurstReleaseDelay": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "LargeTeslaOrbBlast_HomingBurstReleaseTime": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "LargeTeslaOrbBlast_OrbChargeUpTime": {
+    "BaseValue": 84.0,
+    "RevValue": 84.0,
+    "DeathValue": 84.0
+  },
+  "LargeTeslaOrbBlast_RecoilSpeed": {
+    "BaseValue": 44.0,
+    "RevValue": 44.0,
+    "DeathValue": 44.0
+  },
+  "LingeringPlasmaDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "MissileDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "NukeAoEAndPlasmaBlasts_AttackTransitionDelay": {
+    "BaseValue": 72.0,
+    "RevValue": 72.0,
+    "DeathValue": 72.0
+  },
+  "NukeAoEAndPlasmaBlasts_NukeChargeUpTime": {
+    "BaseValue": 152.0,
+    "RevValue": 152.0,
+    "DeathValue": 152.0
+  },
+  "NukeAoEAndPlasmaBlasts_NukeExplosionDelay": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "NukeAoEAndPlasmaBlasts_NukeExplosionDiameter": {
+    "BaseValue": 5400.0,
+    "RevValue": 5400.0,
+    "DeathValue": 5400.0
+  },
+  "NukeExplosionDamage": {
+    "BaseValue": 675.0,
+    "RevValue": 675.0,
+    "DeathValue": 675.0
+  },
+  "NukeWeaponDamage": {
+    "BaseValue": 0.0,
+    "RevValue": 0.0,
+    "DeathValue": 0.0
+  },
+  "PlasmaJetDamage": {
+    "BaseValue": 420.0,
+    "RevValue": 420.0,
+    "DeathValue": 420.0
+  },
+  "SpawnAnimation_EnterForegroundTime": {
+    "BaseValue": 35.0,
+    "RevValue": 35.0,
+    "DeathValue": 35.0
+  },
+  "SmallLaserDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "SmallTeslaSphereDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "TeslaBurstDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  }
+}

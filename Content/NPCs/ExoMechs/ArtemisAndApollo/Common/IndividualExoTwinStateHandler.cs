@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
 {
     public class IndividualExoTwinStateHandler
     {

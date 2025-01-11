@@ -7,7 +7,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace WoTM
+namespace WoTM.Core.BehaviorOverrides
 {
     public abstract class NPCBehaviorOverride : ModType<NPC, NPCBehaviorOverride>
     {
@@ -37,6 +37,8 @@ namespace WoTM
         }
 
         protected override NPC CreateTemplateEntity() => new();
+
+        public virtual void SetDefaults() { }
 
         /// <summary>
         /// Allows for the setting of bestiary information for the NPC.
@@ -99,11 +101,26 @@ namespace WoTM
         public virtual void FindFrame(int frameHeight) { }
 
         /// <summary>
+        /// Allows you to customize the boss head texture used by an NPC based on its state. Set index to -1 to stop the texture from being displayed.
+        /// </summary>
+        public virtual void BossHeadSlot(ref int index) { }
+
+        /// <summary>
         /// Allows you to make things happen whenever this NPC is hit, such as creating dust or gores. <br/> 
         /// Called on local, server and remote clients. <br/> 
         /// Usually when something happens when an NPC dies such as item spawning, you use NPCLoot, but you can use HitEffect paired with a check for <c>if (NPC.life &lt;= 0)</c> to do client-side death effects, such as spawning dust, gore, or death sounds.
         /// </summary>
         public virtual void HitEffect(NPC.HitInfo hit) { }
+
+        /// <summary>
+        /// Allows you to prevent an NPC from doing anything on death (besides die). Return false to stop the NPC from doing anything special. Returns true by default.
+        /// </summary>
+        public virtual bool PreKill() => true;
+
+        /// <summary>
+        /// Whether or not an NPC should be killed when it reaches 0 health. You may program extra effects in this hook (for example, how Golem's head lifts up for the second phase of its fight). Return false to stop the NPC from being killed. Returns true by default.
+        /// </summary>
+        public virtual bool CheckDead() => true;
 
         /// <summary>
         /// Allows you to modify the damage, knockback, etc., that an NPC takes from a projectile.

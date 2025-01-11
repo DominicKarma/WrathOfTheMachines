@@ -1,6 +1,8 @@
 ﻿using Terraria;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {

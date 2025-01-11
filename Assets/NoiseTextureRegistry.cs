@@ -15,7 +15,9 @@ namespace WoTM.Assets
 
         #endregion Texture Path Constants
 
-        #region Noise Textures
+        #region Textures
+
+        public static readonly LazyAsset<Texture2D> BinaryPoem = LoadDeferred($"{ExtraTexturesPath}/BinaryPoem");
 
         public static readonly LazyAsset<Texture2D> BubblyNoise = LoadDeferred($"{ExtraTexturesPath}/BubblyNoise");
 
@@ -37,7 +39,7 @@ namespace WoTM.Assets
 
         public static readonly LazyAsset<Texture2D> WavyBlotchNoiseDetailed = LoadDeferred($"{ExtraTexturesPath}/WavyBlotchNoiseDetailed");
 
-        #endregion Noise Textures
+        #endregion Textures
 
         #region Loader Utility
 

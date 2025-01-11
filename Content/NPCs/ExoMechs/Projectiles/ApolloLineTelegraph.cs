@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -50,7 +51,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         {
             Time++;
 
-            Projectile.Opacity = Utilities.InverseLerpBump(0f, 0.32f, 0.75f, 1f, Time / Lifetime);
+            Projectile.Opacity = LumUtils.InverseLerpBump(0f, 0.32f, 0.75f, 1f, Time / Lifetime) * 0.65f;
 
             if (Time >= Lifetime)
                 Projectile.Kill();
@@ -76,5 +77,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             PrimitiveSettings settings = new(TelegraphWidthFunction, TelegraphColorFunction, Pixelate: true, Shader: telegraphShader);
             PrimitiveRenderer.RenderTrail(telegraphPoints, settings, 28);
         }
+
+        public override bool ShouldUpdatePosition() => false;
     }
 }

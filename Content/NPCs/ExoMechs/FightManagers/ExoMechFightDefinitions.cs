@@ -1,13 +1,29 @@
 ﻿using System;
-using CalamityMod.NPCs.ExoMechs;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Terraria;
 using Terraria.ModLoader;
-using static WoTM.Content.NPCs.ExoMechs.ExoMechFightStateManager;
+using WoTM.Common.Utilities;
+using WoTM.Core.BehaviorOverrides;
+using static WoTM.Content.NPCs.ExoMechs.FightManagers.ExoMechFightStateManager;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
+    /// <summary>
+    /// The central location for all Exo Mech phase definitions.
+    /// This governs the entire fight structure (such as life ratio threshold state changes), and is intended to be extraordinarily flexible.
+    /// </summary>
     public static class ExoMechFightDefinitions
     {
+        // NOTE -- Update XML comments if the life ratios are changed.
+        public static float SummonOtherMechsLifeRatio => 0.7f;
+
+        public static float FightAloneLifeRatio => 0.4f;
+
+        /// <summary>
+        /// How long it takes for the Exo Mechs to return to combat after a death animation if Draedon is not present.
+        /// </summary>
+        public static int NoDraedonExoMechReturnDelay => LumUtils.SecondsToFrames(2f);
+
         /// <summary>
         /// The first phase definition.
         /// </summary>
@@ -88,8 +104,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             return state.TotalKilledMechs >= 1;
         }, state =>
         {
-            ClearExoMechProjectiles();
-            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.FirstInterjection);
+            ExoMechSummonDelayTimer = 0;
+            SetDraedonState(DraedonBehavior.DraedonAIState.FirstInterjection);
         });
 
         /// <summary>
@@ -101,7 +117,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         public static readonly PhaseDefinition SecondTwoAtOncePhaseDefinition = CreateNewPhase(6, state =>
         {
-            return state.DraedonState is null || state.DraedonState != DraedonBehaviorOverride.DraedonAIState.FirstInterjection;
+            if (state.DraedonState is null)
+                return ExoMechSummonDelayTimer >= NoDraedonExoMechReturnDelay;
+
+            return state.DraedonState != DraedonBehavior.DraedonAIState.FirstInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
@@ -131,8 +150,8 @@ namespace WoTM.Content.NPCs.ExoMechs
             return state.TotalKilledMechs >= 2;
         }, state =>
         {
-            ClearExoMechProjectiles();
-            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.SecondInterjection);
+            ExoMechSummonDelayTimer = 0;
+            SetDraedonState(DraedonBehavior.DraedonAIState.SecondInterjection);
         });
 
         /// <summary>
@@ -144,7 +163,10 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         public static readonly PhaseDefinition BerserkSoloPhaseDefinition = CreateNewPhase(9, state =>
         {
-            return state.DraedonState is null || state.DraedonState != DraedonBehaviorOverride.DraedonAIState.SecondInterjection;
+            if (state.DraedonState is null)
+                return ExoMechSummonDelayTimer >= NoDraedonExoMechReturnDelay;
+
+            return state.DraedonState != DraedonBehavior.DraedonAIState.SecondInterjection;
         }, state => MakeExoMechLeaveOrReappear(false, (npc, exoMech) => true));
 
         /// <summary>
@@ -155,17 +177,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             return state.TotalKilledMechs >= 3;
         }, state =>
         {
-            ClearExoMechProjectiles();
-            SetDraedonState(DraedonBehaviorOverride.DraedonAIState.PostBattleInterjection);
+            SetDraedonState(DraedonBehavior.DraedonAIState.PostBattleInterjection);
         });
-
-        // NOTE -- Update XML comments if these are changed.
-        public static float SummonOtherMechsLifeRatio => 0.7f;
-
-        public static float FightAloneLifeRatio => 0.4f;
 
         public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
         {
+            if (NPC.AnyNPCs(ExoMechNPCIDs.ApolloID))
+                KeepExoTwinsAliveSystem.KeepAliveCountdown = 10;
+
             if (leave)
                 ClearExoMechProjectiles();
 
@@ -179,13 +198,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             });
         }
 
-        public static void SetDraedonState(DraedonBehaviorOverride.DraedonAIState state)
+        public static void SetDraedonState(DraedonBehavior.DraedonAIState state)
         {
-            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehaviorOverride behavior))
+            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
             {
-                behavior.AIState = state;
-                behavior.AITimer = 0f;
+                behavior.ChangeAIState(state);
                 Main.npc[draedonIndex].netUpdate = true;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using CalamityMod.NPCs;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -6,11 +7,28 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common
 {
     public static class CommonExoTwinFunctionalities
     {
+        /// <summary>
+        /// How much damage the Exo Twins do via contact.
+        /// </summary>
+        public static int ContactDamage => Main.expertMode ? 400 : 300;
+
+        /// <summary>
+        /// How much defense the Exo Twins have.
+        /// </summary>
+        public static int Defense => 50;
+
+        /// <summary>
+        /// How much DR the Exo Twins have.
+        /// </summary>
+        public static float DamageReductionFactor => 0.25f;
+
         /// <summary>
         /// How perpendicularly offset the optic nerves next to the Exo Twins' thrusters are at the start of the rendered primitive.
         /// </summary>
@@ -28,8 +46,8 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         private static float NerveEndingWidthFunction(NPC twin, float completionRatio)
         {
-            float baseWidth = Utilities.InverseLerp(1f, 0.54f, completionRatio) * 6f;
-            float endTipWidth = Utilities.Convert01To010(Utilities.InverseLerp(0.96f, 0.83f, completionRatio)) * 6f;
+            float baseWidth = LumUtils.InverseLerp(1f, 0.54f, completionRatio) * 6f;
+            float endTipWidth = LumUtils.Convert01To010(LumUtils.InverseLerp(0.96f, 0.83f, completionRatio)) * 6f;
             return (baseWidth + endTipWidth) * twin.scale;
         }
 
@@ -38,12 +56,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         /// <param name="twin">The Exo Twin's NPC instance.</param>
         /// <param name="nerveEndingPalette">The palette for the nerve endings.</param>
-        public static void DrawNerveEndings(NPC twin, params Color[] nerveEndingPalette)
+        public static void DrawNerveEndings(NPC twin, IExoTwin twinInterface, params Color[] nerveEndingPalette)
         {
             Color nerveEndingColorFunction(float completionRatio)
             {
-                float blackInterpolant = Utilities.InverseLerp(0.17f, 0.34f, completionRatio);
-                Color paletteColor = Utilities.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
+                float blackInterpolant = LumUtils.InverseLerp(0.17f, 0.34f, completionRatio);
+                Color paletteColor = LumUtils.MulticolorLerp(completionRatio.Squared(), nerveEndingPalette);
                 return Color.Lerp(new(0f, 0.1f, 0.2f), paletteColor, blackInterpolant) * twin.Opacity;
             }
 
@@ -59,12 +77,12 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 float totalAngularChange = 0f;
                 for (int i = 0; i < 8; i++)
-                    totalAngularChange += MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]) / 8f;
+                    totalAngularChange += MathHelper.WrapAngle(twin.rotation - twin.oldRot[i]) * twinInterface.OpticNerveAngleSensitivity / 8f;
 
                 for (int i = 0; i < nerveDrawPositions.Length; i++)
                 {
                     float completionRatio = i / (float)(nerveDrawPositions.Length - 1);
-                    float inwardBendInterpolant = Utilities.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
+                    float inwardBendInterpolant = LumUtils.InverseLerp(0f, 0.38f, completionRatio) * completionRatio;
                     float outwardExtrusion = MathHelper.Lerp(StartingOpticNerveExtrusion, EndingOpticNerveExtrusion, MathF.Pow(inwardBendInterpolant, 1.2f));
                     Vector2 backwardsOffset = backwards.RotatedBy(totalAngularChange * i * -0.14f) * completionRatio * nerveEndingLength;
                     Vector2 perpendicularOffset = new Vector2(direction * outwardExtrusion, -30f).RotatedBy(twin.oldRot[i] + MathHelper.PiOver2) * twin.scale;
@@ -131,24 +149,27 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             float thrusterWidthFunction(float completionRatio)
             {
-                float thrusterPulse = Utilities.Cos01(Main.GlobalTimeWrappedHourly * -42.3f + twin.whoAmI + completionRatio * 5f) * (1f - completionRatio) * 0.5f;
+                float thrusterPulse = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * -42.3f + twin.whoAmI + completionRatio * 5f) * (1f - completionRatio) * 0.5f;
                 return (MathHelper.Lerp(1f, 0.1f, MathF.Pow(completionRatio, 0.5f)) + thrusterPulse) * thrusterWidth;
             }
             Color thrusterColorFunction(float completionRatio)
             {
                 Color baseColor = twin.GetAlpha(new(0.3f, 0.5f, 1f));
-                float completionRatioOpacity = MathF.Pow(Utilities.InverseLerp(0.9f, 0f, completionRatio), 1.85f);
+                float completionRatioOpacity = MathF.Pow(LumUtils.InverseLerp(0.9f, 0f, completionRatio), 1.85f);
                 float generalOpacity = twin.Opacity;
                 return baseColor * completionRatioOpacity * generalOpacity;
             }
 
             // Draw some bloom over everything.
-            Vector2 thrusterBloomPosition = twin.Center - Main.screenPosition - twin.rotation.ToRotationVector2() * twin.scale * 12f;
-            Texture2D thrusterBloom = MiscTexturesRegistry.BloomCircleSmall.Value;
-            Color thrusterBloomColor = Color.SkyBlue * (twinInterface.ThrusterBoost * 0.6f + 0.33f);
-            thrusterBloomColor.A = 0;
-            Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor, 0f, thrusterBloom.Size() * 0.5f, 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor * 0.5f, 0f, thrusterBloom.Size() * 0.5f, 1f, 0, 0f);
+            if (!ExoTwinsStates.DeathAnimation_SuccessfullyCollided)
+            {
+                Vector2 thrusterBloomPosition = twin.Center - Main.screenPosition - twin.rotation.ToRotationVector2() * twin.scale * 12f;
+                Texture2D thrusterBloom = MiscTexturesRegistry.BloomCircleSmall.Value;
+                Color thrusterBloomColor = Color.SkyBlue * (twinInterface.ThrusterBoost * 0.6f + 0.33f) * twin.Opacity;
+                thrusterBloomColor.A = 0;
+                Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor, 0f, thrusterBloom.Size() * 0.5f, 0.5f, 0, 0f);
+                Main.spriteBatch.Draw(thrusterBloom, thrusterBloomPosition, null, thrusterBloomColor * 0.5f, 0f, thrusterBloom.Size() * 0.5f, 1f, 0, 0f);
+            }
 
             PrimitivePixelationSystem.RenderToPrimsNextFrame(() =>
             {
@@ -183,32 +204,43 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="twinInterface">The Exo Twin's interfaced data.</param>
         /// <param name="texture">The base texture.</param>
         /// <param name="glowmask">The glowmask texture.</param>
+        /// <param name="destroyedTexture">The destroyed texture.</param>
         /// <param name="lightColor">The color of light at the Exo Twin's position.</param>
         /// <param name="screenPos">The screen position offset.</param>
         /// <param name="frame">The frame of the Exo Twin.</param>
-        public static void DrawBase(NPC twin, IExoTwin twinInterface, Texture2D texture, Texture2D glowmask, Color lightColor, Vector2 screenPos, int frame)
+        public static void DrawBase(NPC twin, IExoTwin twinInterface, Texture2D texture, Texture2D glowmask, Texture2D destroyedTexture, Color lightColor, Vector2 screenPos, int frame)
         {
             Main.instance.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            DrawNerveEndings(twin, twinInterface.OpticNervePalette);
+            DrawNerveEndings(twin, twinInterface, twinInterface.OpticNervePalette);
 
             Vector2 drawPosition = twin.Center - screenPos;
             Rectangle frameRectangle = texture.Frame(10, 9, frame / 9, frame % 9);
+            twin.frame = frameRectangle;
 
             Main.spriteBatch.PrepareForShaders();
 
             float[] blurWeights = new float[12];
             for (int i = 0; i < blurWeights.Length; i++)
-                blurWeights[i] = Utilities.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
+                blurWeights[i] = LumUtils.GaussianDistribution(i / (float)(blurWeights.Length - 1f) * 1.5f, 0.6f);
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
-            shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);
-            shader.TrySetParameter("blurWeights", blurWeights);
-            shader.TrySetParameter("blurDirection", Vector2.UnitY);
-            shader.Apply();
+            if (!twinInterface.SpecialShaderAction?.Invoke(texture, twin) ?? true)
+            {
+                ManagedShader shader = ShaderManager.GetShader("WoTM.MotionBlurShader");
+                shader.TrySetParameter("blurInterpolant", twinInterface.MotionBlurInterpolant);
+                shader.TrySetParameter("blurWeights", blurWeights);
+                shader.TrySetParameter("blurDirection", Vector2.UnitY);
+                shader.Apply();
+            }
 
             Vector2 scale = Vector2.One * twin.scale;
-            Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
-            Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+
+            if (twinInterface.HasBeenDestroyed)
+                Main.spriteBatch.Draw(destroyedTexture, drawPosition, null, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, destroyedTexture.Size() * 0.5f, scale, 0, 0f);
+            else
+            {
+                Main.spriteBatch.Draw(texture, drawPosition, frameRectangle, twin.GetAlpha(lightColor), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+                Main.spriteBatch.Draw(glowmask, drawPosition, frameRectangle, twin.GetAlpha(Color.White), twin.rotation + MathHelper.PiOver2, frameRectangle.Size() * 0.5f, scale, 0, 0f);
+            }
 
             Main.spriteBatch.ResetToDefault();
 
@@ -216,6 +248,35 @@ namespace WoTM.Content.NPCs.ExoMechs
             DrawThrusters(twin, twinInterface);
 
             twinInterface.SpecificDrawAction?.Invoke();
+        }
+
+        /// <summary>
+        /// Handles death effects for the Exo Twins.
+        /// </summary>
+        /// <param name="npc">The Exo Twins' NPC data.</param>
+        public static bool HandleDeath(NPC npc)
+        {
+            if (ExoTwinsStateManager.SharedState.AIState != ExoTwinsAIState.DeathAnimation || ExoTwinsStateManager.SharedState.AITimer <= 10)
+            {
+                npc.dontTakeDamage = true;
+                npc.life = 1;
+                npc.active = true;
+
+                // Don't you just love NPC.realLife quirks?
+                if (CalamityGlobalNPC.draedonExoMechTwinRed != -1)
+                {
+                    NPC artemis = Main.npc[CalamityGlobalNPC.draedonExoMechTwinRed];
+                    artemis.dontTakeDamage = true;
+                    artemis.life = 1;
+                    artemis.active = true;
+                }
+
+                ExoMechFightStateManager.ClearExoMechProjectiles();
+                ExoTwinsStateManager.TransitionToNextState(ExoTwinsAIState.DeathAnimation);
+                return false;
+            }
+
+            return true;
         }
     }
 }

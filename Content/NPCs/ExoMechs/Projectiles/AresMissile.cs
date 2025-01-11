@@ -15,6 +15,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
@@ -35,6 +36,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The glowmask texture of this missile.
         /// </summary>
         internal static LazyAsset<Texture2D> Glowmask;
+
+        public bool SetActiveFalseInsteadOfKill => true;
 
         /// <summary>
         /// The Y position that determines whether this missile can do damage. Once the Y position of this projectile's center exceeds this value, tile collisions are enabled again.
@@ -179,11 +182,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public static Color FlameTrailColorFunction(float completionRatio, float opacityFactor)
         {
-            float trailOpacity = Utils.GetLerpValue(0.8f, 0.27f, completionRatio, true) * Utils.GetLerpValue(0f, 0.067f, completionRatio, true);
+            float trailOpacity = LumUtils.InverseLerp(0.8f, 0.27f, completionRatio) * LumUtils.InverseLerp(0f, 0.067f, completionRatio);
             Color startingColor = Color.Lerp(Color.SkyBlue, Color.White, 0.6f);
             Color middleColor = Color.Lerp(Color.Orange, Color.Yellow, 0.32f);
             Color endColor = Color.Lerp(Color.Orange, Color.Red, 0.29f);
-            return Utilities.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity * opacityFactor;
+            return LumUtils.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity * opacityFactor;
         }
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)

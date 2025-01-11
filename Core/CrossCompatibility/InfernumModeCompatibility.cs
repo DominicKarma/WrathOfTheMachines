@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader;
 
-namespace WoTM
+namespace WoTM.Core.CrossCompatibility
 {
     public class InfernumModeCompatibility : ModSystem
     {

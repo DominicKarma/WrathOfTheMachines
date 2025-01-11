@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM
+namespace WoTM.Core.Graphics.Models
 {
     // This is FUCKED!
     public class ModelRegistry : ModSystem

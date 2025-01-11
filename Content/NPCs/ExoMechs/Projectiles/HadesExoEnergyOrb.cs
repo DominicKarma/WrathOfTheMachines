@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System.Collections.Generic;
+using CalamityMod;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using Luminance.Assets;
@@ -10,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
@@ -21,7 +23,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// The lifetime ratio of this orb.
         /// </summary>
-        public float LifetimeRatio => Utilities.Saturate(Time / Lifetime);
+        public float LifetimeRatio => LumUtils.Saturate(Time / Lifetime);
 
         /// <summary>
         /// How long this orb should exist for, in frames.
@@ -51,6 +53,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
+            Projectile.hide = true;
             Projectile.timeLeft = 240000;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
@@ -64,9 +67,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             }
 
             NPC hades = Main.npc[CalamityGlobalNPC.draedonExoMechWorm];
+            float reachInterpolant = LumUtils.InverseLerp(0.92f, 0.75f, LifetimeRatio);
             Projectile.rotation = hades.velocity.ToRotation();
-            Projectile.scale = Utilities.InverseLerpBump(0f, 0.4f, 0.91f, 0.95f, LifetimeRatio);
-            Projectile.Center = hades.Center + Projectile.rotation.ToRotationVector2() * Projectile.width * 0.7f;
+            Projectile.scale = LumUtils.InverseLerpBump(0f, 0.4f, 0.7f, 0.92f, LifetimeRatio);
+            Projectile.Center = hades.Center + Projectile.rotation.ToRotationVector2() * Projectile.width * MathHelper.Lerp(0.06f, 0.7f, reachInterpolant);
 
             CreateElectricParticles();
 
@@ -130,8 +134,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.rand.NextBool(5))
                 arcLength *= 1.6f;
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI) =>
+            behindNPCs.Add(index);
 
         public override bool PreDraw(ref Color lightColor)
         {

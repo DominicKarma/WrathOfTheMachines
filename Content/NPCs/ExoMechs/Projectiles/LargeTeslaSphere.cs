@@ -1,17 +1,20 @@
 ﻿using CalamityMod.Items.Weapons.DraedonsArsenal;
+using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.Particles;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
+using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WoTM.Assets;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
@@ -19,6 +22,15 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
     public class LargeTeslaSphere : ModProjectile, IProjOwnedByBoss<AresBody>, IExoMechProjectile
     {
         public bool SetActiveFalseInsteadOfKill => true;
+
+        /// <summary>
+        /// The loop sound instance for this sphere.
+        /// </summary>
+        public LoopedSoundInstance LoopSoundInstance
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// How long this sphere has existed, in frames.
@@ -29,6 +41,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// The effective amount of spin that has elapsed thus far. Used by the sphere shader.
         /// </summary>
         public ref float SphereSpinScrollOffset => ref Projectile.localAI[0];
+
+        /// <summary>
+        /// The sound played idly by this sphere.
+        /// </summary>
+        public static readonly SoundStyle LoopSound = new("WoTM/Assets/Sounds/Custom/Ares/TeslaSphereLoop");
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 
@@ -54,6 +71,12 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
+            if (CalamityGlobalNPC.draedonExoMechPrime == -1)
+            {
+                Projectile.Kill();
+                return;
+            }
+
             for (int i = 0; i < 2; i++)
                 CreateElectricSpark();
 
@@ -62,7 +85,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Time % 13 == 12 && Projectile.velocity.Length() <= 11f)
                 CreateConvergingCircleParticle();
 
-            Projectile.scale = MathHelper.Lerp(1f, 1.06f, Utilities.Cos01(MathHelper.TwoPi * Time / 6.3f));
+            LoopSoundInstance ??= LoopedSoundManager.CreateNew(LoopSound, () => !Projectile.active);
+            LoopSoundInstance?.Update(Projectile.Center, sound =>
+            {
+                sound.Volume = LumUtils.InverseLerp(0f, 540f, Projectile.width) * 1.5f;
+            });
 
             SphereSpinScrollOffset += Projectile.width * 0.000023f;
 
@@ -93,7 +120,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.rand.NextBool(5))
                 arcLength *= 1.5f;
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), arcSpawnPosition, arcLength, ModContent.ProjectileType<SmallTeslaArc>(), 0, 0f, -1, arcLifetime, 0f);
         }
 
         /// <summary>
@@ -151,19 +178,26 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 20; i++)
             {
-                Vector2 burstVelocity = (MathHelper.TwoPi * i / 16f).ToRotationVector2() * 0.5f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 20f).ToRotationVector2() * 0.54f;
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 9; i++)
             {
-                Vector2 burstVelocity = (MathHelper.TwoPi * i / 8f + MathHelper.Pi / 6f).ToRotationVector2() * 0.97f;
-                Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehaviorOverride.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+                Vector2 burstVelocity = (MathHelper.TwoPi * i / 9f + MathHelper.Pi / 6f).ToRotationVector2() * 0.92f;
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
             }
 
-            Utilities.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);
+            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
+            for (int i = 0; i < 7; i++)
+            {
+                Vector2 burstVelocity = Projectile.SafeDirectionTo(target.Center).RotatedBy(MathHelper.Lerp(-0.51f, 0.51f, i / 6f)) * 1.4f;
+                LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, burstVelocity, ModContent.ProjectileType<HomingTeslaBurst>(), AresBodyBehavior.TeslaBurstDamage, 0f, -1, HomingTeslaBurst.HomeInTime);
+            }
+
+            LumUtils.NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LargeTeslaSphereExplosion>(), 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -175,14 +209,11 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             Main.spriteBatch.PrepareForShaders();
 
-            ManagedShader shader = ShaderManager.GetShader("WoTM.LargeTeslaSphereShader");
-            shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/HarshNoise"), 1, SamplerState.LinearWrap);
-            shader.SetTexture(NoiseTexturesRegistry.ElectricNoise.Value, 2, SamplerState.LinearWrap);
+            ManagedShader shader = ShaderManager.GetShader("WoTM.AresLargeTeslaSphereShader");
             shader.TrySetParameter("textureSize0", Projectile.Size);
             shader.TrySetParameter("posterizationPrecision", 14f);
-            shader.TrySetParameter("sphereSpinScrollOffset", SphereSpinScrollOffset);
-            shader.TrySetParameter("ridgeNoiseInterpolationStart", 0.23f);
-            shader.TrySetParameter("ridgeNoiseInterpolationEnd", 0.09f);
+            shader.SetTexture(MiscTexturesRegistry.DendriticNoiseZoomedOut.Value, 1, SamplerState.LinearWrap);
+            shader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 2, SamplerState.LinearWrap);
             shader.Apply();
 
             Texture2D pixel = MiscTexturesRegistry.Pixel.Value;
@@ -194,6 +225,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
-            Utilities.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.37f, targetHitbox);
+            LumUtils.CircularHitboxCollision(Projectile.Center, Projectile.width * 0.37f, targetHitbox);
     }
 }

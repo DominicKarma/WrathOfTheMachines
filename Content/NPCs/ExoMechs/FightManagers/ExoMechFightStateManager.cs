@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using CalamityMod.NPCs.ExoMechs;
+using CalamityMod;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
+using WoTM.Core.BehaviorOverrides;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     public sealed class ExoMechFightStateManager : ModSystem
     {
@@ -45,6 +50,25 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// Whether all players died in the battle.
+        /// </summary>
+        public static bool AllPlayersDied
+        {
+            get;
+            private set;
+        }
+
+        // This doesn't need syncing since the timer is only used in the context of summoning NPCs, which is not a client-side effect.
+        /// <summary>
+        /// A counter used in conjunction with <see cref="ExoMechFightDefinitions.NoDraedonExoMechReturnDelay"/> to create a time buffer before Exo Mechs return if Draedon is not present.
+        /// </summary>
+        public static int ExoMechSummonDelayTimer
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
         /// The current phase of the Exo Mechs fight, as calculated via the <see cref="PreUpdateEntities"/> hook in this system every frame.
         /// </summary>
         public static PhaseDefinition CurrentPhase
@@ -61,6 +85,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             get;
             private set;
         }
+
+        /// <summary>
+        /// Whether phase transitions should be disabled for debug reasons.
+        /// </summary>
+        public static bool DebugDisablePhaseTransition => false;
 
         /// <summary>
         /// Represents an undefined Exo Mech phase transition condition that always evaluates false regardless of context.
@@ -84,6 +113,12 @@ namespace WoTM.Content.NPCs.ExoMechs
             /// Represents an undefined Exo Mech phase.
             /// </summary>
             public static readonly PhaseDefinition UndefinedPhase = new(0, false, UndefinedPhaseTransitionCondition, null);
+
+            public static bool operator >(PhaseDefinition phaseA, PhaseDefinition phaseB) => phaseA.PhaseOrdering > phaseB.PhaseOrdering;
+            public static bool operator >=(PhaseDefinition phaseA, PhaseDefinition phaseB) => phaseA.PhaseOrdering >= phaseB.PhaseOrdering;
+
+            public static bool operator <(PhaseDefinition phaseA, PhaseDefinition phaseB) => phaseA.PhaseOrdering < phaseB.PhaseOrdering;
+            public static bool operator <=(PhaseDefinition phaseA, PhaseDefinition phaseB) => phaseA.PhaseOrdering <= phaseB.PhaseOrdering;
         }
 
         /// <summary>
@@ -92,7 +127,16 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="fightState">The state of the overall Exo Mechs fight.</param>
         public delegate bool PhaseTransitionCondition(ExoMechFightState fightState);
 
-        public override void PreUpdateEntities() => DetermineBattleState();
+        public override void PreUpdateEntities()
+        {
+            DetermineBattleState();
+        }
+
+        public override void PostUpdateNPCs()
+        {
+            if (FightOngoing)
+                GrantInfiniteFlight();
+        }
 
         /// <summary>
         /// Creates and registers a new phase for the Exo Mechs fight.
@@ -117,7 +161,17 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </remarks>
         private static void CalculateFightState()
         {
-            int totalActiveMechs = 0;
+            bool playerIsAlive = false;
+            foreach (Player player in Main.ActivePlayers)
+            {
+                if (!player.dead)
+                    playerIsAlive = true;
+            }
+
+            if (!playerIsAlive)
+                AllPlayersDied = true;
+
+            int totalAliveMechs = 0;
             bool checkForPrimaryMech = false;
             List<int> evaluatedMechs = new(4);
             foreach (int exoMechID in ExoMechNPCIDs.ManagingExoMechIDs)
@@ -126,7 +180,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                 if (NPC.AnyNPCs(exoMechID))
                 {
                     checkForPrimaryMech = true;
-                    totalActiveMechs++;
+                    totalAliveMechs++;
                 }
             }
 
@@ -139,9 +193,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 return;
             }
 
-            DraedonBehaviorOverride.DraedonAIState? draedonState = null;
-            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehaviorOverride behavior))
+            DraedonBehavior.DraedonAIState? draedonState = null;
+            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
                 draedonState = behavior.AIState;
 
             // Determine the overall fight state.
@@ -154,9 +208,21 @@ namespace WoTM.Content.NPCs.ExoMechs
 
                 stateOfOtherExoMechs[i] = ExoMechStateFromNPC(otherExoMech, exoMechWasSummonedAtOnePoint);
             }
-            FightState = new(draedonState, totalActiveMechs, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
+            FightState = new(draedonState, totalAliveMechs, ExoMechStateFromNPC(primaryMech, true), stateOfOtherExoMechs);
 
             FightOngoing = true;
+        }
+
+        /// <summary>
+        /// Grantes infinite flight to all players for the purposes of the Exo Mechs fight.
+        /// </summary>
+        private static void GrantInfiniteFlight()
+        {
+            foreach (Player player in Main.ActivePlayers)
+            {
+                player.GrantInfiniteFlight();
+                player.Calamity().infiniteFlight = true;
+            }
         }
 
         /// <summary>
@@ -179,6 +245,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void EvaluatePhase()
         {
+            if (CurrentPhase is null)
+                return;
+
             // This is a bit weird but it's necessary to ensure that the static readonly fields are initialized and the ExoMechPhases list is populated properly.
             _ = ExoMechFightDefinitions.StartingTwoAtOncePhaseDefinition;
 
@@ -186,7 +255,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (nextPhase is null)
                 return;
 
-            if (nextPhase.StartCondition(FightState))
+            bool anyPlayersAreAlive = false;
+            foreach (Player player in Main.ActivePlayers)
+            {
+                if (!player.dead)
+                    anyPlayersAreAlive = true;
+            }
+
+            if (!DebugDisablePhaseTransition && nextPhase.StartCondition(FightState) && anyPlayersAreAlive)
             {
                 CurrentPhase = nextPhase;
                 nextPhase.OnStart?.Invoke(FightState);
@@ -211,7 +287,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (exoMech is null || !exoMech.active)
                 return new(0f, wasSummoned, true);
 
-            return new(Utilities.Saturate(exoMech.life / (float)exoMech.lifeMax), true, false);
+            return new(LumUtils.Saturate(exoMech.life / (float)exoMech.lifeMax), true, false);
         }
 
         /// <summary>
@@ -219,22 +295,34 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// </summary>
         private static void DetermineBattleState()
         {
-            // TODO -- Re-enable later.
-            return;
-
             RecordActiveMechs();
 
-            bool draedonIsPresent = NPC.AnyNPCs(ModContent.NPCType<Draedon>());
-            bool fightIsOngoing = ActiveManagingExoMechs.Count >= 1 || draedonIsPresent;
+            bool draedonIsPresent = NPC.AnyNPCs(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
+            bool anyExoMechs = false;
+            foreach (NPC npc in Main.ActiveNPCs)
+            {
+                if (ExoMechNPCIDs.ManagingExoMechIDs.Contains(npc.type))
+                {
+                    anyExoMechs = true;
+                    break;
+                }
+            }
+
+            bool fightIsOngoing = anyExoMechs || draedonIsPresent;
             if (!fightIsOngoing)
             {
                 ResetBattleState();
                 return;
             }
 
+            if (AllPlayersDied)
+                return;
+
             RecordPreviouslySummonedMechs();
             CalculateFightState();
             EvaluatePhase();
+
+            ExoMechSummonDelayTimer++;
         }
 
         /// <summary>
@@ -262,12 +350,14 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (PreviouslySummonedMechIDs.Count >= 1)
                 PreviouslySummonedMechIDs.Clear();
 
+            ExoMechSummonDelayTimer = 0;
             FightOngoing = false;
             CurrentPhase = PhaseDefinition.UndefinedPhase;
             FightState = ExoMechFightState.UndefinedFightState;
+            AllPlayersDied = false;
             ExoTwinsStateManager.SharedState.ResetForEntireBattle();
 
-            if (Main.LocalPlayer.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer) && !NPC.AnyNPCs(ModContent.NPCType<Draedon>()))
+            if (Main.LocalPlayer.TryGetModPlayer(out ExoMechDamageRecorderPlayer recorderPlayer) && !NPC.AnyNPCs(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>()))
                 recorderPlayer.ResetIncurredDamage();
         }
 
@@ -368,7 +458,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             IProjOwnedByBoss<ThanatosHead>.KillAll();
             IProjOwnedByBoss<Artemis>.KillAll();
             IProjOwnedByBoss<Apollo>.KillAll();
-            IProjOwnedByBoss<Draedon>.KillAll();
+            IProjOwnedByBoss<CalamityMod.NPCs.ExoMechs.Draedon>.KillAll();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs
+﻿namespace WoTM.Content.NPCs.ExoMechs.Hades
 {
     public interface IHadesSegment
     {

@@ -1,18 +1,19 @@
 ﻿using System;
-using CalamityMod.NPCs.ExoMechs;
-using CalamityMod.Skies;
+using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Assets;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
+using WoTM.Core.Graphics.Models;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.SpecificManagers
 {
     public class CustomExoMechsSky : CustomSky
     {
@@ -24,7 +25,7 @@ namespace WoTM.Content.NPCs.ExoMechs
 
             public void Update()
             {
-                Brightness = Utilities.Saturate(Brightness * 0.984f - 0.003f);
+                Brightness = LumUtils.Saturate(Brightness * 0.991f - 0.0011f);
             }
         }
 
@@ -58,6 +59,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
+        /// How much the sky colors should be biased towards red.
+        /// </summary>
+        public static float RedSkyInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// The offset of clouds.
         /// </summary>
         public static Vector2 CloudOffset
@@ -69,12 +79,12 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// The default cloud exposure value.
         /// </summary>
-        public static float DefaultCloudExposure => 0.7f;
+        public static float DefaultCloudExposure => 0.3f;
 
         /// <summary>
         /// The lightning instances.
         /// </summary>
-        public static readonly LightningData[] Lightning = new LightningData[10];
+        public static readonly LightningData[] Lightning = new LightningData[5];
 
         /// <summary>
         /// The identifier key for this sky.
@@ -84,11 +94,11 @@ namespace WoTM.Content.NPCs.ExoMechs
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             // Calculate the maximum sky opacity value.
-            // If Draedon is not present it is assumed that the Exo Mechs were just spawned in via cheating, and as such they sky should immediately draw at its maximum intensity, rather than not at all.
+            // If Draedon is not present it is assumed that the Exo Mechs were just spawned in via cheating, and as such the sky should immediately draw at its maximum intensity, rather than not at all.
             float maxSkyOpacity = 1f;
             float planeForwardInterpolant = 0f;
-            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<Draedon>());
-            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehaviorOverride behavior))
+            int draedonIndex = NPC.FindFirstNPC(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
+            if (draedonIndex >= 0 && Main.npc[draedonIndex].TryGetBehavior(out DraedonBehavior behavior))
             {
                 maxSkyOpacity = behavior.MaxSkyOpacity;
                 planeForwardInterpolant = 1f - behavior.PlaneFlyForwardInterpolant;
@@ -97,7 +107,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (!Main.gamePaused)
             {
                 CloudExposure = MathHelper.Lerp(CloudExposure, DefaultCloudExposure, 0.03f);
-                Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.005f, 0f, maxSkyOpacity);
+                Opacity = MathHelper.Clamp(Opacity + skyActive.ToDirectionInt() * 0.0011f, 0f, maxSkyOpacity);
             }
 
             // Prevent drawing beyond the back layer.
@@ -116,9 +126,6 @@ namespace WoTM.Content.NPCs.ExoMechs
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, backgroundMatrix);
             }
-
-            // Get out of my head get out of my head get out of my head get out of my head get out of my head
-            ((ExoMechsSky)SkyManager.Instance["CalamityMod:ExoMechs"]).LightningBolts.Clear();
 
             if (maxDepth < float.MaxValue || minDepth >= float.MaxValue)
             {
@@ -139,7 +146,8 @@ namespace WoTM.Content.NPCs.ExoMechs
                     Lightning[i].Update();
             }
 
-            if (Main.rand.NextBool(600))
+            int lightningSpawnChance = (int)MathHelper.Lerp(480f, 45f, RedSkyInterpolant);
+            if (Main.rand.NextBool(lightningSpawnChance))
                 CreateLightning();
 
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
@@ -167,12 +175,16 @@ namespace WoTM.Content.NPCs.ExoMechs
             cloudShader.TrySetParameter("pixelationFactor", 4f);
             cloudShader.TrySetParameter("lightningIntensities", lightningIntensities);
             cloudShader.TrySetParameter("lightningPositions", lightningPositions);
+            cloudShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/TechyNoise"), 1, SamplerState.LinearWrap);
+            cloudShader.SetTexture(MiscTexturesRegistry.WavyBlotchNoise.Value, 2, SamplerState.LinearWrap);
             cloudShader.Apply();
 
             Texture2D cloud = NoiseTexturesRegistry.CloudDensityMap.Value;
             Vector2 drawPosition = screenSize * 0.5f;
             Vector2 skyScale = screenSize / cloud.Size();
-            Main.spriteBatch.Draw(cloud, drawPosition, null, new Color(48, 57, 70), 0f, cloud.Size() * 0.5f, skyScale, 0, 0f);
+            Color redSkyColor = Color.Lerp(new(255, 66, 78), new(255, 190, 184), LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 6f));
+            Color cloudColor = Color.Lerp(new(48, 57, 70), redSkyColor, RedSkyInterpolant);
+            Main.spriteBatch.Draw(cloud, drawPosition, null, cloudColor, 0f, cloud.Size() * 0.5f, skyScale, 0, 0f);
         }
 
         public static void CreateLightning(Vector2? lightningPosition = null)
@@ -180,16 +192,13 @@ namespace WoTM.Content.NPCs.ExoMechs
             if (Main.netMode == NetmodeID.Server || Main.gamePaused)
                 return;
 
-            SoundEngine.PlaySound(SoundID.Thunder);
-
-            Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            lightningPosition ??= new Vector2(Main.rand.NextFloat(0.2f, 0.8f), Main.rand.NextFloat(-0.07f, -0.02f)) * screenSize;
+            lightningPosition ??= new Vector2(Main.rand.NextFloat(0.2f, 0.8f), Main.rand.NextFloat(-0.07f, 0.9f));
 
             for (int i = 0; i < Lightning.Length; i++)
             {
                 if (Lightning[i].Brightness < 0.03f)
                 {
-                    Lightning[i].Brightness = Main.rand.NextFloat(0.6f, 1f);
+                    Lightning[i].Brightness = Main.rand.NextFloat(0.6f, 0.72f);
                     Lightning[i].LightningPosition = lightningPosition.Value;
                     break;
                 }
@@ -207,7 +216,9 @@ namespace WoTM.Content.NPCs.ExoMechs
                 SkyManager.Instance["CalamityMod:ExoMechs"]?.Deactivate();
 
             if (!skyActive)
-                ResetVariablesWhileInactivity();
+                ResetVariablesWhileInactive();
+            if (!Main.gamePaused)
+                RedSkyInterpolant = LumUtils.Saturate(RedSkyInterpolant - 0.01f);
         }
 
         public static void DrawPlane(float forwardInterpolant)
@@ -218,7 +229,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             Vector2 screenSize = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector3 planePosition = new(screenSize * new Vector2(0.5f, 0.45f), MathHelper.Lerp(100f, -0.95f, MathF.Pow(1f - forwardInterpolant, 0.67f)));
             float scale = 0.7f / (planePosition.Z + 1f);
-            float opacity = Utilities.InverseLerp(100f, 54f, planePosition.Z);
+            float opacity = LumUtils.InverseLerp(100f, 54f, planePosition.Z);
             planePosition.Y -= scale * 1560f;
 
             Matrix rotation = Matrix.CreateRotationX((1f - forwardInterpolant) * 0.5f) * Matrix.CreateRotationZ(MathHelper.Pi);
@@ -251,9 +262,9 @@ namespace WoTM.Content.NPCs.ExoMechs
             }
         }
 
-        public static void ResetVariablesWhileInactivity()
+        public static void ResetVariablesWhileInactive()
         {
-            RedSirensIntensity = Utilities.Saturate(RedSirensIntensity - 0.1f);
+            RedSirensIntensity = LumUtils.Saturate(RedSirensIntensity - 0.1f);
         }
 
         #region Boilerplate

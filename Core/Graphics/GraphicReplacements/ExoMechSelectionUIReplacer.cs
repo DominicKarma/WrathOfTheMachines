@@ -2,7 +2,6 @@
 using CalamityMod.UI.DraedonSummoning;
 using CalamityMod.World;
 using Luminance.Assets;
-using Luminance.Common.Utilities;
 using Luminance.Core.Hooking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,8 +11,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Core.CrossCompatibility;
 
-namespace WoTM.Core.Graphics.EffectManagers
+namespace WoTM.Core.Graphics.GraphicReplacements
 {
     public class ExoMechSelectionUIReplacer : ILEditProvider
     {
@@ -70,7 +70,7 @@ namespace WoTM.Core.Graphics.EffectManagers
 
         public override void Subscribe(ManagedILEdit edit)
         {
-            HookHelper.ModifyMethodWithIL(typeof(ExoMechSelectionUI).GetMethod("Draw", Utilities.UniversalBindingFlags), edit.SubscriptionWrapper);
+            HookHelper.ModifyMethodWithIL(typeof(ExoMechSelectionUI).GetMethod("Draw", LumUtils.UniversalBindingFlags), edit.SubscriptionWrapper);
         }
 
         public override void Unsubscribe(ManagedILEdit edit) { }

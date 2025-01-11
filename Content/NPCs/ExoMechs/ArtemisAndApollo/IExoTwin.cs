@@ -1,8 +1,12 @@
-﻿using System;
-using Luminance.Core.Sounds;
+﻿using Luminance.Core.Sounds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.Common;
+using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo.States;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public interface IExoTwin
     {
@@ -23,6 +27,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// In this context, "second phase" does not refer to the phases of the overall battle, instead referring to whether the Exo Twin has removed its lens and revealed its full mechanical form.
         /// </remarks>
         public bool InPhase2
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether this Exo Twin has been destroyed due to impact during its death animation.
+        /// </summary>
+        public bool HasBeenDestroyed
         {
             get;
             set;
@@ -50,6 +63,15 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// The interpolant of motion blur for this Exo Twin.
         /// </summary>
         public float MotionBlurInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The sensitivity of the optic nerve's angular reach.
+        /// </summary>
+        public float OpticNerveAngleSensitivity
         {
             get;
             set;
@@ -94,6 +116,19 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// A specific, optionally definable draw action that may be used for specific, circumstantial effects.
         /// </summary>
         public Action? SpecificDrawAction
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A specific, optionally defineable shader action that may be used to prepare special effects in place of the standard afterimage blur shader.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Returning <see langword="true"/> in this function indicates that an override has happened.
+        /// </remarks>
+        public Func<Texture2D, NPC, bool> SpecialShaderAction
         {
             get;
             set;

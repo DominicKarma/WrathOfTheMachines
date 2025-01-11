@@ -1,7 +1,8 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
 {
     public abstract class ExoMechComboHandler : ModType
     {

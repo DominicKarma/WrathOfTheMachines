@@ -1,41 +1,58 @@
 Projectiles: {
+	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
 	ApolloMissile.DisplayName: 等离子导弹
-	ArtemisLaserSmall.DisplayName: 小热能激光
+	// AresMissile.DisplayName: Thermal Missile
+	// AresMissileBackground.DisplayName: Thermal Missile
 	ArtemisLaserImproved.DisplayName: 热能激光
+	ArtemisLaserSmall.DisplayName: 小热能激光
 	CannonLaserbeam.DisplayName: 激活热能死光
+	DraedonLootCrate.DisplayName: 嘉登战利品箱
+	// ExoelectricBlast.DisplayName: Exoelectric Blast
+	// ExoOverloadDeathray.DisplayName: Exo Overload Deathray
 	GaussNuke.DisplayName: 高斯核弹
 	GaussNukeBoom.DisplayName: 热核爆炸
+	HadesExoEnergyOrb.DisplayName: 星流电能球
 	HadesLaserBurst.DisplayName: 激光脉冲
+	HadesMine.DisplayName: 哈迪斯之雷
+	// HadesSuperLaserbeam.DisplayName: Exo Energy Blast
 	HomingTeslaBurst.DisplayName: 特斯拉爆破
 	LargeTeslaSphere.DisplayName: 巨型特斯拉电球
 	LargeTeslaSphereExplosion.DisplayName: 特斯拉爆破
 	LingeringPlasmaFireball.DisplayName: 滞留等离子火球
 	SmallTeslaArc.DisplayName: Small 特斯拉电弧
-	TeslaArc.DisplayName: 特斯拉电弧
-	ApolloLineTelegraph.DisplayName: 阿波罗路线预警
-	HadesMine.DisplayName: 哈迪斯之雷
-	DraedonLootCrate.DisplayName: 嘉登战利品箱
-	HadesExoEnergyOrb.DisplayName: 星流电能球
-	ExoEnergyBlast.DisplayName: 星流过载爆破
-	// ExoOverloadDeathray.DisplayName: Exo Overload Deathray
-	// AresMissile.DisplayName: Thermal Missile
-	// AresMissileBackground.DisplayName: Thermal Missile
-	// ExoelectricBlast.DisplayName: Exoelectric Blast
-	// RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor
-	// SpineOfHadesProjectile_Custom.DisplayName: Spine Of Hades
-	// TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter
-	// AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
-	// SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
-	// ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
+	// ExothermalDisintegrationRay.DisplayName: Exothermal Disintegration Ray
+	// ScourgeSandstream.DisplayName: Scourge Sandstream
+	// SmallTeslaSphere.DisplayName: Tesla Sphere
+	// PlasmaFlameJet.DisplayName: Exoplasma Flame Jet
+	// BlazingExoLaserbeam.DisplayName: Blazing Exo Laserbeam
+	// AresDeathAnimationExplosion.DisplayName: Explosion
+	// SmallHadesSegmentExplosion.DisplayName: Explosion
+	// BigHadesSegmentExplosion.DisplayName: Explosion
+	// AresCoreLaserSmall.DisplayName: Energized Spark
+	// AresSwingingKatanas.DisplayName: XF-09 Ares Energy Katana
+	// ApolloPlasmaFireball.DisplayName: Plasma Fireball
+	// AresHyperfuturisticPortal.DisplayName: Hyperfuturistic Portal
+	// ExoTwinHyperfuturisticPortal.DisplayName: Hyperfuturistic Portal
+	// HadesMissile.DisplayName: Fortified Missile
+	// CodebreakerDataStream.DisplayName: Codebreaker Data Stream
+	// SmallCannonLaser.DisplayName: Laser
+	// PulseBlast.DisplayName: Pulse Blast
 	// ExoelectricFieldDestabilizerOrb.DisplayName: Exoelectric Field Destabilizer Orb
+	// ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
+	// RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor Projectile_ Custom
+	// SpineOfHadesProjectile_Custom.DisplayName: Spine Of Hades Projectile_ Custom
 	// SurgeDriverBlast.DisplayName: Surge Driver Blast
 	// SurgeDriverProjectile.DisplayName: Surge Driver Projectile
+	// AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
+	// SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
+	// TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter Projectile_ Custom
 }
 
 NPCs: {
 	AresHand: {
 		DisplayName: 阿瑞斯之手
 		// EnergyKatanaDisplayName: XF-09 Ares Energy Katana
+		// PulseCannonDisplayName: XF-09 Ares Pulse Cannon
 	}
 
 	Draedon: {
@@ -72,6 +89,7 @@ NPCs: {
 		Interjection8: 迄今为止，你给我提供的所有数据均为无价之宝。
 		Interjection9: 现在，是时候进入测试的最终阶段了。
 		Interjection10: 我已经命令我的最后一台机械以最大火力运行。
+		// Interjection10_Plural: I have instructed my last machines to operate at maximum firepower.
 		Interjection11: 祝你好运。
 		EndOfBattle_FirstDefeat1: 出乎意料！
 		EndOfBattle_FirstDefeat2: 这一结果远远超越了我预想中的期望。
@@ -99,10 +117,14 @@ NPCs: {
 		EndOfBattle_FirstDefeatReconBodyKill1: 有趣……
 		EndOfBattle_FirstDefeatReconBodyKill2: 我并非没有将你“易怒”的这一数据点考虑在内。
 		EndOfBattle_FirstDefeatReconBodyKill3: 不管怎么样，正如我所说的……
+		// Death: Precisely within the margins of my calculations.
+		// PlayerDeathAtAmusingTime: That was rather inopportune, but still within the margins of my calculations.
 		Error: 该文本不应显示。
 	}
 
 	ThanatosRename: XM-04“哈迪斯”
+	// ApolloRename: XS-11 Apollo
+	// ExoTwinsRenameNormal: XS-01 Artemis and XS-11 Apollo
 }
 
 Items: {

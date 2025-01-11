@@ -1,0 +1,192 @@
+{
+  "BasicLaserDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "BodySegmentCount": {
+    "BaseValue": 50.0,
+    "RevValue": 50.0,
+    "DeathValue": 50.0
+  },
+  "ContinuousLaserBarrage_BarrageCount": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "ContinuousLaserBarrage_LaserShootSpeed": {
+    "BaseValue": 17.3,
+    "RevValue": 17.3,
+    "DeathValue": 17.3
+  },
+  "ContinuousLaserBarrage_ShootProximityRequirement": {
+    "BaseValue": 3985.0,
+    "RevValue": 3985.0,
+    "DeathValue": 3985.0
+  },
+  "ContinuousLaserBarrage_ShootTime": {
+    "BaseValue": 132.0,
+    "RevValue": 132.0,
+    "DeathValue": 132.0
+  },
+  "ContinuousLaserBarrage_StandardFlySpeed": {
+    "BaseValue": 31.0,
+    "RevValue": 31.0,
+    "DeathValue": 31.0
+  },
+  "ContinuousLaserBarrage_TelegraphTime": {
+    "BaseValue": 96.0,
+    "RevValue": 96.0,
+    "DeathValue": 96.0
+  },
+  "DeathAnimation_BecomeUnstableTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "DeathAnimation_BigExplosionDelay": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "DeathAnimation_HomeInTime": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "DeathAnimation_SmallExplosionsTime": {
+    "BaseValue": 180.0,
+    "RevValue": 180.0,
+    "DeathValue": 180.0
+  },
+  "DefaultSegmentDamage": {
+    "BaseValue": 375.0,
+    "RevValue": 375.0,
+    "DeathValue": 375.0
+  },
+  "ExoEnergyBlast_BlastDelay": {
+    "BaseValue": 222.0,
+    "RevValue": 222.0,
+    "DeathValue": 222.0
+  },
+  "ExoEnergyBlast_InitialRedirectTime": {
+    "BaseValue": 360.0,
+    "RevValue": 360.0,
+    "DeathValue": 360.0
+  },
+  "ExoEnergyBlast_JawOpenTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "ExoEnergyBlast_LaserTurnSpeedDegrees": {
+    "BaseValue": 0.7,
+    "RevValue": 0.7,
+    "DeathValue": 0.7
+  },
+  "ExoEnergyBlast_PostBeamAccelerationTime": {
+    "BaseValue": 72.0,
+    "RevValue": 72.0,
+    "DeathValue": 72.0
+  },
+  "ExoEnergyBlast_ProjectileBurstReleaseRate": {
+    "BaseValue": 600.0,
+    "RevValue": 600.0,
+    "DeathValue": 600.0
+  },
+  "ExoEnergyBlastDamage": {
+    "BaseValue": 540.0,
+    "RevValue": 540.0,
+    "DeathValue": 540.0
+  },
+  "MineBarrages_BarrageCount": {
+    "BaseValue": 1.0,
+    "RevValue": 1.0,
+    "DeathValue": 1.0
+  },
+  "MineBarrages_MineReleaseTime": {
+    "BaseValue": 126.0,
+    "RevValue": 126.0,
+    "DeathValue": 126.0
+  },
+  "MineBarrages_RedirectTime": {
+    "BaseValue": 120.0,
+    "RevValue": 120.0,
+    "DeathValue": 120.0
+  },
+  "MineDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "MissileDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "MissileLunges_LungeCount": {
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
+  },
+  "MissileLunges_LungeDuration": {
+    "BaseValue": 105.0,
+    "RevValue": 105.0,
+    "DeathValue": 105.0
+  },
+  "MissileLunges_RedirectMaxTime": {
+    "BaseValue": 240.0,
+    "RevValue": 240.0,
+    "DeathValue": 240.0
+  },
+  "MissileTailSnaps_ReorientTime": {
+    "BaseValue": 75.0,
+    "RevValue": 75.0,
+    "DeathValue": 75.0
+  },
+  "PerpendicularBodyLaserBlasts_BlastCount": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "PerpendicularBodyLaserBlasts_BlastTelegraphTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "PerpendicularBodyLaserBlasts_BurstShootCompletionRatio": {
+    "BaseValue": 0.79,
+    "RevValue": 0.79,
+    "DeathValue": 0.79
+  },
+  "PerpendicularBodyLaserBlasts_ForwardDestinationOffset": {
+    "BaseValue": 1600.0,
+    "RevValue": 1600.0,
+    "DeathValue": 1600.0
+  },
+  "PerpendicularBodyLaserBlasts_LaserShootSpeed": {
+    "BaseValue": 27.0,
+    "RevValue": 27.0,
+    "DeathValue": 27.0
+  },
+  "PerpendicularBodyLaserBlasts_RedirectTime": {
+    "BaseValue": 138.0,
+    "RevValue": 138.0,
+    "DeathValue": 138.0
+  },
+  "PerpendicularBodyLaserBlasts_SegmentUsageCycle": {
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
+  },
+  "PerpendicularBodyLaserBlasts_SideDestinationOffset": {
+    "BaseValue": 450.0,
+    "RevValue": 450.0,
+    "DeathValue": 450.0
+  },
+  "StandardOpenSegmentDR": {
+    "BaseValue": 0.375,
+    "RevValue": 0.375,
+    "DeathValue": 0.375
+  }
+}

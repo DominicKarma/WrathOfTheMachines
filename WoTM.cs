@@ -1,4 +1,5 @@
-﻿using Terraria.ModLoader;
+﻿global using LumUtils = Luminance.Common.Utilities.Utilities;
+using Terraria.ModLoader;
 
 namespace WoTM
 {

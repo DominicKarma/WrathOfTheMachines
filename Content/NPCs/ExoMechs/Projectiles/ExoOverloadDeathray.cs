@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -13,6 +14,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -33,14 +36,14 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
-        /// How long this laserbeam current is.
+        /// How long this laserbeam currently is.
         /// </summary>
         public ref float LaserbeamLength => ref Projectile.ai[2];
 
         /// <summary>
         /// How long the explosion lasts.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(9f);
+        public static int Lifetime => LumUtils.SecondsToFrames(9f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -105,7 +108,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
-            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehaviorOverride ares))
+            if (CalamityGlobalNPC.draedonExoMechPrime == -1 || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].active || !Main.npc[CalamityGlobalNPC.draedonExoMechPrime].TryGetBehavior(out AresBodyBehavior ares))
             {
                 Projectile.Kill();
                 return;
@@ -114,7 +117,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             float rotationTime = Time / Projectile.MaxUpdates / 167f;
             float sine = MathF.Sin(MathHelper.TwoPi * rotationTime);
             float cosine = MathF.Cos(MathHelper.TwoPi * rotationTime);
-            float upwardsInterpolant = Utilities.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyBehaviorOverride.BackgroundCoreLaserBeams_MissileShootDelay);
+            float upwardsInterpolant = LumUtils.InverseLerp(30f, -30f, Time / Projectile.MaxUpdates - AresBodyBehavior.BackgroundCoreLaserBeams_MissileShootDelay);
             float zRotation = MathHelper.SmoothStep(cosine * 0.1f, -MathHelper.PiOver2, upwardsInterpolant);
             var quaternionRotation = Matrix.CreateRotationZ(zRotation) * Matrix.CreateRotationY(sine * (1f - upwardsInterpolant) * 1.6f + MathHelper.PiOver2);
             Rotation = Quaternion.CreateFromRotationMatrix(quaternionRotation);
@@ -122,7 +125,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             Projectile.Center = ares.CorePosition;
             LaserbeamLength = MathHelper.Clamp(LaserbeamLength + 98f, 0f, MaxLaserbeamLength);
 
-            Projectile.Opacity = MathF.Pow(Utilities.InverseLerp(0f, 11f, Time), 0.63f);
+            Projectile.Opacity = MathF.Pow(LumUtils.InverseLerp(0f, 11f, Time), 0.63f);
 
             if (Projectile.timeLeft <= 60)
                 Projectile.scale *= 0.9f;
@@ -199,7 +202,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 {
                     int upperLeft = i * (CylinderWidthSegments + 1) + j;
                     int upperRight = upperLeft + 1;
-                    int lowerLeft = upperLeft + (CylinderWidthSegments + 1);
+                    int lowerLeft = upperLeft + CylinderWidthSegments + 1;
                     int lowerRight = lowerLeft + 1;
 
                     indices[(i * CylinderWidthSegments + j) * 6] = upperLeft;
@@ -254,8 +257,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float hueShift = Utilities.Cos01(Main.GlobalTimeWrappedHourly * 9f) * -0.09f;
-            float bloomScaleFactor = MathHelper.Lerp(0.9f, 1.1f, Utilities.Cos01(Main.GlobalTimeWrappedHourly * 22f)) * Projectile.Opacity;
+            float hueShift = LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 9f) * -0.09f;
+            float bloomScaleFactor = MathHelper.Lerp(0.9f, 1.1f, LumUtils.Cos01(Main.GlobalTimeWrappedHourly * 22f)) * Projectile.Opacity;
             Texture2D bloom = MiscTexturesRegistry.BloomCircleSmall.Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloom, drawPosition, null, (Color.White with { A = 0 }) * Projectile.Opacity * 0.5f, 0f, bloom.Size() * 0.5f, bloomScaleFactor * 0.24f, 0, 0f);
@@ -272,7 +275,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
             int width = Main.screenWidth;
             int height = Main.screenHeight;
-            Utilities.CalculatePrimitiveMatrices(width, height, out Matrix view, out Matrix projection);
+            LumUtils.CalculatePrimitiveMatrices(width, height, out Matrix view, out Matrix projection);
             Matrix overallProjection = view * projection;
 
             RenderBloom(start, end, overallProjection);

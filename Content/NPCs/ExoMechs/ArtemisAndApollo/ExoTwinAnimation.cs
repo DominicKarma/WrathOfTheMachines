@@ -1,8 +1,7 @@
-﻿using System;
-using Luminance.Common.Utilities;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     /// <summary>
     /// Represents a sequence of animation frames that the Exo Twins can perform.
@@ -52,7 +51,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <param name="phase2">Whether the result should be offset by <see cref="Phase2FrameOffset"/> in order to use phase 2 frames.</param>
         public int CalculateFrame(float animationCompletion, bool phase2)
         {
-            int frame = (int)MathF.Round(MathHelper.Lerp(StartingFrame, EndingFrame, Utilities.Saturate(animationCompletion)));
+            int frame = (int)MathF.Round(MathHelper.Lerp(StartingFrame, EndingFrame, LumUtils.Saturate(animationCompletion)));
             if (phase2)
                 frame += Phase2FrameOffset;
 

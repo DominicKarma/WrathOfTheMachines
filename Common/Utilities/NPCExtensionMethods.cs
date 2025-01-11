@@ -1,6 +1,7 @@
 ﻿using Terraria;
+using WoTM.Core.BehaviorOverrides;
 
-namespace WoTM
+namespace WoTM.Common.Utilities
 {
     public static class NPCExtensionMethods
     {
@@ -20,9 +21,6 @@ namespace WoTM
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             behavior = null;
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-
-            // TODO -- Re-enable later.
-            return false;
 
             if (!npc.TryGetGlobalNPC(out NPCOverrideGlobalManager manager))
                 return false;

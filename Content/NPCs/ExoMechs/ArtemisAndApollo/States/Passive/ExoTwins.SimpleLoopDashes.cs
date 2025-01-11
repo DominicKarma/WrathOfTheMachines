@@ -3,7 +3,7 @@ using Luminance.Common.Utilities;
 using Terraria;
 using Terraria.Audio;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
@@ -38,11 +38,11 @@ namespace WoTM.Content.NPCs.ExoMechs
             {
                 float idealDirection = npc.AngleTo(Target.Center);
                 npc.velocity += idealDirection.ToRotationVector2() * 1.015f;
-                if (npc.velocity.Length() > 25f)
+                if (npc.velocity.Length() > 20.5f)
                     npc.velocity *= 0.98f;
-                if (npc.velocity.Length() > 40f)
+                if (npc.velocity.Length() > 34f)
                     npc.velocity *= 0.97f;
-                if (npc.velocity.Length() > 60f)
+                if (npc.velocity.Length() > 50f)
                     npc.velocity *= 0.97f;
             }
 

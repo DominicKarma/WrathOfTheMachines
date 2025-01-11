@@ -1,4 +1,5 @@
-﻿using CalamityMod.NPCs.ExoMechs.Ares;
+﻿using System.IO;
+using CalamityMod.NPCs.ExoMechs.Ares;
 using Luminance.Assets;
 using Luminance.Common.DataStructures;
 using Luminance.Common.Utilities;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
@@ -73,6 +75,10 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
+        public override void SendExtraAI(BinaryWriter writer) => writer.Write(WidthFactor);
+
+        public override void ReceiveExtraAI(BinaryReader reader) => WidthFactor = reader.ReadSingle();
+
         public void GenerateArcPoints()
         {
             ArcPoints = new Vector2[25];
@@ -93,6 +99,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override void AI()
         {
+            if (WidthFactor <= 0f)
+                WidthFactor = 1f;
+
             if (ArcPoints is null)
                 GenerateArcPoints();
             else
@@ -106,7 +115,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                         arcProtrudeDistance *= 7f;
                     Vector2 arcOffset = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(arcProtrudeAngleOffset) * arcProtrudeDistance;
 
-                    ArcPoints[i] += arcOffset * Utilities.Convert01To010(trailCompletionRatio);
+                    ArcPoints[i] += arcOffset * LumUtils.Convert01To010(trailCompletionRatio);
                 }
             }
 
@@ -118,8 +127,8 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public float ArcWidthFunction(float completionRatio)
         {
             float lifetimeRatio = Time / Lifetime;
-            float lifetimeSquish = Utilities.InverseLerpBump(0.1f, 0.35f, 0.75f, 1f, lifetimeRatio);
-            return MathHelper.Lerp(1f, 3f, Utilities.Convert01To010(completionRatio)) * lifetimeSquish * WidthFactor;
+            float lifetimeSquish = LumUtils.InverseLerpBump(0.1f, 0.35f, 0.75f, 1f, lifetimeRatio);
+            return MathHelper.Lerp(1f, 3f, LumUtils.Convert01To010(completionRatio)) * lifetimeSquish * WidthFactor;
         }
 
         public Color ArcColorFunction(float completionRatio) => Projectile.GetAlpha(ArcColor);
@@ -143,8 +152,6 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
                 ArcColor = Color.Lerp(new Color(1f, 0.3f, 0.38f), new Color(1f, 0.77f, 0.64f), colorInterpolant);
             else
                 ArcColor = Color.Lerp(new Color(0.3f, 0.86f, 1f), new Color(0.75f, 0.83f, 1f), colorInterpolant);
-
-            WidthFactor = 1f;
 
             PrimitiveRenderer.RenderTrail(ArcPoints, settings, 39);
         }

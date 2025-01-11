@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WoTM.Content.NPCs.ExoMechs.Ares;
+using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
 
 namespace WoTM.Content.NPCs.ExoMechs.Projectiles
@@ -34,14 +36,14 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public ref float Time => ref Projectile.ai[1];
 
         /// <summary>
-        /// How long this laserbeam current is.
+        /// How long this laserbeam currently is.
         /// </summary>
         public ref float LaserbeamLength => ref Projectile.ai[2];
 
         /// <summary>
         /// How long this laserbeam should exist for, in frames.
         /// </summary>
-        public static int Lifetime => Utilities.SecondsToFrames(2.2f);
+        public static int Lifetime => LumUtils.SecondsToFrames(2.2f);
 
         /// <summary>
         /// The maximum length of this laserbeam.
@@ -122,9 +124,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         public float LaserWidthFunction(float completionRatio)
         {
             float widthPulsation = MathF.Cos(completionRatio * 100f - Main.GlobalTimeWrappedHourly * 50f) * 1.85f;
-            float initialBulge = Utilities.Convert01To010(Utilities.InverseLerp(0.15f, 0.85f, LaserbeamLength / MaxLaserbeamLength)) * Utilities.InverseLerp(0f, 0.05f, completionRatio) * 32f;
-            float idealWidth = widthPulsation + initialBulge + 14f - Utilities.InverseLerp(0.05f, 0f, completionRatio) * 4f;
-            float closureInterpolant = Utilities.InverseLerp(0f, 8f, Lifetime - Time);
+            float initialBulge = LumUtils.Convert01To010(LumUtils.InverseLerp(0.15f, 0.85f, LaserbeamLength / MaxLaserbeamLength)) * LumUtils.InverseLerp(0f, 0.05f, completionRatio) * 32f;
+            float idealWidth = widthPulsation + initialBulge + 14f - LumUtils.InverseLerp(0.05f, 0f, completionRatio) * 4f;
+            float closureInterpolant = LumUtils.InverseLerp(0f, 8f, Lifetime - Time);
             return Utils.Remap(LaserbeamLength, 0f, MaxLaserbeamLength, 4f, idealWidth) * closureInterpolant;
         }
 
@@ -132,14 +134,15 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public Color LaserColorFunction(float completionRatio)
         {
-            float lengthOpacity = Utilities.InverseLerp(0f, 0.45f, LaserbeamLength / MaxLaserbeamLength);
-            float endOpacity = Utilities.InverseLerp(0.95f, 0.81f, completionRatio);
-            float opacity = lengthOpacity * endOpacity;
+            float lengthOpacity = LumUtils.InverseLerp(0f, 0.45f, LaserbeamLength / MaxLaserbeamLength);
+            float startOpacity = LumUtils.InverseLerp(0f, 0.032f, completionRatio);
+            float endOpacity = LumUtils.InverseLerp(0.95f, 0.81f, completionRatio);
+            float opacity = lengthOpacity * startOpacity * endOpacity;
             Color startingColor = Projectile.GetAlpha(new(255, 56, 35));
             return startingColor * opacity;
         }
 
-        public Color BloomColorFunction(float completionRatio) => LaserColorFunction(completionRatio) * Utilities.InverseLerp(0.01f, 0.065f, completionRatio) * 0.54f;
+        public Color BloomColorFunction(float completionRatio) => LaserColorFunction(completionRatio) * LumUtils.InverseLerp(0.05f, 0.065f, completionRatio) * 0.54f;
 
         public override bool PreDraw(ref Color lightColor)
         {

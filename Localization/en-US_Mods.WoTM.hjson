@@ -1,51 +1,68 @@
 Projectiles: {
+	ApolloLineTelegraph.DisplayName: Telegraph
 	ApolloMissile.DisplayName: Plasma Missile
-	ArtemisLaserSmall.DisplayName: Small Thermal Laser
-	ArtemisLaserImproved.DisplayName: Thermal Laser
-	CannonLaserbeam.DisplayName: Energized Thermal Deathray
-	GaussNuke.DisplayName: Gauss Nuke
-	GaussNukeBoom.DisplayName: Thermonuclear Explosion
-	HadesLaserBurst.DisplayName: Laser Burst
-	HomingTeslaBurst.DisplayName: Tesla Burst
-	LargeTeslaSphere.DisplayName: Large Tesla Sphere
-	LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
-	LingeringPlasmaFireball.DisplayName: Lingering Plasma Fireball
-	SmallTeslaArc.DisplayName: Small Tesla Arc
-	TeslaArc.DisplayName: Tesla Arc
-	ApolloLineTelegraph.DisplayName: Apollo Line Telegraph
-	HadesMine.DisplayName: Hades Mine
-	DraedonLootCrate.DisplayName: Draedon Loot Crate
-	HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
-	ExoEnergyBlast.DisplayName: Exoelectric Overload Blast
-	ExoOverloadDeathray.DisplayName: Exo Overload Deathray
 	AresMissile.DisplayName: Thermal Missile
 	AresMissileBackground.DisplayName: Thermal Missile
+	ArtemisLaserImproved.DisplayName: Thermal Laser
+	ArtemisLaserSmall.DisplayName: Small Thermal Laser
+	CannonLaserbeam.DisplayName: Energized Thermal Deathray
+	DraedonLootCrate.DisplayName: Draedon Loot Crate
 	ExoelectricBlast.DisplayName: Exoelectric Blast
-	RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor
-	SpineOfHadesProjectile_Custom.DisplayName: Spine Of Hades
-	TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter
-	AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
-	SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
-	ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
+	ExoOverloadDeathray.DisplayName: Exo Overload Deathray
+	GaussNuke.DisplayName: Gauss Nuke
+	GaussNukeBoom.DisplayName: Thermonuclear Explosion
+	HadesExoEnergyOrb.DisplayName: Exoelectric Energy Orb
+	HadesLaserBurst.DisplayName: Laser Burst
+	HadesMine.DisplayName: Hades Mine
+	HadesSuperLaserbeam.DisplayName: Exo Energy Blast
+	HomingTeslaBurst.DisplayName: Tesla Burst
+	LargeTeslaSphere.DisplayName: Tesla Sphere
+	LargeTeslaSphereExplosion.DisplayName: Tesla Explosion
+	LingeringPlasmaFireball.DisplayName: Plasma Fireball
+	SmallTeslaArc.DisplayName: Tesla Arc
+	ExothermalDisintegrationRay.DisplayName: Exothermal Disintegration Ray
+	ScourgeSandstream.DisplayName: Scourge Sandstream
+	SmallTeslaSphere.DisplayName: Tesla Sphere
+	PlasmaFlameJet.DisplayName: Exoplasma Flame Jet
+	BlazingExoLaserbeam.DisplayName: Blazing Exo Laserbeam
+	AresDeathAnimationExplosion.DisplayName: Explosion
+	SmallHadesSegmentExplosion.DisplayName: Explosion
+	BigHadesSegmentExplosion.DisplayName: Explosion
+	AresCoreLaserSmall.DisplayName: Energized Spark
+	AresSwingingKatanas.DisplayName: XF-09 Ares Energy Katana
+	ApolloPlasmaFireball.DisplayName: Plasma Fireball
+	AresHyperfuturisticPortal.DisplayName: Hyperfuturistic Portal
+	ExoTwinHyperfuturisticPortal.DisplayName: Hyperfuturistic Portal
+	HadesMissile.DisplayName: Fortified Missile
+	CodebreakerDataStream.DisplayName: Codebreaker Data Stream
+	SmallCannonLaser.DisplayName: Laser
+	PulseBlast.DisplayName: Pulse Blast
 	ExoelectricFieldDestabilizerOrb.DisplayName: Exoelectric Field Destabilizer Orb
+	ExoelectricFieldDestabilizerProjectile.DisplayName: Exoelectric Field Destabilizer Projectile
+	RefractionRotorProjectile_Custom.DisplayName: Refraction Rotor Projectile_ Custom
+	SpineOfHadesProjectile_Custom.DisplayName: Spine Of Hades Projectile_ Custom
 	SurgeDriverBlast.DisplayName: Surge Driver Blast
 	SurgeDriverProjectile.DisplayName: Surge Driver Projectile
+	AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
+	SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
+	TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter Projectile_ Custom
 }
 
 NPCs: {
 	AresHand: {
 		DisplayName: Ares Hand
 		EnergyKatanaDisplayName: XF-09 Ares Energy Katana
+		PulseCannonDisplayName: XF-09 Ares Pulse Cannon
 	}
 
 	Draedon: {
 		IntroductionMonologue1: I have waited long for this moment.
 		IntroductionMonologue2: Your nature fascinates me, for I do not understand it.
-		IntroductionMonologue3: You will face my creations, which have surpassed gods.
+		IntroductionMonologue3: You will face my creations, which have surpassed even gods.
 		IntroductionMonologue4: And you will show me your disposition through battle.
 		IntroductionMonologue5: Now, choose.
 		IntroductionMonologueBrief: Make your choice.
-		ExoMechChoiceResponse1: Excellent.
+		ExoMechChoiceResponse1: Excellent. Your flight abilities will be enhanced as the experiment begins.
 		ExoMechChoiceResponse2: They will arrive shortly.
 		Interjection1: Hmm...
 		Interjection2_Thermal_Minor: It appears that you have thus far sustained minor thermal burns.
@@ -54,24 +71,25 @@ NPCs: {
 		Interjection2_Plasma_Minor: It appears that you have thus far sustained minor plasma burns.
 		Interjection2_Plasma_Major: It appears that you have thus far sustained major plasma burns.
 		Interjection2_Plasma_NearLethal: It appears that you have thus far sustained near-lethal plasma burns.
-		Interjection2_Electricity_Minor: It appears that you have thus far sustained minor nerve damage from electric shocks.
-		Interjection2_Electricity_Major: It appears that you have thus far sustained major nerve damage from electric shocks.
-		Interjection2_Electricity_NearLethal: It appears that you have thus far sustained near-lethal nerve damage from electric shocks.
-		Interjection2_Internal_Minor: It appears that you have thus far sustained minor internal organ damage.
-		Interjection2_Internal_Major: It appears that you have thus far sustained major internal organ damage.
-		Interjection2_Internal_NearLethal: It appears that you have thus far sustained near-lethal internal organ damage.
-		Interjection2_BluntForceTrauma_Minor: It appears that you have thus far sustained minor blunt force trauma.
-		Interjection2_BluntForceTrauma_Major: It appears that you have thus far sustained major blunt force trauma.
-		Interjection2_BluntForceTrauma_NearLethal: It appears that you have thus far sustained near-lethal blunt force trauma.
+		Interjection2_Electricity_Minor: It appears that you have sustained minor nerve damage from electric shocks.
+		Interjection2_Electricity_Major: It appears that you have sustained major nerve damage from electric shocks.
+		Interjection2_Electricity_NearLethal: It appears that you have sustained near-lethal nerve damage from electric shocks.
+		Interjection2_Internal_Minor: It appears that you are currently suffering from minor internal organ damage.
+		Interjection2_Internal_Major: It appears that you are currently suffering from major internal organ damage.
+		Interjection2_Internal_NearLethal: It appears that you are currently suffering from near-lethal internal organ damage.
+		Interjection2_BluntForceTrauma_Minor: It appears that you have been struck by minor blunt force trauma.
+		Interjection2_BluntForceTrauma_Major: It appears that you have been struck by major blunt force trauma.
+		Interjection2_BluntForceTrauma_NearLethal: It appears that you have been struck by near-lethal blunt force trauma.
 		Interjection2_Undamaged: It appears that you have not sustained any damage. Fascinating.
 		Interjection3: These results are excellent.
 		Interjection4: We shall now reset the variables to their controls for the next phase of testing.
 		Interjection5: Now, prepare yourself.
 		Interjection6: My remaining machines shall return shortly.
 		Interjection7: Marvelous.
-		Interjection8: The data you have provided me thus far has been invaluable.
+		Interjection8: Your abilities up to this point have captured my interest.
 		Interjection9: Now, it is time for the final phase of testing.
 		Interjection10: I have instructed my last machine to operate at maximum firepower.
+		Interjection10_Plural: I have instructed my last machines to operate at maximum firepower.
 		Interjection11: Good luck.
 		EndOfBattle_FirstDefeat1: Extraordinary!
 		EndOfBattle_FirstDefeat2: This outcome has fallen far outside the expectations of my hypotheses.
@@ -93,16 +111,20 @@ NPCs: {
 		EndOfBattle_SuccessiveDefeat4_ImproveAggression: Should you desire to engage my machines again, I would suggest a more risky combat approach.
 		EndOfBattle_SuccessiveDefeat4_ImproveBuffs: Should you desire to engage my machines again, I would suggest a reduction in consumable enhancements.
 		EndOfBattle_SuccessiveDefeat4_ImproveHitCounter: Should you desire to engage my machines again, I would suggest greater dodging precision.
-		EndOfBattle_SuccessiveDefeat4_Bad: A more refined combat approach would be more conductive to insightful analysis.
+		EndOfBattle_SuccessiveDefeat4_Bad: A more refined combat approach would be more conducive to insightful analysis.
 		EndOfBattle_SuccessiveDefeat4_WhyDidYouMeltTheBoss: That was far, far too short for me to draw any insightful conclusions.
 		EndOfBattle_SuccessiveDefeat5: I await the next battle.
 		EndOfBattle_FirstDefeatReconBodyKill1: Intriguing...
-		EndOfBattle_FirstDefeatReconBodyKill2: A tempermental disposition is not a data point I had not considered.
+		EndOfBattle_FirstDefeatReconBodyKill2: A temperamental disposition was not a data point I had considered.
 		EndOfBattle_FirstDefeatReconBodyKill3: Regardless, as I was saying...
-		Error: This text should not be displayed.
+		Death: Precisely within the margins of my calculations.
+		PlayerDeathAtAmusingTime: That was rather inopportune, but still within the margins of my calculations.
+		Error: The fabric of this reality rips at the seams.
 	}
 
 	ThanatosRename: XM-04 Hades
+	ApolloRename: XS-11 Apollo
+	ExoTwinsRenameNormal: XS-01 Artemis and XS-11 Apollo
 }
 
 Items: {

@@ -3,8 +3,9 @@ using CalamityMod.NPCs.ExoMechs.Artemis;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using WoTM.Content.NPCs.ExoMechs.FightManagers;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo
 {
     public static partial class ExoTwinsStates
     {
@@ -16,7 +17,7 @@ namespace WoTM.Content.NPCs.ExoMechs
         public static void DoBehavior_Inactive(NPC npc, IExoTwin twinAttributes)
         {
             bool isApollo = npc.type == ExoMechNPCIDs.ApolloID;
-            Vector2 hoverDestination = Target.Center + new Vector2(isApollo.ToDirectionInt() * 900f, -750f);
+            Vector2 hoverDestination = Target.Center + new Vector2(isApollo.ToDirectionInt() * 900f, -1050f);
 
             npc.dontTakeDamage = true;
             npc.SmoothFlyNear(hoverDestination, 0.09f, 0.9f);

@@ -1,4 +1,6 @@
-﻿namespace WoTM.Content.NPCs.ExoMechs.Projectiles
+﻿using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
+
+namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 {
     public interface IExoMechProjectile
     {

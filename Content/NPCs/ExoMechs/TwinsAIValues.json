@@ -1,0 +1,322 @@
+{
+  "BasicShotDamage": {
+    "BaseValue": 300.0,
+    "RevValue": 300.0,
+    "DeathValue": 300.0
+  },
+  "CloseShots_ApolloFireballShootSpeed": {
+    "BaseValue": 33.0,
+    "RevValue": 33.0,
+    "DeathValue": 33.0
+  },
+  "CloseShots_ApolloShootRate": {
+    "BaseValue": 23.0,
+    "RevValue": 23.0,
+    "DeathValue": 23.0
+  },
+  "CloseShots_ArtemisLaserShootSpeed": {
+    "BaseValue": 20.0,
+    "RevValue": 20.0,
+    "DeathValue": 20.0
+  },
+  "CloseShots_ArtemisShootRate": {
+    "BaseValue": 14.0,
+    "RevValue": 14.0,
+    "DeathValue": 14.0
+  },
+  "CloseShots_AttackCycleCount": {
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
+  },
+  "CloseShots_DashSlowdownTime": {
+    "BaseValue": 18.0,
+    "RevValue": 18.0,
+    "DeathValue": 18.0
+  },
+  "CloseShots_DashSpeed": {
+    "BaseValue": 88.0,
+    "RevValue": 88.0,
+    "DeathValue": 88.0
+  },
+  "CloseShots_MaxDashTime": {
+    "BaseValue": 30.0,
+    "RevValue": 30.0,
+    "DeathValue": 30.0
+  },
+  "CloseShots_ShootAtPlayerTime": {
+    "BaseValue": 108.0,
+    "RevValue": 108.0,
+    "DeathValue": 108.0
+  },
+  "CloseShots_RedirectTime": {
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
+  },
+  "DashesAndLasers_ApolloDashSpeed": {
+    "BaseValue": 151.0,
+    "RevValue": 151.0,
+    "DeathValue": 151.0
+  },
+  "DashesAndLasers_ApolloDashTime": {
+    "BaseValue": 9.0,
+    "RevValue": 9.0,
+    "DeathValue": 9.0
+  },
+  "DashesAndLasers_ApolloHoverTime": {
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
+  },
+  "DashesAndLasers_ApolloReelBackTime": {
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
+  },
+  "DashesAndLasers_ApolloSlowDownTime": {
+    "BaseValue": 18.0,
+    "RevValue": 18.0,
+    "DeathValue": 18.0
+  },
+  "DashesAndLasers_ArtemisLaserShootSpeed": {
+    "BaseValue": 13.25,
+    "RevValue": 13.25,
+    "DeathValue": 13.25
+  },
+  "DashesAndLasers_ArtemisShootArcDegrees": {
+    "BaseValue": 42.0,
+    "RevValue": 42.0,
+    "DeathValue": 42.0
+  },
+  "DashesAndLasers_ArtemisShootRate": {
+    "BaseValue": 5.0,
+    "RevValue": 5.0,
+    "DeathValue": 5.0
+  },
+  "DashesAndLasers_TotalAttackCycles": {
+    "BaseValue": 3.0,
+    "RevValue": 3.0,
+    "DeathValue": 3.0
+  },
+  "DeathAnimation_DashChargeUpTime": {
+    "BaseValue": 27.0,
+    "RevValue": 27.0,
+    "DeathValue": 27.0
+  },
+  "DeathAnimation_ExplodeDelay": {
+    "BaseValue": 125.0,
+    "RevValue": 125.0,
+    "DeathValue": 125.0
+  },
+  "DeathAnimation_HoverNearPlayerTime": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "DeathAnimation_ReorientTime": {
+    "BaseValue": 366.0,
+    "RevValue": 366.0,
+    "DeathValue": 366.0
+  },
+  "EnterSecondPhase_ApolloDamageProtectionFactor": {
+    "BaseValue": 0.2,
+    "RevValue": 0.2,
+    "DeathValue": 0.2
+  },
+  "EnterSecondPhase_LensPopOffSpeed": {
+    "BaseValue": 30.0,
+    "RevValue": 30.0,
+    "DeathValue": 30.0
+  },
+  "EnterSecondPhase_LowerForcefieldTime": {
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
+  },
+  "EnterSecondPhase_SecondPhaseAnimationTime": {
+    "BaseValue": 180.0,
+    "RevValue": 180.0,
+    "DeathValue": 180.0
+  },
+  "EnterSecondPhase_SlowDownTime": {
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
+  },
+  "FocusedLaserBursts_ChargeRecoilTime": {
+    "BaseValue": 76.0,
+    "RevValue": 76.0,
+    "DeathValue": 76.0
+  },
+  "FocusedLaserBursts_ChargeUpTime": {
+    "BaseValue": 89.0,
+    "RevValue": 89.0,
+    "DeathValue": 89.0
+  },
+  "FocusedLaserBursts_CycleCount": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "FocusedLaserBursts_RapidShotRate": {
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
+  },
+  "FocusedLaserBursts_RapidShotShootSpeed": {
+    "BaseValue": 9.0,
+    "RevValue": 9.0,
+    "DeathValue": 9.0
+  },
+  "FocusedLaserBursts_RapidShotsTime": {
+    "BaseValue": 138.0,
+    "RevValue": 138.0,
+    "DeathValue": 138.0
+  },
+  "LoopDashBombardment_ApolloFinalDashAcceleration": {
+    "BaseValue": 1.95,
+    "RevValue": 1.95,
+    "DeathValue": 1.95
+  },
+  "LoopDashBombardment_ApolloMissileShootSpeed": {
+    "BaseValue": 16.0,
+    "RevValue": 16.0,
+    "DeathValue": 16.0
+  },
+  "LoopDashBombardment_ApolloMissileSpawnDistanceThreshold": {
+    "BaseValue": 346.0,
+    "RevValue": 346.0,
+    "DeathValue": 346.0
+  },
+  "LoopDashBombardment_CycleCount": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "LoopDashBombardment_FinalDashTime": {
+    "BaseValue": 78.0,
+    "RevValue": 78.0,
+    "DeathValue": 78.0
+  },
+  "LoopDashBombardment_HoverTime": {
+    "BaseValue": 90.0,
+    "RevValue": 90.0,
+    "DeathValue": 90.0
+  },
+  "LoopDashBombardment_InitialApolloDashSpeed": {
+    "BaseValue": 54.0,
+    "RevValue": 54.0,
+    "DeathValue": 54.0
+  },
+  "LoopDashBombardment_MaxApolloFinalDashSpeed": {
+    "BaseValue": 176.0,
+    "RevValue": 176.0,
+    "DeathValue": 176.0
+  },
+  "LoopDashBombardment_MaxApolloSpinSpeed": {
+    "BaseValue": 30.0,
+    "RevValue": 30.0,
+    "DeathValue": 30.0
+  },
+  "LoopDashBombardment_MissileReleaseRate": {
+    "BaseValue": 8.0,
+    "RevValue": 8.0,
+    "DeathValue": 8.0
+  },
+  "LoopDashBombardment_SpinTime": {
+    "BaseValue": 54.0,
+    "RevValue": 54.0,
+    "DeathValue": 54.0
+  },
+  "LoopDashBombardment_StraightDashTime": {
+    "BaseValue": 20.0,
+    "RevValue": 20.0,
+    "DeathValue": 20.0
+  },
+  "LoopDashBombardment_TelegraphSoundBuffer": {
+    "BaseValue": 36.0,
+    "RevValue": 36.0,
+    "DeathValue": 36.0
+  },
+  "MachineGunLasers_ApolloDashTime": {
+    "BaseValue": 22.0,
+    "RevValue": 22.0,
+    "DeathValue": 22.0
+  },
+  "MachineGunLasers_ApolloRedirectTime": {
+    "BaseValue": 25.0,
+    "RevValue": 25.0,
+    "DeathValue": 25.0
+  },
+  "MachineGunLasers_ApolloDashSlowdownTime": {
+    "BaseValue": 16.0,
+    "RevValue": 16.0,
+    "DeathValue": 16.0
+  },
+  "MachineGunLasers_ApolloPlasmaReleaseRate": {
+    "BaseValue": 5.0,
+    "RevValue": 5.0,
+    "DeathValue": 5.0
+  },
+  "MachineGunLasers_ApolloTelegraphTime": {
+    "BaseValue": 51.0,
+    "RevValue": 51.0,
+    "DeathValue": 51.0
+  },
+  "MachineGunLasers_AttackDelay": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  },
+  "MachineGunLasers_AttackDuration": {
+    "BaseValue": 600.0,
+    "RevValue": 600.0,
+    "DeathValue": 600.0
+  },
+  "MachineGunLasers_LaserShootRate": {
+    "BaseValue": 2.0,
+    "RevValue": 2.0,
+    "DeathValue": 2.0
+  },
+  "MachineGunLasers_LaserShootSpeed": {
+    "BaseValue": 18.0,
+    "RevValue": 18.0,
+    "DeathValue": 18.0
+  },
+  "MachineGunLasers_LaserShootSpreadDegrees": {
+    "BaseValue": 4.1,
+    "RevValue": 4.1,
+    "DeathValue": 4.1
+  },
+  "SimpleLaserShots_ArtemisShootRate": {
+    "BaseValue": 45.0,
+    "RevValue": 45.0,
+    "DeathValue": 45.0
+  },
+  "SimpleLaserShots_ArtemisShootSpeed": {
+    "BaseValue": 16.0,
+    "RevValue": 16.0,
+    "DeathValue": 16.0
+  },
+  "SpawnAnimation_AttackTransitionDelay": {
+    "BaseValue": 150.0,
+    "RevValue": 150.0,
+    "DeathValue": 150.0
+  },
+  "SpawnAnimation_FallFromSkySpeed": {
+    "BaseValue": 120.0,
+    "RevValue": 120.0,
+    "DeathValue": 120.0
+  },
+  "SpawnAnimation_FallFromSkyTime": {
+    "BaseValue": 12.0,
+    "RevValue": 12.0,
+    "DeathValue": 12.0
+  },
+  "SpawnAnimation_LookAtPlayerDelay": {
+    "BaseValue": 60.0,
+    "RevValue": 60.0,
+    "DeathValue": 60.0
+  }
+}

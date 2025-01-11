@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
-using CalamityMod.NPCs.ExoMechs;
-using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace WoTM.Content.NPCs.ExoMechs
+namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 {
     public sealed class ExoMechStylePlayer : ModPlayer
     {
-        private static bool resetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<Draedon>());
+        private static bool ResetData => !ExoMechFightStateManager.FightOngoing && !NPC.AnyNPCs(ModContent.NPCType<CalamityMod.NPCs.ExoMechs.Draedon>());
 
         /// <summary>
         /// How many hits the player took during the Exo Mech fight.
@@ -47,9 +44,9 @@ namespace WoTM.Content.NPCs.ExoMechs
         }
 
         /// <summary>
-        /// Whether the boss would be considered melted if it were to stop now.
+        /// Whether the boss would be considered melted if the fight were to stop now.
         /// </summary>
-        public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < Utilities.MinutesToFrames(1.75f);
+        public bool PlayerIsMeltingBoss => PhaseDurations.Sum() < LumUtils.MinutesToFrames(1.75f);
 
         /// <summary>
         /// How long each phase lasted, in frames, during the Exo Mech fight, indexed according to phase.
@@ -59,22 +56,22 @@ namespace WoTM.Content.NPCs.ExoMechs
         /// <summary>
         /// How short the Exo Mechs fight has to be in order to receive minimum style points for it.
         /// </summary>
-        public static float MinStyleBoostFightTime => Utilities.MinutesToFrames(1.5f);
+        public static float MinStyleBoostFightTime => LumUtils.MinutesToFrames(1.5f);
 
         /// <summary>
         /// How long the Exo Mechs fight has to be in order to receive maximum style points for it.
         /// </summary>
-        public static float MaxStyleBoostFightTime => Utilities.MinutesToFrames(3.75f);
+        public static float MaxStyleBoostFightTime => LumUtils.MinutesToFrames(3.75f);
 
         /// <summary>
         /// The influence of player buff count on overall style.
         /// </summary>
-        public float BuffsWeight => Utilities.Saturate(1f - (BuffCount - 11f) / 9f);
+        public float BuffsWeight => LumUtils.Saturate(1f - (BuffCount - 39f) / 11f);
 
         /// <summary>
         /// The influence of hit count on overall style.
         /// </summary>
-        public float HitsWeight => Utilities.Saturate(1f - (HitCount - 2f) / 13f);
+        public float HitsWeight => LumUtils.Saturate(1f - (HitCount - 2f) / 13f);
 
         /// <summary>
         /// The influence of fight time on overall style.
@@ -84,7 +81,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             get
             {
                 int fightDuration = PhaseDurations.Sum();
-                float fightTimeInterpolant = Utilities.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
+                float fightTimeInterpolant = LumUtils.InverseLerp(MinStyleBoostFightTime, MaxStyleBoostFightTime, fightDuration, false);
                 float fightTimeWeight = SmoothClamp(fightTimeInterpolant, 1.13f);
                 return fightTimeWeight;
             }
@@ -103,7 +100,7 @@ namespace WoTM.Content.NPCs.ExoMechs
             get
             {
                 float unclampedStyle = HitsWeight * 0.26f + BuffsWeight * 0.13f + FightTimeWeight * 0.31f + AggressivenessWeight * 0.3f;
-                return Utilities.Saturate(unclampedStyle);
+                return LumUtils.Saturate(unclampedStyle);
             }
         }
 
@@ -134,11 +131,15 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void PostUpdate()
         {
-            if (resetData)
+            if (ResetData || ExoMechFightStateManager.CurrentPhase is null)
             {
                 Reset();
                 return;
             }
+
+            // Stop evaluating the fight if it's over or has yet to start.
+            if (ExoMechFightStateManager.ActiveExoMechs.Count <= 0)
+                return;
 
             int currentPhase = ExoMechFightStateManager.CurrentPhase.PhaseOrdering;
             if (currentPhase >= 1)
@@ -185,7 +186,7 @@ namespace WoTM.Content.NPCs.ExoMechs
                     distanceToClosestNPC = distanceFromNPC;
             }
 
-            AggressivenessBonus += Utilities.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 20f;
+            AggressivenessBonus += LumUtils.InverseLerp(275f, 100f, distanceToClosestNPC) / MaxStyleBoostFightTime * 20f;
 
             Rectangle extendedPlayerHitbox = Player.Hitbox;
             extendedPlayerHitbox.Inflate(30, 30);
@@ -201,13 +202,13 @@ namespace WoTM.Content.NPCs.ExoMechs
 
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
-            if (!resetData)
+            if (!ResetData)
                 HitCount++;
         }
 
         public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
         {
-            if (!resetData)
+            if (!ResetData)
                 HitCount++;
         }
     }
