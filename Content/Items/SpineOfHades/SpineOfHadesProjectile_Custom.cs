@@ -86,8 +86,6 @@ namespace WoTM.Content.Items.SpineOfHades
 
         public override void AI()
         {
-            // TODO -- Add sounds.
-
             CalculateWhipPoints();
             ManipulatePlayerValues();
 
