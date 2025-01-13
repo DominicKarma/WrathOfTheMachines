@@ -1,7 +1,6 @@
 ﻿using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -11,6 +10,7 @@ using Terraria.ModLoader;
 using WoTM.Common.Utilities;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -170,7 +170,6 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
         public static void HandleAttackState(NPC hades)
         {
             // Make the spin angle perpendicular to the target, to ensure that they don't get telefragged by the lasers.
-            // TODO -- This probably will cause telefrags in multiplayer, however. Do we care?
             if (AITimer <= RedirectTime)
                 ExoTwinSpinAngle = hades.AngleTo(Target.Center) + MathHelper.PiOver2;
 
