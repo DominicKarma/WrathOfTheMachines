@@ -3,8 +3,6 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Ares;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,7 +11,9 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Content.NPCs.ExoMechs.SpecificManagers;
 using WoTM.Content.Particles;
@@ -225,24 +225,11 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                 hand.EnergyDrawer.chargeProgress = MathF.Sqrt(LumUtils.InverseLerpBump(0f, ElectrifyTime * 0.32f, ElectrifyTime * 0.81f, ElectrifyTime, AITimer));
             }
 
-            // After Hades is charged up an active, periodically shoot lasers at the target, with a bit of recoil.
-            // Ares plays the minor role in this attack, with Hades doing most of the work.
+            // After Hades is charged up and active, cease attacking.
             else
             {
                 aimDestination = Target.Center;
-
-                if (AITimer % AresCannonShootRate == AresCannonShootRate - 1 && AITimer >= ElectrifyTime + 90)
-                {
-                    SoundEngine.PlaySound(CommonCalamitySounds.ExoLaserShootSound, handNPC.Center).WithVolumeBoost(1.5f);
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        handNPC.velocity -= handNPC.rotation.ToRotationVector2() * 30f;
-                        handNPC.netUpdate = true;
-
-                        LumUtils.NewProjectileBetter(handNPC.GetSource_FromAI(), cannonEnd, handNPC.rotation.ToRotationVector2() * 9.3f, ModContent.ProjectileType<SmallCannonLaser>(), HadesHeadBehavior.BasicLaserDamage, 0f);
-                    }
-                }
-                hand.EnergyDrawer.chargeProgress = LumUtils.InverseLerp(0f, AresCannonShootRate * 0.75f, AITimer % AresCannonShootRate);
+                hand.EnergyDrawer.chargeProgress = 0f;
             }
 
             handNPC.SmoothFlyNear(hoverDestination, 0.25f, 0.75f);
