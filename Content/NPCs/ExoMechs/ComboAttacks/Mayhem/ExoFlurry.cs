@@ -5,8 +5,6 @@ using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Ares;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Assets;
 using Luminance.Common.Easings;
 using Luminance.Common.Utilities;
@@ -17,8 +15,10 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 
 namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
 {
@@ -146,12 +146,12 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.Mayhem
                     riseOffset = 250f;
                 if (Target.velocity.Y < 0f)
                     riseOffset -= Target.velocity.Y * 24f;
-                float horizontalOffset = Target.velocity.X * 7.2f;
+                float horizontalOffset = Target.velocity.X * 18f;
 
                 npc.SmoothFlyNear(Target.Center + new Vector2(horizontalOffset, -riseOffset), 0.1f, 0.9f);
             }
             else if (riseUpwardInterpolant < 1f)
-                npc.velocity.Y *= 0.9f;
+                npc.velocity.Y *= 0.8f;
             else
             {
                 if (flyDownwardInterpolant <= 0.03f)

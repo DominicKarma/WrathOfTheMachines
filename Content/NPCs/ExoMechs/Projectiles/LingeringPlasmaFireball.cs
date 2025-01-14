@@ -65,6 +65,9 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
 
         public override bool? CanDamage() => Projectile.Opacity >= 0.5f && Time >= 95f;
 
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox) =>
+            LumUtils.CircularHitboxCollision(Projectile.Center, Projectile.width * Projectile.scale * 0.5f, targetHitbox);
+
         public override bool PreDraw(ref Color lightColor)
         {
             LumUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Type], Color.White, positionClumpInterpolant: 0.45f);
