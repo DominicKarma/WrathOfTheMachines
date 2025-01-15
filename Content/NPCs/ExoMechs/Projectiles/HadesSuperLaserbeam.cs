@@ -242,7 +242,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), left, right, 16f, ref _);
         }
 
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage += 240f;
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.FinalDamage += 124f;
 
         public override bool ShouldUpdatePosition() => false;
     }
