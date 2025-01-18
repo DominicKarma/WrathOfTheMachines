@@ -46,6 +46,8 @@ Projectiles: {
 	// AtomSplitterSpamSource.DisplayName: Atom Splitter Spam Source
 	// SplitAtomSplitterProjectile.DisplayName: Split Atom Splitter Projectile
 	// TheAtomSplitterProjectile_Custom.DisplayName: The Atom Splitter Projectile_ Custom
+	// ApolloMissile2.DisplayName: Apollo Missile2
+	// HadesLineTelegraph.DisplayName: Hades Line Telegraph
 }
 
 NPCs: {

@@ -1,8 +1,8 @@
 ﻿using System;
-using WoTM.Content.NPCs.ExoMechs.Draedon;
 using Terraria;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Draedon;
 using WoTM.Core.BehaviorOverrides;
 using static WoTM.Content.NPCs.ExoMechs.FightManagers.ExoMechFightStateManager;
 
@@ -182,9 +182,6 @@ namespace WoTM.Content.NPCs.ExoMechs.FightManagers
 
         public static void MakeExoMechLeaveOrReappear(bool leave, Func<NPC, IExoMech, bool> condition)
         {
-            if (NPC.AnyNPCs(ExoMechNPCIDs.ApolloID))
-                KeepExoTwinsAliveSystem.KeepAliveCountdown = 10;
-
             if (leave)
                 ClearExoMechProjectiles();
 
