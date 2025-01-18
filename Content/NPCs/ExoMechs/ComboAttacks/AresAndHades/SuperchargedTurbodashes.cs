@@ -268,6 +268,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
 
                 // Handle the dash cycle, teleporting behind the player and dashing, in a cycle.
                 int cycleTimer = (AITimer - ElectrifyTime) % HadesDashCycleTime;
+                bool hasDashed = AITimer >= ElectrifyTime + HadesDashCycleTime - 1;
                 if (cycleTimer == HadesDashCycleTime - 1)
                 {
                     Vector2 teleportOffsetDirection = -Target.velocity.SafeNormalize(Vector2.UnitX * Target.direction);
@@ -275,12 +276,16 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                     npc.velocity = npc.SafeDirectionTo(Target.Center) * 10f;
                     npc.netUpdate = true;
 
-                    foreach (NPC segment in Main.ActiveNPCs)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        if (segment.realLife == npc.whoAmI)
+                        LumUtils.NewProjectileBetter(npc.GetSource_FromAI(), npc.Center, npc.velocity, ModContent.ProjectileType<HadesLineTelegraph>(), 0, 0f, -1, 32f);
+                        foreach (NPC segment in Main.ActiveNPCs)
                         {
-                            segment.Center = npc.Center;
-                            segment.netUpdate = true;
+                            if (segment.realLife == npc.whoAmI)
+                            {
+                                segment.Center = npc.Center;
+                                segment.netUpdate = true;
+                            }
                         }
                     }
                     SoundEngine.PlaySound(HadesHeadBehavior.DashChargeUpSound with { MaxInstances = 0 }).WithVolumeBoost(2f);
