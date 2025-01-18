@@ -3,7 +3,6 @@ using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Assets;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
@@ -16,6 +15,7 @@ using Terraria.ModLoader;
 using WoTM.Common.Utilities;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 using WoTM.Core.BehaviorOverrides;
 
@@ -113,6 +113,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
                 return;
 
             hades.SegmentReorientationStrength = 0.1f;
+            npc.Center = Vector2.Lerp(npc.Center, Target.Center, 0.015f);
 
             int wrappedTimer = AITimer % HadesAttackCycleTime;
             if (wrappedTimer < HadesRedirectTime)
@@ -134,7 +135,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.HadesAndTwins
                 hades.BodyBehaviorAction = new(HadesHeadBehavior.EveryNthSegment(3), DoBehavior_FireMine);
             }
 
-            npc.rotation = npc.velocity.ToRotation() + MathHelper.PiOver2;
+            npc.rotation = (npc.position - npc.oldPosition).ToRotation() + MathHelper.PiOver2;
         }
 
         public static void DoBehavior_FireMine(HadesBodyBehavior behaviorOverride)

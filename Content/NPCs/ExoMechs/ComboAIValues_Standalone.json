@@ -70,9 +70,9 @@
     "DeathValue": 32.0
   },
   "ExoFlurry_ExoTwinsSpinSlowdownTime": {
-    "BaseValue": 55.0,
-    "RevValue": 55.0,
-    "DeathValue": 55.0
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
   },
   "ExoFlurry_ExoTwinsSpinTime": {
     "BaseValue": 60.0,
@@ -119,25 +119,35 @@
     "RevValue": 510.0,
     "DeathValue": 510.0
   },
-  "ExothermalLaserDashes_ExoTwinSpinAngularVelocityDegrees": {
-    "BaseValue": 2.0,
-    "RevValue": 2.0,
-    "DeathValue": 2.0
+  "ExothermalLaserDashes_DashCount": {
+    "BaseValue": 7.0,
+    "RevValue": 7.0,
+    "DeathValue": 7.0
   },
-  "ExothermalLaserDashes_ExoTwinSpinRadius": {
-    "BaseValue": 545.0,
-    "RevValue": 545.0,
-    "DeathValue": 545.0
+  "ExothermalLaserDashes_LaserBurstStartingSpeed": {
+    "BaseValue": 2.3,
+    "RevValue": 2.3,
+    "DeathValue": 2.3
   },
-  "ExothermalLaserDashes_ExoTwinSpinWindUpTime": {
-    "BaseValue": 75.0,
-    "RevValue": 75.0,
-    "DeathValue": 75.0
+  "ExothermalLaserDashes_LasersPerBurst": {
+    "BaseValue": 4.0,
+    "RevValue": 4.0,
+    "DeathValue": 4.0
   },
-  "ExothermalLaserDashes_RedirectTime": {
-    "BaseValue": 90.0,
-    "RevValue": 90.0,
-    "DeathValue": 90.0
+  "ExothermalLaserDashes_PortalEmergeExoTwinOffsetAngle": {
+    "BaseValue": 0.23,
+    "RevValue": 0.23,
+    "DeathValue": 0.23
+  },
+  "ExothermalLaserDashes_PortalEmergeStartingDashSpeed": {
+    "BaseValue": 40.0,
+    "RevValue": 40.0,
+    "DeathValue": 40.0
+  },
+  "ExothermalLaserDashes_PortalEnterWaitDelay": {
+    "BaseValue": 24.0,
+    "RevValue": 24.0,
+    "DeathValue": 24.0
   },
   "HolographicRush_ExoTwinDashCount": {
     "BaseValue": 8.0,

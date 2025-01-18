@@ -33,7 +33,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
         /// <summary>
         /// A representation of a null combo attack state. Used as a fallback when Exo Mechs are not currently using a combo attack.
         /// </summary>
-        public static readonly ExoMechComboAttack NullComboState = new(n => false);
+        public static readonly ExoMechComboAttack NullComboState = new(n => false, true);
 
         /// <summary>
         /// The underlying value that should be used for all AI state enumerations across the Exo Mechs to represent a combo attack.
@@ -51,8 +51,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
         /// Represents an Exo Mech combo attack.
         /// </summary>
         /// <param name="AttackAction">The delegate responsible for updating the Exo Mechs during the combo attack.</param>
+        /// <param name="ValidStartingAttack">Whether this combo attack can be chosen as the starting attack after a phase transition or not.</param>
         /// <param name="ExpectedManagingExoMechIDs">The set of all managing Exo Mech NPC IDs that are expected to be present during the combo attack. If the exo mech set does not match this exactly, this attack will not execute.</param>
-        public record ExoMechComboAttack(ExoMechComboAttackAction AttackAction, params int[] ExpectedManagingExoMechIDs)
+        public record ExoMechComboAttack(ExoMechComboAttackAction AttackAction, bool ValidStartingAttack, params int[] ExpectedManagingExoMechIDs)
         {
             /// <summary>
             /// Whether this combo attack is undefined.
@@ -108,13 +109,13 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
             if (!everyoneIsPerformingCombo && anyPlayersAreAlive)
             {
                 if (CurrentState?.Undefined ?? true)
-                    SelectNewComboAttackState();
+                    SelectNewComboAttackState(true);
 
                 SetComboStateForAllActiveExoMechs(true);
             }
 
             if (!VerifyComboStateIsValid(CurrentState))
-                SelectNewComboAttackState();
+                SelectNewComboAttackState(true);
         }
 
         /// <summary>
@@ -161,11 +162,19 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
         /// <summary>
         /// Selects a new combo attack that the Exo Mechs can perform.
         /// </summary>
-        private static void SelectNewComboAttackState()
+        private static void SelectNewComboAttackState(bool justStarted)
         {
             ComboAttackTimer = 0;
 
-            var potentialCandidates = RegisteredComboAttacks.Where(VerifyComboStateIsValid).OrderBy(_ => Main.rand.NextFloat());
+            var potentialCandidates = RegisteredComboAttacks.Where(attack =>
+            {
+                if (!VerifyComboStateIsValid(attack))
+                    return false;
+                if (!attack.ValidStartingAttack && justStarted)
+                    return false;
+
+                return true;
+            }).OrderBy(_ => Main.rand.NextFloat());
             var previousState = CurrentState;
 
             for (int i = 0; i < 100; i++)
@@ -212,7 +221,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks
                 {
                     // To clarify, this if statement's execution encompasses the behavior state update.
                     if (CurrentState?.AttackAction?.Invoke(npc) ?? true)
-                        SelectNewComboAttackState();
+                        SelectNewComboAttackState(false);
 
                     if (behavior is HadesHeadBehavior hades)
                     {

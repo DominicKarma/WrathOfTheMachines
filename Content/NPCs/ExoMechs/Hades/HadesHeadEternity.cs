@@ -64,9 +64,18 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
         }
 
         /// <summary>
-        /// Whether Hades' map icons should be disabled.
+        /// Whether Hades' map icons should be disabled. This affects all body and tail segments.
         /// </summary>
         public bool DisableMapIcon
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether Hades' map icon should be disabled. This exclusively affects his head segment.
+        /// </summary>
+        public bool DisableMapIconLocally
         {
             get;
             set;
@@ -332,7 +341,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
 
         public override void BossHeadSlot(ref int index)
         {
-            if (DisableMapIcon)
+            if (DisableMapIcon || DisableMapIconLocally)
                 index = -1;
         }
 
@@ -394,6 +403,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
             BodyBehaviorAction = null;
             BodyRenderAction = null;
             DisableMapIcon = false;
+            DisableMapIconLocally = false;
             SegmentReorientationStrength = MathHelper.Lerp(SegmentReorientationStrength, 1f, 0.03f);
             NPC.As<ThanatosHead>().SecondaryAIState = (int)ThanatosHead.SecondaryPhase.Nothing;
             SegmentOpenInterpolant = Utilities.Saturate(SegmentOpenInterpolant + StandardSegmentOpenRate);
@@ -424,7 +434,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Hades
                 NPC nextSegment = Main.npc[nextSegmentIndex];
                 nextSegment.realLife = NPC.whoAmI;
 
-                // Immediately inform all clients of the spawning of the body segment so that there's a little latency as possible.
+                // Immediately inform all clients of the spawning of the body segment so that there's as little latency as possible.
                 NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, nextSegmentIndex);
 
                 previousSegmentIndex = nextSegmentIndex;
