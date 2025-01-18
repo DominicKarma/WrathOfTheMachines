@@ -2,8 +2,6 @@
 using CalamityMod.NPCs;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
-using WoTM.Content.NPCs.ExoMechs.Ares;
-using WoTM.Content.NPCs.ExoMechs.Hades;
 using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -11,7 +9,9 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
+using WoTM.Content.NPCs.ExoMechs.Hades;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
 
 namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
@@ -120,6 +120,9 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndHades
                 ares.InstructionsForHands[2] = new(h => AresHandUpdate(npc, h, new Vector2(280f, 224f), 2));
                 ares.InstructionsForHands[3] = new(h => AresHandUpdate(npc, h, new Vector2(400f, 40f), 3));
             }
+
+            float colorShiftInterpolant = LumUtils.InverseLerpBump(0f, 30f, AresShootDelay + AresShootCycleCount * AresShootCycleTime - 30f, AresShootDelay + AresShootCycleCount * AresShootCycleTime, AITimer);
+            ares.ShiftLightColors(colorShiftInterpolant, new(81, 10, 220), new Color(156, 67, 220), Color.Wheat);
 
             npc.SmoothFlyNear(Target.Center - Vector2.UnitY.RotatedBy(MathHelper.TwoPi * AITimer / 1600f) * 350f, 0.063f, 0.945f);
             npc.rotation = npc.velocity.X * 0.007f;

@@ -4,7 +4,6 @@ using CalamityMod.NPCs.ExoMechs.Apollo;
 using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Artemis;
 using CalamityMod.Sounds;
-using WoTM.Content.NPCs.ExoMechs.Ares;
 using Luminance.Common.Utilities;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,6 +12,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WoTM.Common.Utilities;
+using WoTM.Content.NPCs.ExoMechs.Ares;
 using WoTM.Content.NPCs.ExoMechs.ArtemisAndApollo;
 using WoTM.Content.NPCs.ExoMechs.FightManagers;
 using WoTM.Content.NPCs.ExoMechs.Projectiles;
@@ -98,7 +98,7 @@ namespace WoTM.Content.NPCs.ExoMechs.ComboAttacks.AresAndTwins
                 SoundEngine.PlaySound(AresPlasmaFlamethrower.TelSound);
 
             float colorShiftInterpolant = LumUtils.InverseLerpBump(0f, 30f, PlasmaCannonChargeUpTime + AttackDuration - 30f, PlasmaCannonChargeUpTime + AttackDuration, AITimer);
-            ares.ShiftLightColors(colorShiftInterpolant, new(239, 62, 62), new(242, 112, 72));
+            ares.ShiftLightColors(colorShiftInterpolant, new(123, 255, 4), new(167, 255, 79), new Color(29, 105, 0));
 
             if (AITimer <= PlasmaCannonChargeUpTime)
             {
