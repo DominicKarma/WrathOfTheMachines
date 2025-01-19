@@ -34,7 +34,7 @@ namespace WoTM.Content.NPCs.ExoMechs.Projectiles
         /// <summary>
         /// How long this portal should exist for, in frames.
         /// </summary>
-        public static int Lifetime => LumUtils.SecondsToFrames(0.63f);
+        public static int Lifetime => LumUtils.SecondsToFrames(0.74f);
 
         public override string Texture => MiscTexturesRegistry.InvisiblePixelPath;
 

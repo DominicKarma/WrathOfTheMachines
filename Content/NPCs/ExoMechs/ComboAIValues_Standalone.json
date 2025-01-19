@@ -124,16 +124,6 @@
     "RevValue": 7.0,
     "DeathValue": 7.0
   },
-  "ExothermalLaserDashes_LaserBurstStartingSpeed": {
-    "BaseValue": 2.3,
-    "RevValue": 2.3,
-    "DeathValue": 2.3
-  },
-  "ExothermalLaserDashes_LasersPerBurst": {
-    "BaseValue": 4.0,
-    "RevValue": 4.0,
-    "DeathValue": 4.0
-  },
   "ExothermalLaserDashes_PortalEmergeExoTwinOffsetAngle": {
     "BaseValue": 0.23,
     "RevValue": 0.23,
